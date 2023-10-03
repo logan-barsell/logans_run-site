@@ -1,0 +1,122 @@
+#bottomNav {
+  overflow: hidden;
+}
+
+#newsSub {
+  color: darkred;
+}
+
+#newsDetails {
+  font-size: 17px;
+  margin-top: 27px;
+  color: white;
+}
+
+@media only screen and (max-width: 650px) {
+  .newsletter input {
+    margin-bottom: 5px;
+  }
+  .newsletter input.form-control {
+    margin-left: 0.5rem;
+    width: 286px;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .newsletter input {
+    margin-bottom: 0px;
+  }
+  input.form-control {
+    margin-left: 0px;
+  }
+}
+
+/*BOTTOM NAV ICONS*/
+
+.iconsNav {
+  margin: 0px 9px;
+}
+
+.iconsNav img {
+  border-radius: 11px;
+  width: 40px;
+  margin: 11px 7px;
+}
+
+@media only screen and (max-width: 587px) {
+  .iconsNav {
+    margin-top: 13px;
+  }
+
+  #bottomNav {
+    padding-top: 21px;
+  }
+}
+
+.mailz {
+  border-radius: 4px;
+}
+
+#st-1 span {
+  font-family: 'Sancreek';
+}
+
+#contact a {
+  color: darkred;
+}
+
+.jumbotron p img {
+  height: 33px;
+}
+
+a {
+  cursor: pointer;
+  color: white;
+}
+
+/*FOOTER */
+
+footer {
+  color: white;
+  background-color: rgba(0,0,0,0.5);
+}
+
+footer h5 {
+  color: darkred;
+  text-shadow: 2px 0px black;
+}
+
+#footer-links .nav-link {
+  padding: 0px;
+  width: fit-content;
+  margin: auto;
+}
+
+#footer-links li {
+  padding: 0px 16px;
+  color: white;
+}
+
+#footer-links li a:hover {
+  color: darkred;
+  text-shadow: 1px 1px black;
+}
+
+.footer-copyright {
+  color: black;
+  border-top: 1px solid black;
+}
+
+.footer-copyright a {
+  color: darkred;
+}
+
+a.nav-item.active {
+  color: darkred;
+  text-shadow: 1px 1px black;
+}
+
+
+#subscribe {
+  margin: 0px 13px;
+}

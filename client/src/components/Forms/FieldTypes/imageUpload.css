@@ -1,0 +1,31 @@
+.fileUpload {
+  display: block;
+  overflow: hidden;
+  margin: 0px 20px;
+  position: relative;
+}
+
+.bi-camera-fill {
+  margin-right: 10px;
+}
+
+.fileUpload input.upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  padding-bottom: 13px;
+}
+
+.selectedFile {
+  font-size: 27px;
+  font-variant: all-small-caps;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  line-height: 22px;
+  padding-bottom: 10px;
+}
+

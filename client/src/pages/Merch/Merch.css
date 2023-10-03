@@ -1,0 +1,87 @@
+#merch {
+  font-size: 18px;
+
+  color: white;
+}
+
+#product-list {
+  margin-top: 30px;
+  margin: auto;
+}
+
+#merch h5 {
+  color: darkred;
+  text-shadow: 1px 1px #3b0600;
+}
+
+#merch .col-sm {
+  margin: auto;
+}
+
+#cart .list-group-item {
+  border: none;
+}
+
+#merch .card {
+  max-width: 366px;
+  margin: 20px auto;
+  background-color: black;
+  border: 1px solid white;
+}
+
+#merch .card-img-top {
+  max-height: 366px;
+}
+
+#merch h5.card-title {
+  color: darkred;
+  font-size: 27px;
+  text-shadow: none;
+}
+
+#merch .card-body {
+  padding-top: 0px;
+  padding-bottom: 20px;
+}
+
+#merch .card-body p {
+  margin-bottom: 0px;
+}
+
+.product .card-body {
+  text-align: center;
+}
+
+.product .form-group {
+  margin: auto;
+  margin-bottom: 13px;
+}
+
+.price {
+  color: white;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.bi-cart4 {
+  margin-left: 5px;
+  margin-bottom: 3px;
+}
+
+.toast-container {
+  z-index: 100;
+}
+
+.toast {
+  background-color: rgba(0,0,0,0.8);
+}
+
+.toast-header img {
+  height: 33px;
+  width: 33px;
+}
+
+.toast-header {
+  background-color: black;
+  color: darkred;
+}

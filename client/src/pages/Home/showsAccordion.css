@@ -1,0 +1,25 @@
+#currentShows.accordion {
+  margin: 50px 0px;
+}
+
+.accordion-header .coHeader {
+  color: white;
+  font-size: 16px;
+}
+
+.accordion-body .coSubhead {
+  font-size: 22px;
+  color: white;
+}
+
+#currentShows.accordion .accordion-header .btn-sm {
+  margin-left: 0px;
+}
+
+#currentShows .content .tix {
+  margin-top: 13px
+}
+
+#currentShows .poster {
+  width: 62px;
+}

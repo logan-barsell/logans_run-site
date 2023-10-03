@@ -1,0 +1,49 @@
+.offcanvas {
+    color: white;
+    width: 100%;
+}
+
+.offcanvas-header {
+    background-color: black;
+    color: darkred;
+    text-shadow: 2px 1px #3b0600;
+}
+
+.offcanvas-body {
+    background-color: #272727;
+}
+
+.productsContainer {
+    padding-bottom: 10px;
+}
+
+.orderSummary {
+    text-align: center;
+    padding: 15px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 7px;
+}
+
+.orderSummary h5 {
+    color: darkred;
+    text-shadow: 2px 1px #3b0600;
+}
+
+.orderDetails {
+    padding-bottom: 20px;
+}
+
+.orderDetails span {
+    color: darkred;
+}
+
+.orderDetails .totalCost {
+    font-size: 27px;
+    margin-top: 10px;
+}
+
+
+.offcanvas-header button.btn-close:focus:not(:focus-visible) {
+    box-shadow: none;
+  }
+

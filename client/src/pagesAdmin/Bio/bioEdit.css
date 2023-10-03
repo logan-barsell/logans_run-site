@@ -1,0 +1,66 @@
+#bioEdit {
+    height: fit-content;
+    padding: 0px 20px;
+    margin-top: 81px;
+}
+
+#bioEdit h3 {
+    color: darkred;
+    text-shadow: 2px 1px #3b0600;
+    margin-top: 22px;
+    font-size: 33px;
+    text-align: center;
+}
+
+#bioEdit form {
+    margin: auto;
+    padding-bottom: 100px;
+    max-width: 666px;
+}
+
+#bioEdit label {
+    color: white;
+    font-size: 33px;
+}
+
+#bioEdit span {
+    color: darkred;
+    font-size: 38px;
+}
+
+
+
+@media screen and (max-width: 400px) {
+    #bioEdit label {
+        font-size: 27px;
+    }
+    #bioEdit .form-control {
+        font-size: 21px;
+    }
+    #bioEdit span {
+        font-size: 30px;
+    }
+}
+
+
+#bioEdit .form-control {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    height: 215px;
+}
+
+@media screen and (max-width: 750px) {
+    #bioEdit .form-control {
+        height: 357px;
+    }
+}
+
+#bioEdit button {
+    margin: auto;
+    width: 50%;
+    min-width: 250px;
+}
+
+.form-floating>.form-control:focus, .form-floating>.form-control:not(:placeholder-shown) {
+    padding-top: 2.625rem;
+}

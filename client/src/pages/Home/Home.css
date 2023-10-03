@@ -1,0 +1,102 @@
+.parallax {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.background-pic img {
+  max-width: 100%;
+}
+
+#upcomingshows {
+  margin: 33px 33px 0px 33px;
+  padding-bottom: 33px;
+}
+
+#upcomingshows h5 {
+  text-align: center;
+  margin: 27px 0px;
+  color: darkred;
+  text-shadow: 1px 1px black;
+}
+
+.showad {
+  margin-bottom: 20px;
+  max-width: 366px;
+}
+
+.showinfo .card {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.showinfo li {
+  background: rgba(0, 0, 0, 0);
+}
+
+.showad img {
+  border: 3px solid black;
+  border-radius: 7px;
+}
+
+.showad .btn-dark {
+  border: 1px solid black;
+  margin: 3px 0px;
+  text-shadow: 1.5px 0.5px black;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-bottom: 3px solid black;
+}
+
+.showad .btn-dark svg {
+  margin-left: 5px;
+}
+
+.showad .btn-danger {
+  text-shadow: 1.5px 0.5px #3b0600;
+  margin-top: 3px;
+}
+#upcomingshows .card {
+  font-size: 20px;
+  min-width: 288px;
+}
+
+.showinfo {
+  padding: 0px;
+}
+
+.showinfo .card {
+  min-width: 288px;
+  height: inherit;
+  border: none;
+  padding-bottom: 33px;
+}
+
+.showinfo .card-title {
+  color: darkred;
+  text-shadow: 1.5px 1px black;
+}
+
+.showinfo .card-text {
+  color: white;
+}
+
+.showinfo button {
+  margin-top: 5px;
+}
+
+.showinfo button span {
+  float: right;
+  margin-right: 10px;
+}
+
+.showinfo .list-group-item {
+  color: darkred;
+  text-shadow: 1px 1px black;
+  position: relative;
+  z-index: 0;
+}
+
+.showinfo .list-group-item span {
+  color: white;
+  text-shadow: none;
+}

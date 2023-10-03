@@ -1,0 +1,122 @@
+.accordion {
+  max-width: 827px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.accordion h5 {
+  color: darkred;
+  text-align: center;
+  font-variant: small-caps;
+  font-size: 40px;
+}
+
+.accordion .accordion-collapse {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* .accordion .accordion-header {
+  background: black;
+  border-radius: 5px;
+} */
+
+.accordion .accordion-header .btn-sm {
+  margin-left: 5px;
+}
+
+.accordion .accordion-body {
+  color: white;
+  align-items: center;
+  padding: 20px 15px;
+}
+
+.accordion .accordion-button {
+  background-color: black;
+  color: darkred;
+}
+
+.accordion .accordion-button:not(.collapsed) {
+  background-color: black;
+  color: darkred;
+}
+
+.accordion-button::after {
+  display: none;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgb(139 0 0 / 35%);
+}
+
+.accordion .img-thumbnail {
+  max-width: 200px;
+}
+
+.accordion-img {
+  display: flex;
+  justify-content: center;
+  margin: 1px 0px;
+}
+
+.itemInfo {
+  text-align: center;
+  margin: 15px 0px;
+  height: fit-content;
+}
+
+.itemInfo .subhead {
+  color: darkred;
+  text-shadow: 1px 1px #3b0600;
+  font-size: 30px;
+}
+
+.subItemVal {
+  padding-left: 7px;
+  color: white;
+  display: inline-block;
+}
+
+.memberMediaIcon {
+  color: white;
+}
+
+.accordion .content {
+  color: darkred;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 14px;
+  padding: 27px 0px;
+  margin-top: 7px;
+}
+
+.accordion .content .subItemVal .btn {
+  margin: 13px 0px;
+}
+
+.addButton.btn {
+  margin: 27px auto;
+  width: 69%;
+  min-width: 250px;
+}
+
+.bi-plus-square-fill {
+  margin-right: 10px;
+}
+
+.deleteItem span {
+  color: darkred;
+  margin: 0px 5px;
+}
+
+.accordion .modify-options {
+  position: absolute;
+  right: 29px;
+  display: flex;
+}
+
+.accordion .modify-options a.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  padding: 9px 11px;
+}
