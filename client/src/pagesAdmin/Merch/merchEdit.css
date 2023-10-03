@@ -1,0 +1,25 @@
+#merchEdit {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#merchEdit h3 {
+    color: darkred;
+    text-shadow: 2px 1px #3b0600;
+}
+
+#merchEdit p {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 33px;
+}
+
+@media screen and (max-width: 350px) {
+    #merchEdit .bi-arrow-right-short {
+        display: none;
+    }
+}

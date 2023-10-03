@@ -1,0 +1,7 @@
+.modal-header .btn-close {
+  display: flex;
+}
+
+.modal-header button.btn-close:focus:not(:focus-visible) {
+  box-shadow: none;
+}

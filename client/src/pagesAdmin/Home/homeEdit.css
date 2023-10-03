@@ -1,0 +1,69 @@
+
+#editCarousel {
+    height: fit-content;
+    margin: 33px auto 100px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#editCarousel h3 {
+    color: darkred;
+    text-shadow: 2px 1px #3b0600;
+    margin-top: 33px;
+    font-size: 33px;
+    text-align: center;
+}
+
+#editCarousel hr {
+    width: 100%;
+    margin-top: 0px;
+    margin-bottom: 44px;
+}
+
+#editCarousel .currentImages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-gap: 55px;
+  margin-bottom: 77px;
+  padding: 0px 27px;
+}
+
+#editCarousel .img-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#editCarousel .currentImages .btn-dark {
+    background-color: black;
+    padding: 0px 9px;
+    border-radius: 20px;
+    align-self: end;
+    position: relative;
+    bottom: -19px;
+    right: -20px;
+    border: 3px solid rgba(255,255,255,0.2);
+}
+
+#editCarousel .currentImages img {
+    width: 100%;
+}
+
+#editCarousel form {
+    width: 100%;
+    max-width: 666px;
+}
+
+#editCarousel .selectedFile {
+    color: white;
+}
+
+#editCarousel .fileUpload {
+    max-width: 333px;
+    margin: auto;
+    background-color: rgba(0,0,0,0.6);
+    border: 2px solid black;
+}

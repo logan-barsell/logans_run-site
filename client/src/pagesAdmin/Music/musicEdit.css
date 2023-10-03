@@ -1,0 +1,60 @@
+#music-edit {
+    display: flex;
+    flex-direction: column;
+    margin: 33px auto;
+    justify-content: center;
+    align-items: center;
+}
+
+#music-edit h3 {
+    color: darkred;
+    text-shadow: 2px 1px #3b0600;
+    margin-top: 33px;
+    font-size: 33px;
+    text-align: center;
+}
+
+#music-edit hr {
+    max-width: 85%;
+}
+
+#currentPlayers {
+    max-width: 888px;
+    padding: 13px;
+}
+
+#currentPlayers .list-group-item {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 3px solid rgba(0,0,0,0.2);
+    margin-bottom: 1px;
+}
+
+#currentPlayers h5 {
+    color: darkred;
+    text-shadow: 2px 1px #3b0600;
+    font-variant: small-caps;
+    font-size: 38px;
+    text-align: center;
+}
+
+#currentPlayers a {
+    text-decoration: none;
+}
+
+#currentPlayers span {
+    color:darkred;
+}
+
+#currentPlayers .theme {
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    border-radius: 2px;
+    margin-left: 2px
+}
+
+#currentPlayers .buttons {
+    gap: 10px;
+    margin-bottom: 10px;
+}

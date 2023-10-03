@@ -1,0 +1,17 @@
+.secondary-nav {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: darkred;
+  text-shadow: 1px 1px #3b0600;
+  box-shadow: 0px -1px 2px black;
+  border-bottom: 0.5px solid white;
+  position: sticky;
+  z-index: 100;
+  top: 95.5px;
+  width: 100%;
+}
+
+@media only screen and (max-width: 991px) {
+  .secondary-nav {
+    top: 87px;
+  }
+}

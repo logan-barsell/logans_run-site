@@ -1,0 +1,47 @@
+.yesdevil {
+  color: darkred;
+  text-shadow: 2px 1px black;
+  font-size: 25px;
+}
+
+.navbar-light .navbar-brand.yesdevil {
+  font-size: 35px;
+  color: darkred;
+  text-shadow: 2px 1px #3b0600;
+}
+
+nav {
+  font-size: 21px;
+  background-color: black;
+  overflow: hidden;
+}
+
+.navbar-nav a.nav-link.nav-item:hover {
+  color: darkred;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: white;
+  width: fit-content;
+}
+
+.navbar-nav {
+  width: 100%;
+}
+
+.navbar-toggler {
+  background-color: white;
+}
+
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link.show,
+.navbar-light .navbar-nav .show > .nav-link {
+  color: darkred;
+}
+
+.cartQuantity {
+  background-color: indianred;
+  border: 1px solid darkred;
+  text-shadow: 1px 1px darkred;
+}
