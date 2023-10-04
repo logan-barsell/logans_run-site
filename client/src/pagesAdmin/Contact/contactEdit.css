@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+--main: #E3FF05;
+--secondary: lightcoral;
+}
+
 #contactEdit {
     height: fit-content;
     padding: 0px 18px;
@@ -5,8 +11,8 @@
 }
 
 #contactEdit h3 {
-    color: darkred;
-    text-shadow: 2px 1px #3b0600;
+    color: var(--main);
+    text-shadow: 2px 1px var(--secondary);
     margin: 22px 0px 33px 0px;
     font-size: 33px;
     text-align: center;
@@ -30,7 +36,7 @@
 
 
 #contactEdit label {
-    color: darkred;
+    color: var(--main);
     font-size: 27px;
 }
 

@@ -1,3 +1,8 @@
+/* COLORS */
+:root {
+--main: #E3FF05;
+--secondary: lightcoral;
+}
 
 #editCarousel {
     height: fit-content;
@@ -9,8 +14,8 @@
 }
 
 #editCarousel h3 {
-    color: darkred;
-    text-shadow: 2px 1px #3b0600;
+    color: var(--main);
+    text-shadow: 2px 1px var(--secondary);
     margin-top: 33px;
     font-size: 33px;
     text-align: center;

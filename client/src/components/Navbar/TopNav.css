@@ -1,13 +1,19 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: lightcoral;
+}
+
 .yesdevil {
-  color: darkred;
+  color: var(--main);
   text-shadow: 2px 1px black;
   font-size: 25px;
 }
 
 .navbar-light .navbar-brand.yesdevil {
   font-size: 35px;
-  color: darkred;
-  text-shadow: 2px 1px #3b0600;
+  color: var(--main);
+  text-shadow: 2px 1px var(--secondary);
 }
 
 nav {
@@ -17,7 +23,7 @@ nav {
 }
 
 .navbar-nav a.nav-link.nav-item:hover {
-  color: darkred;
+  color: var(--main);
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -37,11 +43,11 @@ nav {
 .navbar-light .navbar-nav .nav-link.active,
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .show > .nav-link {
-  color: darkred;
+  color: var(--main);
 }
 
 .cartQuantity {
-  background-color: indianred;
-  border: 1px solid darkred;
-  text-shadow: 1px 1px darkred;
+  background-color: var(--secondary);
+  border: 1px solid var(--main);
+  text-shadow: 1px 1px var(--main);
 }

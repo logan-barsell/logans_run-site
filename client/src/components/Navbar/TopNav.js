@@ -47,7 +47,7 @@ const TopNav = ({ routes }) => {
   return (
     <nav ref={ref} className="navbar navbar-expand-lg navbar-light sticky-top">
       <div className="container-fluid">
-        <a className="navbar-brand yesdevil hvr-grow" href=".">YES DEVIL</a>
+        <a className="navbar-brand yesdevil hvr-grow" href=".">Logan's Run</a>
         <button
           className="navbar-toggler"
           type="button"
@@ -58,7 +58,7 @@ const TopNav = ({ routes }) => {
         <div className="collapse navbar-collapse" id="menu">
           <div className="navbar-nav justify-content-around">
             <NavLink routes={routes} menuToggle={menuToggle} />
-            <a href="#!" className="nav-item nav-link">
+            {/* <a href="#!" className="nav-item nav-link">
               <button 
                 type="button" 
                 className="btn btn-danger cart-button" 
@@ -78,7 +78,7 @@ const TopNav = ({ routes }) => {
                   {cart.products.length}
                 </span>
               }
-            </a>
+            </a> */}
           </div>
         </div>
       </div>

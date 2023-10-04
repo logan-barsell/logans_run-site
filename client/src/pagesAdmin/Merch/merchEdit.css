@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+--main: #E3FF05;
+--secondary: lightcoral;
+}
+
 #merchEdit {
     height: 75vh;
     display: flex;
@@ -8,8 +14,8 @@
 }
 
 #merchEdit h3 {
-    color: darkred;
-    text-shadow: 2px 1px #3b0600;
+    color: var(--main);
+    text-shadow: 2px 1px var(--secondary);
 }
 
 #merchEdit p {

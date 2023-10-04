@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: lightcoral;
+}
+
 #merch {
   font-size: 18px;
 
@@ -10,8 +16,8 @@
 }
 
 #merch h5 {
-  color: darkred;
-  text-shadow: 1px 1px #3b0600;
+  color: var(--main);
+  text-shadow: 1px 1px var(--secondary);
 }
 
 #merch .col-sm {
@@ -34,7 +40,7 @@
 }
 
 #merch h5.card-title {
-  color: darkred;
+  color: var(--main);
   font-size: 27px;
   text-shadow: none;
 }
@@ -83,5 +89,5 @@
 
 .toast-header {
   background-color: black;
-  color: darkred;
+  color: var(--main);
 }

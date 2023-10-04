@@ -1,10 +1,16 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: rgb(240, 128, 128);
+}
+
 /* .final-form {
   max-width: 450px;
   margin: 27px auto;
 } */
 
 .final-form .form-group {
-  color: darkred;
+  color: var(--main);
   text-shadow: 1px 1px black;
   margin-bottom: 1rem;
 }
@@ -33,7 +39,7 @@
 }
 
 .final-form .error {
-  background-color: rgb(51, 5, 0, 0.5);
+  background-color: rgba(10, 51, 0, 0.5);
 }
 
 .final-form .input-group {
@@ -42,10 +48,11 @@
 
 .final-form .input-group-text#basic-addon1 {
   font-size: 25px;
-  color: darkred;
+  color: var(--main);
   background-color: rgba(0, 0, 0, 1);
   border: 2px solid #272727;
   border-radius: 3px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
 .final-form .cancel {

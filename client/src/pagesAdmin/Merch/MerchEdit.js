@@ -4,7 +4,7 @@ import React from 'react';
 const MerchEdit = () => {
   return (
     <div id="merchEdit" class="container">
-      <h3>Managed by Stripe:</h3>
+      <h3>Managed by Stripe</h3>
       <p>To manage products, inventory, view orders, and more - please visit the Stripe Dashboard.</p>
       <a href="https://dashboard.stripe.com/dashboard" target="_blank" rel="noreferrer">
         <button type="button" className="btn btn-danger">

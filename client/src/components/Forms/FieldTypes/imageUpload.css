@@ -3,6 +3,11 @@
   overflow: hidden;
   margin: 0px 20px;
   position: relative;
+  color: white;
+}
+
+.fileUpload.btn-danger:not(:hover){
+  background-color: rgba(227, 255, 5, 0.9);;
 }
 
 .bi-camera-fill {

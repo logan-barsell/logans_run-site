@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+--main: #E3FF05;
+--secondary: lightcoral;
+}
+
 #videoEdit {
     display: flex;
     flex-direction: column;
@@ -5,8 +11,8 @@
 }
 
 #videoEdit h3 {
-    color: darkred;
-    text-shadow: 2px 1px #3b0600;
+    color: var(--main);
+    text-shadow: 2px 1px var(--secondary);
     margin-top: 33px;
     font-size: 33px;
     text-align: center;
@@ -66,7 +72,7 @@
 
 .noVids {
     text-align: center;
-    color: darkred;
+    color: var(--main);
     margin: 15vh auto 27vh;
 }
 

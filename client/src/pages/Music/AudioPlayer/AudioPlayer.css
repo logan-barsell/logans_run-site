@@ -1,3 +1,10 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: rgb(240, 128, 128);
+}
+
+
 .rhap_container {
   border-radius: 0px 0px 5px 5px;
   box-shadow: none;
@@ -34,7 +41,7 @@
 }
 
 .rhap_download-progress {
-  background-color: rgba(245, 245, 245, 0.1);
+  background-color:  rgb(240, 128, 128, 0.1);;
 }
 
 .rhap_time {
@@ -42,7 +49,7 @@
 }
 
 .rhap_progress-filled {
-  background-color: rgba(139, 0, 0, 0.6);
+  background-color: rgba(240, 128, 128, 0.6);
 }
 
 .rhap_repeat-button {
@@ -67,7 +74,7 @@
   cursor: pointer;
   transition: 250ms;
   height: 45px;
-  color: rgba(245, 245, 245, 0.3);
+  color: rgb(240, 128, 128, 0.3);;
 }
 
 .song:hover,
@@ -79,7 +86,7 @@
 .song.active {
   background-color: rgba(0, 0, 0, 0.1);
   color: whitesmoke;
-  border: 1px solid rgba(245, 245, 245, 0.3);
+  border: 1px solid  rgb(240, 128, 128, 0.3);;
 }
 
 .song.even {
@@ -97,7 +104,7 @@
 }
 
 #audio-player .btn-outline-light {
-  border-color: rgba(245, 245, 245, 0.3);
+  border-color: rgb(240, 128, 128, 0.3);
   opacity: 0.7;
 }
 

@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: lightcoral;
+}
+
 #blog .img-container {
   margin-top: 33px;
 }
@@ -5,7 +11,7 @@
 #blog .main.nav {
   position: sticky;
   z-index: 1;
-  top: 95.5px;
+  top: 88px;
   overflow: hidden;
 }
 
@@ -40,11 +46,11 @@
 
 .selectCategory select.form-select, .selectCategory option {
   background-color: rgba(0,0,0,.6);
-  color: darkred;
+  color: var(--main);
 }
 
 .videos-tab .nav-link.select {
-  color: darkred;
+  color: var(--main);
 }
 
 /* h5.text-center {
@@ -64,13 +70,13 @@
 #blog .nav-link.active {
   border-color: transparent;
   background-color: transparent;
-  color: darkred;
+  color: var(--main);
   text-shadow: 2px 0.5px black;
 }
 #blog .nav-link:hover {
   border-color: transparent;
   background-color: transparent;
-  color: darkred;
+  color: var(--main);
   text-shadow: 2px 0.5px black;
 }
 
@@ -87,7 +93,7 @@
 
 #blog h5 .nav-link {
   color: white;
-  text-shadow: 1.5px 1px darkred;
+  text-shadow: 1.5px 1px var(--main);
   margin-top: 0px;
 }
 
@@ -126,8 +132,8 @@
 }
 
 .blog-post .title {
-  color: darkred;
-  text-shadow: 1px 0.5px #3b0600;
+  color: var(--main);
+  text-shadow: 1px 0.5px var(--secondary);
 }
 
 .blog-post hr {
@@ -167,6 +173,6 @@
 
 .noVids {
   text-align: center;
-  color: darkred;
+  color: var(--main);
   margin: 15vh auto 27vh;
 }
