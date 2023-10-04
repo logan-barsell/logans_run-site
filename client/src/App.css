@@ -1,9 +1,26 @@
+/* FONTS */
+@font-face {
+  font-family: stencil;
+  src: url(fonts/stencil.ttf);
+}
+@font-face {
+  font-family: sprayPaint;
+  src: url(fonts/sprayPaint.ttf);
+}
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: rgb(240, 128, 128);
+}
+
 html,
 body {
-  font-family: 'Sancreek';
+  font-family: sprayPaint;
   font-size: 22px;
   background-color: #272727;
+  letter-spacing: 6px;
 }
+
 
 /* FADE IN EFFECT */
 
@@ -44,11 +61,24 @@ h5 {
 }
 
 .btn-danger {
-  background-color: darkred;
+  background-color: var(--main);
+  color: black;
+  border-color: white;
 }
 
 .btn-danger:hover {
   background-color: black;
+  border-color: var(--main);
+}
+
+.btn-danger.disabled, .btn-danger:disabled {
+  background-color: #E3FF05;
+  color: black;
+}
+
+.btn-check:focus+.btn-danger, .btn-danger:focus {
+  background-color: #E3FF05;
+  color: black;
 }
 
 .nav-link {
@@ -72,7 +102,7 @@ p a:hover {
 }
 
 .form-control:focus {
-  border-color: rgba(139, 0, 0, 0.4);
+  border-color: var(--secondary);
   box-shadow: none;
   -webkit-box-shadow: none;
 }
@@ -88,8 +118,8 @@ hr {
 
 .modal-content {
   background-color: rgba(0, 0, 0, 0.4);
-  border: 2px solid darkred;
-  color: darkred;
+  border: 2px solid var(--main);
+  color: var(--main);
 }
 
 .modal-body {

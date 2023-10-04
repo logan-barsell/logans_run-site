@@ -53,7 +53,7 @@ const TopNav = ({ routes }) => {
   return (
     <nav ref={ref} className="navbar navbar-expand-lg navbar-light sticky-top">
       <div className="container-fluid">
-        <a className="navbar-brand yesdevil hvr-grow" href="/home">YES DEVIL</a>
+        <a className="navbar-brand yesdevil hvr-grow" href="/home">Logan's Run</a>
         <button
           className="navbar-toggler"
           type="button"

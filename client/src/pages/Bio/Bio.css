@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: lightcoral;
+}
+
 #aboutus {
   color: white;
 }
@@ -28,7 +34,7 @@
 }
 
 .bio a {
-  color: darkred;
+  color: var(--main);
 }
 
 #aboutus p span {
@@ -48,7 +54,7 @@
 
 .members h4 {
   text-align: center;
-  color: darkred;
+  color: var(--main);
   text-shadow: 2px 1px black;
 }
 .members p {

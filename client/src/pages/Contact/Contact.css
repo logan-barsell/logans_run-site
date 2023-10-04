@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: rgb(240, 128, 128);
+}
+
 #contact {
   padding: 17px;
 }
@@ -8,7 +14,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 0.3rem;
   padding: 4rem 2rem;
-  border: 4px solid rgba(255, 255, 255, 0.1);
+  border: 4px solid rgba(240, 128, 128, 0.3);
 }
 
 @media only screen and (max-width: 576px) {
@@ -18,12 +24,12 @@
 }
 
 #contact h5 {
-  color: darkred;
+  color: var(--main);
   text-shadow: 2px 1px black;
 }
 
 #contact a {
-  color: darkred;
+  color: var(--main);
   text-shadow: 2px 1px black;
 }
 
@@ -45,7 +51,7 @@
 }
 
 .socmed.contact img:hover {
-  background-color: darkred;
+  background-color: var(--main);
 }
 
 #contact .sendmsg {
@@ -54,7 +60,7 @@
 }
 
 #contact .form-group {
-  color: darkred;
+  color: var(--main);
   text-shadow: 1px 1px black;
   margin-bottom: 1rem;
 }

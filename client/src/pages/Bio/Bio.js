@@ -1,5 +1,5 @@
 import './Bio.css';
-import vango from '../../images/logos/vango.png';
+import vango from '../../images/logos/logansrunlogo.png';
 import followme from '../../images/aboutus/instafollow.png';
 
 import React, { useEffect, useReducer } from 'react';
@@ -86,7 +86,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
           </div>
 
           <div className="row justify-content-center bio">
-            <p><span>We are <span className="yesdevil">YES DEVIL</span></span> , &nbsp;{renderBio()}</p>
+            <p><span>This is <span className="yesdevil">Logan's Run</span></span> , &nbsp;{renderBio()}</p>
           </div>
 
         </div>

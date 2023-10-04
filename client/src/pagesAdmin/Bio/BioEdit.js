@@ -59,7 +59,7 @@ const BioEdit = ({ fetchBio, currentBio }) => {
               id="bioText"
             >
             </textarea>
-            <label htmlFor="bioText" >We are <span>YES DEVIL</span>,</label>
+            <label htmlFor="bioText" >This is <span>Logan's Run</span>,</label>
           </div>
           <div className="d-flex">
             <button 

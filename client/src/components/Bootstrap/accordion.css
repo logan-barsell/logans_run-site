@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+  --main: #E3FF05;
+  --secondary: lightcoral;
+}
+
 .accordion {
   max-width: 827px;
   margin: auto;
@@ -5,7 +11,7 @@
 }
 
 .accordion h5 {
-  color: darkred;
+  color: var(--main);
   text-align: center;
   font-variant: small-caps;
   font-size: 40px;
@@ -32,12 +38,12 @@
 
 .accordion .accordion-button {
   background-color: black;
-  color: darkred;
+  color: var(--main);
 }
 
 .accordion .accordion-button:not(.collapsed) {
   background-color: black;
-  color: darkred;
+  color: var(--main);
 }
 
 .accordion-button::after {
@@ -45,7 +51,7 @@
 }
 
 .accordion-button:focus {
-  box-shadow: 0 0 0 0.25rem rgb(139 0 0 / 35%);
+  box-shadow: 0 0 0 0.25rem var(--secondary);
 }
 
 .accordion .img-thumbnail {
@@ -65,8 +71,8 @@
 }
 
 .itemInfo .subhead {
-  color: darkred;
-  text-shadow: 1px 1px #3b0600;
+  color: var(--main);
+  text-shadow: 1px 1px var(--secondary);
   font-size: 30px;
 }
 
@@ -81,7 +87,7 @@
 }
 
 .accordion .content {
-  color: darkred;
+  color: var(--main);
   background: rgba(0, 0, 0, 0.4);
   border-radius: 14px;
   padding: 27px 0px;
@@ -103,7 +109,7 @@
 }
 
 .deleteItem span {
-  color: darkred;
+  color: var(--main);
   margin: 0px 5px;
 }
 

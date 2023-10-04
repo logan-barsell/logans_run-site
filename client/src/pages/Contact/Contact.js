@@ -20,7 +20,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo}) => {
       <div className="row">
         <div className="col-lg">
           <div className="jumbotron p-sm-5">
-            <h5>Contact Information:</h5>
+            <h5>Contact Information</h5>
             <hr className="my-4" />
             <p>
               <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" fill="white" className="bi bi-telephone-fill" viewBox="0 0 16 16">

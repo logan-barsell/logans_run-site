@@ -37,7 +37,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
     return (
       <div key={player._id} className="list-group-item list-group-item-action" aria-current="true">
         <div className="d-flex w-100 justify-content-end">
-          <small><span>Released: </span>{dateString}</small>
+          <small><span>Released </span>{dateString}</small>
         </div>
         <div className="d-flex w-100 justify-content-center">
           <h5 className="mb-2">{player.title}</h5>
@@ -46,7 +46,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           <a href={player.spotifyLink} target="_blank" rel="no-referrer" className="btn btn-sm btn-light">Link to Spotify</a>
         </p>
         <small className="d-flex justify-content-center align-items-center mb-2">
-          <span>Theme: </span> &nbsp; 
+          <span>Theme </span> &nbsp; 
           <div className="theme" style={{ 'backgroundColor': `${color}`}}>
           </div>
         </small>

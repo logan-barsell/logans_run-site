@@ -83,7 +83,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
         <div className="container-fluid text-center text-md-left">
           <div className="row">
             <div className="col-md-7">
-              <h5 className="text-uppercase">Disclaimer:</h5>
+              <h5 className="text-uppercase">Disclaimer</h5>
               <p>Viewer Discrection Advised.</p>
             </div>
             <div className="col-md-5">
@@ -95,7 +95,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
           </div>
         </div>
         {/* Copyright */}
-        <div className="footer-copyright py-3 text-center bg-light">© {new Date().getFullYear()} Copyright: <a href=".">yesdevil.com</a></div>
+        <div className="footer-copyright py-3 text-center bg-light">© {new Date().getFullYear()} Copyright <a href=".">logansrun.com</a></div>
       </footer>
     </>
   );

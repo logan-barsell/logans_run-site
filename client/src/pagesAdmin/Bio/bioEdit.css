@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+--main: rgb(227, 255, 5);
+--secondary: lightcoral;
+}
+
 #bioEdit {
     height: fit-content;
     padding: 0px 20px;
@@ -5,8 +11,8 @@
 }
 
 #bioEdit h3 {
-    color: darkred;
-    text-shadow: 2px 1px #3b0600;
+    color: var(--main);
+    text-shadow: 2px 1px var(--secondary);
     margin-top: 22px;
     font-size: 33px;
     text-align: center;
@@ -24,7 +30,7 @@
 }
 
 #bioEdit span {
-    color: darkred;
+    color: var(--main);
     font-size: 38px;
 }
 
