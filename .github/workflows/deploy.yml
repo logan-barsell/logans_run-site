@@ -1,0 +1,29 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+    
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy NodeJS app
+      uses: appleboy/ssh-action@v0.1.2
+      with:
+        host: ${{secrets.SSH_HOST}}
+        key: ${{secrets.SSH_KEY}}
+        username: ${{secrets.SSH_USERNAME}}
+        
+        script: |
+          cd /var/www/logans-run.com/html/logans_run-site
+          git pull
+          npm i
+          cd client
+          npm i
+          npm run build
+          sudo systemctl restart nginx
+          pm2 reload logans_run-site
