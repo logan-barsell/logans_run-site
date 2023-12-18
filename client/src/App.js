@@ -27,7 +27,7 @@ function App() {
     { name: 'Music', value: '/music' },
     { name: 'Store', value: '/merch' },
     { name: 'Media', value: '/media' },
-    { name: 'About Us', value: '/aboutus' },
+    { name: 'Bio', value: '/bio' },
     { name: 'Contact', value: '/contact' }
   ];
 
@@ -55,7 +55,7 @@ function App() {
               <Route path="/music" exact element={<MusicPage />} />
               <Route path="/merch" exact element={<MerchPage />} />
               <Route path="/media" exact element={<MediaPage />} />
-              <Route path="/aboutus" exact element={<BioPage />} />
+              <Route path="/bio" exact element={<BioPage />} />
               <Route path="/contact" exact element={<ContactPage />} />
             </Routes>
             <BottomNav routes={routes} />

@@ -30,7 +30,7 @@ const MerchPage = () => {
         <div id="thankyouToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
           <div className="toast-header">
             <img src={logo} className="rounded me-2" alt="devil logo"/>
-            <strong className="me-auto">Yes Devil</strong>
+            <strong className="me-auto">Logan's Run</strong>
             <button type="button" className="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
           </div>
           <div className="toast-body">

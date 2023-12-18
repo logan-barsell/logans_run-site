@@ -42,7 +42,7 @@ const BioEdit = ({ fetchBio, currentBio }) => {
   };
 
   const renderBio = () => {
-    return currentBio && currentBio[0].text;
+    return currentBio && currentBio[0]?.text;
   }
 
   return (

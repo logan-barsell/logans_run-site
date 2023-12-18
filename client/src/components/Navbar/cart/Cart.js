@@ -74,7 +74,7 @@ const Cart = ({ fetchShipping, shipping }) => {
                 <h1 
                   style={{
                     "textAlign": 'center',
-                    'color': 'darkred',
+                    'color': '#E3FF05',
                     'marginBottom': '25px'
                 }}>
                     Your Cart is Empty
@@ -86,9 +86,9 @@ const Cart = ({ fetchShipping, shipping }) => {
           <div className='orderSummary pb-4'>
             <h5>Order Summary</h5>
             <div className="orderDetails">
-              <div><span>SubTotal:</span>&nbsp; ${subTotal}</div>
-              <div><span>Shipping:</span>&nbsp; {shippingAmount}</div>
-              <div className="totalCost"><span>Total:</span>&nbsp; ${totalCost}</div>
+              <div><span>SubTotal-</span>&nbsp; ${String(subTotal).replace("0", "O")}</div>
+              <div><span>Shipping-</span>&nbsp; {String(shippingAmount).replace("0", "O")}</div>
+              <div className="totalCost"><span>Total-</span>&nbsp; ${String(totalCost).replace("0", "O")}</div>
             </div>
             <div className="">
               {cart.products.length ?

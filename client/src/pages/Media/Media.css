@@ -88,7 +88,6 @@
   width: 100%;
   border: 2px solid white;
   border-radius: 5px;
-  min-width: 300px;
 }
 
 #blog h5 .nav-link {
@@ -176,3 +175,57 @@
   color: var(--main);
   margin: 15vh auto 27vh;
 }
+@media screen and (max-width: 992px) {
+  .selectCategory select {
+    font-size: 2vw;
+  }
+  .title {
+    font-size: 2.5vw;
+  }
+  .date {
+    font-size: 2vw;
+  }
+}
+
+@media screen and (max-width: 794px) {
+  .selectCategory select {
+    font-size: 3vw;
+  }
+  .title {
+    font-size: 3vw;
+  }
+  .date {
+    font-size: 2.5vw;
+  }
+}
+
+@media screen and (max-width: 572px) {
+  #pictures {
+    grid-template-columns: repeat(auto-fit, minmax(181px, 1fr));
+    grid-gap: 15px;
+    margin: 22px auto;
+  }
+  .selectCategory select {
+    font-size: 4vw;
+  }
+  .title {
+    font-size: 3.5vw;
+  }
+  .date {
+    font-size: 3vw;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .selectCategory select {
+    font-size: 6vw;
+  }
+  .title {
+    font-size: 4vw;
+  }
+  .date {
+    font-size: 3.5vw;
+  }
+}
+
+

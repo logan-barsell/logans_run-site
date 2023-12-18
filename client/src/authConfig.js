@@ -1,9 +1,9 @@
-const redirectUri = process.env.NODE_ENV === 'production' ? 'https://yesdevil.com' : 'http://localhost:3000';
+const redirectUri = process.env.NODE_ENV === 'production' ? 'https://logans-run.com' : 'http://localhost:3000';
 
 export const msalConfig = {
   auth: {
-    clientId: 'ee2c531a-b402-4bd5-ab01-df3ff3900ab0',
-    authority: 'https://login.microsoftonline.com/5184daaf-16a2-479b-8174-79d2e7257401', // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})
+    clientId: '6553cec0-d1fb-4265-9630-a744cddd648c', // APP ID // app registrations
+    authority: 'https://login.microsoftonline.com/372e0b0d-cdee-4804-b13a-2a954bcf6d2f', // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})
     redirectUri: redirectUri,
   },
   cache: {

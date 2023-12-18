@@ -56,6 +56,12 @@ h5 {
   margin: 16px;
 }
 
+@media (max-width: 350px) {
+  h5 {
+    font-size: 7vw;
+  }
+}
+
 .nav {
   z-index: 100;
 }
@@ -84,6 +90,25 @@ h5 {
 .nav-link {
   color: white;
 }
+
+@media (max-width: 2000px) {
+  .cart-button {
+    font-size: 1.5vw;
+  }
+}
+
+@media (max-width: 991px) {
+  .cart-button {
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 500px) {
+  .cart-button {
+    font-size: 7vw;
+  }
+}
+
 
 a {
   text-decoration: none;
@@ -169,4 +194,113 @@ hr {
 .addButton.btn {
   margin: 27px auto;
   max-width: 420px;
+}
+
+#no_content {
+  margin: 20% 20px;
+  color: var(--main);
+  text-align: center;
+}
+
+.at {
+  font-family: 'auto';
+}
+
+@media (max-width: 991px) {
+  p, a {
+    font-size: 2vw;
+  }
+}
+
+@media (max-width: 800px) {
+  p, a {
+    font-size: 2.5vw;
+  }
+  #no_content {
+    font-size: 5vw;
+    margin: 20vh 20px
+  }
+}
+
+@media (max-width: 800px) {
+  p, a {
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 777px) {
+  p, a {
+    font-size: 2.5vw;
+  }
+  h5 {
+    font-size: 3.5vw;
+  }
+  label {
+    font-size: 3vw;
+  }
+  button.btn, .btn {
+    font-size: 3.5vw;
+    letter-spacing: 2.5px;
+  }
+}
+
+@media (max-width: 750px) {
+  p, a {
+    font-size: 2.5vw;
+  }
+}
+
+@media (max-width: 650px) {
+  p, a {
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 500px) {
+  svg {
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 550px) {
+  /* img {
+    width: 10vw;
+  } */
+  h5 {
+    font-size: 4.5vw;
+  }
+  label {
+    font-size: 4vw;
+  }
+  button.btn, .btn {
+    letter-spacing: 3px;
+    font-size: 4.5vw;
+  }
+  input.form-control {
+    font-size: 4vw;
+  }
+  svg {
+    width: 6vw;
+  }
+}
+
+@media (max-width: 450px) {
+  p, a {
+    font-size: 3.5vw;
+  }
+}
+
+@media (max-width: 400px) {
+  button.btn, .btn {
+    padding: 4px 8px;
+  }
+  button.navbar-toggler {
+    font-size: 7vw;
+  }
+}
+
+@media (max-width: 291px) {
+  p, a {
+    letter-spacing: 1.5px;
+  }
 }

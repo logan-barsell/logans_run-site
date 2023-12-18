@@ -4,7 +4,7 @@
   --secondary: lightcoral;
 }
 
-.yesdevil {
+.navbar-light .navbar-brand.yesdevil {
   color: var(--main);
   text-shadow: 2px 1px black;
   font-size: 25px;
@@ -16,10 +16,50 @@
   text-shadow: 2px 1px var(--secondary);
 }
 
+@media (max-width: 2000px) {
+  .navbar-light .navbar-brand.yesdevil {
+    font-size: 2.5vw;
+  }
+}
+
+@media (max-width: 991px) {
+  .navbar-light .navbar-brand.yesdevil {
+    font-size: 4vw;
+  }
+}
+
+@media (max-width: 500px) {
+  .navbar-light .navbar-brand.yesdevil {
+    font-size: 8vw;
+  }
+}
+
 nav {
   font-size: 21px;
   background-color: black;
   overflow: hidden;
+  height: 100%;
+  min-height: 88px;
+}
+
+
+
+@media (max-width: 2000px) {
+  nav {
+    font-size: 1.5vw;
+  }
+}
+
+@media (max-width: 991px) {
+  nav {
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 500px) {
+  nav {
+    font-size: 7vw;
+  }
 }
 
 .navbar-nav a.nav-link.nav-item:hover {
@@ -29,6 +69,10 @@ nav {
 .navbar-light .navbar-nav .nav-link {
   color: white;
   width: fit-content;
+}
+
+.navbar-toggler {
+  padding: 2px;
 }
 
 .navbar-nav {
@@ -49,5 +93,5 @@ nav {
 .cartQuantity {
   background-color: var(--secondary);
   border: 1px solid var(--main);
-  text-shadow: 1px 1px var(--main);
+  /* text-shadow: 1px 1px var(--main); */
 }

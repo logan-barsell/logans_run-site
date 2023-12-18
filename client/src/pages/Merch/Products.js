@@ -34,7 +34,7 @@ console.log(products)
                     data-bs-toggle="offcanvas" 
                     data-bs-target="#shoppingCart" 
                     aria-controls="shoppingCart"
-                  >Add to Cart</button>
+                  >Add to Car t</button>
                 {/* } */}
                 </div>
               </div>
@@ -42,7 +42,9 @@ console.log(products)
             </div>
           </div>
         );
-      }) : () => null;
+      }) : () => (
+        <h3 id="no_content">No merch yet... check back soon!</h3>
+      );
 
   return (
     <>
