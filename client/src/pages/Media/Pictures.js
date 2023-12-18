@@ -24,13 +24,18 @@ const Pictures = ({ fetchMediaImages, images }) => {
 
   return (
     <>
-      <div id="pictures" className="fadeIn">
-        {renderMediaImages}
-      </div>
-      {limit < images.length &&
-        <div className="d-grid see-more">
-          <button onClick={seeMoreImages} className="btn btn-danger">Load More Images</button>
+      {images.length > 0 ?
+      <>
+        <div id="pictures" className="fadeIn">
+          {renderMediaImages}
         </div>
+        {limit < images.length &&
+          <div className="d-grid see-more">
+            <button onClick={seeMoreImages} className="btn btn-danger">Load More Images</button>
+          </div>
+        }
+      </> :
+      <h3 id="no_content">No pictures yet... check back soon!</h3>
       }
     </>
   );

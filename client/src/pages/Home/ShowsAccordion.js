@@ -9,9 +9,9 @@ class ShowsAccordion extends Component {
       if(value) {
         return (
           <div key={index}>
-            {prefix}
+            {prefix && String(prefix).replace("0", "O")}
             <span className="subItemVal">
-              {value}
+              {value && String(value).replace(/\//g, " ").replace(/([$:])/g, "")}
             </span>
           </div>
         );
@@ -33,7 +33,7 @@ class ShowsAccordion extends Component {
             <div className="col-auto"><img className="poster" src={poster} alt="show poster" /></div>
               <div className="row w-100 gx-0 justify-content-between ms-2">
                 <div className="col-12 col-sm-6">
-                  <div className="coHeader">{headerDate}</div>
+                  <div className="coHeader">{headerDate.replace("0", "O")}</div>
                   <div className="header">{venue}</div>
                   <div className='coHeader'>{location}</div>
                 </div>

@@ -1,3 +1,9 @@
+/* COLORS */
+:root {
+--main: #E3FF05;
+--secondary: lightcoral;
+}
+
 .cartItem {
     padding: 40px 0px;
 }
@@ -19,10 +25,10 @@
 }
 
 .productName {
-    color: darkred;
+    color: var(--main);
     font-size: 25px;
     text-align: center;
-    text-shadow: 2px 1px #3b0600;
+    text-shadow: 2px 1px var(--secondary);
 }
 
 .productSize {
@@ -46,7 +52,7 @@
 }
 
 .productPrice {
-    color: darkred;
-    text-shadow: 2px 1px #3b0600;
+    color: var(--main);
+    text-shadow: 2px 1px var(--secondary);
     font-size: 35px;
 }

@@ -31,9 +31,9 @@ const Video = ({ video }) => {
     };
 
     const date = new Date(video.date);
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
+    const month = months[date.getMonth()].replace("0", "O");
+    const day = String(date.getDate()).replace("0", "O");
+    const year = String(date.getFullYear()).replace("0", "O");
     const dateFormatted = `${month} ${day}${daySuffix(day)}, ${year}`
 
     return (

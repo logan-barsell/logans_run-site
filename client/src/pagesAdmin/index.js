@@ -24,7 +24,7 @@ const EditPages = () => {
     { name: 'Music', value: '/music' },
     { name: 'Store', value: '/merch' },
     { name: 'Media', value: '/media' },
-    { name: 'About Us', value: '/aboutus' },
+    { name: 'Bio', value: '/aboutus' },
     { name: 'Contact', value: '/contact' }
   ];
 

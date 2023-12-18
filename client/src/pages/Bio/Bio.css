@@ -25,21 +25,27 @@
   margin: 0px;
 }
 
+.bio .yesdevil {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
 .bio p {
   text-indent: 13%;
   margin: 50px 20px;
   text-align: center;
   text-shadow: 2px 1.5px black;
   max-width: 800px;
+  letter-spacing: 3px;
 }
 
 .bio a {
   color: var(--main);
 }
 
-#aboutus p span {
+/* #aboutus p span {
   font-size: 27px;
-}
+} */
 
 .members .row {
   padding-top: 27px;
@@ -101,4 +107,10 @@ span.a2a_svg {
 
 .instafollow {
   width: 144px;
+}
+
+@media (max-width: 900px) {
+  .members h4 {
+    font-size: 2vw;
+  }
 }

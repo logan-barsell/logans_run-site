@@ -23,14 +23,31 @@
   }
 }
 
+@media (min-width: 576px) {
+  #contact .p-sm-5 {
+      padding: 88px 44px;
+  }
+}
+
 #contact h5 {
   color: var(--main);
   text-shadow: 2px 1px black;
 }
 
+@media (min-width: 576px) {
+  #contact .p-sm-5 {
+      padding: 88px 44px;
+  }
+}
+
 #contact a {
   color: var(--main);
   text-shadow: 2px 1px black;
+}
+
+#contact p {
+  letter-spacing: 3px;
+  font-size: 1.4vw;
 }
 
 #contact a:hover {
@@ -77,4 +94,94 @@
 #contact .form-control:focus {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
+}
+
+#contact svg {
+  margin-right: 20px;
+}
+
+@media (max-width: 991px) {
+  #contact p {
+    font-size: 2vw;
+  }
+}
+
+@media (max-width: 800px) {
+  #contact p {
+    font-size: 2.5vw;
+  }
+}
+
+@media (max-width: 800px) {
+  #contact p {
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 777px) {
+  #contact p {
+    font-size: 2.5vw;
+  }
+  #contact h5 {
+    font-size: 3.5vw;
+  }
+  #contact label {
+    font-size: 3vw;
+  }
+  button.btn {
+    font-size: 3.5vw;
+    letter-spacing: 2.5px;
+  }
+}
+
+@media (max-width: 750px) {
+  #contact p {
+    font-size: 2.5vw;
+  }
+}
+
+@media (max-width: 650px) {
+  #contact p {
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 500px) {
+  #contact svg {
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 550px) {
+  #contact img {
+    width: 10vw;
+  }
+  #contact h5 {
+    font-size: 4.5vw;
+  }
+  #contact label {
+    font-size: 4vw;
+  }
+  button.btn {
+    letter-spacing: 3px;
+    font-size: 4.5vw;
+  }
+}
+
+@media (max-width: 450px) {
+  #contact p {
+    font-size: 3.5vw;
+  }
+}
+
+@media (max-width: 400px) {
+  #contact svg {
+    width: 8%;
+  }
+}
+
+@media (max-width: 291px) {
+  #contact p {
+    letter-spacing: 1.5px;
+  }
 }

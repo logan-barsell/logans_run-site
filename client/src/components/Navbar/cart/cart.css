@@ -53,3 +53,23 @@
     box-shadow: none;
   }
 
+
+@media (max-width: 750px) {
+    .productsContainer h1 {
+        font-size: 5vw;
+    }
+    .orderDetails span, .orderDetails *, .orderDetails .totalCost {
+        font-size: 3.5vw;
+    }
+}
+
+
+@media (max-width: 500px) {
+    .productsContainer h1 {
+        font-size: 7vw;
+    }
+}
+
+
+
+

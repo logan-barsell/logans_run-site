@@ -27,8 +27,7 @@
     margin-bottom: 5px;
   }
   .newsletter input.form-control {
-    margin-left: 0.5rem;
-    width: 286px;
+    max-width: 286px;
   }
 }
 
@@ -51,16 +50,6 @@
   border-radius: 11px;
   width: 40px;
   margin: 11px 7px;
-}
-
-@media only screen and (max-width: 587px) {
-  .iconsNav {
-    margin-top: 13px;
-  }
-
-  #bottomNav {
-    padding-top: 21px;
-  }
 }
 
 .mailz {
@@ -100,6 +89,7 @@ footer h5 {
   padding: 0px;
   width: fit-content;
   margin: auto;
+  margin-bottom: 10px;
 }
 
 #footer-links li {
@@ -118,8 +108,12 @@ footer h5 {
 }
 
 .footer-copyright a {
-  color: var(--main);
-  text-shadow: 0px 0px 4px black;
+  color: black;
+  text-shadow: 1px 1px 0px black;
+}
+
+.footer-copyright p {
+  margin-bottom: 5px;
 }
 
 a.nav-item.active {
@@ -130,4 +124,33 @@ a.nav-item.active {
 
 #subscribe {
   margin: 0px 13px;
+}
+
+@media only screen and (max-width: 485px) {
+  .iconsNav {
+    margin-top: 13px;
+  }
+  #bottomNav {
+    padding-top: 21px;
+  }
+  .iconsNav img {
+    width: 9.5vw;
+  }
+
+}
+
+@media only screen and (max-width: 400px) {
+  #newsDetails {
+    font-size: 4vw;
+  }
+  ul#newsDetails {
+    padding-left: 20px;
+  }
+  
+}
+
+@media only screen and (max-width: 300px) {
+  ul#newsDetails {
+    padding-left: 10px !important;
+  } 
 }

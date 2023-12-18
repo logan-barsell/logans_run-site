@@ -24,7 +24,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
           <div className="row justify-content-center">
             <div className="col-auto">
               <button id="subscribe" type="button" className="btn btn-sm btn-danger mx-sm-3" data-bs-toggle="modal" data-bs-target="#newsletterModal">
-                Subscribe to our Newsletter
+                Join the run
               </button>
             </div>
           </div>
@@ -36,7 +36,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLongTitle">Yes Devil News</h5>
+                <h5 className="modal-title" id="exampleModalLongTitle">Join the run</h5>
 
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="whitesmoke" className="bi bi-x-lg" viewBox="0 0 16 16">
@@ -45,10 +45,10 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                   </svg>
                 </button>
               </div>
-              <form className="form-inline newsletter justify-content-center" action="https://formspree.io/contact@yesdevil.com" method="POST">
+              <form className="form-inline newsletter justify-content-center" action="https://formspree.io/contact@logansrun.com" method="POST">
                 <div className="modal-body">
-                  <div className="row mx-3 me-sm-5 pe-sm-5">
-                    <input className="form-control" name="email" type="email" placeholder="Enter your email here" required="" />
+                  <div className="mx-xs-1 mx-sm-3 me-sm-5 pe-sm-5">
+                    <input className="form-control" name="email" type="email" placeholder="Enter  your  email here" required="" />
                   </div>
 
                   <ul id="newsDetails">
@@ -60,7 +60,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
-                  <button id="newsSub" className="btn btn-outline-light my-2 my-sm-0" value="send" type="submit">Subscribe</button>
+                  <button id="newsSub" className="btn btn-outline-light my-2 my-sm-0" value="send" type="submit">Become a runner</button>
                 </div>
               </form>
             </div>
@@ -83,8 +83,8 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
         <div className="container-fluid text-center text-md-left">
           <div className="row">
             <div className="col-md-7">
-              <h5 className="text-uppercase">Disclaimer</h5>
-              <p>Viewer Discrection Advised.</p>
+              <h5 className="text-uppercase">HELLO.</h5>
+              <p>Welcome to the run.</p>
             </div>
             <div className="col-md-5">
               <h5 className="text-uppercase">Links</h5>
@@ -95,7 +95,11 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
           </div>
         </div>
         {/* Copyright */}
-        <div className="footer-copyright py-3 text-center bg-light">© {new Date().getFullYear()} Copyright <a href=".">logansrun.com</a></div>
+        <div className="footer-copyright pb-1 pt-2 text-center bg-light">
+          <p>
+            © {String(new Date().getFullYear()).replace("0", "O")}  Copyright <a style={{ display: "inline-block" }} href=".">logans-run.com</a>
+          </p>
+        </div>
       </footer>
     </>
   );

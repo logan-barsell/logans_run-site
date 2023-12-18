@@ -35,18 +35,20 @@ const Videos = ({ fetchVideos, videos }) => {
       </div>  
       <hr />
       <div className="videos-container">
-        {filteredVideos
+        {filteredVideos.length ? filteredVideos
           .slice(0, limit)
           .map(video => (
             <Video key={video._id} video={video} />
-          ))}
+          ))
+        :
+            <h3 id="no_content">No videos yet... check back soon!</h3>
+        }
       </div>
       {limit < filteredVideos.length &&
         <div className="d-grid see-more">
           <button onClick={seeMoreVids} className="btn btn-danger">Load More Videos</button>
         </div>
       }
-      {filteredVideos.length === 0 && <h4 className="noVids">No Videos</h4>}
     </div>
   );
 };

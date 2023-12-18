@@ -30,7 +30,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   }, [fetchMembers, fetchBio]);
 
   const renderBio = () => {
-    return currentBio && currentBio[0].text;
+    return currentBio && currentBio[0]?.text;
   }
 
   const renderMembers = members.map((member, index) => {
@@ -53,13 +53,13 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
                 {role}
               </p>
             </div>
-            <div className="row justify-content-center">
+            {/* <div className="row justify-content-center">
               <div className="col-auto">
                 <a href={instaTag} target="_blank" rel="noreferrer">
                   <img className="instafollow" src={followme} alt="Follow Me"/>
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
