@@ -1,5 +1,5 @@
 import './Merch.css';
-import logo from '../../images/logos/vango.png';
+import logo from '../../images/logos/logansrunlogo.png';
 import React, { useEffect } from 'react';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import Products from './Products';

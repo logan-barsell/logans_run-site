@@ -23,7 +23,7 @@ module.exports = app => {
     } catch (err) {
       res.status(500).send(err);
     }
-  })
+  });
 
   app.post('/api/addHomeImage', async (req, res) => {
     const image = new HomeImage(req.body);
