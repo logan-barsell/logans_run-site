@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const keys = require('./config/keys');
 
-require('dotenv').config();
 
 console.log("KEYS: ", keys);
 console.log(process.env.NODE_ENV)
