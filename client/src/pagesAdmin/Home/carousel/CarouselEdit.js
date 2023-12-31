@@ -19,7 +19,7 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
     }, [fetchHomeImages]);
 
     const onSubmit = data => {
-        const file = data.pic[0];
+        const file = data?.pic[0];
         const fileName = new Date().getTime() + file.name;
         const storageRef = ref(storage, fileName);
         setUploading(true);

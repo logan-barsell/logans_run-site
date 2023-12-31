@@ -12,7 +12,7 @@ const ImageUpload = ({ name, initialValue }) => {
       <Field name={name} validate={isRequired && required}>
         {({ input: { value, onChange, ...input } }) => (
           <>
-            <span className="selectedFile">{value ? value[0].name : 'No File Selected'}</span>
+            <span className="selectedFile">{value ? value[0]?.name : 'No File Selected'}</span>
             <div className="fileUpload btn btn-danger">
               <span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-camera-fill" viewBox="0 0 16 16">
@@ -25,7 +25,7 @@ const ImageUpload = ({ name, initialValue }) => {
                 {...input}
                 type="file"
                 accept=".png, .jpg, .jpeg"
-                onChange={({ target }) => onChange(target.files)}
+                onChange={({ target }) => onChange(target?.files)}
                 required={isRequired}
               />
             </div>
