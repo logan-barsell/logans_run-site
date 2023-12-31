@@ -6,7 +6,9 @@ const keys = require('./config/keys');
 
 require('dotenv').config();
 
-
+console.log(keys);
+console.log(process.env.APP_ENV)
+console.log(process.env.MONGO_URI);
 
 mongoose.connect(keys.mongoURI);
 
