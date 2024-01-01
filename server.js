@@ -4,12 +4,6 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const keys = require('./config/keys');
-
-
-console.log("KEYS: ", keys);
-console.log(process.env.NODE_ENV)
-console.log(process.env.MONGO_URI);
-
 mongoose.connect(keys.mongoURI);
 
 const db = mongoose.connection;
