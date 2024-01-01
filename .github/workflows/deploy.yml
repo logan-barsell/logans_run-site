@@ -26,4 +26,4 @@ jobs:
           npm i
           npm run build
           sudo systemctl restart nginx
-          pm2 reload logans_run-site
+          pm2 reload logans-run

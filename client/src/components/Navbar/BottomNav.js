@@ -45,7 +45,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                   </svg>
                 </button>
               </div>
-              <form className="form-inline newsletter justify-content-center" action="https://formspree.io/contact@logansrun.com" method="POST">
+              <form className="form-inline newsletter justify-content-center" action="https://formspree.io/f/xgegekkd" method="POST">
                 <div className="modal-body">
                   <div className="mx-xs-1 mx-sm-3 me-sm-5 pe-sm-5">
                     <input className="form-control" name="email" type="email" placeholder="Enter  your  email here" required="" />
