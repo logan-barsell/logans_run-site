@@ -1,6 +1,6 @@
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: #f08080;
 }
 
@@ -18,6 +18,8 @@
 
 #newsDetails {
   font-size: 17px;
+  font-family: auto;
+  letter-spacing: normal;
   margin-top: 27px;
   color: white;
 }
@@ -77,7 +79,7 @@ a {
 
 footer {
   color: white;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 footer h5 {
@@ -121,7 +123,6 @@ a.nav-item.active {
   text-shadow: 1px 1px black;
 }
 
-
 #subscribe {
   margin: 0px 13px;
 }
@@ -136,7 +137,6 @@ a.nav-item.active {
   .iconsNav img {
     width: 9.5vw;
   }
-
 }
 
 @media only screen and (max-width: 400px) {
@@ -146,11 +146,10 @@ a.nav-item.active {
   ul#newsDetails {
     padding-left: 20px;
   }
-  
 }
 
 @media only screen and (max-width: 300px) {
   ul#newsDetails {
     padding-left: 10px !important;
-  } 
+  }
 }
