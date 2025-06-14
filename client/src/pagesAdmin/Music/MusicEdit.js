@@ -97,7 +97,11 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           id='currentPlayers'
           className='list-group'
         >
-          {renderPlayers}
+          {players.length > 0 ? (
+            renderPlayers
+          ) : (
+            <h3 className='no-content'>No Music</h3>
+          )}
         </div>
       </div>
     </>
