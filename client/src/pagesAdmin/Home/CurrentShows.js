@@ -7,14 +7,12 @@ import AddShow from './AddShow';
 import editShowFields from './editShowFields';
 
 const CurrentShows = ({ fetchShows, shows }) => {
-
   useEffect(() => {
     fetchShows();
   }, [fetchShows]);
 
-
   const deleteShow = id => {
-    axios.get(`/api/deleteShow/${id}`).then(res => {
+    axios.get(`/api/deleteShow/${id}`).then(() => {
       fetchShows();
     });
   };
@@ -23,7 +21,20 @@ const CurrentShows = ({ fetchShows, shows }) => {
     return editShowFields(show);
   };
 
-  const editShow = (_id, { poster, venue, location, date, doors, showtime, doorprice, advprice, tixlink }) => {
+  const editShow = (
+    _id,
+    {
+      poster,
+      venue,
+      location,
+      date,
+      doors,
+      showtime,
+      doorprice,
+      advprice,
+      tixlink,
+    }
+  ) => {
     const newPhoto = poster ? poster[0] : '';
     const updatedShow = {
       id: _id,
@@ -35,34 +46,50 @@ const CurrentShows = ({ fetchShows, shows }) => {
       showtime,
       doorprice,
       advprice,
-      tixlink
+      tixlink,
     };
-
-    console.log(updatedShow);
 
     const payload = new FormData();
     for (let key in updatedShow) {
-      if(updatedShow[key]) {
+      if (updatedShow[key]) {
         payload.append(key, updatedShow[key]);
       }
     }
 
-    axios.post(`/api/updateShow/${_id}`, payload).then(res => {
+    axios.post(`/api/updateShow/${_id}`, payload).then(() => {
       fetchShows();
     });
-
-  }
+  };
 
   const accordionItems = [];
 
   const createAccordionItems = () => {
-    shows.map((show) => {
-      const { _id, poster, venue, location, date, doors, showtime, doorprice, advprice, tixlink } = show;
-      const blob = new Blob([Int8Array.from(poster.img.image.data)], {type: poster.img.contentType});
+    shows.map(show => {
+      const {
+        _id,
+        poster,
+        venue,
+        location,
+        date,
+        doors,
+        showtime,
+        doorprice,
+        advprice,
+        tixlink,
+      } = show;
+      const blob = new Blob([Int8Array.from(poster.img.image.data)], {
+        type: poster.img.contentType,
+      });
       const imgURL = window.URL.createObjectURL(blob);
       const dateString = new Date(date).toLocaleString().split(',')[0];
-      const doorstimeString = new Date(doors).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
-      const showtimeString = new Date(showtime).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+      const doorstimeString = new Date(doors).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+      });
+      const showtimeString = new Date(showtime).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+      });
       return accordionItems.push({
         data: show,
         group: 'shows',
@@ -77,29 +104,41 @@ const CurrentShows = ({ fetchShows, shows }) => {
           { prefix: 'Show: ', value: showtimeString },
           { prefix: 'Door Price: ', value: doorprice },
           { prefix: 'Adv. Price: ', value: advprice },
-          { prefix: 'Ticket Link: ', value: tixlink ? (<a className="btn btn-danger btn-sm" target="_blank" rel="noreferrer" href={tixlink}>Tickets</a>) : null }
-        ]
+          {
+            prefix: 'Ticket Link: ',
+            value: tixlink ? (
+              <a
+                className='btn btn-danger btn-sm'
+                target='_blank'
+                rel='noreferrer'
+                href={tixlink}
+              >
+                Tickets
+              </a>
+            ) : null,
+          },
+        ],
       });
     });
-  }
+  };
   createAccordionItems();
 
   return (
-    <div className="my-5">
-    <Accordion
-        id="showsList"
-        title="Shows"
+    <div className='my-5'>
+      <Accordion
+        id='showsList'
+        title='Shows'
         items={accordionItems}
         editFields={editFields}
         onEdit={editShow}
         onDelete={deleteShow}
       />
-    <div className="d-flex mb-5">
-      <AddShow />
-    </div>
+      <div className='d-flex mb-5'>
+        <AddShow />
+      </div>
     </div>
   );
-}
+};
 
 function mapStateToProps({ shows }) {
   return { shows };
