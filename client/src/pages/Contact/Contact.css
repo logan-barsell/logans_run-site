@@ -1,6 +1,6 @@
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: rgb(240, 128, 128);
 }
 
@@ -25,7 +25,7 @@
 
 @media (min-width: 576px) {
   #contact .p-sm-5 {
-      padding: 88px 44px;
+    padding: 88px 44px;
   }
 }
 
@@ -36,7 +36,7 @@
 
 @media (min-width: 576px) {
   #contact .p-sm-5 {
-      padding: 88px 44px;
+    padding: 88px 44px;
   }
 }
 
@@ -46,7 +46,6 @@
 }
 
 #contact p {
-  letter-spacing: 3px;
   font-size: 1.4vw;
 }
 
@@ -130,7 +129,6 @@
   }
   button.btn {
     font-size: 3.5vw;
-    letter-spacing: 2.5px;
   }
 }
 
@@ -163,7 +161,6 @@
     font-size: 4vw;
   }
   button.btn {
-    letter-spacing: 3px;
     font-size: 4.5vw;
   }
 }
