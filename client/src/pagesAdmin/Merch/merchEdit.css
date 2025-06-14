@@ -1,31 +1,30 @@
 /* COLORS */
 :root {
---main: #E3FF05;
---secondary: lightcoral;
+  --main: #e3ff05;
+  --secondary: lightcoral;
 }
 
 #merchEdit {
-    height: 75vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 #merchEdit h3 {
-    color: var(--main);
-    text-shadow: 2px 1px var(--secondary);
+  color: var(--main);
 }
 
 #merchEdit p {
-    color: white;
-    font-size: 20px;
-    margin-bottom: 33px;
+  color: white;
+  font-size: 20px;
+  margin-bottom: 33px;
 }
 
 @media screen and (max-width: 350px) {
-    #merchEdit .bi-arrow-right-short {
-        display: none;
-    }
+  #merchEdit .bi-arrow-right-short {
+    display: none;
+  }
 }
