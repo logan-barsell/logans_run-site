@@ -1,62 +1,60 @@
 /* COLORS */
 :root {
---main: #E3FF05;
---secondary: lightcoral;
+  --main: #e3ff05;
+  --secondary: lightcoral;
 }
 
 #contactEdit {
-    height: fit-content;
-    padding: 0px 18px;
-    margin-top: 81px;
+  height: fit-content;
+  padding: 0px 18px;
+  margin-top: 81px;
 }
 
 #contactEdit h3 {
-    color: var(--main);
-    text-shadow: 2px 1px var(--secondary);
-    margin: 22px 0px 33px 0px;
-    font-size: 33px;
-    text-align: center;
+  color: var(--main);
+  margin: 22px 0px 33px 0px;
+  font-size: 33px;
+  text-align: center;
 }
 
 #contactEdit form {
-    margin: auto;
-    padding: 66px;
-    max-width: 666px;
-    margin-bottom: 100px;
-    background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 0.3rem;
-    border: 4px solid rgba(0, 0, 0, 0.3);
+  margin: auto;
+  padding: 66px;
+  max-width: 666px;
+  margin-bottom: 100px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 0.3rem;
+  border: 4px solid rgba(0, 0, 0, 0.3);
 }
 
 @media screen and (max-width: 735px) {
-    #contactEdit form {
-        padding: 33px 22px;
-    }
+  #contactEdit form {
+    padding: 33px 22px;
+  }
 }
 
-
 #contactEdit label {
-    color: var(--main);
-    font-size: 27px;
+  color: var(--main);
+  font-size: 27px;
 }
 
 #contactEdit .bi {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 @media screen and (max-width: 400px) {
-    #contactEdit label {
-        font-size: 24px;
-    }
+  #contactEdit label {
+    font-size: 24px;
+  }
 }
 
 #contactEdit .form-control {
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
 }
 
 #contactEdit button {
-    margin: 27px auto;
-    width: 50%;
-    min-width: 250px;
+  margin: 27px auto;
+  width: 50%;
+  min-width: 250px;
 }

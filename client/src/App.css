@@ -9,7 +9,7 @@
 }
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: rgb(240, 128, 128);
 }
 
@@ -20,7 +20,6 @@ body {
   background-color: #272727;
   letter-spacing: 6px;
 }
-
 
 /* FADE IN EFFECT */
 
@@ -66,10 +65,25 @@ h5 {
   z-index: 100;
 }
 
+input,
+select,
+textarea {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.no-content {
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: normal;
+  text-shadow: none;
+}
+
 .btn-danger {
   background-color: var(--main);
   color: black;
   border-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-danger:hover {
@@ -77,13 +91,15 @@ h5 {
   border-color: var(--main);
 }
 
-.btn-danger.disabled, .btn-danger:disabled {
-  background-color: #E3FF05;
+.btn-danger.disabled,
+.btn-danger:disabled {
+  background-color: #e3ff05;
   color: black;
 }
 
-.btn-check:focus+.btn-danger, .btn-danger:focus {
-  background-color: #E3FF05;
+.btn-check:focus + .btn-danger,
+.btn-danger:focus {
+  background-color: #e3ff05;
   color: black;
 }
 
@@ -108,7 +124,6 @@ h5 {
     font-size: 7vw;
   }
 }
-
 
 a {
   text-decoration: none;
@@ -207,29 +222,33 @@ hr {
 }
 
 @media (max-width: 991px) {
-  p, a {
+  p,
+  a {
     font-size: 2vw;
   }
 }
 
 @media (max-width: 800px) {
-  p, a {
+  p,
+  a {
     font-size: 2.5vw;
   }
   #no_content {
     font-size: 5vw;
-    margin: 20vh 20px
+    margin: 20vh 20px;
   }
 }
 
 @media (max-width: 800px) {
-  p, a {
+  p,
+  a {
     font-size: 3vw;
   }
 }
 
 @media (max-width: 777px) {
-  p, a {
+  p,
+  a {
     font-size: 2.5vw;
   }
   h5 {
@@ -238,20 +257,23 @@ hr {
   label {
     font-size: 3vw;
   }
-  button.btn, .btn {
+  button.btn,
+  .btn {
     font-size: 3.5vw;
     letter-spacing: 2.5px;
   }
 }
 
 @media (max-width: 750px) {
-  p, a {
+  p,
+  a {
     font-size: 2.5vw;
   }
 }
 
 @media (max-width: 650px) {
-  p, a {
+  p,
+  a {
     font-size: 3vw;
   }
 }
@@ -272,7 +294,8 @@ hr {
   label {
     font-size: 4vw;
   }
-  button.btn, .btn {
+  button.btn,
+  .btn {
     letter-spacing: 3px;
     font-size: 4.5vw;
   }
@@ -285,13 +308,15 @@ hr {
 }
 
 @media (max-width: 450px) {
-  p, a {
+  p,
+  a {
     font-size: 3.5vw;
   }
 }
 
 @media (max-width: 400px) {
-  button.btn, .btn {
+  button.btn,
+  .btn {
     padding: 4px 8px;
   }
   button.navbar-toggler {
@@ -300,7 +325,8 @@ hr {
 }
 
 @media (max-width: 291px) {
-  p, a {
+  p,
+  a {
     letter-spacing: 1.5px;
   }
 }

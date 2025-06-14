@@ -6,8 +6,8 @@
   color: white;
 }
 
-.fileUpload.btn-danger:not(:hover){
-  background-color: rgba(227, 255, 5, 0.9);;
+.fileUpload.btn-danger:not(:hover) {
+  background-color: rgba(227, 255, 5, 0.9);
 }
 
 .bi-camera-fill {
@@ -25,12 +25,12 @@
 }
 
 .selectedFile {
-  font-size: 27px;
   font-variant: all-small-caps;
   display: flex;
   justify-content: center;
   text-align: center;
   line-height: 22px;
   padding-bottom: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: normal;
 }
-

@@ -1,30 +1,29 @@
 /* COLORS */
 :root {
---main: #E3FF05;
---secondary: lightcoral;
+  --main: #e3ff05;
+  --secondary: lightcoral;
 }
 
 #editPictures {
-    height: fit-content;
-    margin: 33px auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  height: fit-content;
+  margin: 33px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 #editPictures h3 {
-    color: var(--main);
-    text-shadow: 2px 1px var(--secondary);
-    margin-top: 33px;
-    font-size: 33px;
-    text-align: center;
+  color: var(--main);
+  margin-top: 33px;
+  font-size: 33px;
+  text-align: center;
 }
 
 #editPictures hr {
-    width: 100%;
-    margin-top: 0px;
-    margin-bottom: 44px;
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 44px;
 }
 
 #editPictures .currentImages {
@@ -37,48 +36,48 @@
 }
 
 #editPictures .img-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    max-width: 666px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 666px;
 }
 
 #editPictures .currentImages .btn-dark {
-    background-color: black;
-    padding: 0px 9px;
-    border-radius: 20px;
-    align-self: end;
-    position: relative;
-    bottom: -19px;
-    right: -20px;
-    border: 3px solid rgba(255,255,255,0.2);
+  background-color: black;
+  padding: 0px 9px;
+  border-radius: 20px;
+  align-self: end;
+  position: relative;
+  bottom: -19px;
+  right: -20px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
 #editPictures .currentImages img {
-    width: 100%;
+  width: 100%;
 }
 
 #editPictures form {
-    width: 100%;
-    max-width: 666px;
-    margin-bottom: 75px;
+  width: 100%;
+  max-width: 666px;
+  margin-bottom: 75px;
 }
 
 #editPictures .selectedFile {
-    color: white;
+  color: white;
 }
 
 #editPictures .fileUpload {
-    max-width: 333px;
-    margin: auto;
-    background-color: rgba(0,0,0,0.6);
-    border: 2px solid black;
+  max-width: 333px;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid black;
 }
 
 #editPictures .see-more {
-    max-width: 666px;
-    margin: 88px auto;
-    padding: 0px 27px;
-    width: inherit;
-  }
+  max-width: 666px;
+  margin: 88px auto;
+  padding: 0px 27px;
+  width: inherit;
+}
