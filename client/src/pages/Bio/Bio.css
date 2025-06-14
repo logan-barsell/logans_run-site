@@ -1,6 +1,6 @@
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: lightcoral;
 }
 
@@ -19,7 +19,7 @@
 }
 
 #biography.container {
-  background-color: rgba(0,0,0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   padding: 13px 13px 33px;
   max-width: 100%;
   margin: 0px;
@@ -36,7 +36,6 @@
   text-align: center;
   text-shadow: 2px 1.5px black;
   max-width: 800px;
-  letter-spacing: 3px;
 }
 
 .bio a {

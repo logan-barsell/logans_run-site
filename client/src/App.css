@@ -18,7 +18,7 @@ body {
   font-family: sprayPaint;
   font-size: 22px;
   background-color: #272727;
-  letter-spacing: 6px;
+  letter-spacing: 2px;
 }
 
 /* FADE IN EFFECT */
@@ -260,7 +260,6 @@ hr {
   button.btn,
   .btn {
     font-size: 3.5vw;
-    letter-spacing: 2.5px;
   }
 }
 
@@ -296,7 +295,6 @@ hr {
   }
   button.btn,
   .btn {
-    letter-spacing: 3px;
     font-size: 4.5vw;
   }
   input.form-control {
