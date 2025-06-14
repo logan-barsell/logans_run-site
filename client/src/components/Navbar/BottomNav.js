@@ -91,9 +91,9 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                 method='POST'
               >
                 <div className='modal-body'>
-                  <div className='mx-xs-1 mx-sm-3 me-sm-5 pe-sm-5'>
+                  <div className='mx-xs-1 mx-sm-3 me-sm-5 pe-sm-5 final-form input-group'>
                     <input
-                      className='form-control'
+                      className='form-control text-truncate'
                       name='email'
                       type='email'
                       placeholder='Enter your email here'

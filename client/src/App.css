@@ -75,6 +75,10 @@ textarea {
   font-family: 'Courier New', Courier, monospace;
   letter-spacing: normal;
   text-shadow: none;
+  color: var(--main);
+  margin-top: 22px;
+  font-size: 33px;
+  text-align: center;
 }
 
 .btn-danger {
