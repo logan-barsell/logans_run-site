@@ -1,6 +1,6 @@
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: lightcoral;
 }
 
@@ -42,8 +42,6 @@ nav {
   min-height: 88px;
 }
 
-
-
 @media (max-width: 2000px) {
   nav {
     font-size: 1.5vw;
@@ -81,6 +79,11 @@ nav {
 
 .navbar-toggler {
   background-color: white;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  opacity: 0.8;
 }
 
 .navbar-light .navbar-nav .active > .nav-link,
