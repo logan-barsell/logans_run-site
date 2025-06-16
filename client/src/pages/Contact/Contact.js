@@ -24,7 +24,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
           <div className='jumbotron p-sm-5'>
             <h5>Contact Information</h5>
             <hr className='my-4' />
-            <p>
+            <p className='secondary-font'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='33'
@@ -38,10 +38,15 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   d='M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z'
                 />
               </svg>
-              <a href={`tel:+${contactInfo[0].phone}`}>Text/Call</a>
+              <a href={`tel:+${contactInfo[0].phone}`}>
+                {contactInfo[0].phone.slice(0, 3)}.
+                {contactInfo[0].phone.slice(3, 6)}.
+                {contactInfo[0].phone.slice(6)}
+              </a>
             </p>
             <hr className='my-4' />
-            <p>
+
+            <p className='secondary-font'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='33'
@@ -54,7 +59,8 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
               </svg>
               <a href={`mailto:${contactInfo[0].email}`}>
                 {contactInfo[0].email.split('@')[0]}
-                <span className='at@'>@</span>Send Email
+                <span>@</span>
+                {contactInfo[0].email.split('@')[1]}
               </a>
             </p>
             <hr className='my-4' />

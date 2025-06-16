@@ -33,7 +33,7 @@ const Videos = ({ fetchVideos, videos }) => {
         <select
           defaultValue='all'
           onChange={e => handleChange(e.target.value)}
-          className='form-select form-control form-select-lg mb-3'
+          className='form-select form-control form-select-md mb-3'
           aria-label='.form-select-lg example'
         >
           <option disabled>Select Category</option>

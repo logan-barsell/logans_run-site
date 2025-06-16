@@ -1,4 +1,4 @@
-import {configureStore, combineReducers} from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { contactReducer } from './reducers/contactReducer';
 import { bioReducer } from './reducers/bioReducer';
 import { membersReducer } from './reducers/membersReducer';
@@ -11,49 +11,37 @@ import { videosReducer } from './reducers/videosReducer';
 import { musicReducer } from './reducers/musicReducer';
 import cartReducer from './cartRedux';
 import thunk from 'redux-thunk';
-import {
-    persistStore,
-    persistReducer,
-    FLUSH,
-    REHYDRATE,
-    PAUSE,
-    PERSIST,
-    PURGE,
-    REGISTER,
-  } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
-    key: "root",
-    version: 1,
-    storage,
+  key: 'root',
+  version: 1,
+  storage,
 };
 
 const rootReducer = combineReducers({
-    music: musicReducer,
-    videos: videosReducer,
-    media: mediaReducer,
-    carouselImages: carouselReducer,
-    contactInfo: contactReducer,
-    currentBio: bioReducer,
-    members: membersReducer,
-    shows: showsReducer,
-    products: productsReducer,
-    shipping: shippingReducer,
-    cart: cartReducer 
+  music: musicReducer,
+  videos: videosReducer,
+  media: mediaReducer,
+  carouselImages: carouselReducer,
+  contactInfo: contactReducer,
+  currentBio: bioReducer,
+  members: membersReducer,
+  shows: showsReducer,
+  products: productsReducer,
+  shipping: shippingReducer,
+  cart: cartReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
-      // {
-      //   ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      // },
-      immutableCheck: false
+      immutableCheck: false,
     }).concat(thunk),
 });
 
