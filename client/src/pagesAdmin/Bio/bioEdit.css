@@ -32,7 +32,7 @@
   font-size: 33px;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 600px) {
   #bioEdit label {
     font-size: 20px;
   }
@@ -41,6 +41,30 @@
   }
   #bioEdit span {
     font-size: 25px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #bioEdit label {
+    font-size: 14px;
+  }
+  #bioEdit .form-control {
+    font-size: 16px;
+  }
+  #bioEdit span {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 270px) {
+  #bioEdit label {
+    font-size: 12px;
+  }
+  #bioEdit .form-control {
+    font-size: 14px;
+  }
+  #bioEdit span {
+    font-size: 16px;
   }
 }
 
@@ -59,7 +83,6 @@
 #bioEdit button {
   margin: auto;
   width: 50%;
-  min-width: 250px;
 }
 
 .form-floating > .form-control:focus,

@@ -56,6 +56,10 @@ body {
   }
 }
 
+.nav-item h5 {
+  margin: 16px;
+}
+
 .nav {
   z-index: 100;
 }
@@ -303,7 +307,10 @@ hr {
   .btn {
     font-size: 4.5vw;
   }
-  input.form-control {
+  input.form-control,
+  select.form-control,
+  .react-datepicker__input-container input,
+  .final-form .input-group-text#basic-addon1 {
     font-size: 4vw;
   }
   svg {

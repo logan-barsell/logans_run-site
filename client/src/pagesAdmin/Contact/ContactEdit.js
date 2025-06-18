@@ -35,7 +35,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
               subscription={{ dirtyFieldsSinceLastSubmit: true }}
               onChange={() => setUpdated(false)}
             />
-            <div className='mb-3'>
+            <div className='mb-sm-3 mb-2'>
               <Field
                 name='phone'
                 initialValue={contactInfo[0] ? contactInfo[0].phone : ''}
@@ -60,7 +60,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 )}
               </Field>
             </div>
-            <div className='mb-3'>
+            <div className='mb-sm-3 mb-2 '>
               <Field
                 name='email'
                 initialValue={contactInfo[0] ? contactInfo[0].email : ''}
@@ -84,7 +84,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 )}
               </Field>
             </div>
-            <div className='mb-3'>
+            <div className='mb-sm-3 mb-2'>
               <Field
                 name='facebook'
                 initialValue={contactInfo[0] ? contactInfo[0].facebook : ''}
@@ -119,7 +119,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 )}
               </Field>
             </div>
-            <div className='mb-3'>
+            <div className='mb-sm-3 mb-2'>
               <Field
                 name='instagram'
                 initialValue={contactInfo[0] ? contactInfo[0].instagram : ''}
@@ -154,7 +154,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 )}
               </Field>
             </div>
-            <div className='mb-3'>
+            <div className='mb-sm-3 mb-2'>
               <Field
                 name='youtube'
                 initialValue={contactInfo[0] ? contactInfo[0].youtube : ''}
@@ -189,7 +189,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 )}
               </Field>
             </div>
-            <div className='mb-3'>
+            <div className='mb-sm-3 mb-2'>
               <Field
                 name='soundcloud'
                 initialValue={contactInfo[0] ? contactInfo[0].soundcloud : ''}
@@ -227,7 +227,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 )}
               </Field>
             </div>
-            <div className='mb-3'>
+            <div className='mb-sm-3 mb-2'>
               <Field
                 name='spotify'
                 initialValue={contactInfo[0] ? contactInfo[0].spotify : ''}

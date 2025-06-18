@@ -22,6 +22,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [limit, setLimit] = useState(imgCount);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     fetchMediaImages();
@@ -114,10 +115,13 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
                 onFormRestart(form);
               }}
             >
-              <ImageUpload name='pic' />
+              <ImageUpload
+                name='pic'
+                setImage={setImage}
+              />
               <div className='d-grid gap-2'>
                 <button
-                  disabled={uploading}
+                  disabled={uploading || !image}
                   className='submit btn btn-danger mt-3'
                 >
                   {uploading
