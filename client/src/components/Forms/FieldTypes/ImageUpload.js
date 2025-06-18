@@ -4,7 +4,7 @@ import React from 'react';
 import { Field } from 'react-final-form';
 const required = value => (value ? undefined : 'Required');
 
-const ImageUpload = ({ name, initialValue }) => {
+const ImageUpload = ({ name, initialValue, setImage }) => {
   const isRequired = initialValue ? false : true;
 
   return (
@@ -38,7 +38,12 @@ const ImageUpload = ({ name, initialValue }) => {
                 {...input}
                 type='file'
                 accept='.png, .jpg, .jpeg'
-                onChange={({ target }) => onChange(target?.files)}
+                onChange={({ target }) => {
+                  if (setImage) {
+                    setImage(target?.files[0]);
+                  }
+                  onChange(target?.files);
+                }}
                 required={isRequired}
               />
             </div>

@@ -17,13 +17,32 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
   const accordionItems = [];
 
   const createAccordionItems = () => {
-    shows.map((show) => {
-      const { _id, poster, venue, location, date, doors, showtime, doorprice, advprice, tixlink } = show;
-      const blob = new Blob([Int8Array.from(poster.img.image.data)], {type: poster.img.contentType});
+    shows.map(show => {
+      const {
+        _id,
+        poster,
+        venue,
+        location,
+        date,
+        doors,
+        showtime,
+        doorprice,
+        advprice,
+        tixlink,
+      } = show;
+      const blob = new Blob([Int8Array.from(poster.img.image.data)], {
+        type: poster.img.contentType,
+      });
       const imgURL = window.URL.createObjectURL(blob);
       const dateString = new Date(date).toLocaleString().split(',')[0];
-      const doorstimeString = new Date(doors).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
-      const showtimeString = new Date(showtime).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+      const doorstimeString = new Date(doors).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+      });
+      const showtimeString = new Date(showtime).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+      });
       return accordionItems.push({
         id: _id,
         venue,
@@ -36,43 +55,43 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
           { prefix: 'Doors ', value: doorstimeString },
           { prefix: 'Show ', value: showtimeString },
           { prefix: 'Door Price ', value: doorprice ? `$${doorprice}` : null },
-          { prefix: 'Adv. Price ', value: advprice ? `$${advprice}` : null }
-        ]
+          { prefix: 'Adv. Price ', value: advprice ? `$${advprice}` : null },
+        ],
       });
     });
-  }
+  };
 
   createAccordionItems();
 
-
   return (
-    <div id="home" className="fadeIn">
+    <div
+      id='home'
+      className='fadeIn'
+    >
+      {images.length > 0 && <Carousel images={images} />}
 
-      {images.length > 0 && <Carousel images={images}/>}
-
-      {shows[0] ?
+      {shows[0] ? (
         <>
           <SecondaryNav label='Upcoming Shows' />
-          <div id="upcomingshows">
-            <div className="row justify-content-around">
+          <div id='upcomingshows'>
+            <div className='row justify-content-around'>
               <ShowsAccordion
-                id="currentShows"
-                title="Shows"
+                id='currentShows'
+                title='Shows'
                 items={accordionItems}
               />
             </div>
           </div>
         </>
-        :
-        null
-      }
-
+      ) : null}
     </div>
   );
-}
+};
 
 function mapStateToProps({ shows, carouselImages }) {
   return { shows, images: carouselImages };
 }
 
-export default connect(mapStateToProps, { fetchShows, fetchHomeImages })(HomePage);
+export default connect(mapStateToProps, { fetchShows, fetchHomeImages })(
+  HomePage
+);
