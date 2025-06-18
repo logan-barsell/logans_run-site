@@ -4,6 +4,10 @@
   --secondary: lightcoral;
 }
 
+.form-label {
+  margin-bottom: 3px;
+}
+
 #contactEdit {
   height: fit-content;
   padding: 0px 18px;
@@ -13,7 +17,6 @@
 #contactEdit h3 {
   color: var(--main);
   margin: 22px 0px 33px 0px;
-  font-size: 33px;
   text-align: center;
 }
 
@@ -33,19 +36,18 @@
   }
 }
 
+@media screen and (max-width: 315px) {
+  #contactEdit form {
+    padding: 20px 15px;
+  }
+}
+
 #contactEdit label {
   color: var(--main);
-  font-size: 27px;
 }
 
 #contactEdit .bi {
   margin-left: 5px;
-}
-
-@media screen and (max-width: 400px) {
-  #contactEdit label {
-    font-size: 24px;
-  }
 }
 
 #contactEdit .form-control {
@@ -56,5 +58,4 @@
 #contactEdit button {
   margin: 27px auto;
   width: 50%;
-  min-width: 250px;
 }

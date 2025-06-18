@@ -1,5 +1,7 @@
 .modal-header .btn-close {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-header button.btn-close:focus:not(:focus-visible) {

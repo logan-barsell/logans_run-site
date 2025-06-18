@@ -50,10 +50,6 @@ body {
   color: darkred;
 }
 
-h5 {
-  margin: 16px;
-}
-
 @media (max-width: 350px) {
   h5 {
     font-size: 7vw;
@@ -62,6 +58,10 @@ h5 {
 
 .nav {
   z-index: 100;
+}
+
+.row {
+  --bs-gutter-x: 0px;
 }
 
 input,
@@ -76,8 +76,8 @@ textarea {
   text-shadow: none;
   color: var(--main);
   margin-top: 22px;
-  font-size: 22px;
   text-align: center;
+  font-size: 22px;
 }
 
 .btn-danger {
@@ -159,6 +159,10 @@ hr {
   background-color: black;
 }
 
+.modal-title {
+  margin-top: 0px;
+}
+
 .modal-content {
   background-color: rgba(0, 0, 0, 0.4);
   border: 2px solid var(--main);
@@ -236,8 +240,10 @@ hr {
   a {
     font-size: 2.5vw;
   }
+  h3 {
+    font-size: 4vw;
+  }
   #no_content {
-    font-size: 3vw;
     margin: 20vh 20px;
   }
 }
@@ -277,10 +283,7 @@ hr {
 }
 
 @media (max-width: 500px) {
-  svg {
-    margin-right: 10px;
-  }
-  #no_content {
+  h3 {
     font-size: 4vw;
   }
 }
@@ -316,8 +319,8 @@ hr {
   h5 {
     font-size: 5vw;
   }
-  #no_content {
-    font-size: 5vw;
+  h3 {
+    font-size: 7vw;
   }
 }
 
