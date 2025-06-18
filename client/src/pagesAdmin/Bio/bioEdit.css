@@ -13,7 +13,6 @@
 #bioEdit h3 {
   color: var(--main);
   margin-top: 22px;
-  font-size: 33px;
   text-align: center;
 }
 
@@ -25,23 +24,23 @@
 
 #bioEdit label {
   color: white;
-  font-size: 33px;
+  font-size: 27px;
 }
 
 #bioEdit span {
   color: var(--main);
-  font-size: 38px;
+  font-size: 33px;
 }
 
 @media screen and (max-width: 400px) {
   #bioEdit label {
-    font-size: 27px;
+    font-size: 20px;
   }
   #bioEdit .form-control {
     font-size: 21px;
   }
   #bioEdit span {
-    font-size: 30px;
+    font-size: 25px;
   }
 }
 

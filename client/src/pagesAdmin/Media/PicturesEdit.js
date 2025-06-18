@@ -128,9 +128,10 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
             </form>
           )}
         />
-        <div className='currentImages'>
-          {images.length > 0 ? (
-            images.slice(0, limit).map(image => (
+
+        {images.length > 0 ? (
+          <div className='currentImages'>
+            {images.slice(0, limit).map(image => (
               <div
                 key={image._id}
                 className='img-container'
@@ -144,11 +145,12 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
                   alt='media'
                 />
               </div>
-            ))
-          ) : (
-            <h3 className='no-content'>No Images</h3>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <h3 className='no-content'>No Images</h3>
+        )}
+
         {limit < images.length && (
           <div className='d-grid see-more'>
             <button

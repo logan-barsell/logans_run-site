@@ -1,6 +1,6 @@
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: lightcoral;
 }
 
@@ -108,7 +108,6 @@
 .addButton.btn {
   margin: 27px auto;
   width: 69%;
-  min-width: 250px;
 }
 
 .bi-plus-square-fill {
@@ -145,7 +144,7 @@
     font-size: 4.5vw;
   }
   .itemInfo .subhead .coSubhead {
-    font-size: 4.0vw;
+    font-size: 4vw;
   }
   .content {
     font-size: 3.5vw;

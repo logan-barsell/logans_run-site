@@ -2,11 +2,10 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ActiveContext } from '../../App';
 
-const NavLink = ({ routes, menuToggle }) => {
-
+const NavLink = ({ routes, menuToggle, footer }) => {
   const { setActiveIndex, activeIndex, toggle } = useContext(ActiveContext);
 
-  const onNavClick = (index) => {
+  const onNavClick = index => {
     setActiveIndex(index);
     if (toggle === true) {
       menuToggle();
@@ -19,15 +18,20 @@ const NavLink = ({ routes, menuToggle }) => {
     const hvrSink = menuToggle && !toggle ? 'hvr-sink' : '';
 
     return (
-      <Link key={index} to={route.value} className={`nav-item nav-link ${hvrSink} ${active}`} onClick={() => onNavClick(index)} >{route.name}</Link>
+      <Link
+        key={index}
+        to={route.value}
+        className={`nav-item nav-link ${hvrSink} ${active} ${
+          footer ? 'footer-link' : ''
+        }`}
+        onClick={() => onNavClick(index)}
+      >
+        {route.name}
+      </Link>
     );
   });
 
   return renderedNavItems;
-
-
-
-
 };
 
 export default NavLink;

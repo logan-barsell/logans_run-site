@@ -205,7 +205,12 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
           <div className='row'>
             <div className='col-md-7'>
               <h5 className='text-uppercase'>HELLO.</h5>
-              <p>Welcome to the run.</p>
+              <p
+                className='secondary-font'
+                style={{ fontSize: '16px' }}
+              >
+                Welcome to the run.
+              </p>
             </div>
             <div className='col-md-5'>
               <h5 className='text-uppercase'>Links</h5>
@@ -217,6 +222,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                   <NavLink
                     routes={routes}
                     menuToggle={false}
+                    footer={true}
                   />
                 </li>
               </ul>
