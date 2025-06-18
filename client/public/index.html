@@ -51,10 +51,12 @@
     <script>
       paceOptions = {
         eventLag: false,
+        ajax: false,
         elements: {
-          selectors: ['body'],
+          selectors: ['#root'],
         },
-        target: 'body',
+        restartOnRequestAfter: false,
+        target: '#root',
         className: 'custom-pace',
       };
     </script>
