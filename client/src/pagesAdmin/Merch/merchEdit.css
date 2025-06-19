@@ -20,7 +20,7 @@
 #merchEdit p {
   color: white;
   margin-bottom: 33px;
-  font-family: auto;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 @media screen and (max-width: 350px) {

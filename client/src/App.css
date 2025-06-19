@@ -229,7 +229,7 @@ hr {
 }
 
 .at {
-  font-family: 'auto';
+  font-family: 'Courier New', Courier, monospace;
 }
 
 @media (max-width: 991px) {

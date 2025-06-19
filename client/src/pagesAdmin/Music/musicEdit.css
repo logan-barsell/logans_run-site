@@ -56,7 +56,7 @@
 
 .released span {
   color: white;
-  font-family: auto;
+  font-family: 'Courier New', Courier, monospace;
   letter-spacing: normal;
   margin-left: 9px;
 }
