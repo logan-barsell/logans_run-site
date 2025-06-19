@@ -226,6 +226,7 @@ hr {
   margin: 20% 20px;
   color: var(--main);
   text-align: center;
+  padding: 0px 20px;
 }
 
 .at {
