@@ -34,11 +34,10 @@
   margin-bottom: 1px;
 }
 
-#currentPlayers h5 {
+#currentPlayers h3 {
   color: var(--main);
   text-shadow: 2px 1px var(--secondary);
   font-variant: small-caps;
-  font-size: 38px;
   text-align: center;
 }
 
@@ -46,8 +45,13 @@
   text-decoration: none;
 }
 
-#currentPlayers span {
+.released {
   color: var(--main);
+}
+
+.released span {
+  color: 'white';
+  font-family: auto;
 }
 
 #currentPlayers .theme {

@@ -42,13 +42,18 @@
 
 #editCarousel .currentImages .btn-dark {
   background-color: black;
-  padding: 0px 9px;
   border-radius: 20px;
   align-self: end;
   position: relative;
   bottom: -19px;
   right: -20px;
   border: 3px solid rgba(255, 255, 255, 0.2);
+  height: 38px;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 #editCarousel .currentImages img {
@@ -69,4 +74,11 @@
   margin: auto;
   background-color: rgba(0, 0, 0, 0.6);
   border: 2px solid black;
+}
+
+@media (max-width: 450px) {
+  #editCarousel .currentImages {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 25px;
+  }
 }
