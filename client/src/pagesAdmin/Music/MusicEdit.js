@@ -42,15 +42,17 @@ const MusicEdit = ({ fetchPlayers, players }) => {
         className='list-group-item list-group-item-action'
         aria-current='true'
       >
-        <div className='d-flex w-100 justify-content-end'>
-          <small>
-            <span>Released </span>
-            {dateString}
-          </small>
+        <div className='d-flex w-100 justify-content-sm-end justify-content-center mb-md-3'>
+          <p className='released'>
+            Released
+            <span className='secondary-font'>{dateString}</span>
+          </p>
         </div>
-        <div className='d-flex w-100 justify-content-center'>
-          <h5 className='mb-2'>{player.title}</h5>
+
+        <div className='d-flex w-100 justify-content-center mb-md-3'>
+          <h3 className='mb-2'>{player.title}</h3>
         </div>
+
         <p className='mb-3 d-flex justify-content-center'>
           <a
             href={player.spotifyLink}
@@ -61,13 +63,15 @@ const MusicEdit = ({ fetchPlayers, players }) => {
             Link to Spotify
           </a>
         </p>
-        <small className='d-flex justify-content-center align-items-center mb-2'>
+
+        <p className='d-flex justify-content-center align-items-center mb-2 mb-md-3'>
           <span>Theme </span> &nbsp;
           <div
             className='theme'
             style={{ backgroundColor: `${color}` }}
           ></div>
-        </small>
+        </p>
+
         <hr />
         <div className='buttons d-flex justify-content-center'>
           <EditPlayer
