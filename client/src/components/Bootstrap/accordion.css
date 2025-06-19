@@ -115,7 +115,7 @@
 }
 
 .modal-body.deleteItem {
-  font-family: auto;
+  font-family: 'Courier New', Courier, monospace;
   letter-spacing: normal;
 }
 

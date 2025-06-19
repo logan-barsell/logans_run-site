@@ -18,7 +18,7 @@
 
 #newsDetails {
   font-size: 17px;
-  font-family: auto;
+  font-family: 'Courier New', Courier, monospace;
   letter-spacing: normal;
   margin-top: 27px;
   color: white;
@@ -59,7 +59,7 @@
 }
 
 #st-1 span {
-  font-family: 'Sancreek';
+  font-family: 'Courier New', Courier, monospace;
 }
 
 #contact a {
@@ -156,5 +156,5 @@ a.nav-item.active {
 
 .footer-link {
   font-size: 16px;
-  font-family: auto;
+  font-family: 'Courier New', Courier, monospace;
 }
