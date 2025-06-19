@@ -55,7 +55,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
           </div>
           <div className='col-12 col-md-6 ind-bio'>
             <div className='row'>
-              <h4>{name}</h4>
+              <h3>{name}</h3>
               <hr />
               <p>{role}</p>
             </div>
