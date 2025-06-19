@@ -114,6 +114,11 @@
   margin-right: 10px;
 }
 
+.modal-body.deleteItem {
+  font-family: auto;
+  letter-spacing: normal;
+}
+
 .deleteItem span {
   color: var(--main);
   margin: 0px 5px;
