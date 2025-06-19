@@ -47,11 +47,14 @@
 
 .released {
   color: var(--main);
+  margin-bottom: 0;
 }
 
 .released span {
-  color: 'white';
+  color: white;
   font-family: auto;
+  letter-spacing: normal;
+  margin-left: 9px;
 }
 
 #currentPlayers .theme {
