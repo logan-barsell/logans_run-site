@@ -9,6 +9,7 @@
   border: 4px solid rgba(0, 0, 0, 0.8);
   border-radius: 0.5rem;
   letter-spacing: normal;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .react-datepicker__input-container input {
@@ -115,7 +116,12 @@ react-datepicker__month .react-datepicker__day-name,
   }
   .react-datepicker__current-month,
   .react-datepicker-time__header,
-  .react-datepicker-year-header {
+  .react-datepicker-year-header,
+  .react-datepicker__time-container
+    .react-datepicker__time
+    .react-datepicker__time-box
+    ul.react-datepicker__time-list
+    li.react-datepicker__time-list-item {
     font-size: 17px;
   }
 }
@@ -130,7 +136,12 @@ react-datepicker__month .react-datepicker__day-name,
   }
   .react-datepicker__current-month,
   .react-datepicker-time__header,
-  .react-datepicker-year-header {
+  .react-datepicker-year-header,
+  .react-datepicker__time-container
+    .react-datepicker__time
+    .react-datepicker__time-box
+    ul.react-datepicker__time-list
+    li.react-datepicker__time-list-item {
     font-size: 14px;
   }
 }

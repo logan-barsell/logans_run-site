@@ -40,7 +40,6 @@
 
 #currentPlayers h3 {
   color: var(--main);
-  text-shadow: 2px 1px var(--secondary);
   font-variant: small-caps;
   text-align: center;
 }
