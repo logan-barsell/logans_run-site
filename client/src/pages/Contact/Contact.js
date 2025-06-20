@@ -19,7 +19,10 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
       className='container fadeIn'
       id='contact'
     >
-      <div className='row'>
+      <div
+        className='row'
+        style={{ margin: '20px 0px', gap: '60px' }}
+      >
         <div className='col-lg'>
           <div className='jumbotron p-sm-5'>
             <h5>Contact Information</h5>
