@@ -21,6 +21,7 @@
   color: white;
   margin-bottom: 33px;
   font-family: 'Courier New', Courier, monospace;
+  letter-spacing: normal;
 }
 
 @media screen and (max-width: 350px) {

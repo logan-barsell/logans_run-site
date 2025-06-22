@@ -17,7 +17,7 @@
 }
 
 #currentShows .content .tix {
-  margin-top: 13px
+  margin-top: 13px;
 }
 
 #currentShows .poster {
@@ -25,6 +25,6 @@
 }
 
 .subItemVal {
-  font-family: stencil;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: normal;
 }
-

@@ -78,9 +78,9 @@
 }
 
 .itemInfo .subhead {
-  color: var(--main);
-  text-shadow: 1px 1px var(--secondary);
   font-size: 30px;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: normal;
 }
 
 .subItemVal {
@@ -140,13 +140,13 @@
 
 @media (max-width: 777px) {
   .header {
-    font-size: 3vw;
+    font-size: 4vw;
   }
   .accordion-header .coHeader {
     font-size: 2.5vw;
   }
   .itemInfo .subhead {
-    font-size: 4.5vw;
+    font-size: 3.5vw;
   }
   .itemInfo .subhead .coSubhead {
     font-size: 4vw;
@@ -161,7 +161,7 @@
 
 @media (max-width: 450px) {
   .header {
-    font-size: 3.5vw;
+    font-size: 6vw;
   }
   .accordion-header .coHeader {
     font-size: 3vw;
