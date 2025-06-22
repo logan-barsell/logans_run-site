@@ -25,6 +25,7 @@
 #currentPlayers {
   max-width: 888px;
   padding: 13px;
+  gap: 45px;
 }
 
 #currentPlayers .list-group {
