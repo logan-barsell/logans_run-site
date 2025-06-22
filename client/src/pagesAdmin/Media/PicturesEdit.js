@@ -125,7 +125,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
                   className='submit btn btn-danger mt-3'
                 >
                   {uploading
-                    ? `Uploading... ${uploadProgress}%`
+                    ? `Uploading... ${uploadProgress.replace('0', 'O')}%`
                     : 'Add to Images'}
                 </button>
               </div>
