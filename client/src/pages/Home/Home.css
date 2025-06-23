@@ -1,6 +1,6 @@
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: lightcoral;
 }
 
@@ -105,4 +105,11 @@
 .showinfo .list-group-item span {
   color: white;
   text-shadow: none;
+}
+
+@media (max-width: 500px) {
+  #upcomingshows {
+    margin: 33px 18px 0px 18px;
+    padding-bottom: 20px;
+  }
 }

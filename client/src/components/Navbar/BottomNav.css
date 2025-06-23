@@ -45,13 +45,9 @@
 /*BOTTOM NAV ICONS*/
 
 .iconsNav {
-  margin: 0px 9px;
-}
-
-.iconsNav img {
-  border-radius: 11px;
-  width: 40px;
-  margin: 11px 7px;
+  display: flex;
+  gap: 20px;
+  padding-right: 30px;
 }
 
 .mailz {
@@ -124,18 +120,12 @@ a.nav-item.active {
 }
 
 #subscribe {
-  margin: 0px 13px;
+  margin: 0px 30px;
 }
 
 @media only screen and (max-width: 485px) {
-  .iconsNav {
-    margin-top: 13px;
-  }
   #bottomNav {
     padding-top: 21px;
-  }
-  .iconsNav img {
-    width: 9.5vw;
   }
 }
 
