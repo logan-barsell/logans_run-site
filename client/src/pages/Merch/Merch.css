@@ -1,6 +1,6 @@
 /* COLORS */
 :root {
-  --main: #E3FF05;
+  --main: #e3ff05;
   --secondary: lightcoral;
 }
 
@@ -46,7 +46,6 @@
 }
 
 #merch .card-body {
-  padding-top: 0px;
   padding-bottom: 20px;
 }
 
@@ -77,8 +76,14 @@
   z-index: 100;
 }
 
+.product .btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .toast {
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .toast-header img {
