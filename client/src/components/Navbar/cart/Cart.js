@@ -103,15 +103,15 @@ const Cart = ({ fetchShipping, shipping }) => {
                   alignItems: 'center',
                 }}
               >
-                <h1
+                <h5
+                  className='secondary-font'
                   style={{
                     textAlign: 'center',
-                    color: '#E3FF05',
                     marginBottom: '25px',
                   }}
                 >
                   Your Cart is Empty
-                </h1>
+                </h5>
                 <button
                   onClick={e => e.stopPropagation()}
                   type='button'
@@ -126,17 +126,17 @@ const Cart = ({ fetchShipping, shipping }) => {
           </div>
           <div className='orderSummary pb-4'>
             <h5>Order Summary</h5>
-            <div className='orderDetails'>
+            <div className='orderDetails secondary-font'>
               <div>
-                <span>SubTotal-</span>&nbsp; $
-                {String(subTotal).replace('0', 'O')}
+                <span className='font-weight-bold'>SubTotal:</span> $
+                {subTotal.toFixed(2)}
               </div>
               <div>
-                <span>Shipping-</span>&nbsp;{' '}
-                {String(shippingAmount).replace('0', 'O')}
+                <span className='font-bold'>Shipping:</span> {shippingAmount}
               </div>
               <div className='totalCost'>
-                <span>Total-</span>&nbsp; ${String(totalCost).replace('0', 'O')}
+                <span className='font-bold'>Total:</span> $
+                {totalCost.toFixed(2)}
               </div>
             </div>
             <div className='d-flex justify-content-center'>
