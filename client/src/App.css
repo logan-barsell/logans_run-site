@@ -44,6 +44,7 @@ body {
 /*GENERAL*/
 .secondary-font {
   font-family: 'Courier New', Courier, monospace;
+  letter-spacing: normal;
 }
 
 .red {
@@ -306,7 +307,7 @@ hr {
   }
   button.btn,
   .btn {
-    font-size: 4.5vw;
+    font-size: 4vw;
   }
   input.form-control,
   select.form-control,
@@ -336,7 +337,9 @@ hr {
   button.btn,
   .btn {
     padding: 4px 8px;
+    font-size: 4vw;
   }
+
   button.navbar-toggler {
     font-size: 7vw;
   }
