@@ -72,6 +72,10 @@
   #merch .card-img-top {
     height: 300px; /* Smaller height on mobile */
   }
+
+  .product .price {
+    font-size: 4.5vw;
+  }
 }
 
 #merch h5.card-title {
