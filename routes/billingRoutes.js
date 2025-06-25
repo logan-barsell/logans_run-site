@@ -124,7 +124,6 @@ module.exports = app => {
         const match = oldImageUrl.match(/\/o\/([^?]+)/);
         if (match && match[1]) {
           const filePath = decodeURIComponent(match[1]);
-          console.log('Attempting to delete Firebase file:', filePath);
           await bucket
             .file(filePath)
             .delete()
