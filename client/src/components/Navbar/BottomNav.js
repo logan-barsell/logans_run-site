@@ -5,15 +5,38 @@ import soundcloud from '../../images/icons/soundcloud.png';
 import spotify from '../../images/icons/spotify.png';
 import youtube from '../../images/icons/youtube.png';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { fetchContactInfo } from '../../redux/actions';
 import NavLink from '../Routing/NavLink';
+import emailjs from '@emailjs/browser';
 
 const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
   useEffect(() => {
     fetchContactInfo();
   }, [fetchContactInfo]);
+
+  const newsletterForm = useRef();
+
+  const sendNewsletter = e => {
+    e.preventDefault();
+    emailjs
+      .sendForm(
+        'service_gibfdre', // Service ID
+        'template_l2r8dyy', // Newsletter Template ID
+        newsletterForm.current,
+        'z5UnqtbNDPKNGhoGS' // Public Key
+      )
+      .then(
+        result => {
+          alert('Thank you for subscribing!');
+          newsletterForm.current.reset();
+        },
+        error => {
+          alert('Failed to subscribe, please try again.');
+        }
+      );
+  };
 
   return (
     <>
@@ -87,8 +110,8 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
               </div>
               <form
                 className='form-inline newsletter justify-content-center'
-                action='https://formspree.io/f/xgegekkd'
-                method='POST'
+                ref={newsletterForm}
+                onSubmit={sendNewsletter}
               >
                 <div className='modal-body'>
                   <div className='mx-xs-1 mx-sm-3 me-sm-5 pe-sm-5 final-form input-group'>

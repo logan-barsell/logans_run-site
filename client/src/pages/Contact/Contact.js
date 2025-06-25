@@ -1,18 +1,41 @@
 import './Contact.css';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { fetchContactInfo } from '../../redux/actions';
-import facebook from '../../images/icons/facebook.svg';
-import insta from '../../images/icons/instagram.svg';
-import youtube from '../../images/icons/youtube.svg';
-import soundcloud from '../../images/icons/soundcloud.svg';
-import spotify from '../../images/icons/spotify.svg';
+// import facebook from '../../images/icons/facebook.svg';
+// import insta from '../../images/icons/instagram.svg';
+// import youtube from '../../images/icons/youtube.svg';
+// import soundcloud from '../../images/icons/soundcloud.svg';
+// import spotify from '../../images/icons/spotify.svg';
+import emailjs from '@emailjs/browser';
 
 const ContactPage = ({ fetchContactInfo, contactInfo }) => {
   useEffect(() => {
     fetchContactInfo();
   }, []);
+
+  const form = useRef();
+
+  const sendEmail = e => {
+    e.preventDefault();
+    emailjs
+      .sendForm(
+        'service_gibfdre', // Service ID
+        'template_d0jvy6q', // Template ID
+        form.current,
+        'z5UnqtbNDPKNGhoGS' // Public Key
+      )
+      .then(
+        result => {
+          alert('Message sent!');
+          form.current.reset();
+        },
+        error => {
+          alert('Failed to send message, please try again.');
+        }
+      );
+  };
 
   return contactInfo[0] ? (
     <div
@@ -157,24 +180,36 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
         </div>
         <div className='col-lg sendmsg'>
           <form
-            action='https://formspree.io/contact@logansrun.com'
-            method='POST'
+            ref={form}
+            onSubmit={sendEmail}
           >
             <div className='form-group'>
-              <label htmlFor='emailAddress'>Email address</label>
+              <label htmlFor='name'>Name</label>
               <input
                 className='form-control'
-                id='emailAddress'
-                type='email'
-                name='email'
+                id='name'
+                type='text'
+                name='name'
+                required
               />
             </div>
             <div className='form-group'>
-              <label htmlFor='subject'>Subject</label>
+              <label htmlFor='email'>Email address</label>
               <input
                 className='form-control'
-                id='subject'
-                name='subject'
+                id='email'
+                type='email'
+                name='email'
+                required
+              />
+            </div>
+            <div className='form-group'>
+              <label htmlFor='title'>Subject</label>
+              <input
+                className='form-control'
+                id='title'
+                name='title'
+                required
               />
             </div>
             <div className='form-group'>
@@ -184,6 +219,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 id='message'
                 name='message'
                 rows='3'
+                required
               ></textarea>
             </div>
             <div className='d-grid gap-2'>
