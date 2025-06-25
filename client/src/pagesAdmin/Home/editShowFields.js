@@ -1,29 +1,39 @@
-export default (show) => {
-  const { poster, venue, location, date, doors, showtime, doorprice, advprice, tixlink } = show ? show : null;
+const editShowFields = show => {
+  const {
+    poster,
+    venue,
+    location,
+    date,
+    doors,
+    showtime,
+    doorprice,
+    advprice,
+    tixlink,
+  } = show ? show : null;
   return [
     {
       label: 'Upload Image',
       name: 'poster',
       type: 'image',
-      initialValue: poster
+      initialValue: poster,
     },
     {
       label: 'Venue',
       name: 'venue',
       type: 'text',
-      initialValue: venue
+      initialValue: venue,
     },
     {
       label: 'Location',
       name: 'location',
       type: 'text',
-      initialValue: location
+      initialValue: location,
     },
     {
       label: 'Date',
       name: 'date',
       type: 'date',
-      initialValue: date
+      initialValue: date,
     },
     {
       label: 'Time',
@@ -33,35 +43,37 @@ export default (show) => {
       },
       placeholder: {
         doors: 'Doors:',
-        showtime: 'Show:'
+        showtime: 'Show:',
       },
       type: 'time',
       initialValues: {
         doors,
-        showtime
-      }
+        showtime,
+      },
     },
     {
       label: 'Price',
       name: {
         doorprice: 'doorprice',
-        advprice: 'advprice'
+        advprice: 'advprice',
       },
       placeholder: {
         doorprice: 'Door:',
-        advprice: 'Adv:'
+        advprice: 'Adv:',
       },
-      type: 'price',
+      type: 'prices',
       initialValues: {
         doorprice,
-        advprice
-      }
+        advprice,
+      },
     },
     {
       label: 'Ticket Link',
       name: 'tixlink',
       type: 'text',
-      initialValue: tixlink
-    }
+      initialValue: tixlink,
+    },
   ];
-}
+};
+
+export default editShowFields;

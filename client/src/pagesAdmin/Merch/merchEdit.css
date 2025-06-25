@@ -4,8 +4,14 @@
   --secondary: lightcoral;
 }
 
+#merchEdit hr {
+  max-width: 85%;
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 44px;
+}
+
 #merchEdit {
-  height: 75vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,17 +21,19 @@
 
 #merchEdit h3 {
   color: var(--main);
+  margin-top: 33px;
+  text-align: center;
 }
-
+/* 
 #merchEdit p {
   color: white;
   margin-bottom: 33px;
   font-family: 'Courier New', Courier, monospace;
   letter-spacing: normal;
-}
+} */
 
-@media screen and (max-width: 350px) {
+/* @media screen and (max-width: 350px) {
   #merchEdit .bi-arrow-right-short {
     display: none;
   }
-}
+} */

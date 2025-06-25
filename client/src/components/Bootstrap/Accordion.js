@@ -70,8 +70,10 @@ class Accordion extends Component {
                 />
               </div>
               <div className='itemInfo col-12 col-sm-6 col-lg-7 center'>
-                <div className='subhead'>{subhead}</div>
-                <div className='content'>{this.renderSubItems(content)}</div>
+                <div className='subhead secondary-font'>{subhead}</div>
+                <div className='content secondary-font'>
+                  {this.renderSubItems(content)}
+                </div>
               </div>
             </div>
           </div>
