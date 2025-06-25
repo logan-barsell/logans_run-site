@@ -8,6 +8,7 @@
   max-width: 827px;
   margin: auto;
   margin-top: 50px;
+  width: 100%;
 }
 
 .accordion h5 {
@@ -74,14 +75,14 @@
 
 .itemInfo .subhead {
   font-size: 30px;
-  font-family: 'Courier New', Courier, monospace;
-  letter-spacing: normal;
 }
 
 .subItemVal {
   padding-left: 7px;
   color: white;
   display: inline-block;
+  font-weight: normal;
+  display: inline;
 }
 
 .memberMediaIcon {
@@ -94,6 +95,7 @@
   border-radius: 14px;
   padding: 27px 0px;
   margin-top: 7px;
+  font-weight: bold;
 }
 
 .accordion .content .subItemVal .btn {
@@ -157,6 +159,7 @@
 @media (max-width: 450px) {
   .header {
     font-size: 6vw;
+    max-width: 35vw;
   }
   .accordion-header .coHeader {
     font-size: 4vw;

@@ -26,3 +26,5 @@ yarn-error.log*
 dev.js
 
 /client/public/images
+
+config/serviceAccountKey.json
