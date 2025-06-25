@@ -60,7 +60,7 @@ const AddProduct = ({ createProduct, fetchProducts }) => {
     label: 'product_label',
     title: 'NEW PRODUCT',
     buttonText: uploading
-      ? `Uploading... ${String(uploadProgress).replace('0', 'O')}%`
+      ? `Uploading... ${String(uploadProgress).replaceAll('0', 'O')}%`
       : 'Add Product',
   };
 

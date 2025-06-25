@@ -71,7 +71,8 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
 
   const onFormRestart = form => {
     form.restart();
-    document.querySelector('.upload').value = null;
+    const uploadInput = document.querySelector('.upload');
+    if (uploadInput) uploadInput.value = null;
   };
 
   const removeImage = image => {
@@ -125,7 +126,10 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
                   className='submit btn btn-danger mt-3'
                 >
                   {uploading
-                    ? `Uploading... ${uploadProgress.replace('0', 'O')}%`
+                    ? `Uploading... ${String(uploadProgress).replaceAll(
+                        '0',
+                        'O'
+                      )}%`
                     : 'Add to Images'}
                 </button>
               </div>
