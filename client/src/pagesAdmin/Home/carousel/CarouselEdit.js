@@ -135,7 +135,7 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
                 className='submit btn btn-danger mt-3'
               >
                 {uploading
-                  ? `Uploading... ${uploadProgress.replace('0', 'O')}%`
+                  ? `Uploading... ${uploadProgress.replaceAll('0', 'O')}%`
                   : 'Add to Images'}
               </button>
             </div>
