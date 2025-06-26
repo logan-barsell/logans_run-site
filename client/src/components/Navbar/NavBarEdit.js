@@ -3,26 +3,16 @@ import './TopNav.css';
 import React, { useContext, useEffect, useRef } from 'react';
 import NavLinkEdit from '../Routing/NavLinkEdit';
 import { Collapse } from 'bootstrap';
-import { ActiveContext } from '../../pagesAdmin';
+import { ActiveContext } from '../../contexts/ActiveContext';
 import { useTheme } from '../../contexts/ThemeContext';
 
-import { useMsal } from '@azure/msal-react';
-
-function handleLogout(instance) {
-  instance
-    .logoutRedirect()
-    .catch(e => {
-      console.error(e);
-    })
-    .then(() => {
-      window.history.pushState({}, '', '/');
-      const navEvent = new PopStateEvent('popstate');
-      window.dispatchEvent(navEvent);
-    });
+function handleLogout() {
+  fetch('/api/logout', { method: 'POST', credentials: 'include' }).then(
+    () => (window.location.href = '/')
+  );
 }
 
 const TopNav = ({ routes }) => {
-  const { instance } = useMsal();
   const { theme } = useTheme();
 
   const ref = useRef();
@@ -86,7 +76,7 @@ const TopNav = ({ routes }) => {
               className='nav-item nav-link'
             >
               <button
-                onClick={() => handleLogout(instance)}
+                onClick={() => handleLogout()}
                 type='button'
                 className='btn btn-danger'
               >

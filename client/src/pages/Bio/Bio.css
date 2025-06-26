@@ -9,6 +9,7 @@
   border: 4px solid black;
   box-shadow: 1px 1px 9px black;
   background-color: black;
+  border-radius: 180px;
 }
 
 #biography.container {

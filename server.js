@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const keys = require('./config/keys');
@@ -21,6 +22,7 @@ app.use(
 );
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use('/public', express.static(`public`));
 

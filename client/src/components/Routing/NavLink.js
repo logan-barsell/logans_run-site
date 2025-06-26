@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { ActiveContext } from '../../App';
+import { ActiveContext } from '../../contexts/ActiveContext';
 
 const NavLink = ({ routes, menuToggle, footer }) => {
   const { setActiveIndex, activeIndex, toggle } = useContext(ActiveContext);

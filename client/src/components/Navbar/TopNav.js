@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import NavLink from '../Routing/NavLink';
 import { Collapse } from 'bootstrap';
-import { ActiveContext } from '../../App';
+import { ActiveContext } from '../../contexts/ActiveContext';
 import Cart from './cart/Cart';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../../contexts/ThemeContext';
