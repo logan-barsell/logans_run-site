@@ -2,28 +2,37 @@ name: Build & Deploy
 
 on:
   push:
-    branches: [ "main" ]
-    
+    branches: ['main']
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Deploy NodeJS app
-      uses: appleboy/ssh-action@v0.1.2
-      with:
-        host: ${{secrets.SSH_HOST}}
-        key: ${{secrets.SSH_KEY}}
-        username: ${{secrets.SSH_USERNAME}}
-        
-        script: |
-          cd /var/www/logans-run.com/html/logans_run-site
-          git pull
-          npm i
-          cd client
-          npm i
-          npm run build
-          sudo systemctl restart nginx
-          pm2 reload logans-run
+      - name: Deploy NodeJS apps
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script: |
+            set -e
+
+            echo "→ Updating Logans-Run Site"
+            cd /var/www/logans-run.com/html/logans_run-site
+            git pull origin main
+            npm install
+            cd client
+            npm install
+            npm run build
+
+            echo "→ Updating YesDevil Site"
+            cd /var/www/yesdevil.com/html/logans_run-site
+            git pull origin main
+            npm install
+            cd client
+            npm install
+            npm run build
+
+            echo "→ Restarting services"
+            sudo systemctl restart nginx
