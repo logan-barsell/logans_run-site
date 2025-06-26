@@ -18,7 +18,6 @@ const Signin = () => {
       });
       const data = await res.json();
       if (data.success) {
-        // Instead of reloading, trigger a new auth check
         window.location.href = '/theme';
       } else {
         setError(data.error || 'Login failed');
