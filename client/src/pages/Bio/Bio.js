@@ -1,11 +1,11 @@
 import './Bio.css';
 import vango from '../../images/logos/logansrunlogo.png';
-import followme from '../../images/aboutus/instafollow.png';
 
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect } from 'react';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { connect } from 'react-redux';
 import { fetchBio, fetchMembers } from '../../redux/actions';
+import { useTheme } from '../../contexts/ThemeContext';
 // for authentication
 import { useMsal } from '@azure/msal-react';
 import { loginRequest } from '../../authConfig';
@@ -23,9 +23,9 @@ function handleLogin(instance) {
     });
 }
 
-const initialState = { bio: '' };
 const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   const { instance } = useMsal();
+  const { theme } = useTheme();
 
   useEffect(() => {
     fetchMembers();
@@ -37,7 +37,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   };
 
   const renderMembers = members.map((member, index) => {
-    const { _id, bioPic, name, role, instaTag } = member;
+    const { _id, bioPic, name, role } = member;
     const blob = new Blob([Int8Array.from(bioPic.img.image.data)], {
       type: bioPic.img.contentType,
     });
@@ -59,13 +59,6 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
               <hr />
               <p>{role}</p>
             </div>
-            {/* <div className="row justify-content-center">
-              <div className="col-auto">
-                <a href={instaTag} target="_blank" rel="noreferrer">
-                  <img className="instafollow" src={followme} alt="Follow Me"/>
-                </a>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
@@ -87,8 +80,8 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
               <img
                 onClick={() => handleLogin(instance)}
                 className='aboutuspic'
-                src={vango}
-                alt=''
+                src={theme.bandLogoUrl || vango}
+                alt='Band Logo'
               />
             </div>
           </div>
@@ -96,7 +89,10 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
           <div className='row justify-content-center bio'>
             <p>
               <span>
-                This is <span className='yesdevil'>Logan's Run</span>
+                This is{' '}
+                <span className='yesdevil'>
+                  {theme.siteTitle || "Logan's Run"}
+                </span>
               </span>
               , &nbsp;{renderBio()}
             </p>

@@ -1,24 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
+
 /* FONTS */
-@font-face {
-  font-family: stencil;
-  src: url(fonts/stencil.ttf);
-}
 @font-face {
   font-family: sprayPaint;
   src: url(fonts/sprayPaint.ttf);
 }
-/* COLORS */
+
+/* Edgy/Rock Fonts */
+@font-face {
+  font-family: BebasNeue;
+  src: url(fonts/BebasNeue-Regular.ttf);
+}
+@font-face {
+  font-family: Anton;
+  src: url(fonts/Anton-Regular.ttf);
+}
+@font-face {
+  font-family: Oswald;
+  src: url(fonts/Oswald-Regular.ttf);
+}
+
+/* 60s/70s Hippy Fonts */
+@font-face {
+  font-family: Pacifico;
+  src: url(fonts/Pacifico-Regular.ttf);
+}
+
+/* Metal/Horror Fonts */
+@font-face {
+  font-family: Creepster;
+  src: url(fonts/Creepster-Regular.ttf);
+}
+@font-face {
+  font-family: Sancreek;
+  src: url(fonts/Sancreek-Regular.ttf);
+}
+
+/* Punk/Graffiti Fonts */
+@font-face {
+  font-family: VT323;
+  src: url(fonts/VT323-Regular.ttf);
+}
+
+/* Hand-Drawn/Rock Fonts */
+@font-face {
+  font-family: Kalam;
+  src: url(fonts/Kalam-Regular.ttf);
+}
+@font-face {
+  font-family: IndieFlower;
+  src: url(fonts/IndieFlower-Regular.ttf);
+}
+@font-face {
+  font-family: ArchitectsDaughter;
+  src: url(fonts/ArchitectsDaughter-Regular.ttf);
+}
+@font-face {
+  font-family: ComicNeue;
+  src: url(fonts/ComicNeue-Regular.ttf);
+}
+
+/* Fun/Bold Fonts */
+@font-face {
+  font-family: Righteous;
+  src: url(fonts/Righteous-Regular.ttf);
+}
+@font-face {
+  font-family: Lobster;
+  src: url(fonts/Lobster-Regular.ttf);
+}
+
+/* COLORS AND FONTS */
 :root {
-  --main: #e3ff05;
-  --secondary: rgb(240, 128, 128);
+  --main: #e3ff05; /* Default primary color - will be overridden by theme */
+  --secondary: #f08080; /* Default secondary color - will be overridden by theme */
+  --primary-font: sprayPaint; /* Default primary font - will be overridden by theme */
+  --secondary-font: 'Courier New', Courier, monospace; /* Default secondary font */
 }
 
 html,
 body {
-  font-family: sprayPaint;
+  font-family: var(--primary-font), Arial, sans-serif;
   font-size: 22px;
   background-color: #272727;
-  letter-spacing: 2px;
+  letter-spacing: normal;
 }
 
 /* FADE IN EFFECT */
@@ -43,7 +108,7 @@ body {
 
 /*GENERAL*/
 .secondary-font {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
 }
 
@@ -72,11 +137,11 @@ body {
 input,
 select,
 textarea {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
 }
 
 .no-content {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
   text-shadow: none;
   color: var(--main);
@@ -101,13 +166,13 @@ textarea {
 
 .btn-danger.disabled,
 .btn-danger:disabled {
-  background-color: #e3ff05;
+  background-color: var(--main);
   color: black;
 }
 
 .btn-check:focus + .btn-danger,
 .btn-danger:focus {
-  background-color: #e3ff05;
+  background-color: var(--main);
   color: black;
 }
 
@@ -348,6 +413,6 @@ hr {
 @media (max-width: 291px) {
   p,
   a {
-    letter-spacing: 1.5px;
+    font-size: 4.5vw;
   }
 }

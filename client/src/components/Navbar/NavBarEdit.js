@@ -4,38 +4,42 @@ import React, { useContext, useEffect, useRef } from 'react';
 import NavLinkEdit from '../Routing/NavLinkEdit';
 import { Collapse } from 'bootstrap';
 import { ActiveContext } from '../../pagesAdmin';
+import { useTheme } from '../../contexts/ThemeContext';
 
-import { useMsal } from "@azure/msal-react";
+import { useMsal } from '@azure/msal-react';
 
 function handleLogout(instance) {
-  instance.logoutRedirect().catch(e => {
-    console.error(e);
-  }).then(() => {
-    window.history.pushState({}, '', '/');
-    const navEvent = new PopStateEvent('popstate');
-    window.dispatchEvent(navEvent);
-  });
+  instance
+    .logoutRedirect()
+    .catch(e => {
+      console.error(e);
+    })
+    .then(() => {
+      window.history.pushState({}, '', '/');
+      const navEvent = new PopStateEvent('popstate');
+      window.dispatchEvent(navEvent);
+    });
 }
 
 const TopNav = ({ routes }) => {
-
   const { instance } = useMsal();
+  const { theme } = useTheme();
 
   const ref = useRef();
   const { toggle, setToggle } = useContext(ActiveContext);
 
   const menuToggle = () => {
     setToggle(toggle => !toggle);
-  }
+  };
 
   useEffect(() => {
     const menuCollapse = document.getElementById('menu');
     const bsCollapse = new Collapse(menuCollapse, {
-      toggle: false
+      toggle: false,
     });
     toggle ? bsCollapse.show() : bsCollapse.hide();
 
-    const onBodyClick = (event) => {
+    const onBodyClick = event => {
       if (ref.current && ref.current.contains(event.target)) {
         return;
       }
@@ -47,28 +51,44 @@ const TopNav = ({ routes }) => {
     return () => {
       document.body.removeEventListener('click', onBodyClick);
     };
-
   });
 
   return (
-    <nav ref={ref} className="navbar navbar-expand-lg navbar-light sticky-top">
-      <div className="container-fluid">
-        <a className="navbar-brand yesdevil hvr-grow" href="/home">Logan's Run</a>
+    <nav
+      ref={ref}
+      className='navbar navbar-expand-lg navbar-light sticky-top'
+    >
+      <div className='container-fluid'>
+        <a
+          className='navbar-brand yesdevil hvr-grow'
+          href='/home'
+        >
+          {theme.siteTitle || "Logan's Run"}
+        </a>
         <button
-          className="navbar-toggler"
-          type="button"
+          className='navbar-toggler'
+          type='button'
           onClick={() => menuToggle()}
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className='navbar-toggler-icon'></span>
         </button>
-        <div className="collapse navbar-collapse" id="menu">
-          <div className="navbar-nav justify-content-around">
-            <NavLinkEdit routes={routes} menuToggle={menuToggle} />
-            <a href="/" className="nav-item nav-link">
+        <div
+          className='collapse navbar-collapse'
+          id='menu'
+        >
+          <div className='navbar-nav justify-content-around'>
+            <NavLinkEdit
+              routes={routes}
+              menuToggle={menuToggle}
+            />
+            <a
+              href='/'
+              className='nav-item nav-link'
+            >
               <button
                 onClick={() => handleLogout(instance)}
-                type="button"
-                className="btn btn-danger"
+                type='button'
+                className='btn btn-danger'
               >
                 Log Out
               </button>
@@ -78,6 +98,6 @@ const TopNav = ({ routes }) => {
       </div>
     </nav>
   );
-}
+};
 
 export default TopNav;

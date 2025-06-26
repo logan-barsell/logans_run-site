@@ -1,9 +1,3 @@
-/* COLORS */
-:root {
-  --main: #e3ff05;
-  --secondary: lightcoral;
-}
-
 .accordion {
   max-width: 827px;
   margin: auto;
@@ -112,7 +106,7 @@
 }
 
 .modal-body.deleteItem {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
 }
 

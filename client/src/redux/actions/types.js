@@ -11,3 +11,7 @@ export const FETCH_HOME_IMAGES = 'fetch_home_images';
 export const FETCH_MEDIA_IMAGES = 'fetch_media_images';
 export const FETCH_VIDEOS = 'fetch_videos';
 export const FETCH_PLAYERS = 'fetch_players';
+
+// Theme
+export const FETCH_THEME = 'fetch_theme';
+export const UPDATE_THEME = 'update_theme';

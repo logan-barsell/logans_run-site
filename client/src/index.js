@@ -8,6 +8,7 @@ import { PublicClientApplication } from '@azure/msal-browser';
 import { MsalProvider } from '@azure/msal-react';
 import { msalConfig } from './authConfig';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -17,9 +18,11 @@ ReactDOM.render(
       loading={null}
       persistor={persistor}
     >
-      <MsalProvider instance={msalInstance}>
-        <App />
-      </MsalProvider>
+      <ThemeProvider>
+        <MsalProvider instance={msalInstance}>
+          <App />
+        </MsalProvider>
+      </ThemeProvider>
     </PersistGate>
   </Provider>,
   document.getElementById('root')

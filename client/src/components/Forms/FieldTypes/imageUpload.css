@@ -31,6 +31,6 @@
   text-align: center;
   line-height: 22px;
   padding-bottom: 10px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
 }
