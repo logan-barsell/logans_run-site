@@ -5,7 +5,7 @@
 .accordion-header .coHeader {
   color: white;
   font-size: 16px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
 }
 
@@ -27,6 +27,6 @@
 }
 
 .subItemVal {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
 }

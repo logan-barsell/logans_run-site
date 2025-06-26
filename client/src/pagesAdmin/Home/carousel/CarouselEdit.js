@@ -67,7 +67,8 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
 
   const onFormRestart = form => {
     form.restart();
-    document.querySelector('.upload').value = null;
+    const uploadInput = document.querySelector('.upload');
+    if (uploadInput) uploadInput.value = null;
   };
 
   const removeImage = image => {

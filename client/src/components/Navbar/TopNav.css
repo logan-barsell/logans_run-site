@@ -1,9 +1,3 @@
-/* COLORS */
-:root {
-  --main: #e3ff05;
-  --secondary: lightcoral;
-}
-
 .navbar-light .navbar-brand.yesdevil {
   color: var(--main);
   text-shadow: 2px 1px black;

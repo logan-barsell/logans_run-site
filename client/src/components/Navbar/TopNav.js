@@ -7,11 +7,13 @@ import { Collapse } from 'bootstrap';
 import { ActiveContext } from '../../App';
 import Cart from './cart/Cart';
 import { createPortal } from 'react-dom';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const TopNav = ({ routes }) => {
   const cart = useSelector(state => state.cart);
   const ref = useRef();
   const { toggle, setToggle } = useContext(ActiveContext);
+  const { theme } = useTheme();
 
   const menuToggle = () => {
     setToggle(toggle => !toggle);
@@ -53,7 +55,7 @@ const TopNav = ({ routes }) => {
           className='navbar-brand yesdevil hvr-grow'
           href='.'
         >
-          Logan's Run
+          {theme.siteTitle || "Logan's Run"}
         </a>
         <button
           className='navbar-toggler'

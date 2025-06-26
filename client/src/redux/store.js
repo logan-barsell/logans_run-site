@@ -13,6 +13,7 @@ import cartReducer from './cartRedux';
 import thunk from 'redux-thunk';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { themeReducer } from './reducers/themeReducer';
 
 const persistConfig = {
   key: 'root',
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   products: productsReducer,
   shipping: shippingReducer,
   cart: cartReducer,
+  theme: themeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

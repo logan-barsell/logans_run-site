@@ -14,9 +14,11 @@ db.once('open', function () {
 
 const app = express();
 
-app.use(bodyParser.urlencoded({
-  extended: false,
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
 
 app.use(bodyParser.json());
 
@@ -28,7 +30,7 @@ require('./routes/bioRoutes')(app);
 require('./routes/contactRoutes')(app);
 require('./routes/mediaRoutes')(app);
 require('./routes/musicRoutes')(app);
-
+app.use(require('./routes/themeRoutes'));
 
 app.get('/', (req, res) => {
   res.send('EXPRESS ===> REACT');
@@ -49,4 +51,3 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-

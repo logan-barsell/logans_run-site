@@ -1,9 +1,4 @@
 import './BottomNav.css';
-import facebook from '../../images/icons/facebook.png';
-import insta from '../../images/icons/insta.png';
-import soundcloud from '../../images/icons/soundcloud.png';
-import spotify from '../../images/icons/spotify.png';
-import youtube from '../../images/icons/youtube.png';
 
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';

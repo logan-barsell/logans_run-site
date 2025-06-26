@@ -1,9 +1,3 @@
-/* COLORS */
-:root {
-  --main: #e3ff05;
-  --secondary: lightcoral;
-}
-
 .parallax {
   background-attachment: fixed;
   background-position: center;
@@ -111,5 +105,380 @@
   #upcomingshows {
     margin: 33px 18px 0px 18px;
     padding-bottom: 20px;
+  }
+}
+
+#home {
+  color: white;
+}
+
+#home h1 {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#home h2 {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#home h3 {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#home h4 {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#home h5 {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#home h6 {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#home p {
+  text-shadow: 2px 1.5px black;
+}
+
+#home a {
+  color: var(--main);
+}
+
+#home a:hover {
+  color: var(--secondary);
+}
+
+#home .btn {
+  background-color: var(--main);
+  color: black;
+  border-color: var(--main);
+}
+
+#home .btn:hover {
+  background-color: var(--secondary);
+  color: white;
+  border-color: var(--secondary);
+}
+
+#home .carousel-item {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#home .carousel-caption {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+#home .carousel-caption h5 {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#home .carousel-caption p {
+  color: white;
+  text-shadow: 1px 1px black;
+}
+
+#home .card {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--main);
+  color: white;
+}
+
+#home .card-header {
+  background-color: var(--main);
+  color: black;
+  border-bottom: 2px solid var(--main);
+}
+
+#home .card-body {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#home .list-group-item {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: var(--main);
+  color: white;
+}
+
+#home .list-group-item:hover {
+  background-color: var(--main);
+  color: black;
+}
+
+#home .badge {
+  background-color: var(--secondary);
+  color: white;
+}
+
+#home .alert {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-color: var(--main);
+  color: white;
+}
+
+#home .alert-success {
+  border-color: var(--main);
+}
+
+#home .alert-danger {
+  border-color: var(--secondary);
+}
+
+#home .progress {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#home .progress-bar {
+  background-color: var(--main);
+}
+
+#home .modal-content {
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 2px solid var(--main);
+}
+
+#home .modal-header {
+  border-bottom-color: var(--main);
+}
+
+#home .modal-footer {
+  border-top-color: var(--main);
+}
+
+#home .form-control {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: var(--main);
+  color: white;
+}
+
+#home .form-control:focus {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-color: var(--secondary);
+  color: white;
+  box-shadow: 0 0 0 0.2rem rgba(240, 128, 128, 0.25);
+}
+
+#home .form-label {
+  color: var(--main);
+}
+
+#home .form-text {
+  color: var(--secondary);
+}
+
+#home .table {
+  color: white;
+}
+
+#home .table th {
+  background-color: var(--main);
+  color: black;
+}
+
+#home .table td {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#home .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#home .table-hover tbody tr:hover {
+  background-color: var(--main);
+  color: black;
+}
+
+#home .dropdown-menu {
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--main);
+}
+
+#home .dropdown-item {
+  color: white;
+}
+
+#home .dropdown-item:hover {
+  background-color: var(--main);
+  color: black;
+}
+
+#home .nav-tabs {
+  border-bottom-color: var(--main);
+}
+
+#home .nav-tabs .nav-link {
+  color: white;
+  border-color: transparent;
+}
+
+#home .nav-tabs .nav-link:hover {
+  border-color: var(--main);
+  color: var(--main);
+}
+
+#home .nav-tabs .nav-link.active {
+  background-color: var(--main);
+  border-color: var(--main);
+  color: black;
+}
+
+#home .nav-pills .nav-link {
+  color: white;
+}
+
+#home .nav-pills .nav-link.active {
+  background-color: var(--main);
+  color: black;
+}
+
+#home .breadcrumb {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#home .breadcrumb-item + .breadcrumb-item::before {
+  color: var(--main);
+}
+
+#home .pagination .page-link {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: var(--main);
+  color: white;
+}
+
+#home .pagination .page-link:hover {
+  background-color: var(--main);
+  border-color: var(--main);
+  color: black;
+}
+
+#home .pagination .page-item.active .page-link {
+  background-color: var(--main);
+  border-color: var(--main);
+  color: black;
+}
+
+#home .spinner-border {
+  color: var(--main);
+}
+
+#home .spinner-grow {
+  color: var(--main);
+}
+
+#home .text-primary {
+  color: var(--main) !important;
+}
+
+#home .text-secondary {
+  color: var(--secondary) !important;
+}
+
+#home .bg-primary {
+  background-color: var(--main) !important;
+  color: black !important;
+}
+
+#home .bg-secondary {
+  background-color: var(--secondary) !important;
+  color: white !important;
+}
+
+#home .border-primary {
+  border-color: var(--main) !important;
+}
+
+#home .border-secondary {
+  border-color: var(--secondary) !important;
+}
+
+@media (max-width: 768px) {
+  #home h1 {
+    font-size: 2rem;
+  }
+
+  #home h2 {
+    font-size: 1.75rem;
+  }
+
+  #home h3 {
+    font-size: 1.5rem;
+  }
+
+  #home h4 {
+    font-size: 1.25rem;
+  }
+
+  #home h5 {
+    font-size: 1.1rem;
+  }
+
+  #home h6 {
+    font-size: 1rem;
+  }
+
+  #home p {
+    font-size: 0.9rem;
+  }
+
+  #home .carousel-caption {
+    padding: 10px;
+  }
+
+  #home .carousel-caption h5 {
+    font-size: 1.1rem;
+  }
+
+  #home .carousel-caption p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  #home h1 {
+    font-size: 1.75rem;
+  }
+
+  #home h2 {
+    font-size: 1.5rem;
+  }
+
+  #home h3 {
+    font-size: 1.25rem;
+  }
+
+  #home h4 {
+    font-size: 1.1rem;
+  }
+
+  #home h5 {
+    font-size: 1rem;
+  }
+
+  #home h6 {
+    font-size: 0.9rem;
+  }
+
+  #home p {
+    font-size: 0.85rem;
+  }
+
+  #home .carousel-caption {
+    padding: 5px;
+  }
+
+  #home .carousel-caption h5 {
+    font-size: 1rem;
+  }
+
+  #home .carousel-caption p {
+    font-size: 0.8rem;
   }
 }

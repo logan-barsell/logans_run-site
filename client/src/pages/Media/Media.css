@@ -1,9 +1,3 @@
-/* COLORS */
-:root {
-  --main: #e3ff05;
-  --secondary: lightcoral;
-}
-
 #blog .img-container {
   margin-top: 33px;
 }
@@ -166,7 +160,7 @@
 }
 
 .blog-post .date {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
 }
 

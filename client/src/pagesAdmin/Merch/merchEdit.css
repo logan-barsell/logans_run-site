@@ -1,9 +1,3 @@
-/* COLORS */
-:root {
-  --main: #e3ff05;
-  --secondary: lightcoral;
-}
-
 #merchEdit hr {
   max-width: 85%;
   width: 100%;
@@ -28,7 +22,7 @@
 #merchEdit p {
   color: white;
   margin-bottom: 33px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
   letter-spacing: normal;
 } */
 
