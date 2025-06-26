@@ -18,16 +18,28 @@ jobs:
           script: |
             set -e
 
-            echo "→ Updating Logans Run"
+            ######################################
+            # 1) Update Logans-Run site
+            ######################################
+            echo "→ Marking Logans-Run as safe"
+            git config --global --add safe.directory /var/www/logans-run.com/html/logans_run-site
+
+            echo "→ Updating logans_run-site"
             cd /var/www/logans-run.com/html/logans_run-site
             git pull origin main
             npm install
             cd client
-            sudo rm -rf build       
+            sudo rm -rf build
             npm install
             npm run build
 
-            echo "→ Updating Yes Devil"
+            ######################################
+            # 2) Update YesDevil site
+            ######################################
+            echo "→ Marking YesDevil as safe"
+            git config --global --add safe.directory /var/www/yesdevil.com/html/logans_run-site
+
+            echo "→ Updating yesdevil logans_run-site"
             cd /var/www/yesdevil.com/html/logans_run-site
             git pull origin main
             npm install
@@ -36,5 +48,8 @@ jobs:
             npm install
             npm run build
 
+            ######################################
+            # 3) Restart your services
+            ######################################
             echo "→ Restarting nginx & pm2"
             sudo systemctl restart nginx
