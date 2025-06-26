@@ -6,26 +6,11 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { connect } from 'react-redux';
 import { fetchBio, fetchMembers } from '../../redux/actions';
 import { useTheme } from '../../contexts/ThemeContext';
-// for authentication
-import { useMsal } from '@azure/msal-react';
-import { loginRequest } from '../../authConfig';
-
-function handleLogin(instance) {
-  instance
-    .loginRedirect(loginRequest)
-    .then(() => {
-      window.history.pushState({}, '', '/editHome');
-      const navEvent = new PopStateEvent('popstate');
-      window.dispatchEvent(navEvent);
-    })
-    .catch(e => {
-      console.error(e);
-    });
-}
+import { useNavigate } from 'react-router-dom';
 
 const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
-  const { instance } = useMsal();
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMembers();
@@ -78,7 +63,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
           <div className='row justify-content-center'>
             <div className='col-7 col-sm-auto'>
               <img
-                onClick={() => handleLogin(instance)}
+                onClick={() => navigate('/signin')}
                 className='aboutuspic'
                 src={theme.bandLogoUrl || vango}
                 alt='Band Logo'

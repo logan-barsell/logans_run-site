@@ -1,37 +1,32 @@
 import '../App.css';
 import '../plugins/loading-bar.css';
+import '@stripe/stripe-js';
 
 import React, { useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
-import TopNavEdit from '../components/Navbar/NavBarEdit';
-import HomeEdit from './Home/HomeEdit';
-import MusicEdit from './Music/MusicEdit';
-import MerchEdit from './Merch/MerchEdit';
-import MediaEdit from './Media/MediaEdit';
-import BioEdit from './Bio/BioEdit';
-import ContactEdit from './Contact/ContactEdit';
-import ThemeEdit from './Theme/ThemeEdit';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import TopNav from '../components/Navbar/TopNav';
+import BottomNav from '../components/Navbar/BottomNav';
+import HomePage from './Home/Home';
+import MusicPage from './Music/Music';
+import MerchPage from './Merch/Merch';
+import MediaPage from './Media/Media';
+import BioPage from './Bio/Bio';
+import ContactPage from './Contact/Contact';
+import Signin from './Auth/Signin';
 import history from '../history';
-import BottomNavEdit from '../components/Navbar/BottomNavEdit';
 import { ActiveContext } from '../contexts/ActiveContext';
 
-const AdminPages = () => {
-  const location = useLocation();
+const UserPages = () => {
   const routes = [
-    { name: 'Home', value: '/home' },
+    { name: 'Home', value: '/' },
     { name: 'Music', value: '/music' },
     { name: 'Store', value: '/merch' },
     { name: 'Media', value: '/media' },
-    { name: 'Bio', value: '/aboutus' },
+    { name: 'Bio', value: '/bio' },
     { name: 'Contact', value: '/contact' },
   ];
 
-  const currentUrl = location.pathname;
+  const currentUrl = window.location.pathname;
 
   let initialState;
   for (let i = 0; i < routes.length - 1; i++) {
@@ -48,56 +43,56 @@ const AdminPages = () => {
       <ActiveContext.Provider
         value={{ activeIndex, setActiveIndex, toggle, setToggle }}
       >
-        <TopNavEdit routes={routes} />
+        <TopNav routes={routes} />
         <Routes>
           <Route
-            path='/home'
+            path='/'
             exact
-            element={<HomeEdit />}
+            element={<HomePage />}
           />
           <Route
             path='/music'
             exact
-            element={<MusicEdit />}
+            element={<MusicPage />}
           />
           <Route
             path='/merch'
             exact
-            element={<MerchEdit />}
+            element={<MerchPage />}
           />
           <Route
             path='/media'
             exact
-            element={<MediaEdit />}
+            element={<MediaPage />}
           />
           <Route
-            path='/aboutus'
+            path='/bio'
             exact
-            element={<BioEdit />}
+            element={<BioPage />}
           />
           <Route
             path='/contact'
             exact
-            element={<ContactEdit />}
+            element={<ContactPage />}
           />
           <Route
-            path='/theme'
+            path='/signin'
             exact
-            element={<ThemeEdit />}
+            element={<Signin />}
           />
         </Routes>
-        {location.pathname !== '/theme' && <BottomNavEdit />}
+        <BottomNav routes={routes} />
       </ActiveContext.Provider>
     </>
   );
 };
 
-const Admin = () => {
+const User = () => {
   return (
     <Router history={history}>
-      <AdminPages />
+      <UserPages />
     </Router>
   );
 };
 
-export default Admin;
+export default User;

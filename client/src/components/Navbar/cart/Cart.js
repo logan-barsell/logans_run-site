@@ -31,9 +31,9 @@ const Cart = ({ fetchShipping, shipping }) => {
     }
   };
 
-  useEffect(() => {
-    fetchShipping();
-  }, [fetchShipping]);
+  // useEffect(() => {
+  //   fetchShipping();
+  // }, [fetchShipping]);
 
   const subTotal = cart.total / 100;
   const shippingCost = shipping.fixed_amount ? shipping.fixed_amount.amount : 0;
