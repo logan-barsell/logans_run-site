@@ -46,7 +46,7 @@ const Products = ({ fetchProducts, products }) => {
                       data-bs-target='#shoppingCart'
                       aria-controls='shoppingCart'
                     >
-                      Add to Car t{' '}
+                      Add to Cart{' '}
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         width='20'
