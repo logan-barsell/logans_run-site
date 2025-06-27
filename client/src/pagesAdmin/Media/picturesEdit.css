@@ -1,4 +1,3 @@
-
 #editPictures {
   height: fit-content;
   margin: 33px auto;
@@ -6,6 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-bottom: 150px;
 }
 
 #editPictures h3 {
