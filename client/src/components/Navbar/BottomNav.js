@@ -50,7 +50,9 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                 data-bs-toggle='modal'
                 data-bs-target='#newsletterModal'
               >
-                Join the run
+                {contactInfo[0]?.email === 'loganjbars@gmail.com'
+                  ? 'Join Newsletter'
+                  : 'Join the run'}
               </button>
             </div>
           </div>
@@ -75,7 +77,9 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                   className='modal-title'
                   id='exampleModalLongTitle'
                 >
-                  Join the run
+                  {contactInfo[0]?.email === 'loganjbars@gmail.com'
+                    ? 'Join Newsletter'
+                    : 'Join the run'}
                 </h5>
 
                 <button
@@ -144,7 +148,9 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                     value='send'
                     type='submit'
                   >
-                    Become a runner
+                    {contactInfo[0]?.email === 'loganjbars@gmail.com'
+                      ? 'Join'
+                      : 'Become a Runner'}
                   </button>
                 </div>
               </form>
@@ -297,7 +303,9 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
               style={{ display: 'inline-block' }}
               href='.'
             >
-              logans-run.com
+              {contactInfo[0]?.email === 'loganjbars@gmail.com'
+                ? 'yesdevil.com'
+                : 'logans-run.com'}
             </a>
           </p>
         </div>
