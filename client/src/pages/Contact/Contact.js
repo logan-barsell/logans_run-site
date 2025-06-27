@@ -46,7 +46,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
         className='row'
         style={{ margin: '20px 0px', gap: '60px' }}
       >
-        <div className='col-lg'>
+        <div className='col-lg align-content-center'>
           <div className='jumbotron p-sm-5'>
             <h5>Contact Information</h5>
             <hr className='my-4' />
@@ -178,11 +178,13 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
             </div>
           </div>
         </div>
-        <div className='col-lg sendmsg'>
+        <div className='col-lg sendmsg align-content-center my-4'>
           <form
             ref={form}
             onSubmit={sendEmail}
           >
+            <h5 className='text-center'>Email Us</h5>
+            <hr className='mb-4' />
             <div className='form-group'>
               <label htmlFor='name'>Name</label>
               <input
@@ -228,7 +230,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 type='submit'
                 value='send'
               >
-                Submit
+                Send
               </button>
             </div>
           </form>

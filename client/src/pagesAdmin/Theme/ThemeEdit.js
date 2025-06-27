@@ -2,21 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Form, Field, FormSpy } from 'react-final-form';
 import { connect } from 'react-redux';
 import { fetchTheme, updateTheme } from '../../redux/actions';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from 'firebase/storage';
-import app from '../firebase';
 import ImageUpload from '../../components/Forms/FieldTypes/ImageUpload';
 import './themeEdit.css';
+import {
+  uploadImageToFirebase,
+  deleteImageFromFirebase,
+} from '../../utils/firebaseImage';
 
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   const [updated, setUpdated] = useState(false);
   const [logoFile, setLogoFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     fetchTheme();
@@ -27,27 +24,15 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
     let oldBandLogoUrl = theme.bandLogoUrl;
     if (logoFile) {
       setUploading(true);
-      const storage = getStorage(app);
-      // Remove old logo from Firebase if it exists (frontend fallback, but backend will handle real deletion)
-      // (Optional: can keep this for immediate UI feedback, but backend will be source of truth)
-      const fileName = `band-logo-${Date.now()}-${logoFile.name}`;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, logoFile);
-      await new Promise((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          null,
-          error => {
-            setUploading(false);
-            reject(error);
-          },
-          async () => {
-            bandLogoUrl = await getDownloadURL(uploadTask.snapshot.ref);
-            setUploading(false);
-            resolve();
-          }
-        );
-      });
+      try {
+        bandLogoUrl = await uploadImageToFirebase(logoFile, {
+          onProgress: setUploadProgress,
+        });
+      } catch (err) {
+        setUploading(false);
+        throw err;
+      }
+      setUploading(false);
     }
     updateTheme({ ...values, bandLogoUrl, oldBandLogoUrl });
     setUpdated(true);

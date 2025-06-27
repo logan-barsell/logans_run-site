@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { fetchShows } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
 import ADD_SHOW_FIELDS from './addShowFields';
+import { uploadImageToFirebase } from '../../utils/firebaseImage';
 
 const AddShow = ({ fetchShows }) => {
-  const onSubmit = ({
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const onSubmit = async ({
     poster,
     venue,
     location,
@@ -18,12 +22,25 @@ const AddShow = ({ fetchShows }) => {
     advprice,
     tixlink,
   }) => {
+    setUploading(true);
     const newDate = date.getTime();
     const newDoors = doors.getTime();
     const newShowtime = showtime.getTime();
 
+    let posterUrl = '';
+    if (poster && poster[0]) {
+      try {
+        posterUrl = await uploadImageToFirebase(poster[0], {
+          onProgress: setUploadProgress,
+        });
+      } catch (err) {
+        setUploading(false);
+        throw err;
+      }
+    }
+
     const newShow = {
-      poster: poster[0],
+      poster: posterUrl,
       venue,
       location,
       date: newDate,
@@ -34,15 +51,9 @@ const AddShow = ({ fetchShows }) => {
       tixlink,
     };
 
-    const payload = new FormData();
-    for (let key in newShow) {
-      if (newShow[key] !== undefined) {
-        payload.append(key, newShow[key]);
-      }
-    }
-
-    axios.post('/api/addShow', payload).then(res => {
+    axios.post('/api/addShow', newShow).then(res => {
       fetchShows();
+      setUploading(false);
     });
   };
 
@@ -50,7 +61,9 @@ const AddShow = ({ fetchShows }) => {
     id: 'add_show',
     label: 'show_label',
     title: 'NEW SHOW',
-    buttonText: 'Add Show',
+    buttonText: uploading
+      ? `Uploading... ${String(uploadProgress).replaceAll('0', 'O')}%`
+      : 'Add Show',
   };
 
   const AddButton = () => {
@@ -60,6 +73,7 @@ const AddShow = ({ fetchShows }) => {
         data-bs-target={`#${modalProps.id}`}
         className='addButton btn btn-danger'
         type='button'
+        disabled={uploading}
       >
         <svg
           xmlns='http://www.w3.org/2000/svg'

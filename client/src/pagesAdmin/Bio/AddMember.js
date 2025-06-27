@@ -4,57 +4,77 @@ import { connect } from 'react-redux';
 import { fetchMembers } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
+import { uploadImageToFirebase } from '../../utils/firebaseImage';
 
 const AddMember = ({ fetchMembers }) => {
-
   const txtFields = [
     {
       label: 'Upload Image',
       name: 'bioPic',
-      type: 'image'
+      type: 'image',
     },
     { label: 'Name', name: 'name', type: 'text' },
     { label: 'Role', name: 'role', type: 'text' },
-    { label: 'Instagram Tag', name: 'instaTag', type: 'text' }
+    { label: 'Instagram Tag', name: 'instaTag', type: 'text' },
   ];
 
-  const onSubmit = ({ bioPic, name, role, instaTag }) => {
+  const [uploading, setUploading] = React.useState(false);
+  const [uploadProgress, setUploadProgress] = React.useState(0);
 
+  const onSubmit = async ({ bioPic, name, role, instaTag }) => {
+    setUploading(true);
+    let imageUrl = '';
+    let fileName = '';
+    if (bioPic && bioPic.length) {
+      try {
+        fileName = Date.now() + bioPic[0].name;
+        imageUrl = await uploadImageToFirebase(bioPic[0], {
+          fileName,
+          onProgress: setUploadProgress,
+        });
+      } catch (err) {
+        setUploading(false);
+        throw err;
+      }
+    }
     const newMember = {
-      bioPic: bioPic[0],
+      bioPic: imageUrl,
       name,
       role,
-      instaTag
+      instaTag,
     };
-
-    const payload = new FormData();
-    for (let key in newMember) {
-      payload.append(key, newMember[key]);
-    }
-
-    axios.post('/api/addMember', payload).then(res => {
-      fetchMembers();
-    });
-  }
+    await axios.post('/api/addMember', newMember);
+    fetchMembers();
+    setUploading(false);
+  };
 
   const modalProps = {
     id: 'add_modal',
     label: 'add_label',
     title: 'NEW MEMBER',
-    buttonText: 'Add Member'
-  }
-
+    buttonText: uploading
+      ? `Uploading... ${String(uploadProgress).replaceAll('0', 'O')}%`
+      : 'Add Member',
+  };
 
   const AddButton = () => {
     return (
       <button
-        data-bs-toggle="modal"
+        data-bs-toggle='modal'
         data-bs-target={`#${modalProps.id}`}
-        className="addButton btn btn-danger"
-        type="button"
+        className='addButton btn btn-danger'
+        type='button'
+        disabled={uploading}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-plus-square-fill" viewBox="0 0 16 16">
-          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z" />
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='20'
+          height='20'
+          fill='currentColor'
+          className='bi bi-plus-square-fill'
+          viewBox='0 0 16 16'
+        >
+          <path d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z' />
         </svg>
         {modalProps.buttonText}
       </button>
@@ -63,13 +83,18 @@ const AddMember = ({ fetchMembers }) => {
 
   return (
     <>
-      <CustomModal modalProps={modalProps} modalButton={<AddButton />}>
-        <ModalForm fields={txtFields} onSubmit={onSubmit} />
+      <CustomModal
+        modalProps={modalProps}
+        modalButton={<AddButton />}
+      >
+        <ModalForm
+          fields={txtFields}
+          onSubmit={onSubmit}
+        />
       </CustomModal>
     </>
   );
-
-}
+};
 
 function mapStateToProps({ members }) {
   return { members };
