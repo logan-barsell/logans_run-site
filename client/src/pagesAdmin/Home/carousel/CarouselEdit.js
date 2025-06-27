@@ -2,20 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchHomeImages } from '../../../redux/actions';
 import axios from 'axios';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from 'firebase/storage';
-import app from '../../firebase';
 import { Form } from 'react-final-form';
 import { ImageUpload } from '../../../components/Forms/FieldTypes';
 import RemoveImage from './RemoveImage';
+import {
+  uploadImageToFirebase,
+  deleteImageFromFirebase,
+} from '../../../utils/firebaseImage';
+
+function extractStoragePathFromUrl(url) {
+  const match = url && url.match(/\/o\/([^?]+)/);
+  if (match && match[1]) {
+    return decodeURIComponent(match[1]);
+  }
+  return url ? url.split('/').pop().split('?')[0] : '';
+}
 
 const CarouselEdit = ({ fetchHomeImages, images }) => {
-  const storage = getStorage(app);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [image, setImage] = useState(null);
@@ -24,66 +27,43 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
     fetchHomeImages();
   }, [fetchHomeImages]);
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     const file = data?.pic[0];
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
     setUploading(true);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      'state_changed',
-      snapshot => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgress(Math.floor(progress));
-        switch (snapshot.state) {
-          case 'paused':
-            console.log('Upload is paused');
-            break;
-          case 'running':
-            console.log('Upload is running');
-            break;
-          default:
-        }
-      },
-      error => {
-        console.log(error);
-        setUploading(false);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-          const payload = { name: fileName, imgLink: downloadURL };
-          axios
-            .post('/api/addHomeImage', payload)
-            .then(res => {
-              setUploading(false);
-              fetchHomeImages();
-            })
-            .catch(err => console.log(err));
-        });
-      }
-    );
+    let downloadURL = '';
+    let fileName = '';
+    try {
+      fileName = new Date().getTime() + file.name;
+      downloadURL = await uploadImageToFirebase(file, {
+        fileName,
+        onProgress: setUploadProgress,
+      });
+    } catch (err) {
+      setUploading(false);
+      throw err;
+    }
+    const payload = { name: fileName, imgLink: downloadURL };
+    await axios.post('/api/addHomeImage', payload);
+    setUploading(false);
+    fetchHomeImages();
   };
 
   const onFormRestart = form => {
     form.restart();
     const uploadInput = document.querySelector('.upload');
     if (uploadInput) uploadInput.value = null;
+    setImage(null);
   };
 
-  const removeImage = image => {
-    axios
-      .get(`/api/removeImage/${image._id}`)
-      .then(res => {
-        const desertRef = ref(storage, image.name);
-        deleteObject(desertRef)
-          .then(() => {})
-          .catch(error => {
-            console.log(error);
-          });
-        fetchHomeImages();
-      })
-      .catch(err => console.log(err));
+  const removeImage = async image => {
+    const imageName = extractStoragePathFromUrl(image.imgLink);
+    await axios.get(`/api/removeImage/${image._id}`);
+    try {
+      await deleteImageFromFirebase(imageName);
+    } catch (error) {
+      console.log(error);
+    }
+    fetchHomeImages();
   };
 
   return (
@@ -123,7 +103,9 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
               if (error) {
                 return error;
               }
-              onFormRestart(form);
+              setTimeout(() => {
+                onFormRestart(form);
+              }, 1000);
             }}
           >
             <ImageUpload

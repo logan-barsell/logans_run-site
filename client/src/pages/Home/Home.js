@@ -30,10 +30,7 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
         advprice,
         tixlink,
       } = show;
-      const blob = new Blob([Int8Array.from(poster.img.image.data)], {
-        type: poster.img.contentType,
-      });
-      const imgURL = window.URL.createObjectURL(blob);
+
       const dateString = new Date(date).toLocaleString().split(',')[0];
       const doorstimeString = new Date(doors).toLocaleTimeString('en-US', {
         hour: 'numeric',
@@ -47,7 +44,7 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
         id: _id,
         venue,
         date: dateString,
-        poster: imgURL,
+        poster: poster,
         location,
         tixlink,
         content: [

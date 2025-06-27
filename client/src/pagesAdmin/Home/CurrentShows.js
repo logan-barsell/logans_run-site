@@ -5,13 +5,26 @@ import { connect } from 'react-redux';
 import Accordion from '../../components/Bootstrap/Accordion';
 import AddShow from './AddShow';
 import editShowFields from './editShowFields';
+import {
+  uploadImageToFirebase,
+  deleteImageFromFirebase,
+} from '../../utils/firebaseImage';
 
 const CurrentShows = ({ fetchShows, shows }) => {
   useEffect(() => {
     fetchShows();
   }, [fetchShows]);
 
-  const deleteShow = id => {
+  const deleteShow = async id => {
+    const showToDelete = shows.find(show => show._id === id);
+    if (showToDelete && showToDelete.poster) {
+      try {
+        await deleteImageFromFirebase(showToDelete.poster);
+      } catch (error) {
+        console.error('Error deleting image from Firebase:', error);
+      }
+    }
+
     axios.get(`/api/deleteShow/${id}`).then(() => {
       fetchShows();
     });
@@ -21,7 +34,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
     return editShowFields(show);
   };
 
-  const editShow = (
+  const editShow = async (
     _id,
     {
       poster,
@@ -35,10 +48,30 @@ const CurrentShows = ({ fetchShows, shows }) => {
       tixlink,
     }
   ) => {
-    const newPhoto = poster ? poster[0] : '';
+    const currentShow = shows.find(show => show._id === _id);
+    let posterUrl = currentShow.poster || '';
+
+    if (poster && poster[0]) {
+      // Delete old image if it exists
+      if (currentShow.poster) {
+        try {
+          await deleteImageFromFirebase(currentShow.poster);
+        } catch (error) {
+          console.error('Error deleting old image from Firebase:', error);
+        }
+      }
+
+      // Upload new image
+      try {
+        posterUrl = await uploadImageToFirebase(poster[0]);
+      } catch (err) {
+        throw err;
+      }
+    }
+
     const updatedShow = {
       id: _id,
-      poster: newPhoto,
+      poster: posterUrl,
       venue,
       location,
       date,
@@ -49,14 +82,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
       tixlink,
     };
 
-    const payload = new FormData();
-    for (let key in updatedShow) {
-      if (updatedShow[key]) {
-        payload.append(key, updatedShow[key]);
-      }
-    }
-
-    axios.post(`/api/updateShow/${_id}`, payload).then(() => {
+    axios.post(`/api/updateShow/${_id}`, updatedShow).then(() => {
       fetchShows();
     });
   };
@@ -77,10 +103,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
         advprice,
         tixlink,
       } = show;
-      const blob = new Blob([Int8Array.from(poster.img.image.data)], {
-        type: poster.img.contentType,
-      });
-      const imgURL = window.URL.createObjectURL(blob);
+
       const dateString = new Date(date).toLocaleString().split(',')[0];
       const doorstimeString = new Date(doors).toLocaleTimeString('en-US', {
         hour: 'numeric',
@@ -96,7 +119,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
         id: _id,
         name: venue,
         header: venue,
-        img: imgURL,
+        img: poster,
         subhead: location,
         content: [
           { prefix: 'Date ', value: dateString },

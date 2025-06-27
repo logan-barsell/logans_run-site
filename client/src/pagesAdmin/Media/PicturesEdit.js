@@ -4,21 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchMediaImages } from '../../redux/actions';
 import axios from 'axios';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from 'firebase/storage';
-import app from '../firebase';
 import { Form } from 'react-final-form';
 import { ImageUpload } from '../../components/Forms/FieldTypes';
 import RemoveImage from './RemoveImage';
+import {
+  uploadImageToFirebase,
+  deleteImageFromFirebase,
+} from '../../utils/firebaseImage';
 
 const imgCount = 12;
 const PicturesEdit = ({ fetchMediaImages, images }) => {
-  const storage = getStorage(app);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [limit, setLimit] = useState(imgCount);
@@ -28,45 +23,25 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
     fetchMediaImages();
   }, [fetchMediaImages]);
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     const file = data.pic[0];
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
     setUploading(true);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      'state_changed',
-      snapshot => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgress(Math.floor(progress));
-        switch (snapshot.state) {
-          case 'paused':
-            console.log('Upload is paused');
-            break;
-          case 'running':
-            console.log('Upload is running');
-            break;
-          default:
-        }
-      },
-      error => {
-        console.log(error);
-        setUploading(false);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-          const payload = { name: fileName, imgLink: downloadURL };
-          axios
-            .post('/api/addMediaImage', payload)
-            .then(res => {
-              setUploading(false);
-              fetchMediaImages();
-            })
-            .catch(err => console.log(err));
-        });
-      }
-    );
+    let downloadURL = '';
+    let fileName = '';
+    try {
+      fileName = new Date().getTime() + file.name;
+      downloadURL = await uploadImageToFirebase(file, {
+        fileName,
+        onProgress: setUploadProgress,
+      });
+    } catch (err) {
+      setUploading(false);
+      throw err;
+    }
+    const payload = { name: fileName, imgLink: downloadURL };
+    await axios.post('/api/addMediaImage', payload);
+    setUploading(false);
+    fetchMediaImages();
   };
 
   const onFormRestart = form => {
@@ -75,19 +50,23 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
     if (uploadInput) uploadInput.value = null;
   };
 
-  const removeImage = image => {
-    axios
-      .get(`/api/removeMediaImage/${image._id}`)
-      .then(res => {
-        const desertRef = ref(storage, image.name);
-        deleteObject(desertRef)
-          .then(() => {})
-          .catch(error => {
-            console.log(error);
-          });
-        fetchMediaImages();
-      })
-      .catch(err => console.log(err));
+  function extractStoragePathFromUrl(url) {
+    const match = url && url.match(/\/o\/([^?]+)/);
+    if (match && match[1]) {
+      return decodeURIComponent(match[1]);
+    }
+    return url ? url.split('/').pop().split('?')[0] : '';
+  }
+
+  const removeImage = async image => {
+    const imageName = extractStoragePathFromUrl(image.imgLink);
+    await axios.get(`/api/removeMediaImage/${image._id}`);
+    try {
+      await deleteImageFromFirebase(imageName);
+    } catch (error) {
+      console.log(error);
+    }
+    fetchMediaImages();
   };
 
   const seeMoreImages = () => {

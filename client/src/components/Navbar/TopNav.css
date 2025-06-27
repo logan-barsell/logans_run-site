@@ -22,6 +22,12 @@
   }
 }
 
+@media (max-width: 650px) {
+  .navbar-light .navbar-brand.yesdevil {
+    font-size: 6vw;
+  }
+}
+
 @media (max-width: 500px) {
   .navbar-light .navbar-brand.yesdevil {
     font-size: 8vw;

@@ -4,13 +4,7 @@ import { createProduct, fetchProducts } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
 import editProductFields from './editProductFields';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from 'firebase/storage';
-import app from '../firebase';
+import { uploadImageToFirebase } from '../../utils/firebaseImage';
 
 const AddProduct = ({ createProduct, fetchProducts }) => {
   const [uploading, setUploading] = useState(false);
@@ -20,29 +14,14 @@ const AddProduct = ({ createProduct, fetchProducts }) => {
     setUploading(true);
     let imageUrl = '';
     if (values.images && values.images.length) {
-      const file = values.images[0];
-      const fileName = new Date().getTime() + file.name;
-      const storage = getStorage(app);
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      await new Promise((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          snapshot => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setUploadProgress(Math.floor(progress));
-          },
-          error => {
-            setUploading(false);
-            reject(error);
-          },
-          async () => {
-            imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve();
-          }
-        );
-      });
+      try {
+        imageUrl = await uploadImageToFirebase(values.images[0], {
+          onProgress: setUploadProgress,
+        });
+      } catch (err) {
+        setUploading(false);
+        throw err;
+      }
     }
     // Prepare product data for backend
     const payload = {

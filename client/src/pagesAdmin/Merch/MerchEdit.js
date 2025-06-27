@@ -10,12 +10,28 @@ import Accordion from '../../components/Bootstrap/Accordion';
 import editProductFields from './editProductFields';
 import AddProduct from './AddProduct';
 import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from 'firebase/storage';
-import app from '../firebase';
+  uploadImageToFirebase,
+  deleteImageFromFirebase,
+} from '../../utils/firebaseImage';
+
+function extractStoragePathFromUrl(url) {
+  if (!url) {
+    return '';
+  }
+
+  const match = url && url.match(/\/o\/([^?]+)/);
+  if (match && match[1]) {
+    return decodeURIComponent(match[1]);
+  }
+
+  // If it's already a storage path (not a full URL), return as is
+  if (url && !url.startsWith('http')) {
+    return url;
+  }
+
+  // Fallback - extract filename from URL
+  return url.split('/').pop().split('?')[0];
+}
 
 const MerchEdit = ({
   fetchProducts,
@@ -28,18 +44,30 @@ const MerchEdit = ({
   }, [fetchProducts]);
 
   const deleteProduct = async id => {
-    // Find the product to get its image URL
     const productToDelete = products.find(item => item.product.id === id);
+
     const imageUrl =
       productToDelete &&
       productToDelete.product.images &&
       productToDelete.product.images[0];
-    if (imageUrl) {
-      await removeProduct(`${id}?imageUrl=${encodeURIComponent(imageUrl)}`);
-    } else {
-      await removeProduct(id);
+
+    const imageName = extractStoragePathFromUrl(imageUrl);
+
+    if (imageName) {
+      try {
+        await deleteImageFromFirebase(imageName);
+      } catch (error) {
+        // Continue with product deletion even if image deletion fails
+        // This is common if the image was already deleted or doesn't exist
+      }
     }
-    fetchProducts();
+
+    try {
+      await removeProduct(id);
+      fetchProducts();
+    } catch (error) {
+      throw error;
+    }
   };
 
   const editFields = product => {
@@ -48,7 +76,6 @@ const MerchEdit = ({
 
   const editProductHandler = async (id, updatedFields) => {
     let images = updatedFields.images;
-    // Find the current product to get the old image URL
     const currentProduct = products.find(item => item.product.id === id);
     let oldImageUrl = '';
     if (
@@ -58,25 +85,16 @@ const MerchEdit = ({
     ) {
       oldImageUrl = currentProduct.product.images[0];
     }
-    // If a new image file is provided, upload to Firebase
     if (images && images.length && images[0] instanceof File) {
-      const file = images[0];
-      const fileName = new Date().getTime() + file.name;
-      const storage = getStorage(app);
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      await new Promise((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          null,
-          error => reject(error),
-          async () => {
-            const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-            images = [imageUrl];
-            resolve();
-          }
-        );
-      });
+      const oldImageName = extractStoragePathFromUrl(oldImageUrl);
+      if (oldImageName) {
+        await deleteImageFromFirebase(oldImageName);
+      }
+      try {
+        images = [await uploadImageToFirebase(images[0])];
+      } catch (err) {
+        throw err;
+      }
     } else if (images && typeof images[0] === 'string') {
       images = [images[0]];
     }
@@ -84,7 +102,6 @@ const MerchEdit = ({
       ...updatedFields,
       images,
       price: Math.round(Number(updatedFields.price) * 100),
-      oldImageUrl,
     };
     await updateProduct(id, payload);
     fetchProducts();

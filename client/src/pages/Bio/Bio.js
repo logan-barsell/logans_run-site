@@ -23,10 +23,6 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
 
   const renderMembers = members.map((member, index) => {
     const { _id, bioPic, name, role } = member;
-    const blob = new Blob([Int8Array.from(bioPic.img.image.data)], {
-      type: bioPic.img.contentType,
-    });
-    const imgURL = window.URL.createObjectURL(blob);
 
     return (
       <div key={_id}>
@@ -34,7 +30,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
         <div className='row justify-content-center mb-5 mt-4 mx-1 gap-4'>
           <div className='col-12 col-md-5 bioPic'>
             <img
-              src={imgURL}
+              src={bioPic}
               alt={`${name}: ${role}`}
             />
           </div>

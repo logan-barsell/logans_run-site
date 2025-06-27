@@ -14,12 +14,16 @@ const Products = ({ fetchProducts, products }) => {
   const addToCart = item => {
     dispatch(addProductToCart(item));
   };
-  console.log(products);
 
   const renderProducts = products.length
     ? () =>
         products.map((item, index) => {
           const { product, price } = item;
+          const imageUrl =
+            product.images && product.images.length > 0
+              ? product.images[0]
+              : '';
+
           return (
             <div
               key={index}
@@ -28,8 +32,11 @@ const Products = ({ fetchProducts, products }) => {
               <div className='card product'>
                 <img
                   className='card-img-top'
-                  src={product.images[0]}
+                  src={imageUrl}
                   alt='product'
+                  onError={e => {
+                    e.target.style.display = 'none';
+                  }}
                 />
 
                 <div className='card-body'>
