@@ -51,7 +51,7 @@ const TopNav = ({ routes }) => {
       <div className='container-fluid'>
         <a
           className='navbar-brand yesdevil hvr-grow'
-          href='/home'
+          href='/'
         >
           {theme.siteTitle || "Logan's Run"}
         </a>
