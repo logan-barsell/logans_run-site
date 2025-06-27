@@ -8,7 +8,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 
 function handleLogout() {
   fetch('/api/logout', { method: 'POST', credentials: 'include' }).then(
-    () => (window.location.href = '/')
+    () => (window.location.href = '/home')
   );
 }
 
