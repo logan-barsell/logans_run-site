@@ -103,7 +103,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
   createAccordionItems();
 
   return (
-    <div className='my-5'>
+    <div className='my-5 mb-8'>
       <Accordion
         id='membersList'
         title='Members'

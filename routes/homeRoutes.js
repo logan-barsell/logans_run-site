@@ -21,10 +21,19 @@ module.exports = app => {
   });
 
   app.post('/api/addHomeImage', async (req, res) => {
-    const image = new HomeImage(req.body);
     try {
-      await image.save();
-      res.status(200).send(image);
+      // Check if the request body is an array or single object
+      if (Array.isArray(req.body)) {
+        // Multiple images
+        const homeImages = req.body.map(imageData => new HomeImage(imageData));
+        const savedImages = await HomeImage.insertMany(homeImages);
+        res.status(200).send(savedImages);
+      } else {
+        // Single image
+        const image = new HomeImage(req.body);
+        const savedImage = await image.save();
+        res.status(200).send(savedImage);
+      }
     } catch (err) {
       res.status(500).send(err);
     }

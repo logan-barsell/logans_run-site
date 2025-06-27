@@ -20,39 +20,77 @@ function extractStoragePathFromUrl(url) {
 
 const CarouselEdit = ({ fetchHomeImages, images }) => {
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [image, setImage] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [selectedFiles, setSelectedFiles] = useState(null);
 
   useEffect(() => {
     fetchHomeImages();
   }, [fetchHomeImages]);
 
   const onSubmit = async data => {
-    const file = data?.pic[0];
+    const files = data.pic;
+    if (!files || files.length === 0) return;
+
     setUploading(true);
-    let downloadURL = '';
-    let fileName = '';
+    setUploadProgress({});
+
     try {
-      fileName = new Date().getTime() + file.name;
-      downloadURL = await uploadImageToFirebase(file, {
-        fileName,
-        onProgress: setUploadProgress,
+      // Upload all files with individual progress tracking
+      const uploadPromises = Array.from(files).map(async (file, index) => {
+        const fileName = new Date().getTime() + '_' + index + '_' + file.name;
+
+        try {
+          const downloadURL = await uploadImageToFirebase(file, {
+            fileName,
+            onProgress: progress => {
+              setUploadProgress(prev => ({
+                ...prev,
+                [index]: progress,
+              }));
+            },
+          });
+
+          return { name: fileName, imgLink: downloadURL, success: true };
+        } catch (error) {
+          console.error(`Failed to upload ${file.name}:`, error);
+          return { name: fileName, error: error.message, success: false };
+        }
       });
+
+      // Wait for all uploads to complete
+      const uploadResults = await Promise.all(uploadPromises);
+
+      // Separate successful and failed uploads
+      const successfulUploads = uploadResults.filter(result => result.success);
+      const failedUploads = uploadResults.filter(result => !result.success);
+
+      // Add successful uploads to the database using the single route
+      if (successfulUploads.length > 0) {
+        await axios.post(
+          '/api/addHomeImage',
+          successfulUploads.map(result => ({
+            name: result.name,
+            imgLink: result.imgLink,
+          }))
+        );
+      }
+
+      setUploading(false);
+      setUploadProgress({});
+      fetchHomeImages();
     } catch (err) {
       setUploading(false);
-      throw err;
+      setUploadProgress({});
+      console.error('Upload error:', err);
+      alert('An error occurred during upload. Please try again.');
     }
-    const payload = { name: fileName, imgLink: downloadURL };
-    await axios.post('/api/addHomeImage', payload);
-    setUploading(false);
-    fetchHomeImages();
   };
 
   const onFormRestart = form => {
     form.restart();
     const uploadInput = document.querySelector('.upload');
     if (uploadInput) uploadInput.value = null;
-    setImage(null);
+    setSelectedFiles(null);
   };
 
   const removeImage = async image => {
@@ -64,6 +102,24 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
       console.log(error);
     }
     fetchHomeImages();
+  };
+
+  const getUploadButtonText = () => {
+    if (!uploading) return 'Add to Images';
+
+    const totalFiles = selectedFiles ? selectedFiles.length : 0;
+    if (totalFiles === 0) return 'Uploading...';
+
+    const completedFiles = Object.keys(uploadProgress).length;
+    const totalProgress = Object.values(uploadProgress).reduce(
+      (sum, progress) => sum + progress,
+      0
+    );
+    const averageProgress = totalProgress / totalFiles;
+
+    return `Uploading... ${Math.round(
+      averageProgress
+    )}% (${completedFiles}/${totalFiles})`;
   };
 
   return (
@@ -110,19 +166,17 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
           >
             <ImageUpload
               name='pic'
-              setImage={setImage}
+              setImage={setSelectedFiles}
+              multiple={true}
             />
             <div className='d-grid gap-2'>
               <button
-                disabled={uploading || !image}
+                disabled={
+                  uploading || !selectedFiles || selectedFiles.length === 0
+                }
                 className='submit btn btn-danger mt-3'
               >
-                {uploading
-                  ? `Uploading... ${String(uploadProgress).replaceAll(
-                      '0',
-                      'O'
-                    )}%`
-                  : 'Add to Images'}
+                {getUploadButtonText()}
               </button>
             </div>
           </form>

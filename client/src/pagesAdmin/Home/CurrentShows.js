@@ -157,7 +157,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
   createAccordionItems();
 
   return (
-    <div className='my-5'>
+    <div className='my-5 mb-8'>
       <Accordion
         id='showsList'
         title='Shows'
