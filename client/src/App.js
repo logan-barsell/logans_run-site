@@ -21,8 +21,7 @@ function App() {
 
   const [authenticated, setAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  console.log(authenticated);
-  console.log(authLoading);
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
