@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 
 const CartItem = ({ item }) => {
   const sizes = item?.product?.metadata?.sizes?.split?.(', ');
-  console.log(item?.product?.metadata?.sizes?.split?.(', '));
 
   const dispatch = useDispatch();
 
