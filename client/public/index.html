@@ -17,6 +17,49 @@
       href="%PUBLIC_URL%/favicons/site.webmanifest"
     />
     <script>
+      // Fetch theme and set CSS variables before pace loads
+      (async function () {
+        try {
+          const response = await fetch('/api/theme');
+          const theme = await response.json();
+
+          // Set CSS variables immediately
+          const root = document.documentElement;
+          if (theme.primaryColor) {
+            root.style.setProperty('--main', theme.primaryColor);
+          }
+          if (theme.secondaryColor) {
+            root.style.setProperty('--secondary', theme.secondaryColor);
+          }
+          if (theme.primaryFont) {
+            root.style.setProperty('--primary-font', theme.primaryFont);
+          }
+          if (theme.secondaryFont) {
+            let fontStack = '';
+            switch (theme.secondaryFont) {
+              case 'Fira Mono':
+                fontStack = "'Fira Mono', 'Courier New', Courier, monospace";
+                break;
+              case 'JetBrains Mono':
+                fontStack =
+                  "'JetBrains Mono', 'Courier New', Courier, monospace";
+                break;
+              case 'Roboto Mono':
+                fontStack = "'Roboto Mono', 'Courier New', Courier, monospace";
+                break;
+              case 'Courier New':
+              default:
+                fontStack = "'Courier New', Courier, monospace";
+                break;
+            }
+            root.style.setProperty('--secondary-font', fontStack);
+          }
+        } catch (error) {
+          console.log('Could not fetch theme, using defaults');
+        }
+      })();
+    </script>
+    <script>
       paceOptions = {
         eventLag: false,
         ajax: false,
