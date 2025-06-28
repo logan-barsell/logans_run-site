@@ -273,9 +273,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
                 className='secondary-font'
                 style={{ fontSize: '16px' }}
               >
-                {contactInfo[0].email === 'loganjbars@gmail.com'
-                  ? 'Welcome to hell.'
-                  : 'Welcome to the run.'}
+                Welcome
               </p>
             </div>
             <div className='col-md-5'>
