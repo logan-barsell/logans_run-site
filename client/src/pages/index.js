@@ -1,5 +1,5 @@
 import '../App.css';
-import '../plugins/loading-bar.css';
+// import '../plugins/loading-bar.css';
 import '@stripe/stripe-js';
 
 import React, { useState } from 'react';

@@ -45,6 +45,35 @@ const updateCSSVariables = theme => {
   }
 };
 
+// Function to update pace theme and restart Pace
+const updatePaceTheme = paceTheme => {
+  // Remove any existing pace theme CSS
+  const existingLinks = document.querySelectorAll(
+    'link[href*="/themes/pace/"]'
+  );
+  existingLinks.forEach(link => link.remove());
+
+  // Load new pace theme CSS
+  const themeName = paceTheme || 'center-atom';
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `/themes/pace/${themeName}.css`;
+
+  // When CSS loads, restart Pace
+  link.onload = () => {
+    if (window.Pace) {
+      // Update pace options with new theme
+      if (window.paceOptions) {
+        window.paceOptions.className = `pace-theme-${themeName}`;
+      }
+      // Restart Pace to apply new theme
+      window.Pace.restart();
+    }
+  };
+
+  document.head.appendChild(link);
+};
+
 export const ThemeProvider = ({ children }) => {
   const dispatch = useDispatch();
   const theme = useSelector(state => state.theme);
@@ -68,6 +97,10 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     if (theme && Object.keys(theme).length > 0) {
       updateCSSVariables(theme);
+      // Update pace theme if it changed
+      if (theme.paceTheme) {
+        updatePaceTheme(theme.paceTheme);
+      }
     }
   }, [theme]);
 

@@ -41,6 +41,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
     setUpdated(true);
     setLogoFile(null);
   };
+  console.log(theme);
 
   return (
     <div
@@ -233,6 +234,46 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                       <option value='Fira Mono'>Fira Mono</option>
                       <option value='JetBrains Mono'>JetBrains Mono</option>
                       <option value='Roboto Mono'>Roboto Mono</option>
+                    </select>
+                  </>
+                )}
+              </Field>
+            </div>
+            <div className='mb-sm-3 mb-2'>
+              <Field name='paceTheme'>
+                {({ input, meta }) => (
+                  <>
+                    <label
+                      htmlFor='paceTheme'
+                      className='form-label'
+                    >
+                      Loading Animation
+                    </label>
+                    <select
+                      {...input}
+                      className='form-control'
+                      id='paceTheme'
+                    >
+                      <optgroup label='Center Animations'>
+                        <option value='center-atom'>
+                          Center Atom (Default)
+                        </option>
+                        <option value='center-circle'>Center Circle</option>
+                        <option value='center-simple'>Center Simple</option>
+                        <option value='center-radar'>Center Radar</option>
+                      </optgroup>
+                      <optgroup label='Bar Animations'>
+                        <option value='loading-bar'>Loading Bar</option>
+                        <option value='barber-shop'>Barber Shop</option>
+                        <option value='corner-indicator'>
+                          Corner Indicator
+                        </option>
+                        <option value='flash'>Flash</option>
+                      </optgroup>
+                      <optgroup label='Bounce & Material'>
+                        <option value='bounce'>Bounce</option>
+                        <option value='material'>Material Design</option>
+                      </optgroup>
                     </select>
                   </>
                 )}
