@@ -1,5 +1,5 @@
 import '../App.css';
-import '../plugins/loading-bar.css';
+// import '../plugins/loading-bar.css'; // Removed
 
 import React, { useState } from 'react';
 import {
