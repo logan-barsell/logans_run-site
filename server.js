@@ -15,12 +15,25 @@ db.on('error', console.error.bind(console, 'connection error: '));
 db.once('open', async function () {
   console.log('connected successfully');
 
-  // Run migrations and validate schemas on startup
+  // Aggressive database initialization - run migrations and validate schemas
   try {
+    console.log('🔄 Initializing database...');
     await runMigrations();
     await validateAllSchemas();
+
+    // Double-check theme document
+    const Theme = require('./models/Theme');
+    const theme = await Theme.findOne();
+    if (theme && !theme.paceTheme) {
+      console.log('🔧 Fixing missing paceTheme field...');
+      theme.paceTheme = 'center-atom';
+      await theme.save();
+      console.log('✅ paceTheme field added');
+    }
+
+    console.log('✅ Database initialization complete');
   } catch (error) {
-    console.error('Failed to initialize database:', error);
+    console.error('❌ Failed to initialize database:', error);
     process.exit(1);
   }
 });
