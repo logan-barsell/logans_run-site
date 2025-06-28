@@ -12,7 +12,7 @@
 
 #newsDetails {
   font-size: 17px;
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
   letter-spacing: normal;
   margin-top: 27px;
   color: white;
@@ -49,7 +49,7 @@
 }
 
 #st-1 span {
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
 }
 
 #contact a {
@@ -140,5 +140,5 @@ a.nav-item.active {
 
 .footer-link {
   font-size: 16px;
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
 }

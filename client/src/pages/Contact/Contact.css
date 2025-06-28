@@ -176,6 +176,6 @@
   }
 }
 
-at {
-  font-family: 'font-family: ' Courier New ', Courier, monospace;';
+.at {
+  font-family: var(--secondary-font);
 }

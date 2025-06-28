@@ -28,6 +28,7 @@ router.get('/api/theme', async (req, res) => {
         secondaryColor: '#f08080',
         primaryFont: 'SprayPaint',
         secondaryFont: 'Courier New',
+        paceTheme: 'center-atom',
       });
     }
     res.json(theme);

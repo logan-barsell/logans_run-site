@@ -108,7 +108,7 @@ body {
 
 /*GENERAL*/
 .secondary-font {
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
   letter-spacing: normal;
 }
 
@@ -137,11 +137,11 @@ body {
 input,
 select,
 textarea {
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
 }
 
 .no-content {
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
   letter-spacing: normal;
   text-shadow: none;
   color: var(--main);
@@ -289,14 +289,17 @@ hr {
 }
 
 #no_content {
-  margin: 20% 20px;
+  font-family: var(--secondary-font);
+  letter-spacing: normal;
+  text-shadow: none;
   color: var(--main);
+  margin-top: 22px;
   text-align: center;
-  padding: 0px 20px;
+  font-size: 22px;
 }
 
 .at {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
 }
 
 @media (max-width: 991px) {
