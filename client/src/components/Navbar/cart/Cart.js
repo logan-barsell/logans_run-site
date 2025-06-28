@@ -5,7 +5,7 @@ import CartItem from './CartItem';
 import { useSelector, connect } from 'react-redux';
 import { fetchShipping } from '../../../redux/actions';
 
-const Cart = ({ fetchShipping, shipping }) => {
+const Cart = ({ shipping }) => {
   const cart = useSelector(state => state.cart);
 
   const cartDetails = cart.products.map(cartItem => ({
