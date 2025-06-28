@@ -28,55 +28,56 @@ router.get('/api/theme', async (req, res) => {
         secondaryColor: '#f08080',
         primaryFont: 'SprayPaint',
         secondaryFont: 'Courier New',
-        paceTheme: 'center-atom',
+        // paceTheme: 'center-atom',
       });
-    } else {
-      // Aggressive schema fix - ensure ALL required fields exist
-      let needsUpdate = false;
-      const updates = {};
-
-      // Check and fix paceTheme
-      if (!theme.paceTheme) {
-        updates.paceTheme = 'center-atom';
-        needsUpdate = true;
-      }
-
-      // Check and fix other required fields
-      if (!theme.secondaryFont) {
-        updates.secondaryFont = 'Courier New';
-        needsUpdate = true;
-      }
-
-      if (!theme.siteTitle) {
-        updates.siteTitle = "Logan's Run";
-        needsUpdate = true;
-      }
-
-      if (!theme.primaryColor) {
-        updates.primaryColor = '#e3ff05';
-        needsUpdate = true;
-      }
-
-      if (!theme.secondaryColor) {
-        updates.secondaryColor = '#f08080';
-        needsUpdate = true;
-      }
-
-      if (!theme.primaryFont) {
-        updates.primaryFont = 'SprayPaint';
-        needsUpdate = true;
-      }
-
-      // Apply updates if needed
-      if (needsUpdate) {
-        Object.assign(theme, updates);
-        await theme.save();
-        console.log(
-          '🔧 Auto-fixed theme schema on API call:',
-          Object.keys(updates)
-        );
-      }
     }
+    // else {
+    //   // Aggressive schema fix - ensure ALL required fields exist
+    //   let needsUpdate = false;
+    //   const updates = {};
+
+    //   // Check and fix paceTheme
+    //   if (!theme.paceTheme) {
+    //     updates.paceTheme = 'center-atom';
+    //     needsUpdate = true;
+    //   }
+
+    //   // Check and fix other required fields
+    //   if (!theme.secondaryFont) {
+    //     updates.secondaryFont = 'Courier New';
+    //     needsUpdate = true;
+    //   }
+
+    //   if (!theme.siteTitle) {
+    //     updates.siteTitle = "Logan's Run";
+    //     needsUpdate = true;
+    //   }
+
+    //   if (!theme.primaryColor) {
+    //     updates.primaryColor = '#e3ff05';
+    //     needsUpdate = true;
+    //   }
+
+    //   if (!theme.secondaryColor) {
+    //     updates.secondaryColor = '#f08080';
+    //     needsUpdate = true;
+    //   }
+
+    //   if (!theme.primaryFont) {
+    //     updates.primaryFont = 'SprayPaint';
+    //     needsUpdate = true;
+    //   }
+
+    //   // Apply updates if needed
+    //   if (needsUpdate) {
+    //     Object.assign(theme, updates);
+    //     await theme.save();
+    //     console.log(
+    //       '🔧 Auto-fixed theme schema on API call:',
+    //       Object.keys(updates)
+    //     );
+    //   }
+    // }
     res.json(theme);
   } catch (err) {
     console.error('Theme API error:', err);
@@ -121,39 +122,39 @@ router.post('/api/updateTheme', async (req, res) => {
 });
 
 // Health check endpoint - forces schema validation
-router.get('/api/health/db', async (req, res) => {
-  try {
-    console.log('🏥 Health check: Validating database schemas...');
+// router.get('/api/health/db', async (req, res) => {
+//   try {
+//     console.log('🏥 Health check: Validating database schemas...');
 
-    // Force schema validation
-    const { validateAllSchemas } = require('../utils/schemaValidator');
-    await validateAllSchemas();
+//     // Force schema validation
+//     const { validateAllSchemas } = require('../utils/schemaValidator');
+//     await validateAllSchemas();
 
-    // Check theme state
-    const theme = await Theme.findOne();
-    const themeStatus = theme
-      ? {
-          exists: true,
-          hasPaceTheme: !!theme.paceTheme,
-          paceTheme: theme.paceTheme,
-          allFields: Object.keys(theme.toObject()),
-        }
-      : { exists: false };
+//     // Check theme state
+//     const theme = await Theme.findOne();
+//     const themeStatus = theme
+//       ? {
+//           exists: true,
+//           hasPaceTheme: !!theme.paceTheme,
+//           paceTheme: theme.paceTheme,
+//           allFields: Object.keys(theme.toObject()),
+//         }
+//       : { exists: false };
 
-    res.json({
-      status: 'healthy',
-      timestamp: new Date().toISOString(),
-      theme: themeStatus,
-      message: 'Database schemas validated successfully',
-    });
-  } catch (error) {
-    console.error('Health check failed:', error);
-    res.status(500).json({
-      status: 'unhealthy',
-      error: error.message,
-      timestamp: new Date().toISOString(),
-    });
-  }
-});
+//     res.json({
+//       status: 'healthy',
+//       timestamp: new Date().toISOString(),
+//       theme: themeStatus,
+//       message: 'Database schemas validated successfully',
+//     });
+//   } catch (error) {
+//     console.error('Health check failed:', error);
+//     res.status(500).json({
+//       status: 'unhealthy',
+//       error: error.message,
+//       timestamp: new Date().toISOString(),
+//     });
+//   }
+// });
 
 module.exports = router;
