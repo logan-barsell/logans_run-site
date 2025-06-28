@@ -13,27 +13,44 @@ mongoose.connect(keys.mongoURI);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error: '));
 db.once('open', async function () {
-  console.log('connected successfully');
+  console.log('✅ Database connected successfully');
+  console.log('🔄 Starting database initialization...');
 
   // Aggressive database initialization - run migrations and validate schemas
   try {
-    console.log('🔄 Initializing database...');
+    console.log('📋 Step 1: Running migrations...');
     await runMigrations();
+    console.log('✅ Migrations completed');
+
+    console.log('📋 Step 2: Validating schemas...');
     await validateAllSchemas();
+    console.log('✅ Schema validation completed');
 
     // Double-check theme document
+    console.log('📋 Step 3: Checking theme document...');
     const Theme = require('./models/Theme');
     const theme = await Theme.findOne();
-    if (theme && !theme.paceTheme) {
-      console.log('🔧 Fixing missing paceTheme field...');
-      theme.paceTheme = 'center-atom';
-      await theme.save();
-      console.log('✅ paceTheme field added');
+    if (theme) {
+      console.log('📊 Theme document found:', {
+        id: theme._id,
+        hasPaceTheme: !!theme.paceTheme,
+        paceTheme: theme.paceTheme,
+      });
+
+      if (!theme.paceTheme) {
+        console.log('🔧 Fixing missing paceTheme field...');
+        theme.paceTheme = 'center-atom';
+        await theme.save();
+        console.log('✅ paceTheme field added');
+      }
+    } else {
+      console.log('⚠️ No theme document found');
     }
 
-    console.log('✅ Database initialization complete');
+    console.log('🎉 Database initialization complete');
   } catch (error) {
     console.error('❌ Failed to initialize database:', error);
+    console.error('❌ Error details:', error.stack);
     process.exit(1);
   }
 });
@@ -76,5 +93,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`📅 Server started at: ${new Date().toISOString()}`);
+  console.log(`🔧 Database migration system: ENABLED`);
 });

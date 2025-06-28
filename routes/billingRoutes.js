@@ -1,4 +1,19 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET);
+// Initialize Stripe with error handling
+let stripe;
+try {
+  if (!process.env.STRIPE_SECRET) {
+    console.warn(
+      '⚠️  STRIPE_SECRET environment variable is not set. Stripe functionality will be disabled.'
+    );
+    stripe = null;
+  } else {
+    stripe = require('stripe')(process.env.STRIPE_SECRET);
+  }
+} catch (error) {
+  console.error('❌ Failed to initialize Stripe:', error.message);
+  stripe = null;
+}
+
 const admin = require('firebase-admin');
 const path = require('path');
 const serviceAccount = require(path.join(
@@ -14,26 +29,60 @@ if (!admin.apps.length) {
 }
 const bucket = admin.storage().bucket();
 
+// Helper function to check if Stripe is available
+const checkStripeAvailable = res => {
+  if (!stripe) {
+    res.status(503).json({ error: 'Stripe is not configured' });
+    return false;
+  }
+  return true;
+};
+
 module.exports = app => {
   app.get('/api/products', async (req, res) => {
-    const products = await stripe.products.list({
-      active: true,
-      limit: 100,
-    });
-    // Sort products by creation date (oldest first)
-    products.data.sort((a, b) => a.created - b.created);
-    const productList = [];
-    await Promise.all(
-      products.data.map(async product => {
-        const price = await stripe.prices.retrieve(product.default_price);
-        productList.push({ product, price, quantity: 1, size: 'MD' });
-      })
-    );
+    if (!checkStripeAvailable(res)) return;
 
-    res.send(productList);
+    try {
+      const products = await stripe.products.list({
+        active: true,
+        limit: 100,
+      });
+      // Sort products by creation date (oldest first)
+      products.data.sort((a, b) => a.created - b.created);
+      const productList = [];
+      await Promise.all(
+        products.data.map(async product => {
+          // Skip products without a default_price
+          if (!product.default_price) {
+            console.warn(
+              `Product ${product.id} (${product.name}) has no default_price, skipping`
+            );
+            return;
+          }
+
+          try {
+            const price = await stripe.prices.retrieve(product.default_price);
+            productList.push({ product, price, quantity: 1, size: 'MD' });
+          } catch (priceError) {
+            console.error(
+              `Failed to retrieve price for product ${product.id}:`,
+              priceError.message
+            );
+            // Skip this product if price retrieval fails
+          }
+        })
+      );
+
+      res.send(productList);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ error: 'Failed to fetch products' });
+    }
   });
 
   app.post('/api/create-checkout-session', async (req, res) => {
+    if (!checkStripeAvailable(res)) return;
+
     const products = JSON.parse(Object.keys(req.body)[0]);
     const productlist = [];
     await Promise.all(
@@ -75,6 +124,8 @@ module.exports = app => {
   });
 
   app.get('/api/shipping', async (req, res) => {
+    if (!checkStripeAvailable(res)) return;
+
     try {
       const shippingRate = await stripe.shippingRates.retrieve(
         process.env.SHIPPING_RATE_ID
@@ -87,6 +138,8 @@ module.exports = app => {
 
   // Create a new product (expects images as array of public URLs)
   app.post('/api/products', async (req, res) => {
+    if (!checkStripeAvailable(res)) return;
+
     try {
       const { name, description, sizes, price, images = [] } = req.body;
       const product = await stripe.products.create({
@@ -107,6 +160,8 @@ module.exports = app => {
 
   // Update an existing product (can update image URL)
   app.put('/api/products/:id', async (req, res) => {
+    if (!checkStripeAvailable(res)) return;
+
     try {
       const { name, description, images, sizes, oldImageUrl } = req.body;
       const updateData = {};
@@ -145,6 +200,8 @@ module.exports = app => {
 
   // Remove (deactivate) a product and its prices, and optionally delete Firebase image
   app.delete('/api/products/:id', async (req, res) => {
+    if (!checkStripeAvailable(res)) return;
+
     try {
       // Set product as inactive
       const product = await stripe.products.update(req.params.id, {
