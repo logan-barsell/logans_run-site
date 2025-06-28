@@ -5,12 +5,24 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const keys = require('./config/keys');
+const { runMigrations } = require('./migrations/migrationRunner');
+const { validateAllSchemas } = require('./utils/schemaValidator');
+
 mongoose.connect(keys.mongoURI);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error: '));
-db.once('open', function () {
+db.once('open', async function () {
   console.log('connected successfully');
+
+  // Run migrations and validate schemas on startup
+  try {
+    await runMigrations();
+    await validateAllSchemas();
+  } catch (error) {
+    console.error('Failed to initialize database:', error);
+    process.exit(1);
+  }
 });
 
 const app = express();

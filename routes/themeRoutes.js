@@ -30,6 +30,12 @@ router.get('/api/theme', async (req, res) => {
         secondaryFont: 'Courier New',
         paceTheme: 'center-atom',
       });
+    } else {
+      // Ensure paceTheme field exists (for existing documents)
+      if (!theme.paceTheme) {
+        theme.paceTheme = 'center-atom';
+        await theme.save();
+      }
     }
     res.json(theme);
   } catch (err) {
