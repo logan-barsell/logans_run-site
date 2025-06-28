@@ -31,4 +31,5 @@ jobs:
             npm i
             npm run build
 
+            pm2 restart all
             sudo systemctl restart nginx

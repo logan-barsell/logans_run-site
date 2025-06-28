@@ -7,8 +7,13 @@ class ShowsAccordion extends Component {
     return content.map(({ prefix, value }, index) => {
       if (value) {
         return (
-          <div key={index}>
-            {prefix && String(prefix).replace('0', 'O')}
+          <div
+            className='secondary-font'
+            key={index}
+          >
+            <span className='font-weight-bold'>
+              {prefix && String(prefix).replace('0', 'O')}
+            </span>
             <span className='subItemVal'>{value && String(value)}</span>
           </div>
         );
@@ -97,7 +102,7 @@ class ShowsAccordion extends Component {
               <div className='itemInfo col-12 col-sm-6 col-lg-7 center'>
                 <div className='subhead'>
                   {venue}
-                  <div className='coSubhead'>{location}</div>
+                  <div className='coSubhead secondary-font'>{location}</div>
                 </div>
                 <div className='content'>
                   {this.renderSubItems(content)}

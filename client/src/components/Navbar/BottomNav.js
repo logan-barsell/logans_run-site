@@ -40,7 +40,7 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
         className='navbar navbar-light justify-content-center'
       >
         {/* Button trigger modal */}
-        <div className='col-md-7'>
+        <div className='col-md-7 my-2'>
           <div className='row justify-content-center'>
             <div className='col-auto'>
               <button
@@ -294,16 +294,14 @@ const BottomNav = ({ routes, fetchContactInfo, contactInfo }) => {
           </div>
         </div>
         {/* Copyright */}
-        <div className='footer-copyright pb-1 pt-2 text-center bg-light'>
+        <div className='footer-copyright secondary-font pb-1 pt-2 text-center bg-dark'>
           <p>
-            © {String(new Date().getFullYear()).replace('0', 'O')} Copyright{' '}
+            {String(new Date().getFullYear()).replace('0', 'O')} Copyright ©{' '}
             <a
               style={{ display: 'inline-block' }}
               href='.'
             >
-              {contactInfo[0]?.email === 'loganjbars@gmail.com'
-                ? 'yesdevil.com'
-                : 'logans-run.com'}
+              {process.env.REACT_APP_DOMAIN || 'your-domain.com'}
             </a>
           </p>
         </div>
