@@ -24,19 +24,31 @@
           paceTheme: 'center-atom',
         };
 
-        // Try to fetch theme synchronously but with timeout
+        // Try to fetch theme with timeout and error handling for mobile
         try {
           var xhr = new XMLHttpRequest();
           xhr.open('GET', '/api/theme', false);
-          xhr.timeout = 3000; // 3 second timeout
+          xhr.timeout = 3000; // 3 second timeout for mobile
+          xhr.onerror = function () {
+            console.warn('Theme fetch failed (network error), using defaults');
+          };
+          xhr.ontimeout = function () {
+            console.warn('Theme fetch timed out, using defaults');
+          };
           xhr.send();
 
-          if (xhr.status === 200) {
+          if (xhr.status === 200 && xhr.responseText) {
             try {
               theme = JSON.parse(xhr.responseText);
             } catch (error) {
               console.warn('Theme parse failed, using defaults:', error);
             }
+          } else {
+            console.warn(
+              'Theme fetch returned status:',
+              xhr.status,
+              'using defaults'
+            );
           }
         } catch (error) {
           console.warn('Theme fetch failed, using defaults:', error);
