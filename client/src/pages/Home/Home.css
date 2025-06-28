@@ -146,24 +146,8 @@
   text-shadow: 2px 1.5px black;
 }
 
-#home a {
-  color: var(--main);
-}
-
-#home a:hover {
-  color: var(--secondary);
-}
-
 #home .btn {
-  background-color: var(--main);
   color: black;
-  border-color: var(--main);
-}
-
-#home .btn:hover {
-  background-color: var(--secondary);
-  color: white;
-  border-color: var(--secondary);
 }
 
 #home .carousel-item {

@@ -41,7 +41,7 @@
 .iconsNav {
   display: flex;
   gap: 20px;
-  padding-right: 30px;
+  padding: 25px 30px;
 }
 
 .mailz {
@@ -69,7 +69,6 @@ a {
 
 footer {
   color: white;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
 footer h5 {
@@ -95,13 +94,8 @@ footer h5 {
 }
 
 .footer-copyright {
-  color: black;
+  color: white;
   border-top: 1px solid black;
-}
-
-.footer-copyright a {
-  color: black;
-  text-shadow: 1px 1px 0px black;
 }
 
 .footer-copyright p {
@@ -135,6 +129,12 @@ a.nav-item.active {
 @media only screen and (max-width: 300px) {
   ul#newsDetails {
     padding-left: 10px !important;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .iconsNav {
+    padding-top: 10px;
   }
 }
 

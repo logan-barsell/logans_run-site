@@ -293,6 +293,7 @@ hr {
   letter-spacing: normal;
   text-shadow: none;
   color: var(--main);
+  margin: 0px 20vw;
   margin-top: 22px;
   text-align: center;
   font-size: 22px;
@@ -319,6 +320,7 @@ hr {
   }
   #no_content {
     margin: 20vh 20px;
+    font-size: 17px;
   }
 }
 
