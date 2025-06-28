@@ -10,10 +10,10 @@ import {
 } from '../../utils/firebaseImage';
 
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
-  const [updated, setUpdated] = useState(false);
   const [logoFile, setLogoFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     fetchTheme();
@@ -34,7 +34,10 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
       }
       setUploading(false);
     }
-    updateTheme({ ...values, bandLogoUrl, oldBandLogoUrl });
+
+    // Update theme
+    await updateTheme({ ...values, bandLogoUrl, oldBandLogoUrl });
+
     setUpdated(true);
     setLogoFile(null);
   };
@@ -235,7 +238,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                 )}
               </Field>
             </div>
-            <div className='d-flex'>
+            <div className='d-flex gap-2'>
               <button
                 type='submit'
                 className='btn btn-danger'

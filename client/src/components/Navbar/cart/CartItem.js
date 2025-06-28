@@ -77,7 +77,7 @@ const CartItem = ({ item }) => {
             xmlns='http://www.w3.org/2000/svg'
             width='25'
             height='25'
-            fill='#E3FF05'
+            fill='var(--main)'
             className='bi bi-dash-square-fill'
             viewBox='0 0 16 16'
           >
@@ -89,7 +89,7 @@ const CartItem = ({ item }) => {
             xmlns='http://www.w3.org/2000/svg'
             width='25'
             height='25'
-            fill='#E3FF05'
+            fill='var(--main)'
             className='bi bi-plus-square-fill'
             viewBox='0 0 16 16'
           >

@@ -160,7 +160,7 @@
 }
 
 .blog-post .date {
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
   letter-spacing: normal;
 }
 

@@ -35,10 +35,10 @@
 .pace .pace-progress:before {
   content: attr(data-progress-text);
   text-align: center;
-  color: black;
+  color: 'black';
   background: var(--main);
   border-radius: 50%;
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
   letter-spacing: normal;
   font-size: 14px;
   font-weight: 100;
@@ -54,7 +54,7 @@
 
 .pace .pace-activity {
   border-radius: 50%;
-  border: 5px solid var(--main);
+  border: 5px solid var(--main) !important;
   content: ' ';
   display: block;
   position: absolute;
@@ -67,11 +67,12 @@
   -moz-animation: pace-theme-center-atom-spin 2s linear infinite;
   -o-animation: pace-theme-center-atom-spin 2s linear infinite;
   animation: pace-theme-center-atom-spin 2s linear infinite;
+  border-color: var(--main) !important;
 }
 
 .pace .pace-activity:after {
   border-radius: 50%;
-  border: 5px solid var(--main);
+  border: 5px solid var(--main) !important;
   content: ' ';
   display: block;
   position: absolute;
@@ -84,11 +85,13 @@
   -moz-transform: rotate(60deg);
   -o-transform: rotate(60deg);
   transform: rotate(60deg);
+
+  border-color: var(--main) !important;
 }
 
 .pace .pace-activity:before {
   border-radius: 50%;
-  border: 5px solid var(--main);
+  border: 5px solid var(--main) !important;
   content: ' ';
   display: block;
   position: absolute;
@@ -101,6 +104,8 @@
   -moz-transform: rotate(120deg);
   -o-transform: rotate(120deg);
   transform: rotate(120deg);
+
+  border-color: var(--main) !important;
 }
 
 @-webkit-keyframes pace-theme-center-atom-spin {
@@ -134,6 +139,94 @@
   100% {
     transform: rotate(359deg);
   }
+}
+
+/* Add fade effect for content */
+.pace-running .fadeIn > *:not(.pace) {
+  opacity: 0;
+}
+
+.pace-done .fadeIn > *:not(.pace) {
+  opacity: 1;
+  animation: FadeAnim 1.5s ease;
+}
+
+@keyframes FadeAnim {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Custom pace theme overrides - only for our custom center-atom theme */
+/* .pace-theme-center-atom .pace .pace-progress {
+  background: var(--main) !important;
+} */
+
+.pace-theme-center-atom .pace .pace-activity {
+  border-color: var(--main) !important;
+}
+
+.pace-theme-center-atom .pace .pace-activity:after {
+  border-color: var(--main) !important;
+}
+
+.pace-theme-center-atom .pace .pace-activity:before {
+  border-color: var(--main) !important;
+}
+
+/* Override text colors for themes that have text */
+.pace-theme-center-atom .pace .pace-progress:before {
+  color: var(--secondary) !important;
+}
+
+Override
+  bar
+  colors
+  for
+  bar-based
+  themes
+  .pace-theme-center-atom
+  .pace
+  .pace-progress-bar {
+  background: var(--main) !important;
+}
+
+Override
+  background
+  colors
+  for
+  themes
+  that
+  use
+  backgrounds
+  .pace-theme-center-atom
+  .pace
+  .pace-progress-inner {
+  background: var(--main) !important;
+}
+
+/* Ensure our custom center-atom theme still works */
+.pace-theme-center-atom .pace .pace-progress:before {
+  content: attr(data-progress-text);
+  text-align: center;
+  color: var(--secondary);
+  background: var(--main);
+  border-radius: 50%;
+  font-family: var(--secondary-font);
+  letter-spacing: normal;
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 1;
+  padding: 16% 0 7px;
+  width: 50%;
+  height: 40%;
+  margin: 10px 0 0 30px;
+  display: block;
+  z-index: 999;
+  position: absolute;
 }
 
 /* Add fade effect for content */

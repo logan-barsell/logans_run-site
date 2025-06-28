@@ -3,7 +3,7 @@
   border: 4px solid rgba(0, 0, 0, 0.8);
   border-radius: 0.5rem;
   letter-spacing: normal;
-  font-family: var(--secondary-font), 'Courier New', Courier, monospace;
+  font-family: var(--secondary-font);
 }
 
 .react-datepicker__input-container input {
