@@ -65,9 +65,9 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 />
               </svg>
               <a href={`tel:+${contactInfo[0].phone}`}>
-                {contactInfo[0]?.phone?.slice(0, 3)}.
-                {contactInfo[0]?.phone?.slice(3, 6)}.
-                {contactInfo[0]?.phone?.slice(6)}
+                {contactInfo[0].phone.slice(0, 3)}.
+                {contactInfo[0].phone.slice(3, 6)}.
+                {contactInfo[0].phone.slice(6)}
               </a>
             </p>
             <hr className='my-4' />
