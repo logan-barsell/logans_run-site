@@ -53,7 +53,7 @@ module.exports = app => {
       await Promise.all(
         products.data.map(async product => {
           // Skip products without a default_price
-          if (!product.default_price) {
+          if (!product.default_price || product.default_price === '') {
             console.warn(
               `Product ${product.id} (${product.name}) has no default_price, skipping`
             );
