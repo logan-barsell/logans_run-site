@@ -19,18 +19,15 @@
     <script>
       // Fetch theme and set CSS variables before pace loads
       (function () {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/theme', false);
-        xhr.send();
-
         // Initialize theme with defaults
         let theme = {
           paceTheme: 'center-atom',
         };
 
-        if (xhr.status === 200) {
+        // Function to apply theme
+        function applyTheme(themeData) {
           try {
-            theme = JSON.parse(xhr.responseText);
+            theme = themeData;
 
             // Set CSS variables
             const root = document.documentElement;
@@ -58,26 +55,52 @@
               root.style.setProperty('--secondary-font', fontStack);
             }
           } catch (error) {
-            // Use defaults
+            console.warn('Theme application failed:', error);
           }
         }
 
-        // Set basic pace options
-        window.paceOptions = {
-          eventLag: false,
-          ajax: false,
-          elements: { selectors: ['#root'] },
-          restartOnRequestAfter: false,
-          target: '#root',
-          className: `pace-theme-${theme.paceTheme || 'center-atom'}`,
-        };
+        // Function to setup pace
+        function setupPace() {
+          // Set basic pace options
+          window.paceOptions = {
+            eventLag: false,
+            ajax: false,
+            elements: { selectors: ['#root'] },
+            restartOnRequestAfter: false,
+            target: '#root',
+            className: `pace-theme-${theme.paceTheme || 'center-atom'}`,
+          };
 
-        // Load the pace theme CSS from local files
-        const themeName = theme.paceTheme || 'center-atom';
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `/themes/pace/${themeName}.css`;
-        document.head.appendChild(link);
+          // Load the pace theme CSS from local files
+          const themeName = theme.paceTheme || 'center-atom';
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = `/themes/pace/${themeName}.css`;
+          document.head.appendChild(link);
+        }
+
+        // Try to fetch theme asynchronously
+        try {
+          fetch('/api/theme')
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error('Theme fetch failed');
+            })
+            .then(themeData => {
+              applyTheme(themeData);
+              setupPace();
+            })
+            .catch(error => {
+              console.warn('Theme fetch failed, using defaults:', error);
+              setupPace();
+            });
+        } catch (error) {
+          // Fallback for older browsers
+          console.warn('Fetch not available, using defaults:', error);
+          setupPace();
+        }
       })();
     </script>
     <script src="%PUBLIC_URL%/pace.min.js"></script>
