@@ -261,7 +261,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                 )}
               </Field>
             </div>
-            {/* <div className='mb-sm-3 mb-2'>
+            <div className='mb-sm-3 mb-2'>
               <Field name='paceTheme'>
                 {({ input, meta }) => (
                   <>
@@ -300,7 +300,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                   </>
                 )}
               </Field>
-            </div> */}
+            </div>
             <div className='d-flex gap-2'>
               <button
                 type='submit'
