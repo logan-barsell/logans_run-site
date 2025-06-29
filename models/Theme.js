@@ -10,6 +10,7 @@ const ThemeSchema = new Schema({
   secondaryFont: { type: String, default: 'Courier New' },
   catchPhrase: { type: String, default: 'Welcome to our site' },
   // paceTheme: { type: String, default: 'center-atom' },
+  paceTheme: { type: String, default: 'center-atom' },
 });
 
 const Theme = mongoose.model('Theme', ThemeSchema);

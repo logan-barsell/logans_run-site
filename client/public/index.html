@@ -29,7 +29,7 @@
       rel="manifest"
       href="%PUBLIC_URL%/favicons/site.webmanifest"
     />
-    <!-- <script>
+    <script>
       // Fetch theme and set CSS variables before pace loads
       (function () {
         // Initialize theme with defaults
@@ -42,10 +42,10 @@
           var xhr = new XMLHttpRequest();
           xhr.open('GET', '/api/theme', false);
           xhr.timeout = 3000; // 3 second timeout for mobile
-          xhr.onerror = function() {
+          xhr.onerror = function () {
             console.warn('Theme fetch failed (network error), using defaults');
           };
-          xhr.ontimeout = function() {
+          xhr.ontimeout = function () {
             console.warn('Theme fetch timed out, using defaults');
           };
           xhr.send();
@@ -57,7 +57,11 @@
               console.warn('Theme parse failed, using defaults:', error);
             }
           } else {
-            console.warn('Theme fetch returned status:', xhr.status, 'using defaults');
+            console.warn(
+              'Theme fetch returned status:',
+              xhr.status,
+              'using defaults'
+            );
           }
         } catch (error) {
           console.warn('Theme fetch failed, using defaults:', error);
@@ -71,7 +75,7 @@
           root.style.setProperty('--secondary', theme.secondaryColor);
         if (theme.primaryFont)
           root.style.setProperty('--primary-font', theme.primaryFont);
-        
+
         if (theme.secondaryFont) {
           let fontStack = "'Courier New', Courier, monospace";
           switch (theme.secondaryFont) {
@@ -79,12 +83,10 @@
               fontStack = "'Fira Mono', 'Courier New', Courier, monospace";
               break;
             case 'JetBrains Mono':
-              fontStack =
-                "'JetBrains Mono', 'Courier New', Courier, monospace";
+              fontStack = "'JetBrains Mono', 'Courier New', Courier, monospace";
               break;
             case 'Roboto Mono':
-              fontStack =
-                "'Roboto Mono', 'Courier New', Courier, monospace";
+              fontStack = "'Roboto Mono', 'Courier New', Courier, monospace";
               break;
           }
           root.style.setProperty('--secondary-font', fontStack);
@@ -107,17 +109,6 @@
         link.href = `/themes/pace/${themeName}.css`;
         document.head.appendChild(link);
       })();
-    </script> -->
-    <script>
-      // Basic pace configuration without themes
-      window.paceOptions = {
-        eventLag: false,
-        ajax: false,
-        elements: { selectors: ['#root'] },
-        restartOnRequestAfter: false,
-        target: '#root',
-        className: 'pace-theme-minimal',
-      };
     </script>
     <script src="%PUBLIC_URL%/pace.min.js"></script>
     <link

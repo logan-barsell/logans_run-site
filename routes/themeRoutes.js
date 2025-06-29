@@ -29,61 +29,60 @@ router.get('/api/theme', async (req, res) => {
         primaryFont: 'SprayPaint',
         secondaryFont: 'Courier New',
         catchPhrase: 'Welcome to our site',
-        // paceTheme: 'center-atom',
+        paceTheme: 'center-atom',
       });
+    } else {
+      // Aggressive schema fix - ensure ALL required fields exist
+      let needsUpdate = false;
+      const updates = {};
+
+      // Check and fix paceTheme
+      if (!theme.paceTheme) {
+        updates.paceTheme = 'center-atom';
+        needsUpdate = true;
+      }
+
+      // Check and fix other required fields
+      if (!theme.secondaryFont) {
+        updates.secondaryFont = 'Courier New';
+        needsUpdate = true;
+      }
+
+      if (!theme.catchPhrase) {
+        updates.catchPhrase = 'Welcome';
+        needsUpdate = true;
+      }
+
+      if (!theme.siteTitle) {
+        updates.siteTitle = "Logan's Run";
+        needsUpdate = true;
+      }
+
+      if (!theme.primaryColor) {
+        updates.primaryColor = '#e3ff05';
+        needsUpdate = true;
+      }
+
+      if (!theme.secondaryColor) {
+        updates.secondaryColor = '#f08080';
+        needsUpdate = true;
+      }
+
+      if (!theme.primaryFont) {
+        updates.primaryFont = 'SprayPaint';
+        needsUpdate = true;
+      }
+
+      // Apply updates if needed
+      if (needsUpdate) {
+        Object.assign(theme, updates);
+        await theme.save();
+        console.log(
+          '🔧 Auto-fixed theme schema on API call:',
+          Object.keys(updates)
+        );
+      }
     }
-    // else {
-    //   // Aggressive schema fix - ensure ALL required fields exist
-    //   let needsUpdate = false;
-    //   const updates = {};
-
-    //   // Check and fix paceTheme
-    //   if (!theme.paceTheme) {
-    //     updates.paceTheme = 'center-atom';
-    //     needsUpdate = true;
-    //   }
-
-    //   // Check and fix other required fields
-    //   if (!theme.secondaryFont) {
-    //     updates.secondaryFont = 'Courier New';
-    //     needsUpdate = true;
-    //   }
-
-    //   if (!theme.catchPhrase) {
-    //     updates.catchPhrase = 'Welcome';
-    //     needsUpdate = true;
-    //   }
-
-    //   if (!theme.siteTitle) {
-    //     updates.siteTitle = "Logan's Run";
-    //     needsUpdate = true;
-    //   }
-
-    //   if (!theme.primaryColor) {
-    //     updates.primaryColor = '#e3ff05';
-    //     needsUpdate = true;
-    //   }
-
-    //   if (!theme.secondaryColor) {
-    //     updates.secondaryColor = '#f08080';
-    //     needsUpdate = true;
-    //   }
-
-    //   if (!theme.primaryFont) {
-    //     updates.primaryFont = 'SprayPaint';
-    //     needsUpdate = true;
-    //   }
-
-    //   // Apply updates if needed
-    //   if (needsUpdate) {
-    //     Object.assign(theme, updates);
-    //     await theme.save();
-    //     console.log(
-    //       '🔧 Auto-fixed theme schema on API call:',
-    //       Object.keys(updates)
-    //     );
-    //   }
-    // }
     res.json(theme);
   } catch (err) {
     console.error('Theme API error:', err);
