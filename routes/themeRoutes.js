@@ -23,7 +23,7 @@ router.get('/api/theme', async (req, res) => {
     if (!theme) {
       // Provide default theme if none exists
       theme = await Theme.create({
-        siteTitle: "Logan's Run",
+        siteTitle: 'Band Site',
         primaryColor: '#e3ff05',
         secondaryColor: '#f08080',
         primaryFont: 'SprayPaint',
@@ -54,7 +54,7 @@ router.get('/api/theme', async (req, res) => {
       }
 
       if (!theme.siteTitle) {
-        updates.siteTitle = "Logan's Run";
+        updates.siteTitle = 'Band Site';
         needsUpdate = true;
       }
 
