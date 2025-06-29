@@ -74,6 +74,46 @@ const updatePaceTheme = paceTheme => {
   document.head.appendChild(link);
 };
 
+// Function to update page title
+const updatePageTitle = siteTitle => {
+  if (siteTitle) {
+    document.title = siteTitle;
+  }
+};
+
+// Function to update favicon
+const updateFavicon = bandLogoUrl => {
+  if (bandLogoUrl) {
+    // Remove existing favicon links
+    const existingFavicons = document.querySelectorAll(
+      'link[rel*="icon"], link[rel="apple-touch-icon"]'
+    );
+    existingFavicons.forEach(link => link.remove());
+
+    // Add new favicon links with proper type detection
+    const faviconLink = document.createElement('link');
+    faviconLink.rel = 'icon';
+
+    // Detect image type from URL or default to png
+    const imageType = bandLogoUrl.match(/\.(jpg|jpeg|png|gif|svg|ico)$/i);
+    faviconLink.type = imageType ? `image/${imageType[1]}` : 'image/png';
+    faviconLink.href = bandLogoUrl;
+    document.head.appendChild(faviconLink);
+
+    // Add apple touch icon
+    const appleTouchIcon = document.createElement('link');
+    appleTouchIcon.rel = 'apple-touch-icon';
+    appleTouchIcon.href = bandLogoUrl;
+    document.head.appendChild(appleTouchIcon);
+
+    // Add shortcut icon for older browsers
+    const shortcutIcon = document.createElement('link');
+    shortcutIcon.rel = 'shortcut icon';
+    shortcutIcon.href = bandLogoUrl;
+    document.head.appendChild(shortcutIcon);
+  }
+};
+
 export const ThemeProvider = ({ children }) => {
   const dispatch = useDispatch();
   const theme = useSelector(state => state.theme);
@@ -93,10 +133,18 @@ export const ThemeProvider = ({ children }) => {
     loadTheme();
   }, [dispatch]);
 
-  // Update CSS variables when theme changes
+  // Update theme elements when theme changes
   useEffect(() => {
     if (theme && Object.keys(theme).length > 0) {
       updateCSSVariables(theme);
+      // Update page title if it changed
+      if (theme.siteTitle) {
+        updatePageTitle(theme.siteTitle);
+      }
+      // Update favicon if it changed
+      if (theme.bandLogoUrl) {
+        updateFavicon(theme.bandLogoUrl);
+      }
       // Update pace theme if it changed
       if (theme.paceTheme) {
         updatePaceTheme(theme.paceTheme);

@@ -6,20 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1"
     />
-    <title>Logan's Run Project</title>
-    <script>
-      // Set default CSS variables immediately
-      document.documentElement.style.setProperty('--main', '#e3ff05');
-      document.documentElement.style.setProperty('--secondary', '#f08080');
-      document.documentElement.style.setProperty(
-        '--primary-font',
-        'sprayPaint'
-      );
-      document.documentElement.style.setProperty(
-        '--secondary-font',
-        "'Courier New', Courier, monospace"
-      );
-    </script>
+    <title>Loading...</title>
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -32,10 +19,7 @@
     <script>
       // Fetch theme and set CSS variables before pace loads
       (function () {
-        // Initialize theme with defaults
-        let theme = {
-          paceTheme: 'center-atom',
-        };
+        let theme = null;
 
         // Try to fetch theme with timeout and error handling for mobile
         try {
@@ -43,10 +27,10 @@
           xhr.open('GET', '/api/theme', false);
           xhr.timeout = 3000; // 3 second timeout for mobile
           xhr.onerror = function () {
-            console.warn('Theme fetch failed (network error), using defaults');
+            console.warn('Theme fetch failed (network error)');
           };
           xhr.ontimeout = function () {
-            console.warn('Theme fetch timed out, using defaults');
+            console.warn('Theme fetch timed out');
           };
           xhr.send();
 
@@ -54,60 +38,99 @@
             try {
               theme = JSON.parse(xhr.responseText);
             } catch (error) {
-              console.warn('Theme parse failed, using defaults:', error);
+              console.warn('Theme parse failed:', error);
             }
           } else {
-            console.warn(
-              'Theme fetch returned status:',
-              xhr.status,
-              'using defaults'
-            );
+            console.warn('Theme fetch returned status:', xhr.status);
           }
         } catch (error) {
-          console.warn('Theme fetch failed, using defaults:', error);
+          console.warn('Theme fetch failed:', error);
         }
 
-        // Set CSS variables
-        const root = document.documentElement;
-        if (theme.primaryColor)
-          root.style.setProperty('--main', theme.primaryColor);
-        if (theme.secondaryColor)
-          root.style.setProperty('--secondary', theme.secondaryColor);
-        if (theme.primaryFont)
-          root.style.setProperty('--primary-font', theme.primaryFont);
-
-        if (theme.secondaryFont) {
-          let fontStack = "'Courier New', Courier, monospace";
-          switch (theme.secondaryFont) {
-            case 'Fira Mono':
-              fontStack = "'Fira Mono', 'Courier New', Courier, monospace";
-              break;
-            case 'JetBrains Mono':
-              fontStack = "'JetBrains Mono', 'Courier New', Courier, monospace";
-              break;
-            case 'Roboto Mono':
-              fontStack = "'Roboto Mono', 'Courier New', Courier, monospace";
-              break;
+        // Only proceed if we have valid theme data
+        if (theme && Object.keys(theme).length > 0) {
+          // Update page title
+          if (theme.siteTitle) {
+            document.title = theme.siteTitle;
           }
-          root.style.setProperty('--secondary-font', fontStack);
+
+          // Update favicon if bandLogoUrl is provided
+          if (theme.bandLogoUrl) {
+            // Remove existing favicon links
+            const existingFavicons = document.querySelectorAll(
+              'link[rel*="icon"], link[rel="apple-touch-icon"]'
+            );
+            existingFavicons.forEach(link => link.remove());
+
+            // Add new favicon links with proper type detection
+            const faviconLink = document.createElement('link');
+            faviconLink.rel = 'icon';
+
+            // Detect image type from URL or default to png
+            const imageType = theme.bandLogoUrl.match(
+              /\.(jpg|jpeg|png|gif|svg|ico)$/i
+            );
+            faviconLink.type = imageType
+              ? `image/${imageType[1]}`
+              : 'image/png';
+            faviconLink.href = theme.bandLogoUrl;
+            document.head.appendChild(faviconLink);
+
+            // Add apple touch icon
+            const appleTouchIcon = document.createElement('link');
+            appleTouchIcon.rel = 'apple-touch-icon';
+            appleTouchIcon.href = theme.bandLogoUrl;
+            document.head.appendChild(appleTouchIcon);
+
+            // Add shortcut icon for older browsers
+            const shortcutIcon = document.createElement('link');
+            shortcutIcon.rel = 'shortcut icon';
+            shortcutIcon.href = theme.bandLogoUrl;
+            document.head.appendChild(shortcutIcon);
+          }
+
+          // Set CSS variables
+          const root = document.documentElement;
+          if (theme.primaryColor)
+            root.style.setProperty('--main', theme.primaryColor);
+          if (theme.secondaryColor)
+            root.style.setProperty('--secondary', theme.secondaryColor);
+          if (theme.primaryFont)
+            root.style.setProperty('--primary-font', theme.primaryFont);
+
+          if (theme.secondaryFont) {
+            let fontStack = "'Courier New', Courier, monospace";
+            switch (theme.secondaryFont) {
+              case 'Fira Mono':
+                fontStack = "'Fira Mono', 'Courier New', Courier, monospace";
+                break;
+              case 'JetBrains Mono':
+                fontStack =
+                  "'JetBrains Mono', 'Courier New', Courier, monospace";
+                break;
+              case 'Roboto Mono':
+                fontStack = "'Roboto Mono', 'Courier New', Courier, monospace";
+                break;
+            }
+            root.style.setProperty('--secondary-font', fontStack);
+          }
+
+          // Set basic pace options
+          window.paceOptions = {
+            eventLag: false,
+            ajax: false,
+            elements: { selectors: ['#root'] },
+            restartOnRequestAfter: false,
+            target: '#root',
+            className: `pace-theme-${theme.paceTheme}`,
+          };
+
+          // Load the pace theme CSS from local files
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = `/themes/pace/${theme.paceTheme}.css`;
+          document.head.appendChild(link);
         }
-
-        // Set basic pace options
-        window.paceOptions = {
-          eventLag: false,
-          ajax: false,
-          elements: { selectors: ['#root'] },
-          restartOnRequestAfter: false,
-          target: '#root',
-          className: `pace-theme-${theme.paceTheme || 'center-atom'}`,
-        };
-
-        // Load the pace theme CSS from local files
-        const themeName = theme.paceTheme || 'center-atom';
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `/themes/pace/${themeName}.css`;
-        document.head.appendChild(link);
       })();
     </script>
     <script src="%PUBLIC_URL%/pace.min.js"></script>

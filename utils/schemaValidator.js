@@ -27,7 +27,7 @@ const schemaValidators = {
     }
 
     if (!theme.siteTitle) {
-      updates.siteTitle = "Logan's Run";
+      updates.siteTitle = 'Band Site';
       needsUpdate = true;
     }
 
