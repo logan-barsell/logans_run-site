@@ -90,27 +90,51 @@ const updateFavicon = bandLogoUrl => {
     );
     existingFavicons.forEach(link => link.remove());
 
-    // Add new favicon links with proper type detection
+    // Add new favicon links with proper type detection and cache busting
+    const cacheBuster = '?v=' + Date.now();
+
     const faviconLink = document.createElement('link');
     faviconLink.rel = 'icon';
 
     // Detect image type from URL or default to png
     const imageType = bandLogoUrl.match(/\.(jpg|jpeg|png|gif|svg|ico)$/i);
     faviconLink.type = imageType ? `image/${imageType[1]}` : 'image/png';
-    faviconLink.href = bandLogoUrl;
+    faviconLink.href = bandLogoUrl + cacheBuster;
     document.head.appendChild(faviconLink);
 
-    // Add apple touch icon
+    // Add apple touch icon with cache busting
     const appleTouchIcon = document.createElement('link');
     appleTouchIcon.rel = 'apple-touch-icon';
-    appleTouchIcon.href = bandLogoUrl;
+    appleTouchIcon.href = bandLogoUrl + cacheBuster;
     document.head.appendChild(appleTouchIcon);
 
     // Add shortcut icon for older browsers
     const shortcutIcon = document.createElement('link');
     shortcutIcon.rel = 'shortcut icon';
-    shortcutIcon.href = bandLogoUrl;
+    shortcutIcon.href = bandLogoUrl + cacheBuster;
     document.head.appendChild(shortcutIcon);
+
+    // Add additional mobile-specific favicon links
+    const appleTouchIconPrecomposed = document.createElement('link');
+    appleTouchIconPrecomposed.rel = 'apple-touch-icon-precomposed';
+    appleTouchIconPrecomposed.href = bandLogoUrl + cacheBuster;
+    document.head.appendChild(appleTouchIconPrecomposed);
+
+    // Add 32x32 favicon specifically for mobile
+    const favicon32 = document.createElement('link');
+    favicon32.rel = 'icon';
+    favicon32.type = 'image/png';
+    favicon32.sizes = '32x32';
+    favicon32.href = bandLogoUrl + cacheBuster;
+    document.head.appendChild(favicon32);
+
+    // Add 16x16 favicon specifically for mobile
+    const favicon16 = document.createElement('link');
+    favicon16.rel = 'icon';
+    favicon16.type = 'image/png';
+    favicon16.sizes = '16x16';
+    favicon16.href = bandLogoUrl + cacheBuster;
+    document.head.appendChild(favicon16);
   }
 };
 
