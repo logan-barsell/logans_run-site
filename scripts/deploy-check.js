@@ -37,6 +37,7 @@ async function deployCheck() {
         secondaryColor: !!theme.secondaryColor,
         primaryFont: !!theme.primaryFont,
         secondaryFont: !!theme.secondaryFont,
+        catchPhrase: !!theme.catchPhrase,
         paceTheme: !!theme.paceTheme,
       });
     } else {

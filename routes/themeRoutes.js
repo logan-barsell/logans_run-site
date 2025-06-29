@@ -28,6 +28,7 @@ router.get('/api/theme', async (req, res) => {
         secondaryColor: '#f08080',
         primaryFont: 'SprayPaint',
         secondaryFont: 'Courier New',
+        catchPhrase: 'Welcome to our site',
         // paceTheme: 'center-atom',
       });
     }
@@ -45,6 +46,11 @@ router.get('/api/theme', async (req, res) => {
     //   // Check and fix other required fields
     //   if (!theme.secondaryFont) {
     //     updates.secondaryFont = 'Courier New';
+    //     needsUpdate = true;
+    //   }
+
+    //   if (!theme.catchPhrase) {
+    //     updates.catchPhrase = 'Welcome';
     //     needsUpdate = true;
     //   }
 

@@ -21,6 +21,11 @@ const schemaValidators = {
       needsUpdate = true;
     }
 
+    if (!theme.catchPhrase) {
+      updates.catchPhrase = 'Welcome to our site';
+      needsUpdate = true;
+    }
+
     if (!theme.siteTitle) {
       updates.siteTitle = "Logan's Run";
       needsUpdate = true;
