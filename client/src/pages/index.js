@@ -13,6 +13,7 @@ import MediaPage from './Media/Media';
 import BioPage from './Bio/Bio';
 import ContactPage from './Contact/Contact';
 import Signin from './Auth/Signin';
+import NotFound from './NotFound';
 import history from '../history';
 import { ActiveContext } from '../contexts/ActiveContext';
 
@@ -79,6 +80,10 @@ const UserPages = () => {
             path='/signin'
             exact
             element={<Signin />}
+          />
+          <Route
+            path='*'
+            element={<NotFound />}
           />
         </Routes>
         <BottomNav routes={routes} />
