@@ -15,9 +15,21 @@ const migrations = [
       console.log(`Applied migration: ${migrations[0].name}`);
     },
   },
+  {
+    version: 2,
+    name: 'Add catchPhrase field',
+    run: async () => {
+      const themes = await Theme.find({ catchPhrase: { $exists: false } });
+      for (const theme of themes) {
+        theme.catchPhrase = 'Welcome to our site';
+        await theme.save();
+      }
+      console.log(`Applied migration: ${migrations[1].name}`);
+    },
+  },
   // Add future migrations here
   // {
-  //   version: 2,
+  //   version: 3,
   //   name: 'Add new field',
   //   run: async () => {
   //     // Migration logic

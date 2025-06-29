@@ -8,6 +8,7 @@ const ThemeSchema = new Schema({
   primaryFont: String,
   bandLogoUrl: String,
   secondaryFont: { type: String, default: 'Courier New' },
+  catchPhrase: { type: String, default: 'Welcome to our site' },
   // paceTheme: { type: String, default: 'center-atom' },
 });
 

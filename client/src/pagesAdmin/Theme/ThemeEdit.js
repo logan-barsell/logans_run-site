@@ -107,6 +107,28 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
               </Field>
             </div>
             <div className='mb-sm-3 mb-2'>
+              <Field name='catchPhrase'>
+                {({ input, meta }) => (
+                  <>
+                    <label
+                      htmlFor='catchPhrase'
+                      className='form-label'
+                    >
+                      Catch Phrase
+                    </label>
+                    <input
+                      {...input}
+                      type='text'
+                      className='form-control'
+                      id='catchPhrase'
+                      placeholder='Enter your catch phrase'
+                      autoComplete='off'
+                    />
+                  </>
+                )}
+              </Field>
+            </div>
+            <div className='mb-sm-3 mb-2'>
               <Field name='primaryColor'>
                 {({ input, meta }) => (
                   <>
