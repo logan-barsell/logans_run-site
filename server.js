@@ -66,6 +66,35 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+// Add targeted cache control middleware for theme and favicon requests only
+app.use((req, res, next) => {
+  // Prevent caching for theme API requests only
+  if (
+    req.path.includes('/api/theme') ||
+    req.path.includes('/api/updateTheme')
+  ) {
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+
+  // Only prevent caching for images that are likely favicons (small images or specific paths)
+  // This is more targeted and won't affect regular site images
+  if (
+    req.path.match(/\.(ico)$/i) || // .ico files are typically favicons
+    req.path.includes('favicon') || // Files with favicon in the name
+    req.path.includes('logo') || // Logo files that might be used as favicons
+    (req.path.match(/\.(png|jpg|jpeg|gif|svg)$/i) && req.query.favicon)
+  ) {
+    // Only if explicitly marked as favicon
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+
+  next();
+});
+
 app.use('/public', express.static(`public`));
 
 require('./routes/billingRoutes')(app);
