@@ -232,16 +232,13 @@ const BottomNav = ({
           </div>
         )}
       </nav>
-      <footer className='page-footer font-small pt-4'>
+      <footer className='page-footer pt-4'>
         {/* Footer Links */}
         <div className='container-fluid text-center text-md-left'>
           <div className='row'>
             <div className='col-md-7'>
               <h5 className='text-uppercase'>HELLO.</h5>
-              <p
-                className='secondary-font'
-                style={{ fontSize: '16px' }}
-              >
+              <p className='secondary-font'>
                 {theme.catchPhrase || 'Welcome to our site'}.
               </p>
             </div>
@@ -263,7 +260,7 @@ const BottomNav = ({
           </div>
         </div>
         {/* Copyright */}
-        <div className='footer-copyright secondary-font pb-1 pt-2 text-center bg-dark'>
+        <div className='footer-copyright secondary-font pb-1 pt-2 text-center'>
           <p>
             {String(new Date().getFullYear()).replace('0', 'O')} Copyright ©{' '}
             <a

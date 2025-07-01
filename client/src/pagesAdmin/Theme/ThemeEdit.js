@@ -41,7 +41,6 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
     setUpdated(true);
     setLogoFile(null);
   };
-  console.log(theme);
 
   return (
     <div

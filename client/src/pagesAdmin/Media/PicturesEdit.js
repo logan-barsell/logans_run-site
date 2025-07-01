@@ -118,16 +118,16 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
     const totalFiles = selectedFiles ? selectedFiles.length : 0;
     if (totalFiles === 0) return 'Uploading...';
 
-    const completedFiles = Object.keys(uploadProgress).length;
     const totalProgress = Object.values(uploadProgress).reduce(
       (sum, progress) => sum + progress,
       0
     );
     const averageProgress = totalProgress / totalFiles;
 
-    return `Uploading... ${Math.round(
-      averageProgress
-    )}% (${completedFiles}/${totalFiles})`;
+    return `Uploading... ${String(Math.round(averageProgress)).replace(
+      '0',
+      'O'
+    )}%`;
   };
 
   return (
