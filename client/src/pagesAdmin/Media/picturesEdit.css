@@ -22,11 +22,12 @@
 
 #editPictures .currentImages {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 400px));
   grid-gap: 55px;
   margin-bottom: 15px;
   padding: 0px 27px;
   width: 100%;
+  justify-content: center;
 }
 
 #editPictures .img-container {
