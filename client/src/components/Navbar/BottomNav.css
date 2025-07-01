@@ -1,5 +1,14 @@
 #bottomNav {
+  position: relative;
+  z-index: 10;
+  background: #000;
   overflow: hidden;
+}
+
+footer {
+  position: relative;
+  z-index: 10;
+  background: #272727;
 }
 
 #newsSub {
