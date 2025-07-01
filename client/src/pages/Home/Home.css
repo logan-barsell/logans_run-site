@@ -3,10 +3,6 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .background-pic img {
@@ -155,7 +151,7 @@
 }
 
 #home .carousel-item {
-  background: none;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 #home .carousel-caption {
@@ -474,28 +470,4 @@
   #home .carousel-caption p {
     font-size: 0.8rem;
   }
-}
-
-.parallax-carousel {
-  position: relative;
-  width: 100vw;
-  height: 100%;
-  max-height: 83vh;
-  overflow: hidden;
-  background: #000;
-  box-shadow: 0 30px 40px -20px rgba(0, 0, 0, 0.7);
-  z-index: 1;
-}
-
-.parallax-carousel .carousel-inner,
-.parallax-carousel img {
-  height: 100%;
-  object-fit: cover;
-  max-height: 118vh;
-}
-
-.home-content-below-carousel {
-  background: #272727;
-  position: relative;
-  z-index: 2;
 }
