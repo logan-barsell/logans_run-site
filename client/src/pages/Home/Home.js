@@ -14,18 +14,6 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
     fetchHomeImages();
   }, [fetchShows, fetchHomeImages]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const carousel = document.querySelector('.parallax-carousel');
-      if (carousel) {
-        carousel.style.transform = `translateY(${scrolled * 0.5}px)`;
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const accordionItems = [];
 
   const createAccordionItems = () => {
@@ -77,25 +65,22 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
       id='home'
       className='fadeIn'
     >
-      <div className='parallax-carousel'>
-        {images.length > 0 && <Carousel images={images} />}
-      </div>
-      <div className='home-content-below-carousel'>
-        {shows[0] ? (
-          <>
-            <SecondaryNav label='Upcoming Shows' />
-            <div id='upcomingshows'>
-              <div className='row justify-content-around'>
-                <ShowsAccordion
-                  id='currentShows'
-                  title='Shows'
-                  items={accordionItems}
-                />
-              </div>
+      {images.length > 0 && <Carousel images={images} />}
+
+      {shows[0] ? (
+        <>
+          <SecondaryNav label='Upcoming Shows' />
+          <div id='upcomingshows'>
+            <div className='row justify-content-around'>
+              <ShowsAccordion
+                id='currentShows'
+                title='Shows'
+                items={accordionItems}
+              />
             </div>
-          </>
-        ) : null}
-      </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 };
