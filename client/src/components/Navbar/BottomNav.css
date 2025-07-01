@@ -111,6 +111,15 @@ a.nav-item.active {
 
 #subscribe {
   margin: 0px 30px;
+  gap: 10px;
+}
+
+#subscribe svg {
+  fill: black;
+}
+
+#subscribe:hover svg {
+  fill: white;
 }
 
 @media only screen and (max-width: 485px) {
