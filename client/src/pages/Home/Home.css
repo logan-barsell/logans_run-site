@@ -471,3 +471,35 @@
     font-size: 0.8rem;
   }
 }
+
+.parallax-carousel {
+  width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 30px 40px -20px rgba(0, 0, 0, 0.7);
+  margin: 0 auto;
+}
+
+.parallax-carousel .carousel-inner,
+.parallax-carousel .carousel-item {
+  width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.parallax-carousel img {
+  width: 100vw;
+  height: auto;
+  display: block;
+  max-height: 100vh;
+  margin: 0 auto;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.home-content-below-carousel {
+  background: #272727;
+  position: relative;
+  z-index: 2;
+}

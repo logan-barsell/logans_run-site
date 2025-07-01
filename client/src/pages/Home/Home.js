@@ -65,8 +65,9 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
       id='home'
       className='fadeIn'
     >
-      {images.length > 0 && <Carousel images={images} />}
-
+      <div className='parallax-carousel'>
+        {images.length > 0 && <Carousel images={images} />}
+      </div>
       {shows[0] ? (
         <>
           <SecondaryNav label='Upcoming Shows' />
