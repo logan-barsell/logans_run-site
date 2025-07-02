@@ -5,7 +5,13 @@ import { connect } from 'react-redux';
 import Accordion from '../../components/Bootstrap/Accordion';
 import AddMember from './AddMember';
 import editMemberFields from './editMemberFields';
-import { Instagram } from './socialMediaIcons';
+import {
+  Facebook,
+  Instagram,
+  TikTok,
+  YouTube,
+  X as XIcon,
+} from './socialMediaIcons';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
@@ -43,7 +49,10 @@ const CurrentMembers = ({ fetchMembers, members }) => {
     return editMemberFields(member);
   };
 
-  const editMember = async (_id, { bioPic, name, role, instaTag }) => {
+  const editMember = async (
+    _id,
+    { bioPic, name, role, facebook, instagram, tiktok, youtube, x }
+  ) => {
     let newPhoto = bioPic ? bioPic[0] : '';
     const currentMember = members.find(m => m._id === _id);
     let oldImageUrl = currentMember ? currentMember.bioPic : '';
@@ -69,7 +78,11 @@ const CurrentMembers = ({ fetchMembers, members }) => {
       bioPic: imageUrl,
       name,
       role,
-      instaTag,
+      facebook,
+      instagram,
+      tiktok,
+      youtube,
+      x,
     };
     await axios.post(`/api/updateMember/${_id}`, updatedMember);
     fetchMembers();
@@ -77,17 +90,97 @@ const CurrentMembers = ({ fetchMembers, members }) => {
 
   const accordionItems = [];
 
+  const renderSocialIcons = member => {
+    const icons = [];
+    if (member.facebook)
+      icons.push(
+        <a
+          key='facebook'
+          href={member.facebook}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <Facebook />{' '}
+        </a>
+      );
+    if (member.instagram)
+      icons.push(
+        <a
+          key='instagram'
+          href={member.instagram}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <Instagram />{' '}
+        </a>
+      );
+    if (member.tiktok)
+      icons.push(
+        <a
+          key='tiktok'
+          href={member.tiktok}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <TikTok />{' '}
+        </a>
+      );
+    if (member.youtube)
+      icons.push(
+        <a
+          key='youtube'
+          href={member.youtube}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <YouTube />{' '}
+        </a>
+      );
+    if (member.x)
+      icons.push(
+        <a
+          key='x'
+          href={member.x}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <XIcon />{' '}
+        </a>
+      );
+    if (!icons.length) return null;
+    return (
+      <div className='member-social-icons d-flex justify-content-center mb-2'>
+        {icons}
+      </div>
+    );
+  };
+
   const createAccordionItems = () => {
     members.map((member, index) => {
-      const { _id, bioPic, name, role, instaTag } = member;
+      const {
+        _id,
+        bioPic,
+        name,
+        role,
+        facebook,
+        instagram,
+        tiktok,
+        youtube,
+        x,
+      } = member;
       // Use the image URL directly
       const imgURL = bioPic || '';
-      let parsedInsta = '';
-      try {
-        parsedInsta = new URL(instaTag).pathname.replace('/', '');
-      } catch {
-        parsedInsta = instaTag;
-      }
+      const socials = renderSocialIcons(member);
       return accordionItems.push({
         data: member,
         group: 'members',
@@ -96,7 +189,17 @@ const CurrentMembers = ({ fetchMembers, members }) => {
         header: name,
         img: imgURL,
         subhead: role,
-        content: [{ prefix: <Instagram />, value: parsedInsta }],
+        content: [
+          {
+            prefix: 'Member Socials',
+            value: socials || (
+              <>
+                <br />
+                No Socials
+              </>
+            ),
+          },
+        ],
       });
     });
   };

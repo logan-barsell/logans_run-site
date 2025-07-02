@@ -4,8 +4,12 @@ const { Schema } = mongoose;
 const MemberSchema = new Schema({
   name: String,
   role: String,
-  instaTag: String,
   bioPic: String,
+  facebook: String,
+  instagram: String,
+  tiktok: String,
+  youtube: String,
+  x: String,
 });
 
 const Member = mongoose.model('Members', MemberSchema);

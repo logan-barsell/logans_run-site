@@ -1,12 +1,18 @@
 import './Bio.css';
 import vango from '../../images/logos/logansrunlogo.png';
-
 import React, { useEffect } from 'react';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { connect } from 'react-redux';
 import { fetchBio, fetchMembers } from '../../redux/actions';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
+import {
+  Facebook,
+  Instagram,
+  TikTok,
+  YouTube,
+  X as XIcon,
+} from '../../pagesAdmin/Bio/socialMediaIcons';
 
 const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   const { theme } = useTheme();
@@ -19,6 +25,81 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
 
   const renderBio = () => {
     return currentBio && currentBio[0]?.text;
+  };
+
+  const renderSocialIcons = member => {
+    const icons = [];
+    if (member.facebook)
+      icons.push(
+        <a
+          key='facebook'
+          href={member.facebook}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <Facebook />{' '}
+        </a>
+      );
+    if (member.instagram)
+      icons.push(
+        <a
+          key='instagram'
+          href={member.instagram}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <Instagram />{' '}
+        </a>
+      );
+    if (member.tiktok)
+      icons.push(
+        <a
+          key='tiktok'
+          href={member.tiktok}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <TikTok />{' '}
+        </a>
+      );
+    if (member.youtube)
+      icons.push(
+        <a
+          key='youtube'
+          href={member.youtube}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <YouTube />{' '}
+        </a>
+      );
+    if (member.x)
+      icons.push(
+        <a
+          key='x'
+          href={member.x}
+          target='_blank'
+          rel='noreferrer'
+          className='mx-1'
+        >
+          {' '}
+          <XIcon />{' '}
+        </a>
+      );
+    if (!icons.length) return null;
+    return (
+      <div className='member-social-icons d-flex justify-content-center mb-2'>
+        {icons}
+      </div>
+    );
   };
 
   const renderMembers = members.map((member, index) => {
@@ -39,6 +120,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
               <h3>{name}</h3>
               <hr />
               <p>{role}</p>
+              {renderSocialIcons(member)}
             </div>
           </div>
         </div>

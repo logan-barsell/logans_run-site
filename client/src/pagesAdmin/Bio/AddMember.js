@@ -15,13 +15,26 @@ const AddMember = ({ fetchMembers }) => {
     },
     { label: 'Name', name: 'name', type: 'text' },
     { label: 'Role', name: 'role', type: 'text' },
-    { label: 'Instagram Tag', name: 'instaTag', type: 'text' },
+    { label: 'Facebook', name: 'facebook', type: 'text' },
+    { label: 'Instagram', name: 'instagram', type: 'text' },
+    { label: 'TikTok', name: 'tiktok', type: 'text' },
+    { label: 'YouTube', name: 'youtube', type: 'text' },
+    { label: 'X', name: 'x', type: 'text' },
   ];
 
   const [uploading, setUploading] = React.useState(false);
   const [uploadProgress, setUploadProgress] = React.useState(0);
 
-  const onSubmit = async ({ bioPic, name, role, instaTag }) => {
+  const onSubmit = async ({
+    bioPic,
+    name,
+    role,
+    facebook,
+    instagram,
+    tiktok,
+    youtube,
+    x,
+  }) => {
     setUploading(true);
     let imageUrl = '';
     let fileName = '';
@@ -41,7 +54,11 @@ const AddMember = ({ fetchMembers }) => {
       bioPic: imageUrl,
       name,
       role,
-      instaTag,
+      facebook,
+      instagram,
+      tiktok,
+      youtube,
+      x,
     };
     await axios.post('/api/addMember', newMember);
     fetchMembers();
@@ -96,8 +113,4 @@ const AddMember = ({ fetchMembers }) => {
   );
 };
 
-function mapStateToProps({ members }) {
-  return { members };
-}
-
-export default connect(mapStateToProps, { fetchMembers })(AddMember);
+export default connect(null, { fetchMembers })(AddMember);
