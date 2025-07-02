@@ -111,3 +111,8 @@ span.a2a_svg {
     font-size: 2vw;
   }
 }
+
+.member-social-icons {
+  margin-bottom: 0 !important;
+  margin-top: 25px !important;
+}

@@ -114,15 +114,6 @@ a.nav-item.active {
   gap: 10px;
 }
 
-#subscribe svg {
-  fill: black;
-  transition: 500ms;
-}
-
-#subscribe:hover svg {
-  fill: white;
-}
-
 @media only screen and (max-width: 485px) {
   #bottomNav {
     padding-top: 21px;
