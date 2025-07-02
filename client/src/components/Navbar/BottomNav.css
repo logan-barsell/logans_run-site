@@ -116,6 +116,7 @@ a.nav-item.active {
 
 #subscribe svg {
   fill: black;
+  transition: 500ms;
 }
 
 #subscribe:hover svg {
