@@ -49,10 +49,10 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
         tixlink,
         content: [
           { value: dateString },
-          { prefix: 'Doors ', value: doorstimeString },
-          { prefix: 'Show ', value: showtimeString },
-          { prefix: 'Door Price ', value: doorprice ? `$${doorprice}` : null },
-          { prefix: 'Adv. Price ', value: advprice ? `$${advprice}` : null },
+          { prefix: 'Doors: ', value: doorstimeString },
+          { prefix: 'Show: ', value: showtimeString },
+          { prefix: 'Adv. Price: ', value: advprice ? `$${advprice}` : null },
+          { prefix: 'Door Price: ', value: doorprice ? `$${doorprice}` : null },
         ],
       });
     });

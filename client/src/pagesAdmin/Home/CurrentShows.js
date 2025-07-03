@@ -122,13 +122,13 @@ const CurrentShows = ({ fetchShows, shows }) => {
         img: poster,
         subhead: location,
         content: [
-          { prefix: 'Date ', value: dateString },
-          { prefix: 'Doors ', value: doorstimeString },
-          { prefix: 'Show ', value: showtimeString },
-          { prefix: 'Door Price ', value: `$${doorprice}` },
-          { prefix: 'Adv. Price ', value: `$${advprice}` },
+          { prefix: 'Date: ', value: dateString },
+          { prefix: 'Doors: ', value: doorstimeString },
+          { prefix: 'Show: ', value: showtimeString },
+          { prefix: 'Adv. Price: ', value: `$${advprice}` },
+          { prefix: 'Door Price: ', value: `$${doorprice}` },
           {
-            prefix: 'Ticket Link ',
+            prefix: 'Ticket Link: ',
             value: tixlink ? (
               <a
                 className='btn btn-light btn-sm'
