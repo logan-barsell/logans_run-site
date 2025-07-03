@@ -7,6 +7,12 @@
       content="width=device-width, initial-scale=1"
     />
     <title>Loading...</title>
+    <style>
+      html,
+      body {
+        background-color: #272727 !important;
+      }
+    </style>
     <link
       rel="icon"
       type="image/png"
@@ -21,7 +27,6 @@
         try {
           var xhr = new XMLHttpRequest();
           xhr.open('GET', '/api/theme', false);
-          xhr.timeout = 3000; // 3 second timeout for mobile
           xhr.onerror = function () {
             console.warn('Theme fetch failed (network error)');
           };
@@ -147,5 +152,6 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+    <script src="https://widget.bandsintown.com/main.min.js"></script>
   </body>
 </html>

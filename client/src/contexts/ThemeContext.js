@@ -144,17 +144,20 @@ export const ThemeProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const loadTheme = async () => {
       try {
         await dispatch(fetchTheme());
       } catch (error) {
         console.error('Failed to load theme:', error);
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
-
     loadTheme();
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch]);
 
   // Update theme elements when theme changes

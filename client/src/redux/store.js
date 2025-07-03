@@ -14,6 +14,7 @@ import thunk from 'redux-thunk';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { themeReducer } from './reducers/themeReducer';
+import showsSettingsReducer from './reducers/showsReducer';
 
 const persistConfig = {
   key: 'root',
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   shipping: shippingReducer,
   cart: cartReducer,
   theme: themeReducer,
+  showsSettings: showsSettingsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

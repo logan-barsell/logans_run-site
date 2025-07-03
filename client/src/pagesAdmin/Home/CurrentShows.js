@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { fetchShows } from '../../redux/actions';
+import {
+  fetchShows,
+  fetchShowsSettings,
+  updateShowsSettings,
+} from '../../redux/actions';
 import { connect } from 'react-redux';
 import Accordion from '../../components/Bootstrap/Accordion';
 import AddShow from './AddShow';
@@ -9,11 +13,85 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
+import { Form, Field, FormSpy } from 'react-final-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { Check } from '../../components/icons';
+import BandsintownWidget from '../../components/BandsintownWidget';
 
 const CurrentShows = ({ fetchShows, shows }) => {
+  const dispatch = useDispatch();
+  const showsSettings = useSelector(state => state.showsSettings);
+  const [showSystem, setShowSystem] = useState('custom');
+  const [bandsintownArtist, setBandsintownArtist] = useState('');
+  const [artistInput, setArtistInput] = useState('');
+  const [updated, setUpdated] = useState(false);
+  const [artistExists, setArtistExists] = useState(null);
+  const [checkingArtist, setCheckingArtist] = useState(false);
+
+  // Function to check if artist exists
+  const checkArtist = artistName => {
+    if (!artistName) {
+      setArtistExists(null);
+      return;
+    }
+    setCheckingArtist(true);
+    const appId = process.env.REACT_APP_BANDSINTOWN_APP_ID || 'test';
+    // fetch(
+    //   `https://rest.bandsintown.com/artists/${encodeURIComponent(
+    //     artistName
+    //   )}?app_id=${appId}`
+    // )
+    //   .then(res => (res.ok ? res.json() : null))
+    //   .then(data => {
+    //     if (data && !data.error) {
+    //       setArtistExists(true);
+    //     } else {
+    //       setArtistExists(false);
+    //     }
+    //   })
+    //   .catch(() => setArtistExists(false))
+    //   .finally(() => setCheckingArtist(false));
+  };
+
   useEffect(() => {
-    fetchShows();
-  }, [fetchShows]);
+    dispatch(fetchShowsSettings());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (showsSettings) {
+      setShowSystem(showsSettings.showSystem || 'custom');
+      setBandsintownArtist(showsSettings.bandsintownArtist || '');
+      setArtistInput(showsSettings.bandsintownArtist || '');
+      checkArtist(showsSettings.bandsintownArtist || '');
+    }
+  }, [showsSettings]);
+
+  useEffect(() => {
+    setUpdated(false);
+  }, [artistInput]);
+
+  const handleShowSystemChange = e => {
+    const newSystem = e.target.value;
+    setShowSystem(newSystem);
+    dispatch(
+      updateShowsSettings({
+        showSystem: newSystem,
+        bandsintownArtist,
+      })
+    );
+  };
+
+  const handleSave = () => {
+    dispatch(
+      updateShowsSettings({
+        showSystem,
+        bandsintownArtist: artistInput || '',
+      })
+    );
+    setBandsintownArtist(artistInput || '');
+    setUpdated(true);
+    checkArtist(artistInput || '');
+  };
 
   const deleteShow = async id => {
     const showToDelete = shows.find(show => show._id === id);
@@ -157,18 +235,88 @@ const CurrentShows = ({ fetchShows, shows }) => {
   createAccordionItems();
 
   return (
-    <div className='my-5 mb-10'>
-      <Accordion
-        id='showsList'
-        title='Shows'
-        items={accordionItems}
-        editFields={editFields}
-        onEdit={editShow}
-        onDelete={deleteShow}
-      />
-      <div className='d-flex mb-5'>
-        <AddShow />
+    <div className='mt-5 mb-5 pb-5'>
+      <div className='selectCategory'>
+        <select
+          value={showSystem}
+          onChange={handleShowSystemChange}
+          className='form-select form-control form-select-md mb-3'
+          aria-label='.form-select-lg example'
+        >
+          <option disabled>Select Shows System</option>
+          <option value='custom'>Custom Management</option>
+          <option value='bandsintown'>Bandsintown</option>
+        </select>
       </div>
+      <hr />
+      {showSystem === 'bandsintown' ? (
+        <div
+          id='bandsintownEdit'
+          className='container textForm'
+        >
+          <h3>Bandsintown Settings</h3>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              handleSave();
+            }}
+            autoComplete='off'
+          >
+            <div className='mb-sm-3 mb-2'>
+              <label
+                htmlFor='bandsintownArtist'
+                className='form-label'
+              >
+                Artist Name / ID
+              </label>
+              <input
+                id='bandsintownArtist'
+                className='form-control mb-3'
+                type='text'
+                value={artistInput}
+                onChange={e => setArtistInput(e.target.value)}
+                placeholder='Enter your Bandsintown artist name'
+                autoComplete='off'
+              />
+            </div>
+            <div className='d-grid col-6 mx-auto'>
+              <button
+                type='submit'
+                className='btn btn-danger submitForm'
+                disabled={updated}
+              >
+                {updated ? (
+                  <>
+                    Update Successful &nbsp;
+                    <Check />
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
+              </button>
+            </div>
+          </form>
+          {bandsintownArtist && (
+            <div className='mt-4'>
+              <BandsintownWidget artistName={bandsintownArtist} />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className=''>
+          <Accordion
+            id='showsList'
+            title='Shows'
+            items={accordionItems}
+            editFields={editFields}
+            onEdit={editShow}
+            onDelete={deleteShow}
+          />
+          <div className='d-flex mb-5'>
+            <AddShow />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

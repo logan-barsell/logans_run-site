@@ -15,6 +15,8 @@ import {
   DELETE_PRODUCT,
   FETCH_THEME,
   UPDATE_THEME,
+  FETCH_SHOWS_SETTINGS,
+  UPDATE_SHOWS_SETTINGS,
 } from './types';
 
 export const fetchContactInfo = () => async dispatch => {
@@ -95,4 +97,14 @@ export const fetchTheme = () => async dispatch => {
 export const updateTheme = updatedTheme => async dispatch => {
   const res = await axios.post('/api/updateTheme', updatedTheme);
   dispatch({ type: UPDATE_THEME, payload: res.data });
+};
+
+export const fetchShowsSettings = () => async dispatch => {
+  const res = await axios.get('/api/showsSettings');
+  dispatch({ type: FETCH_SHOWS_SETTINGS, payload: res.data });
+};
+
+export const updateShowsSettings = settings => async dispatch => {
+  const res = await axios.post('/api/updateShowsSettings', settings);
+  dispatch({ type: UPDATE_SHOWS_SETTINGS, payload: res.data });
 };
