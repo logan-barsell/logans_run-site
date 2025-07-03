@@ -11,7 +11,7 @@ import {
   TikTok,
   YouTube,
   X as XIcon,
-} from './socialMediaIcons';
+} from '../../components/icons';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,

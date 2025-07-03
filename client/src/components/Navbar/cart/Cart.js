@@ -4,6 +4,7 @@ import axios from 'axios';
 import CartItem from './CartItem';
 import { useSelector, connect } from 'react-redux';
 import { fetchShipping } from '../../../redux/actions';
+import { X as XIcon } from '../../../components/icons';
 
 const Cart = ({ shipping }) => {
   const cart = useSelector(state => state.cart);
@@ -63,23 +64,7 @@ const Cart = ({ shipping }) => {
             data-bs-dismiss='offcanvas'
             aria-label='Close'
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='25'
-              height='25'
-              fill='whitesmoke'
-              className='bi bi-x-lg'
-              viewBox='0 0 16 16'
-            >
-              <path
-                fillRule='evenodd'
-                d='M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z'
-              />
-              <path
-                fillRule='evenodd'
-                d='M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z'
-              />
-            </svg>
+            <XIcon />
           </button>
           {/* <button onClick={e => e.stopPropagation()} type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button> */}
         </div>
