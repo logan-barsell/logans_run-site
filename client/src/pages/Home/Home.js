@@ -5,14 +5,27 @@ import React, { useEffect } from 'react';
 import Carousel from '../../components/Bootstrap/Carousel';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import ShowsAccordion from './ShowsAccordion';
+import BandsintownWidget from '../../components/BandsintownWidget';
 import { connect } from 'react-redux';
-import { fetchHomeImages, fetchShows } from '../../redux/actions';
+import {
+  fetchHomeImages,
+  fetchShows,
+  fetchShowsSettings,
+} from '../../redux/actions';
 
-const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
+const HomePage = ({
+  fetchShows,
+  shows,
+  fetchHomeImages,
+  images,
+  fetchShowsSettings,
+  showsSettings,
+}) => {
   useEffect(() => {
     fetchShows();
     fetchHomeImages();
-  }, [fetchShows, fetchHomeImages]);
+    fetchShowsSettings();
+  }, [fetchShows, fetchHomeImages, fetchShowsSettings]);
 
   const accordionItems = [];
 
@@ -68,7 +81,21 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
       <div className='parallax-carousel'>
         {images.length > 0 && <Carousel images={images} />}
       </div>
-      {shows[0] ? (
+      {showsSettings.showSystem === 'bandsintown' &&
+      showsSettings.bandsintownArtist ? (
+        <>
+          <SecondaryNav label='Upcoming Shows' />
+          <div id='upcomingshows'>
+            <div className='row justify-content-around'>
+              <div className='bandsintown-widget-container'>
+                <BandsintownWidget
+                  artistName={showsSettings.bandsintownArtist}
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      ) : shows[0] ? (
         <>
           <SecondaryNav label='Upcoming Shows' />
           <div id='upcomingshows'>
@@ -86,10 +113,12 @@ const HomePage = ({ fetchShows, shows, fetchHomeImages, images }) => {
   );
 };
 
-function mapStateToProps({ shows, carouselImages }) {
-  return { shows, images: carouselImages };
+function mapStateToProps({ shows, carouselImages, showsSettings }) {
+  return { shows, images: carouselImages, showsSettings };
 }
 
-export default connect(mapStateToProps, { fetchShows, fetchHomeImages })(
-  HomePage
-);
+export default connect(mapStateToProps, {
+  fetchShows,
+  fetchHomeImages,
+  fetchShowsSettings,
+})(HomePage);

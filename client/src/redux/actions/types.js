@@ -15,3 +15,7 @@ export const FETCH_PLAYERS = 'fetch_players';
 // Theme
 export const FETCH_THEME = 'fetch_theme';
 export const UPDATE_THEME = 'update_theme';
+
+// Shows settings
+export const FETCH_SHOWS_SETTINGS = 'fetch_shows_settings';
+export const UPDATE_SHOWS_SETTINGS = 'update_shows_settings';
