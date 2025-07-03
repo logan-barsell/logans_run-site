@@ -10,7 +10,7 @@ import {
   Instagram,
   YouTube,
   Spotify,
-  X as XIcon,
+  Close,
 } from '../../components/icons';
 
 const BottomNav = ({
@@ -108,7 +108,7 @@ const BottomNav = ({
                   data-bs-dismiss='modal'
                   aria-label='Close'
                 >
-                  <XIcon />
+                  <Close />
                 </button>
               </div>
               <form

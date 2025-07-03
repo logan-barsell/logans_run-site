@@ -3,7 +3,7 @@ import appleMusic from '../../images/music/applemusic.png';
 
 import React from 'react';
 import SongCredits from '../../pages/Music/AudioPlayer/TrackContent/SongCredits';
-import { X as XIcon } from '../../components/icons';
+import { Close } from '../../components/icons';
 
 const ModalContent = ({ modalId, track }) => {
   const lyrics = modalId.includes('lyrics');
@@ -32,7 +32,7 @@ const ModalContent = ({ modalId, track }) => {
               data-bs-dismiss='modal'
               aria-label='Close'
             >
-              <XIcon />
+              <Close />
             </button>
           </div>
           <div

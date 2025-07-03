@@ -4,7 +4,7 @@ import axios from 'axios';
 import CartItem from './CartItem';
 import { useSelector, connect } from 'react-redux';
 import { fetchShipping } from '../../../redux/actions';
-import { X as XIcon } from '../../../components/icons';
+import { Close } from '../../../components/icons';
 
 const Cart = ({ shipping }) => {
   const cart = useSelector(state => state.cart);
@@ -64,7 +64,7 @@ const Cart = ({ shipping }) => {
             data-bs-dismiss='offcanvas'
             aria-label='Close'
           >
-            <XIcon />
+            <Close />
           </button>
           {/* <button onClick={e => e.stopPropagation()} type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button> */}
         </div>
