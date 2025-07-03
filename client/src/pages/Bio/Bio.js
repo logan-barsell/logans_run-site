@@ -12,7 +12,7 @@ import {
   TikTok,
   YouTube,
   X as XIcon,
-} from '../../pagesAdmin/Bio/socialMediaIcons';
+} from '../../components/icons';
 
 const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   const { theme } = useTheme();
