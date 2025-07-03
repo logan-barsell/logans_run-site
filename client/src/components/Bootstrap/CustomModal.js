@@ -1,5 +1,5 @@
 import './customModal.css';
-import { X as XIcon } from '../../components/icons';
+import { Close } from '../../components/icons';
 
 import React from 'react';
 import { createPortal } from 'react-dom';
@@ -31,7 +31,7 @@ const Modal = ({ modalProps, children, modalButton }) => {
               data-bs-dismiss='modal'
               aria-label='Close'
             >
-              <XIcon />
+              <Close />
             </button>
           </div>
           {children}

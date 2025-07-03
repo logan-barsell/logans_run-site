@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomModal from '../../components/Bootstrap/CustomModal';
-import { X as XIcon } from '../../components/icons';
+import { Close } from '../../components/icons';
 
 const RemoveImage = ({ item, onDelete }) => {
   const modalProps = {
@@ -42,7 +42,7 @@ const RemoveImage = ({ item, onDelete }) => {
         data-bs-toggle='modal'
         data-bs-target={`#${modalProps.id}`}
       >
-        <XIcon />
+        <Close />
       </button>
     );
   };
