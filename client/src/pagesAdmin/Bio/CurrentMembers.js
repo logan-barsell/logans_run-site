@@ -49,11 +49,8 @@ const CurrentMembers = ({ fetchMembers, members }) => {
     return editMemberFields(member);
   };
 
-  const editMember = async (
-    _id,
-    { bioPic, name, role, facebook, instagram, tiktok, youtube, x }
-  ) => {
-    let newPhoto = bioPic ? bioPic[0] : '';
+  const editMember = async (_id, values) => {
+    let newPhoto = values.bioPic ? values.bioPic[0] : '';
     const currentMember = members.find(m => m._id === _id);
     let oldImageUrl = currentMember ? currentMember.bioPic : '';
     let imageUrl = oldImageUrl;
@@ -73,16 +70,23 @@ const CurrentMembers = ({ fetchMembers, members }) => {
         throw err;
       }
     }
+    // Ensure all social fields are present
+    const socials = ['facebook', 'instagram', 'tiktok', 'youtube', 'x'];
+    for (const key of socials) {
+      if (typeof values[key] === 'undefined') {
+        values[key] = '';
+      }
+    }
     const updatedMember = {
       id: _id,
       bioPic: imageUrl,
-      name,
-      role,
-      facebook,
-      instagram,
-      tiktok,
-      youtube,
-      x,
+      name: values.name,
+      role: values.role,
+      facebook: values.facebook,
+      instagram: values.instagram,
+      tiktok: values.tiktok,
+      youtube: values.youtube,
+      x: values.x,
     };
     await axios.post(`/api/updateMember/${_id}`, updatedMember);
     fetchMembers();
