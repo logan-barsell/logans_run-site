@@ -68,9 +68,7 @@ module.exports = app => {
     try {
       const updatedMember = {};
       for (let key in req.body) {
-        if (req.body[key] !== '') {
-          updatedMember[key] = req.body[key];
-        }
+        updatedMember[key] = req.body[key];
       }
       await memberModel.findOneAndUpdate(
         { _id: updatedMember.id },

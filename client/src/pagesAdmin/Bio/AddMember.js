@@ -15,33 +15,24 @@ const AddMember = ({ fetchMembers }) => {
     },
     { label: 'Name', name: 'name', type: 'text' },
     { label: 'Role', name: 'role', type: 'text' },
-    { label: 'Facebook', name: 'facebook', type: 'text' },
-    { label: 'Instagram', name: 'instagram', type: 'text' },
-    { label: 'TikTok', name: 'tiktok', type: 'text' },
-    { label: 'YouTube', name: 'youtube', type: 'text' },
-    { label: 'X', name: 'x', type: 'text' },
+    { label: 'Facebook', name: 'facebook', type: 'text', required: false },
+    { label: 'Instagram', name: 'instagram', type: 'text', required: false },
+    { label: 'TikTok', name: 'tiktok', type: 'text', required: false },
+    { label: 'YouTube', name: 'youtube', type: 'text', required: false },
+    { label: 'X', name: 'x', type: 'text', required: false },
   ];
 
   const [uploading, setUploading] = React.useState(false);
   const [uploadProgress, setUploadProgress] = React.useState(0);
 
-  const onSubmit = async ({
-    bioPic,
-    name,
-    role,
-    facebook,
-    instagram,
-    tiktok,
-    youtube,
-    x,
-  }) => {
+  const onSubmit = async values => {
     setUploading(true);
     let imageUrl = '';
     let fileName = '';
-    if (bioPic && bioPic.length) {
+    if (values.bioPic && values.bioPic.length) {
       try {
-        fileName = Date.now() + bioPic[0].name;
-        imageUrl = await uploadImageToFirebase(bioPic[0], {
+        fileName = Date.now() + values.bioPic[0].name;
+        imageUrl = await uploadImageToFirebase(values.bioPic[0], {
           fileName,
           onProgress: setUploadProgress,
         });
@@ -50,15 +41,22 @@ const AddMember = ({ fetchMembers }) => {
         throw err;
       }
     }
+    // Ensure all social fields are present
+    const socials = ['facebook', 'instagram', 'tiktok', 'youtube', 'x'];
+    for (const key of socials) {
+      if (typeof values[key] === 'undefined') {
+        values[key] = '';
+      }
+    }
     const newMember = {
       bioPic: imageUrl,
-      name,
-      role,
-      facebook,
-      instagram,
-      tiktok,
-      youtube,
-      x,
+      name: values.name,
+      role: values.role,
+      facebook: values.facebook,
+      instagram: values.instagram,
+      tiktok: values.tiktok,
+      youtube: values.youtube,
+      x: values.x,
     };
     await axios.post('/api/addMember', newMember);
     fetchMembers();

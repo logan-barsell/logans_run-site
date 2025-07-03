@@ -1,14 +1,13 @@
 import React from 'react';
 import { Field } from 'react-final-form';
 
-const required = value => (value ? undefined : 'Required');
-
-const TextField = ({ label, name, initialValue }) => {
-  const isRequired = name !== 'tixlink' && !initialValue;
+const TextField = ({ label, name, initialValue, required }) => {
+  // Only require if explicitly set to true
+  const isRequired = required === true;
 
   const validation = () => {
     if (isRequired) {
-      return required;
+      return value => (value ? undefined : 'Required');
     }
     return undefined;
   };
