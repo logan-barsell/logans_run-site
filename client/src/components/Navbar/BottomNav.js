@@ -221,6 +221,14 @@ const BottomNav = ({
                   />
                 </li>
               </ul>
+              <div className='d-flex justify-content-center my-3'>
+                <a
+                  href='/signin'
+                  className='btn btn-sm btn-danger btn-primary'
+                >
+                  Member Login
+                </a>
+              </div>
             </div>
           </div>
         </div>
