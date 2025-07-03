@@ -69,21 +69,69 @@ nav {
   width: fit-content;
 }
 
-.navbar-toggler {
-  padding: 2px;
-}
-
 .navbar-nav {
   width: 100%;
 }
 
 .navbar-toggler {
-  background-color: white;
+  background-color: transparent;
   transition: all 0.3s ease;
+  border: none;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  position: relative;
 }
 
 .navbar-toggler:hover {
   opacity: 0.8;
+}
+
+/* Hide default Bootstrap icon */
+.navbar-toggler .navbar-toggler-icon {
+  display: none;
+}
+
+/* Custom animated hamburger */
+.navbar-toggler::before,
+.navbar-toggler::after,
+.navbar-toggler .hamburger-line {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  left: 8px;
+}
+
+.navbar-toggler::before {
+  top: 12px;
+}
+
+.navbar-toggler .hamburger-line {
+  top: 18px;
+}
+
+.navbar-toggler::after {
+  top: 24px;
+}
+
+/* Animation when menu is open */
+.navbar-toggler[aria-expanded='true']::before {
+  transform: rotate(45deg);
+  top: 18px;
+}
+
+.navbar-toggler[aria-expanded='true'] .hamburger-line {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.navbar-toggler[aria-expanded='true']::after {
+  transform: rotate(-45deg);
+  top: 18px;
 }
 
 .navbar-light .navbar-nav .active > .nav-link,
@@ -96,5 +144,4 @@ nav {
 .cartQuantity {
   background-color: var(--secondary);
   border: 1px solid var(--main);
-  /* text-shadow: 1px 1px var(--main); */
 }
