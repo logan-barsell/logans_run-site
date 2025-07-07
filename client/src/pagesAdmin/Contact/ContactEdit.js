@@ -263,6 +263,76 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 )}
               </Field>
             </div>
+            <div className='mb-sm-3 mb-2'>
+              <Field
+                name='x'
+                initialValue={contactInfo[0] ? contactInfo[0].x : ''}
+              >
+                {({ input, meta }) => (
+                  <>
+                    <label
+                      htmlFor='x'
+                      className='form-label'
+                    >
+                      X (Twitter)
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='22'
+                        height='22'
+                        fill='currentColor'
+                        className='bi bi-twitter-x'
+                        viewBox='0 0 16 16'
+                      >
+                        <path d='M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z' />
+                      </svg>
+                    </label>
+                    <input
+                      name='x'
+                      {...input}
+                      type='text'
+                      className='form-control'
+                      id='x'
+                      autoComplete='off'
+                    />
+                  </>
+                )}
+              </Field>
+            </div>
+            <div className='mb-sm-3 mb-2'>
+              <Field
+                name='tiktok'
+                initialValue={contactInfo[0] ? contactInfo[0].tiktok : ''}
+              >
+                {({ input, meta }) => (
+                  <>
+                    <label
+                      htmlFor='tiktok'
+                      className='form-label'
+                    >
+                      TikTok
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='22'
+                        height='22'
+                        fill='currentColor'
+                        className='bi bi-tiktok'
+                        viewBox='0 0 32 32'
+                      >
+                        <path d='M16.001 2.667c0-.368.298-.667.666-.667h3.334a.667.667 0 0 1 .667.667c0 2.577 2.09 4.667 4.666 4.667a.667.667 0 0 1 .666.666v3.334a.667.667 0 0 1-.666.666c-1.16 0-2.27-.23-3.334-.646v10.646c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8c.368 0 .667.299.667.667v3.333a.667.667 0 0 1-.667.667c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4V2.667z' />
+                      </svg>
+                    </label>
+                    <input
+                      name='tiktok'
+                      {...input}
+                      type='text'
+                      className='form-control'
+                      id='tiktok'
+                      autoComplete='off'
+                    />
+                  </>
+                )}
+              </Field>
+            </div>
             <div className='d-flex'>
               <button
                 type='submit'

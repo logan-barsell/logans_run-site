@@ -77,8 +77,3 @@
 #bioEdit button {
   margin: auto;
 }
-
-.form-floating > .form-control:focus,
-.form-floating > .form-control:not(:placeholder-shown) {
-  padding-top: 2.625rem;
-}

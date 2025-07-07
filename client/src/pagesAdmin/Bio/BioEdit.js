@@ -6,13 +6,11 @@ import { connect } from 'react-redux';
 import { fetchBio } from '../../redux/actions';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import CurrentMembers from './CurrentMembers';
-import { useTheme } from '../../contexts/ThemeContext';
 
 const BioEdit = ({ fetchBio, currentBio }) => {
   const initialState = { bio: '' };
   const [state, dispatch] = useReducer(reducer, initialState);
   const [updated, setUpdated] = useState(false);
-  const { theme } = useTheme();
 
   function reducer(state, action) {
     switch (action.type) {
@@ -55,7 +53,7 @@ const BioEdit = ({ fetchBio, currentBio }) => {
       >
         <h3>Update Bio</h3>
         <form>
-          <div className='mb-3 form-floating'>
+          <div className='mb-3'>
             <textarea
               defaultValue={renderBio()}
               onChange={e => handleInput(e)}
@@ -63,9 +61,6 @@ const BioEdit = ({ fetchBio, currentBio }) => {
               className='form-control'
               id='bioText'
             ></textarea>
-            <label htmlFor='bioText'>
-              This is <span>{theme.siteTitle || "Logan's Run"}</span>,
-            </label>
           </div>
           <div className='d-flex'>
             <button

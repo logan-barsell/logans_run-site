@@ -5,7 +5,7 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { connect } from 'react-redux';
 import { fetchBio, fetchMembers } from '../../redux/actions';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useNavigate } from 'react-router-dom';
+
 import {
   Facebook,
   Instagram,
@@ -16,7 +16,6 @@ import {
 
 const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   const { theme } = useTheme();
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMembers();
@@ -141,7 +140,6 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
           <div className='row justify-content-center'>
             <div className='col-7 col-sm-auto'>
               <img
-                onClick={() => navigate('/signin')}
                 className='aboutuspic'
                 src={theme.bandLogoUrl || vango}
                 alt='Band Logo'
@@ -150,15 +148,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
           </div>
 
           <div className='row justify-content-center bio'>
-            <p>
-              <span>
-                This is{' '}
-                <span className='yesdevil'>
-                  {theme.siteTitle || "Logan's Run"}
-                </span>
-              </span>
-              , &nbsp;{renderBio()}
-            </p>
+            <p>{renderBio()}</p>
           </div>
         </div>
 
