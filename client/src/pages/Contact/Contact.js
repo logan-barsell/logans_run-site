@@ -8,6 +8,8 @@ import {
   Instagram,
   YouTube,
   Spotify,
+  X,
+  TikTok,
   Envelope,
 } from '../../components/icons';
 import emailjs from '@emailjs/browser';
@@ -115,6 +117,22 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 rel='noreferrer'
               >
                 <Spotify />
+              </a>
+              <a
+                className='hvr-grow'
+                href={contactInfo[0].x}
+                target='_blank'
+                rel='noreferrer'
+              >
+                <X />
+              </a>
+              <a
+                className='hvr-grow'
+                href={contactInfo[0].tiktok}
+                target='_blank'
+                rel='noreferrer'
+              >
+                <TikTok />
               </a>
             </div>
           </div>

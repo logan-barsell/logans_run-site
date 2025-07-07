@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import './signin.css';
+import ErrorMessage from '../../components/ErrorMessage';
 
 const Signin = () => {
   const [error, setError] = useState(null);
@@ -42,9 +43,7 @@ const Signin = () => {
             onSubmit={handleSubmit}
             className='mt-4'
           >
-            {error && (
-              <div className='red text-center secondary-font mb-2'>{error}</div>
-            )}
+            {error && <ErrorMessage>{error}</ErrorMessage>}
             <div className='mb-3'>
               <Field name='email'>
                 {({ input, meta }) => (

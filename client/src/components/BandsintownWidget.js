@@ -7,14 +7,19 @@
 // Usage:
 //   <BandsintownWidget artistName="Metallica" />
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ErrorMessage from './ErrorMessage';
 
 const BandsintownWidget = ({ artistName, style }) => {
   const widgetContainerRef = useRef(null);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (artistName && widgetContainerRef.current) {
-      widgetContainerRef.current.innerHTML = '';
+    setNotFound(false);
+
+    const container = widgetContainerRef.current;
+    if (artistName && container) {
+      container.innerHTML = '';
       const widgetDiv = document.createElement('div');
       widgetDiv.className = 'bit-widget-initializer';
       widgetDiv.setAttribute('data-artist-name', artistName);
@@ -37,7 +42,7 @@ const BandsintownWidget = ({ artistName, style }) => {
       if (style) {
         Object.assign(widgetDiv.style, style);
       }
-      widgetContainerRef.current.appendChild(widgetDiv);
+      container.appendChild(widgetDiv);
 
       // Remove any existing Bandsintown widget script
       const existingScript = document.querySelector(
@@ -53,19 +58,41 @@ const BandsintownWidget = ({ artistName, style }) => {
       script.async = true;
       document.body.appendChild(script);
 
-      // Clean up script and widget on unmount
+      // Check for "not found" after a short delay
+      const timeout = setTimeout(() => {
+        const bitContainer = container.querySelector('.bit-widget-container');
+        if (
+          !bitContainer ||
+          !bitContainer.innerText.trim() ||
+          bitContainer.innerHTML === '<div></div>'
+        ) {
+          setNotFound(true);
+        }
+      }, 1500); // 1.5 seconds
+
+      // Clean up script, widget, and timeout on unmount
       return () => {
+        clearTimeout(timeout);
         if (script.parentNode) {
           script.parentNode.removeChild(script);
         }
-        if (widgetContainerRef.current) {
-          widgetContainerRef.current.innerHTML = '';
+        if (container) {
+          container.innerHTML = '';
         }
       };
     }
   }, [artistName, style]);
 
-  return <div ref={widgetContainerRef} />;
+  return (
+    <>
+      {notFound && (
+        <ErrorMessage>
+          Sorry, this artist was not found on Bandsintown.
+        </ErrorMessage>
+      )}
+      <div ref={widgetContainerRef} />
+    </>
+  );
 };
 
 export default BandsintownWidget;

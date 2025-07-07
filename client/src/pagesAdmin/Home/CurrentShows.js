@@ -13,7 +13,6 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
-import { Form, Field, FormSpy } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Check } from '../../components/icons';
 import BandsintownWidget from '../../components/BandsintownWidget';
@@ -25,33 +24,6 @@ const CurrentShows = ({ fetchShows, shows }) => {
   const [bandsintownArtist, setBandsintownArtist] = useState('');
   const [artistInput, setArtistInput] = useState('');
   const [updated, setUpdated] = useState(false);
-  const [artistExists, setArtistExists] = useState(null);
-  const [checkingArtist, setCheckingArtist] = useState(false);
-
-  // Function to check if artist exists
-  const checkArtist = artistName => {
-    if (!artistName) {
-      setArtistExists(null);
-      return;
-    }
-    setCheckingArtist(true);
-    const appId = process.env.REACT_APP_BANDSINTOWN_APP_ID || 'test';
-    // fetch(
-    //   `https://rest.bandsintown.com/artists/${encodeURIComponent(
-    //     artistName
-    //   )}?app_id=${appId}`
-    // )
-    //   .then(res => (res.ok ? res.json() : null))
-    //   .then(data => {
-    //     if (data && !data.error) {
-    //       setArtistExists(true);
-    //     } else {
-    //       setArtistExists(false);
-    //     }
-    //   })
-    //   .catch(() => setArtistExists(false))
-    //   .finally(() => setCheckingArtist(false));
-  };
 
   useEffect(() => {
     dispatch(fetchShowsSettings());
@@ -62,7 +34,6 @@ const CurrentShows = ({ fetchShows, shows }) => {
       setShowSystem(showsSettings.showSystem || 'custom');
       setBandsintownArtist(showsSettings.bandsintownArtist || '');
       setArtistInput(showsSettings.bandsintownArtist || '');
-      checkArtist(showsSettings.bandsintownArtist || '');
     }
   }, [showsSettings]);
 
@@ -90,7 +61,6 @@ const CurrentShows = ({ fetchShows, shows }) => {
     );
     setBandsintownArtist(artistInput || '');
     setUpdated(true);
-    checkArtist(artistInput || '');
   };
 
   const deleteShow = async id => {
@@ -279,7 +249,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
                 autoComplete='off'
               />
             </div>
-            <div className='d-grid col-6 mx-auto'>
+            <div className='d-grid col-12 sm:col-6 mx-auto'>
               <button
                 type='submit'
                 className='btn btn-danger submitForm'

@@ -10,6 +10,8 @@ import {
   Instagram,
   YouTube,
   Spotify,
+  X,
+  TikTok,
   Close,
 } from '../../components/icons';
 
@@ -193,6 +195,22 @@ const BottomNav = ({
               href={contactInfo[0].spotify}
             >
               <Spotify />
+            </a>
+            <a
+              className=''
+              target='_blank'
+              rel='noreferrer'
+              href={contactInfo[0].x}
+            >
+              <X />
+            </a>
+            <a
+              className=''
+              target='_blank'
+              rel='noreferrer'
+              href={contactInfo[0].tiktok}
+            >
+              <TikTok />
             </a>
           </div>
         )}

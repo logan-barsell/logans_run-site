@@ -20,6 +20,8 @@ const ContactSchema = new Schema({
   youtube: String,
   soundcloud: String,
   spotify: String,
+  x: String,
+  tiktok: String,
 });
 
 const ContactInfo = mongoose.model('Contact', ContactSchema);

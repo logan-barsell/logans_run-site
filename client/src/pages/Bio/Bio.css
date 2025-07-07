@@ -7,7 +7,6 @@
   max-height: 315px;
   margin: 50px auto 30px auto;
   border: 4px solid black;
-  box-shadow: 1px 1px 9px black;
   background-color: black;
   border-radius: 180px;
 }
@@ -25,7 +24,6 @@
 }
 
 .bio p {
-  text-indent: 13%;
   margin: 50px 20px;
   text-align: center;
   text-shadow: 2px 1.5px black;
@@ -33,14 +31,6 @@
   letter-spacing: normal;
   font-family: var(--secondary-font);
 }
-
-.bio a {
-  color: var(--main);
-}
-
-/* #aboutus p span {
-  font-size: 27px;
-} */
 
 .members .row {
   padding-top: 27px;
@@ -50,7 +40,6 @@
   max-width: 333px;
   width: 100%;
   border-radius: 5px;
-  box-shadow: 1px 1px 9px black;
 }
 
 .members h3 {
