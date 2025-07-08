@@ -16,7 +16,7 @@
   bottom: 0;
   height: 5px;
   width: 200px;
-  background: #fff;
+  background: transparent;
   border: 1px solid var(--main);
 
   overflow: hidden;
