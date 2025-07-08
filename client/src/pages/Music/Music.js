@@ -16,6 +16,19 @@ const MusicPage = ({ fetchPlayers, players }) => {
       id='music'
       className='fadeIn'
     >
+      <div className='audioPlayer mainAudioPlayer container'>
+        <iframe
+          title='123'
+          style={{ 'border-radius': '12px' }}
+          src='https://open.spotify.com/embed/artist/0b8AbfdNkOFy9tYFuWMf13?utm_source=generator'
+          width='100%'
+          height='390px'
+          allowfullscreen=''
+          allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+          loading='lazy'
+        ></iframe>
+      </div>
+
       {players.length > 0 ? (
         players?.map(player => (
           <div>

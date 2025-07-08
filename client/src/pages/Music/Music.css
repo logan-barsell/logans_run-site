@@ -3,3 +3,7 @@
   padding: 55px 16px;
   max-width: 666px;
 }
+
+#music .mainAudioPlayer {
+  max-width: 1000px;
+}

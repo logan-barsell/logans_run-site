@@ -276,12 +276,10 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                       id='paceTheme'
                     >
                       <optgroup label='Center Animations'>
-                        <option value='center-atom'>
-                          Center Atom (Default)
-                        </option>
                         <option value='center-circle'>Center Circle</option>
                         <option value='center-simple'>Center Simple</option>
                         <option value='center-radar'>Center Radar</option>
+                        <option value='center-atom'>Center Atom</option>
                       </optgroup>
                       <optgroup label='Bar Animations'>
                         <option value='loading-bar'>Loading Bar</option>
