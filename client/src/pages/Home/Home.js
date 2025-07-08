@@ -1,7 +1,7 @@
 import './Home.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Carousel from '../../components/Bootstrap/Carousel';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import ShowsAccordion from './ShowsAccordion';
@@ -12,6 +12,8 @@ import {
   fetchShows,
   fetchShowsSettings,
 } from '../../redux/actions';
+import VideoCarousel from '../../components/Bootstrap/VideoCarousel';
+import axios from 'axios';
 
 const HomePage = ({
   fetchShows,
@@ -21,10 +23,52 @@ const HomePage = ({
   fetchShowsSettings,
   showsSettings,
 }) => {
+  const [featuredVideos, setFeaturedVideos] = useState([]);
+
   useEffect(() => {
     fetchShows();
     fetchHomeImages();
     fetchShowsSettings();
+    // Fetch featured videos
+    axios.get('/api/featuredVideos').then(res => {
+      // Sort by releaseDate descending (newest first)
+      const sorted = (res.data || []).sort(
+        (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
+      );
+      // Map API data to VideoCarousel format
+      const vids = sorted.map(v => {
+        // Extract videoId from youtubeLink (supports full URL or share link)
+        let videoId = '';
+        try {
+          const url = new URL(v.youtubeLink);
+          if (url.hostname.includes('youtu.be')) {
+            videoId = url.pathname.replace('/', '');
+          } else if (url.hostname.includes('youtube.com')) {
+            const params = new URLSearchParams(url.search);
+            videoId = params.get('v');
+          }
+        } catch {
+          // fallback: try to parse as ID
+          videoId = v.youtubeLink;
+        }
+        return {
+          videoId,
+          title: v.title,
+          description: v.description,
+          startTime:
+            v.startTime !== undefined &&
+            v.startTime !== null &&
+            v.startTime !== ''
+              ? Number(v.startTime)
+              : undefined,
+          endTime:
+            v.endTime !== undefined && v.endTime !== null && v.endTime !== ''
+              ? Number(v.endTime)
+              : undefined,
+        };
+      });
+      setFeaturedVideos(vids);
+    });
   }, [fetchShows, fetchHomeImages, fetchShowsSettings]);
 
   const accordionItems = [];
@@ -78,9 +122,15 @@ const HomePage = ({
       id='home'
       className='fadeIn'
     >
+      {/* IMG CAROUSEL */}
       <div className='parallax-carousel'>
         {images.length > 0 && <Carousel images={images} />}
       </div>
+
+      {/* FEATURED VIDEOS */}
+      {featuredVideos.length > 0 && <VideoCarousel videos={featuredVideos} />}
+
+      {/* UPCOMING SHOWS */}
       {showsSettings.showSystem === 'bandsintown' &&
       showsSettings.bandsintownArtist ? (
         <>

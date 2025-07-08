@@ -8,6 +8,7 @@ import {
   PriceFields,
 } from './FieldTypes';
 import OptionsField from './FieldTypes/OptionsField';
+import NumberField from './FieldTypes/NumberField';
 
 class RenderField extends Component {
   renderContent() {
@@ -80,6 +81,15 @@ class RenderField extends Component {
           name={name}
           options={options}
           initialValue={initialValue}
+        />
+      );
+    } else if (type === 'number') {
+      return (
+        <NumberField
+          label={label}
+          name={name}
+          initialValue={initialValue}
+          placeholder={placeholder}
         />
       );
     }
