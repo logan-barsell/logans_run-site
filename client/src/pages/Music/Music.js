@@ -130,7 +130,8 @@ const MusicPage = ({
               ></iframe>
 
               {/* Music platform icons for individual players */}
-              {(player.appleMusicLink ||
+              {(player.spotifyLink ||
+                player.appleMusicLink ||
                 player.soundcloudLink ||
                 player.youtubeLink) && <hr className='w-100 mt-3' />}
               <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
