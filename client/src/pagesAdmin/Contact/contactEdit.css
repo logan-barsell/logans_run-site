@@ -113,3 +113,9 @@
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
 }
+
+.form-label > svg,
+.form-label > .icon {
+  margin-left: 0.5em;
+  vertical-align: middle;
+}

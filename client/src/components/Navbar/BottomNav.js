@@ -10,6 +10,8 @@ import {
   Instagram,
   YouTube,
   Spotify,
+  AppleMusic,
+  SoundCloud,
   X,
   TikTok,
   Close,
@@ -195,6 +197,22 @@ const BottomNav = ({
               href={contactInfo[0].spotify}
             >
               <Spotify />
+            </a>
+            <a
+              className=''
+              target='_blank'
+              rel='noreferrer'
+              href={contactInfo[0].appleMusic}
+            >
+              <AppleMusic />
+            </a>
+            <a
+              className=''
+              target='_blank'
+              rel='noreferrer'
+              href={contactInfo[0].soundcloud}
+            >
+              <SoundCloud />
             </a>
             <a
               className=''
