@@ -2,12 +2,14 @@ import './videoEdit.css';
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import AddVideo from './AddVideo';
+import AddVideo, { addVideoFields } from './AddVideo';
 import DeleteVideo from './DeleteVideo';
 import EditVideo from './EditVideo';
 import editVideoFields from './editVideoFields';
 import { fetchVideos } from '../../../redux/actions';
 import axios from 'axios';
+import VideoContainer from '../../../components/Video/VideoContainer';
+import VideoItem from '../../../components/Video/VideoItem';
 
 const videoCount = 6;
 const VideosEdit = ({ fetchVideos, videos }) => {
@@ -39,39 +41,41 @@ const VideosEdit = ({ fetchVideos, videos }) => {
     setLimit(limit + videoCount);
   };
 
-  const currentVideos = videos?.slice(0, limit).map(video => (
-    <div
-      key={video._id}
-      className='vid-container'
-    >
-      <div className='video embed-responsive embed-responsive-16by9'>
-        <iframe
-          title={video._id}
-          className='embed-responsive-item'
-          src={video.embedLink}
-        ></iframe>
-      </div>
-      <div className='buttons d-grid gap-1'>
-        <EditVideo
-          video={video}
-          editFields={editVideoFields}
-          onEdit={editVideo}
-        />
-        <DeleteVideo
-          video={video}
-          onDelete={deleteVideo}
-        />
-      </div>
-    </div>
-  ));
-
   return (
     <>
       <div id='videoEdit'>
         <h3>Edit Videos</h3>
         <hr />
         <AddVideo />
-        <div className='currentVideos'>{currentVideos}</div>
+        <VideoContainer>
+          {videos?.slice(0, limit).map(video => {
+            const categoryOption = addVideoFields[0].options.find(
+              opt => opt.value === video.category
+            );
+            const categoryName = categoryOption
+              ? categoryOption.name
+              : video.category;
+            return (
+              <VideoItem
+                key={video._id}
+                youtubeLink={video.link}
+                title={video.title}
+                description={categoryName}
+                iframe={true}
+              >
+                <EditVideo
+                  video={video}
+                  editFields={editVideoFields}
+                  onEdit={editVideo}
+                />
+                <DeleteVideo
+                  video={video}
+                  onDelete={deleteVideo}
+                />
+              </VideoItem>
+            );
+          })}
+        </VideoContainer>
         {limit < videos.length && (
           <div className='d-grid see-more'>
             <button

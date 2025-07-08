@@ -1,0 +1,45 @@
+/* VideoItem container and video styles (from media videoEdit.css) */
+.vid-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 666px;
+  margin: auto;
+  padding: 17px 17px 7px 17px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 7px;
+}
+
+.video {
+  height: 327px;
+  width: 100%;
+}
+
+.video iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.vid-container .buttons {
+  padding: 13px 0px;
+  width: 100%;
+}
+
+.buttons .bi {
+  margin-right: 7px;
+}
+
+.video-title {
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 0.15em;
+}
+
+.video-desc {
+  color: #fff;
+  text-align: center;
+  font-family: var(--secondary-font);
+}

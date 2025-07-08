@@ -1,5 +1,22 @@
 import React from 'react';
 
+function getYouTubeId(url) {
+  if (!url) return '';
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === 'youtu.be') {
+      return parsed.pathname.slice(1);
+    }
+    if (parsed.hostname.includes('youtube.com')) {
+      return new URLSearchParams(parsed.search).get('v');
+    }
+  } catch {
+    // fallback: maybe it's already an ID
+    return url;
+  }
+  return '';
+}
+
 const Video = ({ video }) => {
   const months = [
     'January',
@@ -36,6 +53,10 @@ const Video = ({ video }) => {
   const year = String(date.getFullYear());
   const dateFormatted = `${month} ${day}${daySuffix(day)}, ${year}`;
 
+  // Robust embed URL
+  const videoId = getYouTubeId(video.link || video.embedLink);
+  const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+
   return (
     <div className='blog-post'>
       <div className='title'>{video.title}</div>
@@ -45,7 +66,7 @@ const Video = ({ video }) => {
         <iframe
           title={`${video.id}`}
           className='embed-responsive-item'
-          src={video.embedLink}
+          src={embedUrl}
           allowFullScreen
         ></iframe>
       </div>
