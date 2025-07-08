@@ -20,6 +20,7 @@ const ContactSchema = new Schema({
   youtube: String,
   soundcloud: String,
   spotify: String,
+  appleMusic: String,
   x: String,
   tiktok: String,
 });

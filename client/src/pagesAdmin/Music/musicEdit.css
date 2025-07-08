@@ -71,3 +71,28 @@
   gap: 10px;
   margin-bottom: 10px;
 }
+
+.music-platform-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.music-platform-links a {
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-platform-links a:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.music-platform-links svg {
+  width: 24px;
+  height: 24px;
+}

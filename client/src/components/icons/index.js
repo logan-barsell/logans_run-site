@@ -91,6 +91,61 @@ export const Spotify = () => (
   </svg>
 );
 
+export const AppleMusic = () => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width='22'
+    height='22'
+    viewBox='0 0 24 24'
+    className='icon applemusic-icon'
+    fill='currentColor'
+  >
+    <circle
+      cx='12'
+      cy='12'
+      r='12'
+    />
+    <path
+      d='M16.5 7.5V15.25C16.5 16.4926 15.4926 17.5 14.25 17.5C13.0074 17.5 12 16.4926 12 15.25C12 14.0074 13.0074 13 14.25 13C14.6642 13 15.0482 13.1201 15.364 13.3207V9.5H11.5V16.25C11.5 17.4926 10.4926 18.5 9.25 18.5C8.00736 18.5 7 17.4926 7 16.25C7 15.0074 8.00736 14 9.25 14C9.66421 14 10.0482 14.1201 10.364 14.3207V7.5H16.5Z'
+      fill='black'
+    />
+  </svg>
+);
+
+export const SoundCloud = () => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width='22'
+    height='22'
+    viewBox='0 0 24 24'
+    className='icon soundcloud-icon'
+    fill='currentColor'
+  >
+    <path d='M17.5 17.5C19.9853 17.5 22 15.4853 22 13C22 10.5147 19.9853 8.5 17.5 8.5C16.9642 8.5 16.4442 8.5875 15.9572 8.75313C15.6612 6.67031 13.9002 5 11.75 5C9.67893 5 8 6.67893 8 8.75V17.5H17.5Z' />
+    <rect
+      x='2'
+      y='12'
+      width='2'
+      height='5.5'
+      rx='1'
+    />
+    <rect
+      x='5'
+      y='10.5'
+      width='2'
+      height='7'
+      rx='1'
+    />
+    <rect
+      x='8'
+      y='9'
+      width='2'
+      height='8.5'
+      rx='1'
+    />
+  </svg>
+);
+
 export const Ticket = () => (
   <svg
     xmlns='http://www.w3.org/2000/svg'

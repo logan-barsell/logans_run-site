@@ -5,6 +5,12 @@ import React, { useEffect } from 'react';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { fetchPlayers, fetchContactInfo } from '../../redux/actions';
 import { connect } from 'react-redux';
+import {
+  AppleMusic,
+  SoundCloud,
+  YouTube,
+  Spotify,
+} from '../../components/icons';
 
 const MusicPage = ({
   fetchPlayers,
@@ -58,6 +64,52 @@ const MusicPage = ({
             allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
             loading='lazy'
           ></iframe>
+
+          <hr />
+
+          {/* Music platform icons */}
+          <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
+            {contactInfo[0]?.spotify && (
+              <a
+                href={contactInfo[0].spotify}
+                target='_blank'
+                rel='noreferrer'
+                className='hvr-grow'
+              >
+                <Spotify />
+              </a>
+            )}
+            {contactInfo[0]?.appleMusic && (
+              <a
+                href={contactInfo[0].appleMusic}
+                target='_blank'
+                rel='noreferrer'
+                className='hvr-grow'
+              >
+                <AppleMusic />
+              </a>
+            )}
+            {contactInfo[0]?.soundcloud && (
+              <a
+                href={contactInfo[0].soundcloud}
+                target='_blank'
+                rel='noreferrer'
+                className='hvr-grow'
+              >
+                <SoundCloud />
+              </a>
+            )}
+            {contactInfo[0]?.youtube && (
+              <a
+                href={contactInfo[0].youtube}
+                target='_blank'
+                rel='noreferrer'
+                className='hvr-grow'
+              >
+                <YouTube />
+              </a>
+            )}
+          </div>
         </div>
       )}
 
@@ -76,6 +128,53 @@ const MusicPage = ({
                 loading='lazy'
                 title={player.title}
               ></iframe>
+
+              {/* Music platform icons for individual players */}
+              {(player.appleMusicLink ||
+                player.soundcloudLink ||
+                player.youtubeLink) && <hr className='w-100 mt-3' />}
+              <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
+                {player.spotifyLink && (
+                  <a
+                    href={player.spotifyLink}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='hvr-grow'
+                  >
+                    <Spotify />
+                  </a>
+                )}
+                {player.appleMusicLink && (
+                  <a
+                    href={player.appleMusicLink}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='hvr-grow'
+                  >
+                    <AppleMusic />
+                  </a>
+                )}
+                {player.soundcloudLink && (
+                  <a
+                    href={player.soundcloudLink}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='hvr-grow'
+                  >
+                    <SoundCloud />
+                  </a>
+                )}
+                {player.youtubeLink && (
+                  <a
+                    href={player.youtubeLink}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='hvr-grow'
+                  >
+                    <YouTube />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         ))

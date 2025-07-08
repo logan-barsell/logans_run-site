@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { fetchContactInfo } from '../../redux/actions';
 import { Form, Field, FormSpy } from 'react-final-form';
 import axios from 'axios';
-import { Check } from '../../components/icons';
+import { Check, AppleMusic, SoundCloud } from '../../components/icons';
 
 const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
   const [updated, setUpdated] = useState(false);
@@ -202,19 +202,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                       className='form-label'
                     >
                       SoundCloud
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        width='22'
-                        height='22'
-                        fill='currentColor'
-                        className='bi bi-soundwave'
-                        viewBox='0 0 16 16'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M8.5 2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-1 0v-11a.5.5 0 0 1 .5-.5zm-2 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm-6 1.5A.5.5 0 0 1 5 6v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm8 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm-10 1A.5.5 0 0 1 3 7v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5zm12 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5z'
-                        />
-                      </svg>
+                      <SoundCloud />
                     </label>
                     <input
                       name='soundcloud'
@@ -222,6 +210,32 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                       type='text'
                       className='form-control'
                       id='sc'
+                      autoComplete='off'
+                    />
+                  </>
+                )}
+              </Field>
+            </div>
+            <div className='mb-sm-3 mb-2'>
+              <Field
+                name='appleMusic'
+                initialValue={contactInfo[0] ? contactInfo[0].appleMusic : ''}
+              >
+                {({ input, meta }) => (
+                  <>
+                    <label
+                      htmlFor='am'
+                      className='form-label'
+                    >
+                      Apple Music
+                      <AppleMusic />
+                    </label>
+                    <input
+                      name='appleMusic'
+                      {...input}
+                      type='text'
+                      className='form-control'
+                      id='am'
                       autoComplete='off'
                     />
                   </>

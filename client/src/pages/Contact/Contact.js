@@ -8,6 +8,8 @@ import {
   Instagram,
   YouTube,
   Spotify,
+  AppleMusic,
+  SoundCloud,
   X,
   TikTok,
   Envelope,
@@ -117,6 +119,22 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 rel='noreferrer'
               >
                 <Spotify />
+              </a>
+              <a
+                className='hvr-grow'
+                href={contactInfo[0].appleMusic}
+                target='_blank'
+                rel='noreferrer'
+              >
+                <AppleMusic />
+              </a>
+              <a
+                className='hvr-grow'
+                href={contactInfo[0].soundcloud}
+                target='_blank'
+                rel='noreferrer'
+              >
+                <SoundCloud />
               </a>
               <a
                 className='hvr-grow'
