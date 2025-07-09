@@ -66,7 +66,7 @@ class ShowsAccordion extends Component {
                       onClick={e => window.open(e.target.href, '_blank')}
                       target='_blank'
                       rel='noreferrer'
-                      className='tix btn btn-sm btn-light secondary-font'
+                      className='tix btn btn-sm btn-outline-light secondary-font'
                       style={{ gap: '5px' }}
                     >
                       Tickets <Ticket />
@@ -102,7 +102,7 @@ class ShowsAccordion extends Component {
                       href={tixlink}
                       target='_blank'
                       rel='noreferrer'
-                      className='tix btn btn-light secondary-font d-flex align-items-center'
+                      className='tix btn btn-outline-light secondary-font d-flex align-items-center'
                       style={{
                         maxWidth: 'fit-content',
                         margin: '30px auto',

@@ -104,7 +104,7 @@ const CartItem = ({ item }) => {
         </p>
         <button
           onClick={() => removeFromCart(item)}
-          className='btn btn-sm btn-light'
+          className='btn btn-sm btn-outline-light'
         >
           Remove
         </button>
