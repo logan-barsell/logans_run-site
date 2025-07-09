@@ -62,8 +62,6 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
 
       // Separate successful and failed uploads
       const successfulUploads = uploadResults.filter(result => result.success);
-      const failedUploads = uploadResults.filter(result => !result.success);
-
       // Add successful uploads to the database using the single route
       if (successfulUploads.length > 0) {
         await axios.post(
@@ -129,7 +127,7 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
     >
       <h3>Home Page</h3>
       <hr />
-      <div className='currentImages'>
+      <div className='currentImages container'>
         {images.length > 0 ? (
           images.map(image => (
             <div
