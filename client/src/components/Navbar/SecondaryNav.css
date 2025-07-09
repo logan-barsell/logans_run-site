@@ -5,12 +5,5 @@
   border-bottom: 0.5px solid white;
   position: sticky;
   z-index: 100;
-  top: 88px;
   width: 100%;
-}
-
-@media only screen and (max-width: 991px) {
-  .secondary-nav {
-    top: 87px;
-  }
 }

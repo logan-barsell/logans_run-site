@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet';
 import { useTheme } from './contexts/ThemeContext';
 import { useSelector } from 'react-redux';
+import { NavHeightProvider } from './contexts/NavHeightContext';
 
 import React, { createContext, useState, useEffect } from 'react';
 import Admin from './pagesAdmin';
@@ -63,42 +64,44 @@ function App() {
   }
 
   return (
-    <>
-      <Helmet>
-        <title>{bandName}</title>
-        <meta
-          name='description'
-          content={metaDescription}
-        />
-        {/* Open Graph tags */}
-        <meta
-          property='og:title'
-          content={bandName}
-        />
-        <meta
-          property='og:description'
-          content={metaDescription}
-        />
-        <meta
-          property='og:image'
-          content={bandLogo}
-        />
-        {/* Twitter card tags */}
-        <meta
-          name='twitter:title'
-          content={bandName}
-        />
-        <meta
-          name='twitter:description'
-          content={metaDescription}
-        />
-        <meta
-          name='twitter:image'
-          content={bandLogo}
-        />
-      </Helmet>
-      {authenticated ? <Admin /> : <User />}
-    </>
+    <NavHeightProvider>
+      <>
+        <Helmet>
+          <title>{bandName}</title>
+          <meta
+            name='description'
+            content={metaDescription}
+          />
+          {/* Open Graph tags */}
+          <meta
+            property='og:title'
+            content={bandName}
+          />
+          <meta
+            property='og:description'
+            content={metaDescription}
+          />
+          <meta
+            property='og:image'
+            content={bandLogo}
+          />
+          {/* Twitter card tags */}
+          <meta
+            name='twitter:title'
+            content={bandName}
+          />
+          <meta
+            name='twitter:description'
+            content={metaDescription}
+          />
+          <meta
+            name='twitter:image'
+            content={bandLogo}
+          />
+        </Helmet>
+        {authenticated ? <Admin /> : <User />}
+      </>
+    </NavHeightProvider>
   );
 }
 
