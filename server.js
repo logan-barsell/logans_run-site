@@ -36,6 +36,7 @@ require('./routes/musicRoutes')(app);
 app.use(require('./routes/themeRoutes'));
 app.use(require('./routes/showsSettingsRoutes'));
 app.use(require('./routes/featuredVideosRoutes'));
+app.use(require('./routes/featuredReleasesRoutes'));
 
 app.get('/', (req, res) => {
   res.send('EXPRESS ===> REACT');

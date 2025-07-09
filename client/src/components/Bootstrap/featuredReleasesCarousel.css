@@ -1,0 +1,106 @@
+.featured-releases-carousel {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.featured-release-slide {
+  min-height: 320px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  overflow: hidden;
+  padding: 45px;
+}
+
+.featured-release-cover {
+  flex: 1 1 0;
+  max-width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1.5rem 0;
+}
+
+.featured-release-img {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 8px;
+}
+
+.featured-release-info {
+  flex: 1 1 0;
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.featured-release-title {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-family: var(--secondary-font);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.featured-release-type {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: #bbb;
+  font-family: var(--secondary-font);
+  margin-bottom: 1.2rem;
+}
+
+.featured-release-listen-btn {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  padding: 0.5em 1.5em;
+  font-family: var(--secondary-font);
+}
+
+@media (max-width: 768px) {
+  .featured-release-slide {
+    flex-direction: column !important;
+    min-height: 0;
+    max-width: 100%;
+    gap: 0;
+    padding: 0px 45px;
+  }
+  .featured-release-info {
+    padding: 1.2rem 1rem;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  .featured-release-cover {
+    max-width: 100%;
+    padding: 1rem 0;
+    justify-content: center;
+  }
+  .featured-release-title {
+    font-size: 1.3rem;
+  }
+  .featured-release-type {
+    font-size: 1rem;
+  }
+  .featured-release-listen-btn {
+    font-size: 1rem;
+    padding: 0.5em 1.2em;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-release-title {
+    font-size: 1.05rem;
+  }
+  .featured-release-type {
+    font-size: 0.92rem;
+  }
+  .featured-release-listen-btn {
+    font-size: 0.92rem;
+    padding: 0.45em 1em;
+  }
+}

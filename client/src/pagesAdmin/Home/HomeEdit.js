@@ -5,12 +5,14 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import CurrentShows from './CurrentShows';
 import CarouselEdit from './carousel/CarouselEdit';
 import FeaturedVideosEdit from './FeaturedVideosEdit';
+import FeaturedReleasesEdit from './FeaturedReleasesEdit';
 
 const HomeEdit = () => {
   return (
     <>
       <CarouselEdit />
       <FeaturedVideosEdit />
+      <FeaturedReleasesEdit />
       <SecondaryNav label={'Upcoming Shows'} />
       <div className='container'>
         <div className='row'>

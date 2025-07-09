@@ -37,7 +37,7 @@ function VideoCarousel({ videos }) {
                   href={`https://youtu.be/${video.videoId}`}
                   target='_blank'
                   rel='noreferrer'
-                  className='btn btn-sm btn-dark text-white addButton d-flex gap-2 justify-content-center align-items-center'
+                  className='btn btn-sm btn-outline-light addButton d-flex gap-2 justify-content-center align-items-center'
                 >
                   Watch Now <YouTube />
                 </a>
