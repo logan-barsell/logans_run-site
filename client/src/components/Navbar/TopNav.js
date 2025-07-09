@@ -8,16 +8,32 @@ import { ActiveContext } from '../../contexts/ActiveContext';
 import Cart from './cart/Cart';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useNavHeight } from '../../contexts/NavHeightContext';
 
 const TopNav = ({ routes }) => {
   const cart = useSelector(state => state.cart);
   const ref = useRef();
   const { toggle, setToggle } = useContext(ActiveContext);
   const { theme } = useTheme();
+  const { setTopNavHeight } = useNavHeight();
 
   const menuToggle = () => {
     setToggle(toggle => !toggle);
   };
+
+  useEffect(() => {
+    // Measure and set nav height
+    const updateHeight = () => {
+      if (ref.current) {
+        setTopNavHeight(ref.current.offsetHeight - 1);
+      }
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, [setTopNavHeight]);
 
   useEffect(() => {
     const menuCollapse = document.getElementById('menu');
