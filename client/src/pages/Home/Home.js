@@ -13,6 +13,7 @@ import {
   fetchShowsSettings,
 } from '../../redux/actions';
 import VideoCarousel from '../../components/Bootstrap/VideoCarousel';
+import FeaturedReleasesCarousel from '../../components/Bootstrap/FeaturedReleasesCarousel';
 import axios from 'axios';
 
 const HomePage = ({
@@ -24,6 +25,7 @@ const HomePage = ({
   showsSettings,
 }) => {
   const [featuredVideos, setFeaturedVideos] = useState([]);
+  const [featuredReleases, setFeaturedReleases] = useState([]);
 
   useEffect(() => {
     fetchShows();
@@ -68,6 +70,10 @@ const HomePage = ({
         };
       });
       setFeaturedVideos(vids);
+    });
+    // Fetch featured releases
+    axios.get('/api/featuredReleases').then(res => {
+      setFeaturedReleases(res.data || []);
     });
   }, [fetchShows, fetchHomeImages, fetchShowsSettings]);
 
@@ -129,6 +135,17 @@ const HomePage = ({
 
       {/* FEATURED VIDEOS */}
       {featuredVideos.length > 0 && <VideoCarousel videos={featuredVideos} />}
+
+      {/* FEATURED RELEASES */}
+      {featuredReleases.length > 0 && (
+        <>
+          <h3 className='text-center mt-5 text-white secondary-font'>
+            New Releases
+          </h3>
+          <hr className='w-75 mx-auto bg-white' />
+          <FeaturedReleasesCarousel releases={featuredReleases} />
+        </>
+      )}
 
       {/* UPCOMING SHOWS */}
       {showsSettings.showSystem === 'bandsintown' &&

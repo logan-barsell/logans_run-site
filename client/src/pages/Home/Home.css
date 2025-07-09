@@ -146,14 +146,6 @@
   text-shadow: 2px 1.5px black;
 }
 
-#home .btn {
-  color: black;
-}
-
-#home .carousel-item {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
 #home .carousel-caption {
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
