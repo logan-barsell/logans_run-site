@@ -1,55 +1,28 @@
-import './videoEdit.css';
+import './videos.css';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
-import AddVideo, { addVideoFields } from './AddVideo';
+import AddVideo from './AddVideo';
 import DeleteVideo from './DeleteVideo';
 import EditVideo from './EditVideo';
-import editVideoFields from './editVideoFields';
 import { fetchVideos } from '../../../redux/actions';
-import {
-  updateVideo,
-  deleteVideo as deleteVideoService,
-} from '../../../services/mediaManagementService';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import VideoItem from '../../../components/Video/VideoItem';
-import { useAlert } from '../../../contexts/AlertContext';
+import { addVideoFields, VIDEO_COUNT } from './constants';
 
-const videoCount = 6;
 const VideosEdit = ({ fetchVideos, videos }) => {
-  const { showError, showSuccess } = useAlert();
-  const [limit, setLimit] = useState(videoCount);
+  const [limit, setLimit] = useState(VIDEO_COUNT);
+
+  const memoizedFetchVideos = useCallback(() => {
+    fetchVideos();
+  }, [fetchVideos]);
 
   useEffect(() => {
-    fetchVideos();
-  }, []); // Remove fetchVideos from dependency to prevent infinite loop
-
-  const editVideo = async video => {
-    try {
-      const path = new URL(video.link).pathname;
-      const embedLink = `https://www.youtube.com/embed${path}`;
-      const updatedVideo = { ...video, embedLink };
-
-      await updateVideo(updatedVideo);
-      showSuccess('Video updated successfully');
-      fetchVideos();
-    } catch (err) {
-      showError('Failed to update video');
-    }
-  };
-
-  const deleteVideo = async id => {
-    try {
-      await deleteVideoService(id);
-      showSuccess('Video deleted successfully');
-      fetchVideos();
-    } catch (err) {
-      showError('Failed to delete video');
-    }
-  };
+    memoizedFetchVideos();
+  }, [memoizedFetchVideos]);
 
   const loadMoreVids = () => {
-    setLimit(limit + videoCount);
+    setLimit(limit + VIDEO_COUNT);
   };
 
   return (
@@ -57,7 +30,7 @@ const VideosEdit = ({ fetchVideos, videos }) => {
       <div id='videoEdit'>
         <h3>Edit Videos</h3>
         <hr />
-        <AddVideo />
+        <AddVideo fetchVideos={fetchVideos} />
         <VideoContainer>
           {(videos || [])?.slice(0, limit).map(video => {
             const categoryOption = addVideoFields[0].options.find(
@@ -76,12 +49,11 @@ const VideosEdit = ({ fetchVideos, videos }) => {
               >
                 <EditVideo
                   video={video}
-                  editFields={editVideoFields}
-                  onEdit={editVideo}
+                  fetchVideos={fetchVideos}
                 />
                 <DeleteVideo
                   video={video}
-                  onDelete={deleteVideo}
+                  fetchVideos={fetchVideos}
                 />
               </VideoItem>
             );

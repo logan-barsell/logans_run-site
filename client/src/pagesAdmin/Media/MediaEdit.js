@@ -2,15 +2,8 @@ import './mediaEdit.css';
 
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import PicturesEdit from './PicturesEdit';
-import VideosEdit from './videoEdit/VideosEdit';
-
-function mapStateToProps({ media, videos }) {
-  return {
-    images: media?.data || [],
-    videos: videos?.data || [],
-  };
-}
+import PicturesEdit from './PicturesEdit/PicturesEdit';
+import VideosEdit from './VideosEdit/Videos';
 
 const MediaEdit = () => {
   const [searchParams, setSearchParams] = useSearchParams();

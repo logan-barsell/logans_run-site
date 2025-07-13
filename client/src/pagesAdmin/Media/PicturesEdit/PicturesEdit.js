@@ -2,19 +2,19 @@ import './picturesEdit.css';
 
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { fetchMediaImages } from '../../redux/actions';
+import { fetchMediaImages } from '../../../redux/actions';
 import { Form } from 'react-final-form';
-import { ImageUploadField } from '../../components/Forms/FieldTypes/ImageUpload';
+import { ImageUploadField } from '../../../components/Forms/FieldTypes/ImageUpload';
 import RemoveImage from './RemoveImage';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
-} from '../../utils/firebaseImage';
+} from '../../../utils/firebaseImage';
 import {
   uploadMediaImage,
   removeMediaImage,
-} from '../../services/mediaManagementService';
-import { useAlert } from '../../contexts/AlertContext';
+} from '../../../services/mediaManagementService';
+import { useAlert } from '../../../contexts/AlertContext';
 
 const imgCount = 12;
 const PicturesEdit = ({ fetchMediaImages, images }) => {
