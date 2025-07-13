@@ -1,11 +1,10 @@
-import './contactEdit.css';
-
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchContactInfo } from '../../redux/actions';
 import { updateContact } from '../../services/contactService';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
+import { CustomForm } from '../../components/Forms';
 
 const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
   const [updated, setUpdated] = useState(false);
@@ -58,11 +57,10 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
   };
 
   return (
-    <div
-      id='contactEdit'
-      className='container'
+    <CustomForm
+      title='Update Contact Info'
+      containerId='contactEdit'
     >
-      <h3>Update Contact Info</h3>
       <form onSubmit={handleSubmit}>
         <div className='mb-3'>
           <label
@@ -233,7 +231,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
           {updated ? 'Update Successful' : 'Save Changes'}
         </button>
       </form>
-    </div>
+    </CustomForm>
   );
 };
 
