@@ -77,20 +77,24 @@ export function uploadImageToFirebase(file, { onProgress, fileName } = {}) {
  * @returns {Promise<void>}
  */
 export function deleteImageFromFirebase(imageUrlOrName) {
-  const storage = getStorage(app);
-  let imageRef;
-  if (imageUrlOrName.startsWith('http')) {
-    const match = imageUrlOrName.match(/\/o\/([^?]+)/);
-    if (match && match[1]) {
-      const filePath = decodeURIComponent(match[1]);
-      imageRef = ref(storage, filePath);
+  try {
+    const storage = getStorage(app);
+    let imageRef;
+    if (imageUrlOrName.startsWith('http')) {
+      const match = imageUrlOrName.match(/\/o\/([^?]+)/);
+      if (match && match[1]) {
+        const filePath = decodeURIComponent(match[1]);
+        imageRef = ref(storage, filePath);
+      } else {
+        const fallback = imageUrlOrName.split('/').pop().split('?')[0];
+        imageRef = ref(storage, fallback);
+      }
     } else {
-      const fallback = imageUrlOrName.split('/').pop().split('?')[0];
-      imageRef = ref(storage, fallback);
+      imageRef = ref(storage, imageUrlOrName);
     }
-  } else {
-    imageRef = ref(storage, imageUrlOrName);
-  }
 
-  return deleteObject(imageRef);
+    return deleteObject(imageRef);
+  } catch (error) {
+    console.log(error);
+  }
 }

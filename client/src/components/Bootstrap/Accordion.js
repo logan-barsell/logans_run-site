@@ -22,6 +22,16 @@ class Accordion extends Component {
       const headerId = `heading${id}`;
       const collapseId = `collapse${id}`;
 
+      const itemName = item.name || item.title || 'item';
+      const itemGroup = item.group || 'ITEMS';
+      const editTitle = `EDIT ${itemGroup.toUpperCase().slice(0, -1)}`;
+      const deleteTitle = `DELETE ${itemGroup.toUpperCase().slice(0, -1)}`;
+      const deleteContent = (
+        <>
+          Remove <span>{itemName}</span> from {item.group}?
+        </>
+      );
+
       return (
         <div
           key={index}
@@ -43,12 +53,15 @@ class Accordion extends Component {
               <div className='modify-options'>
                 <EditItem
                   item={item}
+                  title={editTitle}
                   editFields={this.props.editFields}
                   onEdit={this.props.onEdit}
                 />
                 <DeleteItem
                   item={item}
                   onDelete={this.props.onDelete}
+                  title={deleteTitle}
+                  content={deleteContent}
                 />
               </div>
             </button>

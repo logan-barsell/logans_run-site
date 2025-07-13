@@ -1,31 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { fetchVideos } from '../../../redux/actions';
 import ModalForm from '../../../components/Forms/ModalForm';
 import CustomModal from '../../../components/Bootstrap/CustomModal';
 import { addVideo } from '../../../services/mediaManagementService';
 import { useAlert } from '../../../contexts/AlertContext';
-
-export const addVideoFields = [
-  {
-    label: 'Category',
-    name: 'category',
-    type: 'options',
-    options: [
-      { name: 'Music Videos', value: 'musicVids' },
-      { name: 'Live Performances', value: 'liveVids' },
-      { name: 'Vlogs', value: 'vlogs' },
-    ],
-    initialValue: 'musicVids',
-  },
-  { label: 'Title', name: 'title', type: 'text' },
-  { label: 'Release Date', name: 'date', type: 'date' },
-  { label: 'YouTube Share Link', name: 'link', type: 'text' },
-];
+import { addVideoFields } from './constants';
 
 const AddVideo = ({ fetchVideos }) => {
   const { showError, showSuccess } = useAlert();
-  const fields = addVideoFields;
 
   const onSubmit = async ({ category, title, date, link }) => {
     try {
@@ -84,7 +65,7 @@ const AddVideo = ({ fetchVideos }) => {
         modalButton={<AddButton />}
       >
         <ModalForm
-          fields={fields}
+          fields={addVideoFields}
           onSubmit={onSubmit}
         />
       </CustomModal>
@@ -92,8 +73,4 @@ const AddVideo = ({ fetchVideos }) => {
   );
 };
 
-function mapStateToProps({ videos }) {
-  return { videos };
-}
-
-export default connect(mapStateToProps, { fetchVideos })(AddVideo);
+export default AddVideo;

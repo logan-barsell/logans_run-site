@@ -1,6 +1,6 @@
 import React from 'react';
-import CustomModal from '../../components/Bootstrap/CustomModal';
-import { Close } from '../../components/icons';
+import CustomModal from '../../../components/Bootstrap/CustomModal';
+import { Close } from '../../../components/icons';
 
 const RemoveImage = ({ item, onDelete }) => {
   const modalProps = {

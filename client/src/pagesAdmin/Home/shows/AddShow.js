@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { fetchShows } from '../../redux/actions';
-import ModalForm from '../../components/Forms/ModalForm';
-import CustomModal from '../../components/Bootstrap/CustomModal';
-import ADD_SHOW_FIELDS from './addShowFields';
-import { uploadImageToFirebase } from '../../utils/firebaseImage';
-import { addShow } from '../../services/showsManagementService';
-import { useAlert } from '../../contexts/AlertContext';
+import ModalForm from '../../../components/Forms/ModalForm';
+import CustomModal from '../../../components/Bootstrap/CustomModal';
+import { ADD_SHOW_FIELDS } from './constants';
+import { uploadImageToFirebase } from '../../../utils/firebaseImage';
+import { addShow } from '../../../services/showsManagementService';
+import { useAlert } from '../../../contexts/AlertContext';
 
 const AddShow = ({ fetchShows }) => {
   const [uploading, setUploading] = useState(false);
@@ -113,8 +111,4 @@ const AddShow = ({ fetchShows }) => {
   );
 };
 
-function mapStateToProps({ shows }) {
-  return { shows };
-}
-
-export default connect(mapStateToProps, { fetchShows })(AddShow);
+export default AddShow;

@@ -2,14 +2,10 @@ import './homeEdit.css';
 
 import React from 'react';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
-import CurrentShows from './CurrentShows';
+import CurrentShows from './shows/CurrentShows';
 import CarouselEdit from './carousel/CarouselEdit';
-import FeaturedVideosEdit from './FeaturedVideosEdit';
-import FeaturedReleasesEdit from './FeaturedReleasesEdit';
-
-function mapStateToProps({ carouselImages }) {
-  return { images: carouselImages?.data || [] };
-}
+import FeaturedVideosEdit from './videos/FeaturedVideosEdit';
+import FeaturedReleasesEdit from './releases/FeaturedReleases';
 
 const HomeEdit = () => {
   return (
