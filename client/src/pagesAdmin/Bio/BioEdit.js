@@ -1,104 +1,72 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchBio } from '../../redux/actions';
 import { updateBio } from '../../services/bioService';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import CurrentMembers from './CurrentMembers';
 import { useAlert } from '../../contexts/AlertContext';
-import { CustomForm } from '../../components/Forms';
+import { EditableForm } from '../../components/Forms';
 
 const BioEdit = ({ fetchBio, bio }) => {
   const { showError, showSuccess } = useAlert();
-  const initialState = { bio: '' };
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [updated, setUpdated] = useState(false);
-
-  function reducer(state, action) {
-    switch (action.type) {
-      case 'updateBio':
-        return { bio: action.payload };
-      default:
-        return state;
-    }
-  }
 
   useEffect(() => {
     fetchBio();
   }, [fetchBio]);
 
-  const handleInput = e => {
-    dispatch({ type: 'updateBio', payload: e.target.value });
-    setUpdated(false);
+  const handleSave = async data => {
+    await updateBio({ data: data.text });
   };
 
-  const handleSubmit = async () => {
-    try {
-      await updateBio({ data: state.bio });
-      setUpdated(true);
-      showSuccess('Bio updated successfully');
-      fetchBio();
-    } catch (err) {
-      console.error('Failed to update bio:', err);
-      showError('Failed to update bio');
-    }
+  const handleSuccess = () => {
+    showSuccess('Bio updated successfully');
+    fetchBio();
   };
 
-  const renderBio = () => {
-    return bio && bio[0]?.text;
+  const handleError = () => {
+    showError('Failed to update bio');
+  };
+
+  // Custom comparison function for bio text
+  const compareFunction = (initial, current) => {
+    if (!initial || !current) return false;
+    const initialText = initial.text || '';
+    const currentText = current.text || '';
+    return initialText === currentText;
   };
 
   return (
-    <>
-      <CustomForm
+    <div className='mb-5 pb-5'>
+      <EditableForm
         title='Update Bio'
         containerId='bioEdit'
         className='bio-form'
+        initialData={bio && bio.length > 0 ? bio[0] : null}
+        onSave={handleSave}
+        onSuccess={handleSuccess}
+        onError={handleError}
+        compareFunction={compareFunction}
       >
-        <form>
+        {({ formData, handleInputChange }) => (
           <div className='mb-3'>
             <textarea
-              defaultValue={renderBio()}
-              onChange={e => handleInput(e)}
+              name='text'
+              defaultValue={formData.text || ''}
+              onChange={handleInputChange}
               required
               className='form-control'
               id='bioText'
-            ></textarea>
+            />
           </div>
-          <div className='d-flex'>
-            <button
-              onClick={handleSubmit}
-              type='button'
-              className='btn btn-danger'
-              disabled={updated}
-            >
-              {updated ? (
-                <>
-                  Update Successful &nbsp;
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='16'
-                    height='16'
-                    fill='currentColor'
-                    className='bi bi-check-lg'
-                    viewBox='0 0 16 16'
-                  >
-                    <path d='M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z' />
-                  </svg>
-                </>
-              ) : (
-                'Save Changes'
-              )}
-            </button>
-          </div>
-        </form>
-      </CustomForm>
+        )}
+      </EditableForm>
       <SecondaryNav label={'Members'} />
       <div className='container'>
         <div className='row'>
           <CurrentMembers />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

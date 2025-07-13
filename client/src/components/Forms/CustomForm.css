@@ -24,7 +24,7 @@
 }
 
 /* Button styling */
-.custom-form-container button {
+.custom-form-container button.btn {
   margin: 27px auto;
 }
 

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useAlert } from '../contexts/AlertContext';
 import { checkAuth } from '../services/authService';
 
 const AuthWrapper = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  const { showError } = useAlert();
 
   useEffect(() => {
     const checkAuthentication = async () => {

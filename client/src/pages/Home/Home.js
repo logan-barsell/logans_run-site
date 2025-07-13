@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Carousel from '../../components/Bootstrap/Carousel';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import ShowsAccordion from './ShowsAccordion';
-import BandsintownWidget from '../../components/BandsintownWidget';
+import { BandsintownWidget } from '../../components/Bandsintown';
 import { connect } from 'react-redux';
 import {
   fetchHomeImages,

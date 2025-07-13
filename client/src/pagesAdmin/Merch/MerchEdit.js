@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchMerchConfig, updateMerchConfig } from '../../redux/actions';
-import { Form, Field } from 'react-final-form';
-import { Check } from '../../components/icons';
 import StripeSetupGuide from '../../components/Storefront/Guides/StripeSetupGuide';
 import ShopifySetupGuide from '../../components/Storefront/Guides/ShopifySetupGuide';
 import ShopifyValidation from '../../components/Storefront/Validation/ShopifyValidation';
 import StripeValidation from '../../components/Storefront/Validation/StripeValidation';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
-import { CustomForm } from '../../components/Forms';
+import { EditableForm } from '../../components/Forms';
 
 const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
   const { showError, showSuccess } = useAlert();
-  const [updated, setUpdated] = useState(false);
   const [forceValidation, setForceValidation] = useState(false);
   const [selectedStoreType, setSelectedStoreType] = useState(
     merchConfig?.storeType || ''
@@ -54,244 +51,60 @@ const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
     }
   };
 
-  const handleSaveConfig = async configData => {
-    try {
-      // Ensure all fields are included in the data, even if empty
-      const dataToSave = {
-        // Include all possible fields with their current values or empty defaults
-        shopDomain: configData.shopDomain || '',
-        storefrontAccessToken: configData.storefrontAccessToken || '',
-        collectionId: configData.collectionId || '',
-        paymentLinkIds: configData.paymentLinkIds || [],
-        storefrontUrl: normalizeUrl(configData.storefrontUrl || ''),
-        publishableKey: configData.publishableKey || '',
-        storeType: selectedStoreType,
-      };
-      await updateMerchConfig(dataToSave);
-      setUpdated(true);
-      showSuccess('Merchandise configuration updated successfully');
+  const handleSaveConfig = async formData => {
+    // Ensure all fields are included in the data, even if empty
+    const dataToSave = {
+      // Include all possible fields with their current values or empty defaults
+      shopDomain: formData.shopDomain || '',
+      storefrontAccessToken: formData.storefrontAccessToken || '',
+      collectionId: formData.collectionId || '',
+      paymentLinkIds: formData.paymentLinkIds || [],
+      storefrontUrl: normalizeUrl(formData.storefrontUrl || ''),
+      publishableKey: formData.publishableKey || '',
+      storeType: selectedStoreType,
+    };
+    await updateMerchConfig(dataToSave);
+  };
 
-      // Force validation after successful save for Shopify/Stripe config
-      if (selectedStoreType === 'shopify' || selectedStoreType === 'stripe') {
-        setForceValidation(true);
-        // Reset forceValidation after a short delay
-        setTimeout(() => setForceValidation(false), 100);
-      }
+  const handleSuccess = () => {
+    showSuccess('Merchandise configuration updated successfully');
 
-      // Clear the success state after 3 seconds
-      setTimeout(() => setUpdated(false), 3000);
-    } catch (error) {
-      showError(error.message);
+    // Force validation after successful save for Shopify/Stripe config
+    if (selectedStoreType === 'shopify' || selectedStoreType === 'stripe') {
+      setForceValidation(true);
+      // Reset forceValidation after a short delay
+      setTimeout(() => setForceValidation(false), 100);
     }
   };
 
-  const renderShopifyFields = () => (
-    <>
-      <div className='mb-sm-3 mb-2'>
-        <Field
-          name='shopDomain'
-          initialValue={merchConfig?.shopDomain || ''}
-        >
-          {({ input, meta }) => (
-            <>
-              <label
-                htmlFor='shopDomain'
-                className='form-label'
-              >
-                Shop Domain / URL
-              </label>
-              <input
-                {...input}
-                type='text'
-                className='form-control mb-3'
-                id='shopDomain'
-                placeholder='your-store.myshopify.com'
-                autoComplete='off'
-                required
-              />
-            </>
-          )}
-        </Field>
-      </div>
-      <div className='mb-sm-3 mb-2'>
-        <Field
-          name='storefrontAccessToken'
-          initialValue={merchConfig?.storefrontAccessToken || ''}
-        >
-          {({ input, meta }) => (
-            <>
-              <label
-                htmlFor='storefrontAccessToken'
-                className='form-label'
-              >
-                Storefront Access Token
-              </label>
-              <input
-                {...input}
-                type='password'
-                className='form-control mb-3'
-                id='storefrontAccessToken'
-                placeholder='Enter your Shopify storefront access token'
-                autoComplete='off'
-                required
-              />
-            </>
-          )}
-        </Field>
-      </div>
-      <div className='mb-sm-3 mb-2'>
-        <Field
-          name='collectionId'
-          initialValue={merchConfig?.collectionId || ''}
-        >
-          {({ input, meta }) => (
-            <>
-              <label
-                htmlFor='collectionId'
-                className='form-label'
-              >
-                Collection ID
-              </label>
-              <input
-                {...input}
-                type='text'
-                className='form-control mb-3'
-                id='collectionId'
-                placeholder='Enter the collection ID (numbers only)'
-                autoComplete='off'
-                required
-              />
-            </>
-          )}
-        </Field>
-      </div>
-    </>
-  );
+  const handleError = error => {
+    showError(error.message);
+  };
 
-  const renderStripeFields = () => (
-    <>
-      <div className='mb-sm-3 mb-2'>
-        <Field
-          name='publishableKey'
-          initialValue={merchConfig?.publishableKey || ''}
-        >
-          {({ input, meta }) => (
-            <>
-              <label
-                htmlFor='publishableKey'
-                className='form-label'
-              >
-                Publishable Key
-              </label>
-              <input
-                {...input}
-                type='text'
-                className='form-control mb-3'
-                id='publishableKey'
-                placeholder='pk_test_... or pk_live_...'
-                autoComplete='off'
-              />
-              <div className='form-text'>
-                Your Stripe publishable key. You can find this in your Stripe
-                dashboard under Developers &gt; API keys.
-              </div>
-            </>
-          )}
-        </Field>
-      </div>
-      <div className='mb-sm-3 mb-2'>
-        <Field
-          name='paymentLinkIds'
-          initialValue={merchConfig?.paymentLinkIds || []}
-        >
-          {({ input, meta }) => (
-            <>
-              <label
-                htmlFor='paymentLinkIds'
-                className='form-label'
-              >
-                Buy Button IDs
-              </label>
-              <textarea
-                className='form-control mb-3'
-                id='paymentLinkIds'
-                rows='6'
-                placeholder='Enter Stripe buy button IDs, one per line
+  // Custom comparison function for merch config
+  const compareFunction = (initial, current) => {
+    if (!initial || !current) return false;
 
-Example:
-buy_btn_1Rj6noHCVtmXVGiSacAIQc0j
-buy_btn_1Rj6noHCVtmXVGiSacAIQc0k'
-                autoComplete='off'
-                value={Array.isArray(input.value) ? input.value.join('\n') : ''}
-                onChange={e => {
-                  // Don't filter out empty lines - let user type freely
-                  const lines = e.target.value.split('\n');
-                  input.onChange(lines);
-                }}
-              />
-              <div className='form-text'>
-                Enter each Stripe buy button ID on a separate line. You can find
-                these in your Stripe dashboard under Payment Links &gt; Embed.
-              </div>
-            </>
-          )}
-        </Field>
-      </div>
-    </>
-  );
+    const fieldsToCompare = [
+      'shopDomain',
+      'storefrontAccessToken',
+      'collectionId',
+      'paymentLinkIds',
+      'storefrontUrl',
+      'publishableKey',
+    ];
 
-  const renderExternalFields = () => (
-    <div className='mb-sm-3 mb-2'>
-      <Field
-        name='storefrontUrl'
-        initialValue={merchConfig?.storefrontUrl || ''}
-      >
-        {({ input, meta }) => (
-          <>
-            <label
-              htmlFor='storefrontUrl'
-              className='form-label'
-            >
-              Store URL
-            </label>
-            <input
-              {...input}
-              type='text'
-              className='form-control mb-3'
-              id='storefrontUrl'
-              placeholder='your-store.com or https://your-store.com'
-              autoComplete='off'
-            />
-          </>
-        )}
-      </Field>
-    </div>
-  );
+    return fieldsToCompare.every(field => {
+      const initialValue = initial[field] || '';
+      const currentValue = current[field] || '';
+      return initialValue === currentValue;
+    });
+  };
 
   return (
-    <CustomForm
-      title='Store Configuration'
-      containerId='merchConfigEdit'
-    >
-      <hr />
-
-      {/* Shopify Validation - shown when Shopify is selected */}
-      {selectedStoreType === 'shopify' && (
-        <ShopifyValidation
-          merchConfig={merchConfig}
-          forceValidation={forceValidation}
-        />
-      )}
-
-      {/* Stripe Validation - shown when Stripe is selected */}
-      {selectedStoreType === 'stripe' && (
-        <StripeValidation
-          merchConfig={merchConfig}
-          forceValidation={forceValidation}
-        />
-      )}
-
-      <div className='container'>
+    <>
+      {/* Store Type Selection - outside of form */}
+      <div className='container mb-5 pb-5'>
         <div className='selectCategory'>
           <select
             value={selectedStoreType}
@@ -311,58 +124,195 @@ buy_btn_1Rj6noHCVtmXVGiSacAIQc0k'
           </select>
         </div>
 
-        <Form
-          onSubmit={handleSaveConfig}
-          initialValues={{ ...merchConfig, storeType: selectedStoreType }}
-          render={({ handleSubmit, form, meta }) => (
-            <form
-              onSubmit={handleSubmit}
-              autoComplete='off'
-            >
-              {/* FormSpy removed - was interfering with success state */}
+        <hr />
 
-              {/* Hidden field to include storeType in form submission */}
-              <Field name='storeType'>
-                {({ input }) => (
-                  <input
-                    {...input}
-                    type='hidden'
-                    value={selectedStoreType}
-                  />
-                )}
-              </Field>
-
-              {selectedStoreType === 'shopify' && renderShopifyFields()}
-              {selectedStoreType === 'stripe' && renderStripeFields()}
-              {selectedStoreType === 'external' && renderExternalFields()}
-
-              {selectedStoreType && (
-                <div className='d-grid col-12 sm:col-6 mx-auto'>
-                  <button
-                    type='submit'
-                    className='btn btn-danger submitForm'
-                    disabled={updated}
-                  >
-                    {updated ? (
-                      <>
-                        Update Successful &nbsp;
-                        <Check />
-                      </>
-                    ) : (
-                      'Save Changes'
-                    )}
-                  </button>
-                </div>
+        <EditableForm
+          title='Store Configuration'
+          containerId='merchConfigEdit'
+          initialData={merchConfig}
+          onSave={handleSaveConfig}
+          onSuccess={handleSuccess}
+          onError={handleError}
+          compareFunction={compareFunction}
+        >
+          {({ formData, handleInputChange }) => (
+            <>
+              {/* Shopify Validation - shown when Shopify is selected */}
+              {selectedStoreType === 'shopify' && (
+                <ShopifyValidation
+                  merchConfig={merchConfig}
+                  forceValidation={forceValidation}
+                />
               )}
-            </form>
+
+              {/* Stripe Validation - shown when Stripe is selected */}
+              {selectedStoreType === 'stripe' && (
+                <StripeValidation
+                  merchConfig={merchConfig}
+                  forceValidation={forceValidation}
+                />
+              )}
+
+              <div className='container'>
+                {/* Shopify Fields */}
+                {selectedStoreType === 'shopify' && (
+                  <>
+                    <div className='mb-sm-3 mb-2'>
+                      <label
+                        htmlFor='shopDomain'
+                        className='form-label'
+                      >
+                        Shop Domain / URL
+                      </label>
+                      <input
+                        type='text'
+                        className='form-control mb-3'
+                        id='shopDomain'
+                        name='shopDomain'
+                        value={formData.shopDomain || ''}
+                        onChange={handleInputChange}
+                        placeholder='your-store.myshopify.com'
+                        autoComplete='off'
+                        required
+                      />
+                    </div>
+                    <div className='mb-sm-3 mb-2'>
+                      <label
+                        htmlFor='storefrontAccessToken'
+                        className='form-label'
+                      >
+                        Storefront Access Token
+                      </label>
+                      <input
+                        type='password'
+                        className='form-control mb-3'
+                        id='storefrontAccessToken'
+                        name='storefrontAccessToken'
+                        value={formData.storefrontAccessToken || ''}
+                        onChange={handleInputChange}
+                        placeholder='Enter your Shopify storefront access token'
+                        autoComplete='off'
+                        required
+                      />
+                    </div>
+                    <div className='mb-sm-3 mb-2'>
+                      <label
+                        htmlFor='collectionId'
+                        className='form-label'
+                      >
+                        Collection ID
+                      </label>
+                      <input
+                        type='text'
+                        className='form-control mb-3'
+                        id='collectionId'
+                        name='collectionId'
+                        value={formData.collectionId || ''}
+                        onChange={handleInputChange}
+                        placeholder='Enter the collection ID (numbers only)'
+                        autoComplete='off'
+                        required
+                      />
+                    </div>
+                  </>
+                )}
+
+                {/* Stripe Fields */}
+                {selectedStoreType === 'stripe' && (
+                  <>
+                    <div className='mb-sm-3 mb-2'>
+                      <label
+                        htmlFor='publishableKey'
+                        className='form-label'
+                      >
+                        Publishable Key
+                      </label>
+                      <input
+                        type='text'
+                        className='form-control mb-3'
+                        id='publishableKey'
+                        name='publishableKey'
+                        value={formData.publishableKey || ''}
+                        onChange={handleInputChange}
+                        placeholder='pk_test_... or pk_live_...'
+                        autoComplete='off'
+                      />
+                      <div className='form-text'>
+                        Your Stripe publishable key. You can find this in your
+                        Stripe dashboard under Developers &gt; API keys.
+                      </div>
+                    </div>
+                    <div className='mb-sm-3 mb-2'>
+                      <label
+                        htmlFor='paymentLinkIds'
+                        className='form-label'
+                      >
+                        Buy Button IDs
+                      </label>
+                      <textarea
+                        className='form-control mb-3'
+                        id='paymentLinkIds'
+                        name='paymentLinkIds'
+                        rows='6'
+                        placeholder='Enter Stripe buy button IDs, one per line
+
+Example:
+buy_btn_1Rj6noHCVtmXVGiSacAIQc0j
+buy_btn_1Rj6noHCVtmXVGiSacAIQc0k'
+                        autoComplete='off'
+                        value={
+                          Array.isArray(formData.paymentLinkIds)
+                            ? formData.paymentLinkIds.join('\n')
+                            : ''
+                        }
+                        onChange={e => {
+                          // Don't filter out empty lines - let user type freely
+                          const lines = e.target.value.split('\n');
+                          handleInputChange({
+                            target: { name: 'paymentLinkIds', value: lines },
+                          });
+                        }}
+                      />
+                      <div className='form-text'>
+                        Enter each Stripe buy button ID on a separate line. You
+                        can find these in your Stripe dashboard under Payment
+                        Links &gt; Embed.
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* External Fields */}
+                {selectedStoreType === 'external' && (
+                  <div className='mb-sm-3 mb-2'>
+                    <label
+                      htmlFor='storefrontUrl'
+                      className='form-label'
+                    >
+                      Store URL
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control mb-3'
+                      id='storefrontUrl'
+                      name='storefrontUrl'
+                      value={formData.storefrontUrl || ''}
+                      onChange={handleInputChange}
+                      placeholder='your-store.com or https://your-store.com'
+                      autoComplete='off'
+                    />
+                  </div>
+                )}
+              </div>
+            </>
           )}
-        />
+        </EditableForm>
 
         {/* Setup Guides - shown based on selected store type */}
         {selectedStoreType === 'stripe' && <StripeSetupGuide />}
         {selectedStoreType === 'shopify' && <ShopifySetupGuide />}
       </div>
-    </CustomForm>
+    </>
   );
 };
 

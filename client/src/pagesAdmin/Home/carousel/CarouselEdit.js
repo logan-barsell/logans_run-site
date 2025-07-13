@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchHomeImages } from '../../../redux/actions';
 import { Form } from 'react-final-form';
-import { ImageUpload } from '../../../components/Forms/FieldTypes';
+import { ImageUploadField } from '../../../components/Forms/FieldTypes/ImageUpload';
 import RemoveImage from './RemoveImage';
 import {
   uploadImageToFirebase,
@@ -172,7 +172,7 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
               }, 1000);
             }}
           >
-            <ImageUpload
+            <ImageUploadField
               name='pic'
               setImage={setSelectedFiles}
               multiple={true}

@@ -5,6 +5,10 @@ import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
 import { addPlayer } from '../../services/musicPlayersService';
 import { useAlert } from '../../contexts/AlertContext';
+import {
+  validateSpotifyUrl,
+  generateSpotifyEmbedUrl,
+} from '../../utils/spotifyValidation';
 
 const AddPlayer = ({ fetchPlayers }) => {
   const { showError, showSuccess } = useAlert();
@@ -22,7 +26,7 @@ const AddPlayer = ({ fetchPlayers }) => {
     },
     { label: 'Title', name: 'title', type: 'text' },
     { label: 'Release Date', name: 'date', type: 'date' },
-    { label: 'Spotify Link', name: 'spotifyLink', type: 'text' },
+    { label: 'Spotify Link', name: 'spotifyLink', type: 'spotifyUrl' },
     { label: 'Apple Music Link', name: 'appleMusicLink', type: 'text' },
     { label: 'YouTube Link', name: 'youtubeLink', type: 'text' },
     { label: 'SoundCloud Link', name: 'soundcloudLink', type: 'text' },
@@ -38,9 +42,20 @@ const AddPlayer = ({ fetchPlayers }) => {
     soundcloudLink,
   }) => {
     try {
-      const path = new URL(spotifyLink).pathname;
-      const theme = bgColor ? bgColor : '';
-      const embedLink = `https://open.spotify.com/embed${path}?utm_source=generator${theme}`;
+      // Validate Spotify URL
+      const spotifyValidation = validateSpotifyUrl(spotifyLink);
+      if (!spotifyValidation.isValid) {
+        showError(spotifyValidation.error);
+        return;
+      }
+
+      // Generate embed URL
+      const embedLink = generateSpotifyEmbedUrl(spotifyLink, bgColor);
+      if (!embedLink) {
+        showError('Failed to generate Spotify embed URL');
+        return;
+      }
+
       const newPlayer = {
         title,
         date: date.getTime(),

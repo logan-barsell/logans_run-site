@@ -52,7 +52,7 @@ const MediaEdit = () => {
           {renderedNavItems}
         </div>
       </ul>
-      <div className='container'>
+      <div className='container mb-5 pb-5'>
         {currentTab === 'pictures' && <PicturesEdit />}
         {currentTab === 'videos' && <VideosEdit />}
       </div>

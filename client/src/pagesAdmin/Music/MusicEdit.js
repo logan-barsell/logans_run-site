@@ -15,6 +15,10 @@ import {
   SoundCloud,
 } from '../../components/icons';
 import { useAlert } from '../../contexts/AlertContext';
+import {
+  validateSpotifyUrl,
+  generateSpotifyEmbedUrl,
+} from '../../utils/spotifyValidation';
 
 const MusicEdit = ({ fetchPlayers, players }) => {
   const { showError, showSuccess } = useAlert();
@@ -25,10 +29,24 @@ const MusicEdit = ({ fetchPlayers, players }) => {
 
   const editPlayer = async player => {
     try {
-      const path = new URL(player.spotifyLink).pathname;
-      const theme = player.bgColor ? player.bgColor : '';
-      const embedLink = `https://open.spotify.com/embed${path}?utm_source=generator${theme}`;
-      const updatedPlayer = { ...player, embedLink, bgColor: theme };
+      // Validate Spotify URL
+      const spotifyValidation = validateSpotifyUrl(player.spotifyLink);
+      if (!spotifyValidation.isValid) {
+        showError(spotifyValidation.error);
+        return;
+      }
+
+      // Generate embed URL
+      const embedLink = generateSpotifyEmbedUrl(
+        player.spotifyLink,
+        player.bgColor
+      );
+      if (!embedLink) {
+        showError('Failed to generate Spotify embed URL');
+        return;
+      }
+
+      const updatedPlayer = { ...player, embedLink };
 
       await updatePlayer(updatedPlayer);
       fetchPlayers();
@@ -145,7 +163,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
     <>
       <div
         id='music-edit'
-        className='row'
+        className='row mb-5 pb-5'
       >
         <h3>Edit Music</h3>
         <hr />

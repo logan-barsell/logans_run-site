@@ -25,7 +25,7 @@ export default player => {
     {
       label: 'Spotify Link',
       name: 'spotifyLink',
-      type: 'text',
+      type: 'spotifyUrl',
       initialValue: spotifyLink,
     },
     {

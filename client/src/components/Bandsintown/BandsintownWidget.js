@@ -8,7 +8,7 @@
 //   <BandsintownWidget artistName="Metallica" />
 
 import React, { useEffect, useRef, useState } from 'react';
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from '../ErrorMessage';
 
 const BandsintownWidget = ({ artistName, style }) => {
   const widgetContainerRef = useRef(null);

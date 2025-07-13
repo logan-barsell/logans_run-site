@@ -33,7 +33,6 @@
 
 .accordion .accordion-button:not(.collapsed) {
   background-color: black;
-  color: var(--main);
 }
 
 .accordion-button::after {

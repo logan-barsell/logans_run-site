@@ -14,13 +14,16 @@ import {
 } from '../../utils/firebaseImage';
 import { useDispatch, useSelector } from 'react-redux';
 import { Check } from '../../components/icons';
-import BandsintownWidget from '../../components/BandsintownWidget';
+import {
+  BandsintownWidget,
+  BandsintownSetupGuide,
+} from '../../components/Bandsintown';
 import {
   deleteShow as deleteShowService,
   updateShow as updateShowService,
 } from '../../services/showsManagementService';
 import { useAlert } from '../../contexts/AlertContext';
-import { CustomForm } from '../../components/Forms';
+import { EditableForm } from '../../components/Forms';
 
 const CurrentShows = ({ fetchShows, shows }) => {
   const dispatch = useDispatch();
@@ -30,9 +33,6 @@ const CurrentShows = ({ fetchShows, shows }) => {
     bandsintownArtist: '',
   };
   const [showSystem, setShowSystem] = useState('custom');
-  const [bandsintownArtist, setBandsintownArtist] = useState('');
-  const [artistInput, setArtistInput] = useState('');
-  const [updated, setUpdated] = useState(false);
   const { showError, showSuccess } = useAlert();
 
   useEffect(() => {
@@ -42,14 +42,8 @@ const CurrentShows = ({ fetchShows, shows }) => {
   useEffect(() => {
     if (showsSettings) {
       setShowSystem(showsSettings.showSystem || 'custom');
-      setBandsintownArtist(showsSettings.bandsintownArtist || '');
-      setArtistInput(showsSettings.bandsintownArtist || '');
     }
   }, [showsSettings]);
-
-  useEffect(() => {
-    setUpdated(false);
-  }, [artistInput]);
 
   const handleShowSystemChange = e => {
     const newSystem = e.target.value;
@@ -57,20 +51,34 @@ const CurrentShows = ({ fetchShows, shows }) => {
     dispatch(
       updateShowsSettings({
         showSystem: newSystem,
-        bandsintownArtist,
+        bandsintownArtist: showsSettings.bandsintownArtist || '',
       })
     );
   };
 
-  const handleSave = () => {
-    dispatch(
+  const handleSaveBandsintown = async data => {
+    await dispatch(
       updateShowsSettings({
         showSystem,
-        bandsintownArtist: artistInput || '',
+        bandsintownArtist: data.bandsintownArtist || '',
       })
     );
-    setBandsintownArtist(artistInput || '');
-    setUpdated(true);
+  };
+
+  const handleBandsintownSuccess = () => {
+    showSuccess('Bandsintown settings updated successfully!');
+  };
+
+  const handleBandsintownError = err => {
+    showError(err.message || 'Failed to update Bandsintown settings');
+  };
+
+  // Custom comparison function for bandsintown settings
+  const compareBandsintownFunction = (initial, current) => {
+    if (!initial || !current) return false;
+    const initialArtist = initial.bandsintownArtist || '';
+    const currentArtist = current.bandsintownArtist || '';
+    return initialArtist === currentArtist;
   };
 
   const deleteShow = async id => {
@@ -240,57 +248,48 @@ const CurrentShows = ({ fetchShows, shows }) => {
       </div>
       <hr />
       {showSystem === 'bandsintown' ? (
-        <CustomForm
-          title='Bandsintown Settings'
-          containerId='bandsintownEdit'
-        >
-          <form
-            onSubmit={e => {
-              e.preventDefault();
-              handleSave();
-            }}
-            autoComplete='off'
+        <>
+          <EditableForm
+            title='Bandsintown Settings'
+            containerId='bandsintownEdit'
+            initialData={showsSettings}
+            onSave={handleSaveBandsintown}
+            onSuccess={handleBandsintownSuccess}
+            onError={handleBandsintownError}
+            compareFunction={compareBandsintownFunction}
           >
-            <div className='mb-sm-3 mb-2'>
-              <label
-                htmlFor='bandsintownArtist'
-                className='form-label'
-              >
-                Artist Name / ID
-              </label>
-              <input
-                id='bandsintownArtist'
-                className='form-control mb-3'
-                type='text'
-                value={artistInput}
-                onChange={e => setArtistInput(e.target.value)}
-                placeholder='Enter your Bandsintown artist name'
-                autoComplete='off'
-              />
-            </div>
-            <div className='d-grid col-12 sm:col-6 mx-auto'>
-              <button
-                type='submit'
-                className='btn btn-danger submitForm'
-                disabled={updated}
-              >
-                {updated ? (
-                  <>
-                    Update Successful &nbsp;
-                    <Check />
-                  </>
-                ) : (
-                  'Save Changes'
-                )}
-              </button>
-            </div>
-          </form>
-          {bandsintownArtist && (
-            <div className='mt-4'>
-              <BandsintownWidget artistName={bandsintownArtist} />
+            {({ formData, handleInputChange }) => (
+              <div className='mb-sm-3 mb-2'>
+                <label
+                  htmlFor='bandsintownArtist'
+                  className='form-label'
+                >
+                  Artist Name / ID
+                </label>
+                <input
+                  id='bandsintownArtist'
+                  name='bandsintownArtist'
+                  className='form-control mb-3'
+                  type='text'
+                  value={formData.bandsintownArtist || ''}
+                  onChange={handleInputChange}
+                  placeholder='Enter your Bandsintown artist name'
+                  autoComplete='off'
+                />
+              </div>
+            )}
+          </EditableForm>
+
+          {/* BandsintownWidget and SetupGuide outside the form */}
+          {showsSettings?.bandsintownArtist && (
+            <div className='my-4 pb-4'>
+              <BandsintownWidget artistName={showsSettings.bandsintownArtist} />
             </div>
           )}
-        </CustomForm>
+          <div className='mt-4'>
+            <BandsintownSetupGuide />
+          </div>
+        </>
       ) : (
         <div className=''>
           <Accordion
