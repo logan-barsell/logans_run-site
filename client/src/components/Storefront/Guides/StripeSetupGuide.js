@@ -1,5 +1,5 @@
 import React from 'react';
-import SetupGuide from '../Bootstrap/SetupGuide';
+import SetupGuide from '../../Bootstrap/SetupGuide';
 
 const StripeSetupGuide = () => {
   const steps = [

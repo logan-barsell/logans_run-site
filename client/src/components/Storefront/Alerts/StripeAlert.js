@@ -1,5 +1,5 @@
 import React from 'react';
-import StaticAlert from '../Alert/StaticAlert';
+import StaticAlert from '../../Alert/StaticAlert';
 
 const StripeAlert = ({ error }) => {
   // If no error, don't render anything
