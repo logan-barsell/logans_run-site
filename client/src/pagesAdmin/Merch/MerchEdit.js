@@ -1,4 +1,3 @@
-import './merchEdit.css';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchMerchConfig, updateMerchConfig } from '../../redux/actions';
@@ -10,6 +9,7 @@ import ShopifyValidation from '../../components/Storefront/Validation/ShopifyVal
 import StripeValidation from '../../components/Storefront/Validation/StripeValidation';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
+import { CustomForm } from '../../components/Forms';
 
 const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
   const { showError, showSuccess } = useAlert();
@@ -269,11 +269,10 @@ buy_btn_1Rj6noHCVtmXVGiSacAIQc0k'
   );
 
   return (
-    <div
-      id='merchConfigEdit'
-      className='container textForm'
+    <CustomForm
+      title='Store Configuration'
+      containerId='merchConfigEdit'
     >
-      <h3>Store Configuration</h3>
       <hr />
 
       {/* Shopify Validation - shown when Shopify is selected */}
@@ -363,7 +362,7 @@ buy_btn_1Rj6noHCVtmXVGiSacAIQc0k'
         {selectedStoreType === 'stripe' && <StripeSetupGuide />}
         {selectedStoreType === 'shopify' && <ShopifySetupGuide />}
       </div>
-    </div>
+    </CustomForm>
   );
 };
 

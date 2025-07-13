@@ -3,7 +3,7 @@ import { Form, Field, FormSpy } from 'react-final-form';
 import { connect } from 'react-redux';
 import { fetchTheme, updateTheme } from '../../redux/actions';
 import ImageUpload from '../../components/Forms/FieldTypes/ImageUpload';
-import './themeEdit.css';
+import { CustomForm } from '../../components/Forms';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
@@ -60,12 +60,10 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   };
 
   return (
-    <div
-      id='themeEdit'
-      className='container textForm'
+    <CustomForm
+      title='Update Theme'
+      containerId='themeEdit'
     >
-      <h3>Update Theme</h3>
-
       <Form
         onSubmit={onSubmit}
         initialValues={theme}
@@ -247,6 +245,9 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                         <option value='Courier New'>
                           Courier New (Retro/Vintage)
                         </option>
+                        <option value='RobotoCondensed'>
+                          Roboto Condensed (Clean)
+                        </option>
                       </optgroup>
                     </select>
                   </>
@@ -268,84 +269,76 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                       className='form-control'
                       id='secondaryFont'
                     >
-                      <option value='Courier New'>Courier New (Default)</option>
-                      <option value='Fira Mono'>Fira Mono</option>
-                      <option value='JetBrains Mono'>JetBrains Mono</option>
-                      <option value='Roboto Mono'>Roboto Mono</option>
-                    </select>
-                  </>
-                )}
-              </Field>
-            </div>
-            <div className='mb-sm-3 mb-2'>
-              <Field name='paceTheme'>
-                {({ input, meta }) => (
-                  <>
-                    <label
-                      htmlFor='paceTheme'
-                      className='form-label'
-                    >
-                      Loading Animation
-                    </label>
-                    <select
-                      {...input}
-                      className='form-control'
-                      id='paceTheme'
-                    >
-                      <optgroup label='Center Animations'>
-                        <option value='center-circle'>Center Circle</option>
-                        <option value='center-simple'>Center Simple</option>
-                        <option value='center-radar'>Center Radar</option>
-                        <option value='center-atom'>Center Atom</option>
+                      <optgroup label='Custom Fonts'>
+                        <option value='SprayPaint'>SprayPaint (Custom)</option>
                       </optgroup>
-                      <optgroup label='Bar Animations'>
-                        <option value='loading-bar'>Loading Bar</option>
-                        <option value='barber-shop'>Barber Shop</option>
-                        <option value='corner-indicator'>
-                          Corner Indicator
+                      <optgroup label='Edgy/Rock'>
+                        <option value='BebasNeue'>
+                          Bebas Neue (Ultra Bold)
                         </option>
-                        <option value='flash'>Flash</option>
+                        <option value='Anton'>Anton (Heavy Impact)</option>
+                        <option value='Oswald'>
+                          Oswald (Condensed Industrial)
+                        </option>
                       </optgroup>
-                      <optgroup label='Bounce & Material'>
-                        <option value='bounce'>Bounce</option>
-                        <option value='material'>Material Design</option>
+                      <optgroup label='60s/70s Hippy'>
+                        <option value='Pacifico'>Pacifico (Hippy Vibes)</option>
+                      </optgroup>
+                      <optgroup label='Metal/Horror'>
+                        <option value='Creepster'>
+                          Creepster (Horror Metal)
+                        </option>
+                        <option value='Sancreek'>
+                          Sancreek (Western Horror)
+                        </option>
+                      </optgroup>
+                      <optgroup label='Punk/Graffiti'>
+                        <option value='VT323'>VT323 (Retro Terminal)</option>
+                      </optgroup>
+                      <optgroup label='Hand-Drawn/Rock'>
+                        <option value='Kalam'>Kalam (Hand-Drawn)</option>
+                        <option value='IndieFlower'>
+                          Indie Flower (Playful)
+                        </option>
+                        <option value='ArchitectsDaughter'>
+                          Architects Daughter (Sketchy)
+                        </option>
+                        <option value='ComicNeue'>
+                          Comic Neue (Comic Style)
+                        </option>
+                      </optgroup>
+                      <optgroup label='Fun/Bold'>
+                        <option value='Righteous'>
+                          Righteous (Futuristic)
+                        </option>
+                        <option value='Lobster'>Lobster (Fun & Bold)</option>
+                      </optgroup>
+                      <optgroup label='Classic'>
+                        <option value='Courier New'>
+                          Courier New (Retro/Vintage)
+                        </option>
+                        <option value='RobotoCondensed'>
+                          Roboto Condensed (Clean)
+                        </option>
                       </optgroup>
                     </select>
                   </>
                 )}
               </Field>
             </div>
-            <div className='d-flex gap-2'>
+            <div className='d-flex justify-content-center'>
               <button
                 type='submit'
                 className='btn btn-danger'
-                disabled={updated || uploading}
+                disabled={uploading}
               >
-                {updated ? (
-                  <>
-                    Update Successful &nbsp;
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      width='16'
-                      height='16'
-                      fill='currentColor'
-                      className='bi bi-check-lg'
-                      viewBox='0 0 16 16'
-                    >
-                      <path d='M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z' />
-                    </svg>
-                  </>
-                ) : uploading ? (
-                  `Uploading... ${String(uploadProgress).replace('0', 'O')}%`
-                ) : (
-                  'Save Changes'
-                )}
+                {uploading ? `Uploading... ${uploadProgress}%` : 'Save Theme'}
               </button>
             </div>
           </form>
         )}
       />
-    </div>
+    </CustomForm>
   );
 };
 

@@ -20,6 +20,7 @@ import {
   updateShow as updateShowService,
 } from '../../services/showsManagementService';
 import { useAlert } from '../../contexts/AlertContext';
+import { CustomForm } from '../../components/Forms';
 
 const CurrentShows = ({ fetchShows, shows }) => {
   const dispatch = useDispatch();
@@ -239,11 +240,10 @@ const CurrentShows = ({ fetchShows, shows }) => {
       </div>
       <hr />
       {showSystem === 'bandsintown' ? (
-        <div
-          id='bandsintownEdit'
-          className='container textForm'
+        <CustomForm
+          title='Bandsintown Settings'
+          containerId='bandsintownEdit'
         >
-          <h3>Bandsintown Settings</h3>
           <form
             onSubmit={e => {
               e.preventDefault();
@@ -290,7 +290,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
               <BandsintownWidget artistName={bandsintownArtist} />
             </div>
           )}
-        </div>
+        </CustomForm>
       ) : (
         <div className=''>
           <Accordion

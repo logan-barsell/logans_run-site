@@ -1,5 +1,3 @@
-import './bioEdit.css';
-
 import React, { useState, useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import { fetchBio } from '../../redux/actions';
@@ -7,6 +5,7 @@ import { updateBio } from '../../services/bioService';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import CurrentMembers from './CurrentMembers';
 import { useAlert } from '../../contexts/AlertContext';
+import { CustomForm } from '../../components/Forms';
 
 const BioEdit = ({ fetchBio, bio }) => {
   const { showError, showSuccess } = useAlert();
@@ -50,11 +49,11 @@ const BioEdit = ({ fetchBio, bio }) => {
 
   return (
     <>
-      <div
-        id='bioEdit'
-        className='container'
+      <CustomForm
+        title='Update Bio'
+        containerId='bioEdit'
+        className='bio-form'
       >
-        <h3>Update Bio</h3>
         <form>
           <div className='mb-3'>
             <textarea
@@ -92,7 +91,7 @@ const BioEdit = ({ fetchBio, bio }) => {
             </button>
           </div>
         </form>
-      </div>
+      </CustomForm>
       <SecondaryNav label={'Members'} />
       <div className='container'>
         <div className='row'>

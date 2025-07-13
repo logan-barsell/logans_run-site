@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
-import './signin.css';
+import { CustomForm } from '../../components/Forms';
 import ErrorMessage from '../../components/ErrorMessage';
 import { login } from '../../services/authService';
 import { useAlert } from '../../contexts/AlertContext';
@@ -35,11 +35,11 @@ const Signin = () => {
   };
 
   return (
-    <div
-      className='container textForm'
-      id='signinPage'
+    <CustomForm
+      title='Member Login'
+      className='auth-form'
+      containerId='signinPage'
     >
-      <h3>Member Login</h3>
       <Form
         onSubmit={onSubmit}
         render={({ handleSubmit, submitting }) => (
@@ -104,7 +104,7 @@ const Signin = () => {
           </form>
         )}
       />
-    </div>
+    </CustomForm>
   );
 };
 
