@@ -164,7 +164,7 @@ const BottomNav = ({
           </div>
         </div>
 
-        {contactInfo[0] && (
+        {contactInfo && contactInfo[0] && (
           <div className='iconsNav col-auto justify-content-center mx-auto'>
             <a
               className=''
@@ -240,7 +240,7 @@ const BottomNav = ({
             <div className='col-md-7'>
               <h5 className='text-uppercase'>HELLO.</h5>
               <p className='secondary-font'>
-                {theme.catchPhrase || 'Welcome to our site'}.
+                {theme?.catchPhrase || 'Welcome to our site'}.
               </p>
             </div>
             <div className='col-md-5'>
@@ -286,7 +286,10 @@ const BottomNav = ({
 };
 
 function mapStateToProps({ contactInfo, theme }) {
-  return { contactInfo, theme };
+  return {
+    contactInfo: contactInfo?.data || [],
+    theme: theme?.data || null,
+  };
 }
 
 export default connect(mapStateToProps, { fetchContactInfo, fetchTheme })(

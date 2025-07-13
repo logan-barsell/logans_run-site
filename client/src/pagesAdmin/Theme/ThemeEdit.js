@@ -8,38 +8,55 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
+import { useAlert } from '../../contexts/AlertContext';
 
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   const [logoFile, setLogoFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [updated, setUpdated] = useState(false);
+  const { showError, showSuccess } = useAlert();
 
   useEffect(() => {
     fetchTheme();
   }, [fetchTheme]);
 
   const onSubmit = async values => {
-    let bandLogoUrl = theme.bandLogoUrl;
-    let oldBandLogoUrl = theme.bandLogoUrl;
-    if (logoFile) {
+    try {
       setUploading(true);
-      try {
-        bandLogoUrl = await uploadImageToFirebase(logoFile, {
-          onProgress: setUploadProgress,
-        });
-      } catch (err) {
-        setUploading(false);
-        throw err;
+      let bandLogoUrl = theme.bandLogoUrl;
+
+      if (logoFile) {
+        // Delete old image if exists
+        if (theme.bandLogoUrl) {
+          try {
+            await deleteImageFromFirebase(theme.bandLogoUrl);
+          } catch (error) {
+            // ignore
+          }
+        }
+
+        try {
+          bandLogoUrl = await uploadImageToFirebase(logoFile, {
+            onProgress: setUploadProgress,
+          });
+        } catch (err) {
+          setUploading(false);
+          showError('Failed to upload logo image');
+          throw err;
+        }
       }
+
+      // Update theme
+      await updateTheme({ ...values, bandLogoUrl });
+      showSuccess('Theme updated successfully!');
+      setUpdated(true);
+      setLogoFile(null);
       setUploading(false);
+    } catch (err) {
+      setUploading(false);
+      showError(err.message || 'Failed to update theme');
     }
-
-    // Update theme
-    await updateTheme({ ...values, bandLogoUrl, oldBandLogoUrl });
-
-    setUpdated(true);
-    setLogoFile(null);
   };
 
   return (
@@ -319,7 +336,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                     </svg>
                   </>
                 ) : uploading ? (
-                  'Saving...'
+                  `Uploading... ${String(uploadProgress).replace('0', 'O')}%`
                 ) : (
                   'Save Changes'
                 )}
@@ -333,7 +350,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
 };
 
 const mapStateToProps = state => ({
-  theme: state.theme,
+  theme: state.theme?.data || {},
 });
 
 export default connect(mapStateToProps, { fetchTheme, updateTheme })(ThemeEdit);

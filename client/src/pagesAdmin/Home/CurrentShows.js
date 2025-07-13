@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   fetchShows,
   fetchShowsSettings,
@@ -16,14 +15,24 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Check } from '../../components/icons';
 import BandsintownWidget from '../../components/BandsintownWidget';
+import {
+  deleteShow as deleteShowService,
+  updateShow as updateShowService,
+} from '../../services/showsManagementService';
+import { useAlert } from '../../contexts/AlertContext';
 
 const CurrentShows = ({ fetchShows, shows }) => {
   const dispatch = useDispatch();
-  const showsSettings = useSelector(state => state.showsSettings);
+  const showsSettingsState = useSelector(state => state.showsSettings);
+  const showsSettings = showsSettingsState?.data || {
+    showSystem: 'custom',
+    bandsintownArtist: '',
+  };
   const [showSystem, setShowSystem] = useState('custom');
   const [bandsintownArtist, setBandsintownArtist] = useState('');
   const [artistInput, setArtistInput] = useState('');
   const [updated, setUpdated] = useState(false);
+  const { showError, showSuccess } = useAlert();
 
   useEffect(() => {
     dispatch(fetchShowsSettings());
@@ -64,18 +73,22 @@ const CurrentShows = ({ fetchShows, shows }) => {
   };
 
   const deleteShow = async id => {
-    const showToDelete = shows.find(show => show._id === id);
-    if (showToDelete && showToDelete.poster) {
-      try {
-        await deleteImageFromFirebase(showToDelete.poster);
-      } catch (error) {
-        console.error('Error deleting image from Firebase:', error);
+    try {
+      const showToDelete = shows.find(show => show._id === id);
+      if (showToDelete && showToDelete.poster) {
+        try {
+          await deleteImageFromFirebase(showToDelete.poster);
+        } catch (error) {
+          console.error('Error deleting image from Firebase:', error);
+        }
       }
-    }
 
-    axios.get(`/api/deleteShow/${id}`).then(() => {
+      await deleteShowService(id);
       fetchShows();
-    });
+      showSuccess('Show deleted successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to delete show');
+    }
   };
 
   const editFields = show => {
@@ -96,43 +109,48 @@ const CurrentShows = ({ fetchShows, shows }) => {
       tixlink,
     }
   ) => {
-    const currentShow = shows.find(show => show._id === _id);
-    let posterUrl = currentShow.poster || '';
+    try {
+      const currentShow = shows.find(show => show._id === _id);
+      let posterUrl = currentShow.poster || '';
 
-    if (poster && poster[0]) {
-      // Delete old image if it exists
-      if (currentShow.poster) {
+      if (poster && poster[0]) {
+        // Delete old image if it exists
+        if (currentShow.poster) {
+          try {
+            await deleteImageFromFirebase(currentShow.poster);
+          } catch (error) {
+            console.error('Error deleting old image from Firebase:', error);
+          }
+        }
+
+        // Upload new image
         try {
-          await deleteImageFromFirebase(currentShow.poster);
-        } catch (error) {
-          console.error('Error deleting old image from Firebase:', error);
+          posterUrl = await uploadImageToFirebase(poster[0]);
+        } catch (err) {
+          showError('Failed to upload show poster');
+          throw err;
         }
       }
 
-      // Upload new image
-      try {
-        posterUrl = await uploadImageToFirebase(poster[0]);
-      } catch (err) {
-        throw err;
-      }
-    }
+      const updatedShow = {
+        id: _id,
+        poster: posterUrl,
+        venue,
+        location,
+        date,
+        doors,
+        showtime,
+        doorprice,
+        advprice,
+        tixlink,
+      };
 
-    const updatedShow = {
-      id: _id,
-      poster: posterUrl,
-      venue,
-      location,
-      date,
-      doors,
-      showtime,
-      doorprice,
-      advprice,
-      tixlink,
-    };
-
-    axios.post(`/api/updateShow/${_id}`, updatedShow).then(() => {
+      await updateShowService(_id, updatedShow);
       fetchShows();
-    });
+      showSuccess('Show updated successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to update show');
+    }
   };
 
   const accordionItems = [];
@@ -293,7 +311,7 @@ const CurrentShows = ({ fetchShows, shows }) => {
 };
 
 function mapStateToProps({ shows }) {
-  return { shows };
+  return { shows: shows?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchShows })(CurrentShows);

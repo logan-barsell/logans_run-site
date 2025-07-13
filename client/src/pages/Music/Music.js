@@ -43,7 +43,7 @@ const MusicPage = ({
     return null;
   };
 
-  const spotifyEmbedLink = contactInfo[0]?.spotify
+  const spotifyEmbedLink = contactInfo?.[0]?.spotify
     ? getSpotifyEmbedLink(contactInfo[0].spotify)
     : null;
 
@@ -69,7 +69,7 @@ const MusicPage = ({
 
           {/* Music platform icons */}
           <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
-            {contactInfo[0]?.spotify && (
+            {contactInfo?.[0]?.spotify && (
               <a
                 href={contactInfo[0].spotify}
                 target='_blank'
@@ -79,7 +79,7 @@ const MusicPage = ({
                 <Spotify />
               </a>
             )}
-            {contactInfo[0]?.appleMusic && (
+            {contactInfo?.[0]?.appleMusic && (
               <a
                 href={contactInfo[0].appleMusic}
                 target='_blank'
@@ -89,7 +89,7 @@ const MusicPage = ({
                 <AppleMusic />
               </a>
             )}
-            {contactInfo[0]?.soundcloud && (
+            {contactInfo?.[0]?.soundcloud && (
               <a
                 href={contactInfo[0].soundcloud}
                 target='_blank'
@@ -99,7 +99,7 @@ const MusicPage = ({
                 <SoundCloud />
               </a>
             )}
-            {contactInfo[0]?.youtube && (
+            {contactInfo?.[0]?.youtube && (
               <a
                 href={contactInfo[0].youtube}
                 target='_blank'
@@ -113,9 +113,9 @@ const MusicPage = ({
         </div>
       )}
 
-      {players.length > 0 ? (
-        players?.map(player => (
-          <div>
+      {players && players.length > 0 ? (
+        players.map(player => (
+          <div key={player._id}>
             <SecondaryNav label={player.title} />
             <div className='audioPlayer container'>
               <iframe
@@ -192,7 +192,10 @@ const MusicPage = ({
 };
 
 function mapStateToProps({ music, contactInfo }) {
-  return { players: music, contactInfo };
+  return {
+    players: music?.data || [],
+    contactInfo: contactInfo?.data || [],
+  };
 }
 
 export default connect(mapStateToProps, { fetchPlayers, fetchContactInfo })(

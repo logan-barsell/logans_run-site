@@ -3,7 +3,6 @@ import './picturesEdit.css';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchMediaImages } from '../../redux/actions';
-import axios from 'axios';
 import { Form } from 'react-final-form';
 import { ImageUpload } from '../../components/Forms/FieldTypes';
 import RemoveImage from './RemoveImage';
@@ -11,6 +10,11 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
+import {
+  uploadMediaImage,
+  removeMediaImage,
+} from '../../services/mediaManagementService';
+import { useAlert } from '../../contexts/AlertContext';
 
 const imgCount = 12;
 const PicturesEdit = ({ fetchMediaImages, images }) => {
@@ -18,6 +22,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
   const [uploadProgress, setUploadProgress] = useState({});
   const [limit, setLimit] = useState(imgCount);
   const [selectedFiles, setSelectedFiles] = useState(null);
+  const { showError, showSuccess } = useAlert();
 
   useEffect(() => {
     fetchMediaImages();
@@ -62,8 +67,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
 
       // Add successful uploads to the database using the single route
       if (successfulUploads.length > 0) {
-        await axios.post(
-          '/api/addMediaImage',
+        await uploadMediaImage(
           successfulUploads.map(result => ({
             name: result.name,
             imgLink: result.imgLink,
@@ -74,11 +78,16 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
       setUploading(false);
       setUploadProgress({});
       fetchMediaImages();
+      showSuccess(
+        `Successfully uploaded ${successfulUploads.length} image(s)!`
+      );
     } catch (err) {
       setUploading(false);
       setUploadProgress({});
       console.error('Upload error:', err);
-      alert('An error occurred during upload. Please try again.');
+      showError(
+        err.message || 'An error occurred during upload. Please try again.'
+      );
     }
   };
 
@@ -98,14 +107,19 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
   }
 
   const removeImage = async image => {
-    const imageName = extractStoragePathFromUrl(image.imgLink);
-    await axios.get(`/api/removeMediaImage/${image._id}`);
     try {
-      await deleteImageFromFirebase(imageName);
-    } catch (error) {
-      console.log(error);
+      const imageName = extractStoragePathFromUrl(image.imgLink);
+      await removeMediaImage(image._id);
+      try {
+        await deleteImageFromFirebase(imageName);
+      } catch (error) {
+        console.log(error);
+      }
+      fetchMediaImages();
+      showSuccess('Image removed successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to remove image');
     }
-    fetchMediaImages();
   };
 
   const seeMoreImages = () => {
@@ -172,9 +186,9 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
           )}
         />
 
-        {images.length > 0 ? (
+        {images && images.length > 0 ? (
           <div className='currentImages'>
-            {images.slice(0, limit).map(image => (
+            {(images || []).slice(0, limit).map(image => (
               <div
                 key={image._id}
                 className='img-container'
@@ -194,7 +208,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
           <h3 className='no-content'>No Images</h3>
         )}
 
-        {limit < images.length && (
+        {limit < (images?.length || 0) && (
           <div className='d-grid see-more'>
             <button
               onClick={seeMoreImages}
@@ -210,7 +224,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
 };
 
 function mapStateToProps({ media }) {
-  return { images: media };
+  return { images: media?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchMediaImages })(PicturesEdit);

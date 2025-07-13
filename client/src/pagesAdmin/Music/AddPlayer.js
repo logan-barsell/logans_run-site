@@ -1,11 +1,14 @@
 import React from 'react';
-import axios from 'axios';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
 import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
+import { addPlayer } from '../../services/musicPlayersService';
+import { useAlert } from '../../contexts/AlertContext';
 
 const AddPlayer = ({ fetchPlayers }) => {
+  const { showError, showSuccess } = useAlert();
+
   const fields = [
     {
       label: 'Background Color',
@@ -25,7 +28,7 @@ const AddPlayer = ({ fetchPlayers }) => {
     { label: 'SoundCloud Link', name: 'soundcloudLink', type: 'text' },
   ];
 
-  const onSubmit = ({
+  const onSubmit = async ({
     bgColor,
     title,
     date,
@@ -34,25 +37,27 @@ const AddPlayer = ({ fetchPlayers }) => {
     youtubeLink,
     soundcloudLink,
   }) => {
-    const path = new URL(spotifyLink).pathname;
-    const theme = bgColor ? bgColor : '';
-    const embedLink = `https://open.spotify.com/embed${path}?utm_source=generator${theme}`;
-    const newPlayer = {
-      title,
-      date: date.getTime(),
-      bgColor,
-      spotifyLink,
-      embedLink,
-      appleMusicLink,
-      youtubeLink,
-      soundcloudLink,
-    };
+    try {
+      const path = new URL(spotifyLink).pathname;
+      const theme = bgColor ? bgColor : '';
+      const embedLink = `https://open.spotify.com/embed${path}?utm_source=generator${theme}`;
+      const newPlayer = {
+        title,
+        date: date.getTime(),
+        bgColor,
+        spotifyLink,
+        embedLink,
+        appleMusicLink,
+        youtubeLink,
+        soundcloudLink,
+      };
 
-    console.log(newPlayer);
-
-    axios.post('/api/addPlayer', newPlayer).then(res => {
+      await addPlayer(newPlayer);
       fetchPlayers();
-    });
+      showSuccess('Music player added successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to add music player');
+    }
   };
 
   const modalProps = {

@@ -2,29 +2,33 @@ import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import './signin.css';
 import ErrorMessage from '../../components/ErrorMessage';
+import { login } from '../../services/authService';
+import { useAlert } from '../../contexts/AlertContext';
 
 const Signin = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { showError, showSuccess } = useAlert();
 
   const onSubmit = async values => {
     setError(null);
     setIsLoading(true);
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(values),
-      });
-      const data = await res.json();
+      const data = await login(values);
       if (data.success) {
-        window.location.href = '/theme';
+        showSuccess('Login successful! Redirecting...');
+        setTimeout(() => {
+          window.location.href = '/theme';
+        }, 1000);
       } else {
-        setError(data.error || 'Login failed');
+        const errorMessage = data.error || 'Login failed';
+        setError(errorMessage);
+        showError(errorMessage);
       }
     } catch (err) {
-      setError('Login failed');
+      const errorMessage = err.message || 'Login failed';
+      setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setIsLoading(false);
     }

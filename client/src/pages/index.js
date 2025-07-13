@@ -1,5 +1,4 @@
 import '../App.css';
-// import '../plugins/loading-bar.css';
 import '@stripe/stripe-js';
 
 import React, { useState } from 'react';
@@ -8,7 +7,7 @@ import TopNav from '../components/Navbar/TopNav';
 import BottomNav from '../components/Navbar/BottomNav';
 import HomePage from './Home/Home';
 import MusicPage from './Music/Music';
-import MerchPage from './Merch/Merch';
+import StorePage from './Store/Store';
 import MediaPage from './Media/Media';
 import BioPage from './Bio/Bio';
 import ContactPage from './Contact/Contact';
@@ -16,12 +15,13 @@ import Signin from './Auth/Signin';
 import NotFound from './NotFound';
 import history from '../history';
 import { ActiveContext } from '../contexts/ActiveContext';
+import { AlertContainer } from '../components/Alert';
 
 const UserPages = () => {
   const routes = [
     { name: 'Home', value: '/' },
     { name: 'Music', value: '/music' },
-    { name: 'Store', value: '/merch' },
+    { name: 'Store', value: '/store' },
     { name: 'Media', value: '/media' },
     { name: 'Bio', value: '/bio' },
     { name: 'Contact', value: '/contact' },
@@ -57,9 +57,9 @@ const UserPages = () => {
             element={<MusicPage />}
           />
           <Route
-            path='/merch'
+            path='/store'
             exact
-            element={<MerchPage />}
+            element={<StorePage />}
           />
           <Route
             path='/media'
@@ -87,6 +87,7 @@ const UserPages = () => {
           />
         </Routes>
         <BottomNav routes={routes} />
+        <AlertContainer />
       </ActiveContext.Provider>
     </>
   );

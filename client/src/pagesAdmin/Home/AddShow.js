@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { fetchShows } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
 import ADD_SHOW_FIELDS from './addShowFields';
 import { uploadImageToFirebase } from '../../utils/firebaseImage';
+import { addShow } from '../../services/showsManagementService';
+import { useAlert } from '../../contexts/AlertContext';
 
 const AddShow = ({ fetchShows }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const { showError, showSuccess } = useAlert();
 
   const onSubmit = async ({
     poster,
@@ -23,38 +25,44 @@ const AddShow = ({ fetchShows }) => {
     tixlink,
   }) => {
     setUploading(true);
-    const newDate = date.getTime();
-    const newDoors = doors.getTime();
-    const newShowtime = showtime.getTime();
+    try {
+      const newDate = date.getTime();
+      const newDoors = doors.getTime();
+      const newShowtime = showtime.getTime();
 
-    let posterUrl = '';
-    if (poster && poster[0]) {
-      try {
-        posterUrl = await uploadImageToFirebase(poster[0], {
-          onProgress: setUploadProgress,
-        });
-      } catch (err) {
-        setUploading(false);
-        throw err;
+      let posterUrl = '';
+      if (poster && poster[0]) {
+        try {
+          posterUrl = await uploadImageToFirebase(poster[0], {
+            onProgress: setUploadProgress,
+          });
+        } catch (err) {
+          setUploading(false);
+          showError('Failed to upload show poster');
+          throw err;
+        }
       }
-    }
 
-    const newShow = {
-      poster: posterUrl,
-      venue,
-      location,
-      date: newDate,
-      doors: newDoors,
-      showtime: newShowtime,
-      doorprice,
-      advprice,
-      tixlink,
-    };
+      const newShow = {
+        poster: posterUrl,
+        venue,
+        location,
+        date: newDate,
+        doors: newDoors,
+        showtime: newShowtime,
+        doorprice,
+        advprice,
+        tixlink,
+      };
 
-    axios.post('/api/addShow', newShow).then(res => {
+      await addShow(newShow);
       fetchShows();
+      showSuccess('Show added successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to add show');
+    } finally {
       setUploading(false);
-    });
+    }
   };
 
   const modalProps = {

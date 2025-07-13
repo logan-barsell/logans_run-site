@@ -7,6 +7,10 @@ import CarouselEdit from './carousel/CarouselEdit';
 import FeaturedVideosEdit from './FeaturedVideosEdit';
 import FeaturedReleasesEdit from './FeaturedReleasesEdit';
 
+function mapStateToProps({ carouselImages }) {
+  return { images: carouselImages?.data || [] };
+}
+
 const HomeEdit = () => {
   return (
     <>

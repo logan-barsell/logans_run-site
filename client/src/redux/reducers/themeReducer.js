@@ -1,11 +1,25 @@
-import { FETCH_THEME, UPDATE_THEME } from '../actions/types';
+import {
+  FETCH_THEME,
+  UPDATE_THEME,
+  FETCH_THEME_LOADING,
+  FETCH_THEME_ERROR,
+} from '../actions/types';
 
-export const themeReducer = (state = {}, action) => {
+const initialState = {
+  data: null,
+  loading: false,
+  error: null,
+};
+
+export const themeReducer = (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_THEME_LOADING:
+      return { ...state, loading: true, error: null };
     case FETCH_THEME:
-      return { ...state, ...action.payload };
     case UPDATE_THEME:
-      return { ...state, ...action.payload };
+      return { ...state, data: action.payload, loading: false, error: null };
+    case FETCH_THEME_ERROR:
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }

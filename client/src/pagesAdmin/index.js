@@ -7,6 +7,7 @@ import {
   Route,
   Routes,
   useLocation,
+  Navigate,
 } from 'react-router-dom';
 import TopNavEdit from '../components/Navbar/NavBarEdit';
 import HomeEdit from './Home/HomeEdit';
@@ -19,6 +20,7 @@ import ThemeEdit from './Theme/ThemeEdit';
 import history from '../history';
 import BottomNavEdit from '../components/Navbar/BottomNavEdit';
 import { ActiveContext } from '../contexts/ActiveContext';
+import { AlertContainer } from '../components/Alert';
 
 const AdminPages = () => {
   const location = useLocation();
@@ -50,6 +52,16 @@ const AdminPages = () => {
       >
         <TopNavEdit routes={routes} />
         <Routes>
+          <Route
+            path='/'
+            exact
+            element={
+              <Navigate
+                to='/theme'
+                replace
+              />
+            }
+          />
           <Route
             path='/home'
             exact
@@ -87,6 +99,7 @@ const AdminPages = () => {
           />
         </Routes>
         {location.pathname !== '/theme' && <BottomNavEdit />}
+        <AlertContainer />
       </ActiveContext.Provider>
     </>
   );

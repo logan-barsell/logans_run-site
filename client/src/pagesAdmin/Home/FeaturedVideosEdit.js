@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
 import VideoContainer from '../../components/Video/VideoContainer';
 import VideoItem from '../../components/Video/VideoItem';
 import './featuredVideosEdit.css';
+import {
+  getFeaturedVideos,
+  addFeaturedVideo as addFeaturedVideoService,
+  updateFeaturedVideo as updateFeaturedVideoService,
+  deleteFeaturedVideo as deleteFeaturedVideoService,
+} from '../../services/featuredContentService';
+import { useAlert } from '../../contexts/AlertContext';
 
 const featuredVideoFields = (video = {}) => [
   {
@@ -204,14 +210,15 @@ const DeleteFeaturedVideo = ({ video, onDelete }) => {
 const FeaturedVideosEdit = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { showError, showSuccess } = useAlert();
 
   const fetchFeaturedVideos = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('/api/featuredVideos');
-      setVideos(res.data);
+      const data = await getFeaturedVideos();
+      setVideos(data);
     } catch (err) {
-      // handle error
+      showError(err.message || 'Failed to load featured videos');
     }
     setLoading(false);
   };
@@ -221,26 +228,41 @@ const FeaturedVideosEdit = () => {
   }, []);
 
   const addFeaturedVideo = async fields => {
-    const payload = { ...fields };
-    if (payload.releaseDate && typeof payload.releaseDate !== 'object') {
-      payload.releaseDate = new Date(payload.releaseDate);
+    try {
+      const payload = { ...fields };
+      if (payload.releaseDate && typeof payload.releaseDate !== 'object') {
+        payload.releaseDate = new Date(payload.releaseDate);
+      }
+      await addFeaturedVideoService(payload);
+      fetchFeaturedVideos();
+      showSuccess('Featured video added successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to add featured video');
     }
-    await axios.post('/api/featuredVideos', payload);
-    fetchFeaturedVideos();
   };
 
   const editFeaturedVideo = async fields => {
-    const payload = { ...fields };
-    if (payload.releaseDate && typeof payload.releaseDate !== 'object') {
-      payload.releaseDate = new Date(payload.releaseDate);
+    try {
+      const payload = { ...fields };
+      if (payload.releaseDate && typeof payload.releaseDate !== 'object') {
+        payload.releaseDate = new Date(payload.releaseDate);
+      }
+      await updateFeaturedVideoService(fields._id, payload);
+      fetchFeaturedVideos();
+      showSuccess('Featured video updated successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to update featured video');
     }
-    await axios.put(`/api/featuredVideos/${fields._id}`, payload);
-    fetchFeaturedVideos();
   };
 
   const deleteFeaturedVideo = async id => {
-    await axios.delete(`/api/featuredVideos/${id}`);
-    fetchFeaturedVideos();
+    try {
+      await deleteFeaturedVideoService(id);
+      fetchFeaturedVideos();
+      showSuccess('Featured video deleted successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to delete featured video');
+    }
   };
 
   return (

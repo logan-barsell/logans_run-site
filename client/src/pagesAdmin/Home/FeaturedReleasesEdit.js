@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
 import VideoContainer from '../../components/Video/VideoContainer';
@@ -8,6 +7,13 @@ import {
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
 import './featuredReleasesEdit.css';
+import {
+  getFeaturedReleases,
+  addFeaturedRelease as addFeaturedReleaseService,
+  updateFeaturedRelease as updateFeaturedReleaseService,
+  deleteFeaturedRelease as deleteFeaturedReleaseService,
+} from '../../services/featuredContentService';
+import { useAlert } from '../../contexts/AlertContext';
 
 const releaseTypes = [
   { name: 'Album', value: 'album' },
@@ -51,26 +57,33 @@ const featuredReleaseFields = (release = {}) => [
 ];
 
 const AddFeaturedRelease = ({ onAdd }) => {
+  const { showError, showSuccess } = useAlert();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const onSubmit = async fields => {
-    setUploading(true);
-    let coverImageUrl = '';
-    if (fields.coverImage && fields.coverImage[0]) {
-      coverImageUrl = await uploadImageToFirebase(fields.coverImage[0], {
-        onProgress: setUploadProgress,
-      });
+    try {
+      setUploading(true);
+      let coverImageUrl = '';
+      if (fields.coverImage && fields.coverImage[0]) {
+        coverImageUrl = await uploadImageToFirebase(fields.coverImage[0], {
+          onProgress: setUploadProgress,
+        });
+      }
+      const payload = {
+        ...fields,
+        coverImage: coverImageUrl,
+        releaseDate: fields.releaseDate
+          ? new Date(fields.releaseDate)
+          : undefined,
+      };
+      await onAdd(payload);
+      showSuccess('Featured release added successfully');
+      setUploading(false);
+    } catch (error) {
+      showError('Failed to add featured release');
+      setUploading(false);
     }
-    const payload = {
-      ...fields,
-      coverImage: coverImageUrl,
-      releaseDate: fields.releaseDate
-        ? new Date(fields.releaseDate)
-        : undefined,
-    };
-    await onAdd(payload);
-    setUploading(false);
   };
 
   const modalProps = {
@@ -118,34 +131,41 @@ const AddFeaturedRelease = ({ onAdd }) => {
 };
 
 const EditFeaturedRelease = ({ release, onEdit }) => {
+  const { showError, showSuccess } = useAlert();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const onSubmit = async fields => {
-    setUploading(true);
-    let coverImageUrl = release.coverImage;
-    if (fields.coverImage && fields.coverImage[0]) {
-      // Delete old image if exists
-      if (release.coverImage) {
-        try {
-          await deleteImageFromFirebase(release.coverImage);
-        } catch (error) {
-          // ignore
+    try {
+      setUploading(true);
+      let coverImageUrl = release.coverImage;
+      if (fields.coverImage && fields.coverImage[0]) {
+        // Delete old image if exists
+        if (release.coverImage) {
+          try {
+            await deleteImageFromFirebase(release.coverImage);
+          } catch (error) {
+            // ignore
+          }
         }
+        coverImageUrl = await uploadImageToFirebase(fields.coverImage[0], {
+          onProgress: setUploadProgress,
+        });
       }
-      coverImageUrl = await uploadImageToFirebase(fields.coverImage[0], {
-        onProgress: setUploadProgress,
-      });
+      const payload = {
+        ...fields,
+        coverImage: coverImageUrl,
+        releaseDate: fields.releaseDate
+          ? new Date(fields.releaseDate)
+          : undefined,
+      };
+      await onEdit(release._id, payload);
+      showSuccess('Featured release updated successfully');
+      setUploading(false);
+    } catch (error) {
+      showError('Failed to update featured release');
+      setUploading(false);
     }
-    const payload = {
-      ...fields,
-      coverImage: coverImageUrl,
-      releaseDate: fields.releaseDate
-        ? new Date(fields.releaseDate)
-        : undefined,
-    };
-    await onEdit(release._id, payload);
-    setUploading(false);
   };
 
   const modalProps = {
@@ -197,6 +217,7 @@ const EditFeaturedRelease = ({ release, onEdit }) => {
 };
 
 const DeleteFeaturedRelease = ({ release, onDelete }) => {
+  const { showError, showSuccess } = useAlert();
   const modalProps = {
     id: `del_featured_release_${release._id}`,
     label: `del_featured_release_label_${release._id}`,
@@ -216,12 +237,17 @@ const DeleteFeaturedRelease = ({ release, onDelete }) => {
         </button>
         <button
           onClick={async () => {
-            if (release.coverImage) {
-              try {
-                await deleteImageFromFirebase(release.coverImage);
-              } catch (error) {}
+            try {
+              if (release.coverImage) {
+                try {
+                  await deleteImageFromFirebase(release.coverImage);
+                } catch (error) {}
+              }
+              await onDelete(release._id);
+              showSuccess('Featured release deleted successfully');
+            } catch (error) {
+              showError('Failed to delete featured release');
             }
-            onDelete(release._id);
           }}
           type='button'
           data-bs-dismiss='modal'
@@ -265,15 +291,18 @@ const DeleteFeaturedRelease = ({ release, onDelete }) => {
 };
 
 const FeaturedReleasesEdit = () => {
+  const { showError } = useAlert();
   const [releases, setReleases] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchReleases = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('/api/featuredReleases');
-      setReleases(res.data);
-    } catch (err) {}
+      const data = await getFeaturedReleases();
+      setReleases(data);
+    } catch (err) {
+      showError('Failed to load featured releases');
+    }
     setLoading(false);
   };
 
@@ -282,18 +311,30 @@ const FeaturedReleasesEdit = () => {
   }, []);
 
   const addRelease = async fields => {
-    await axios.post('/api/featuredReleases', fields);
-    fetchReleases();
+    try {
+      await addFeaturedReleaseService(fields);
+      fetchReleases();
+    } catch (error) {
+      showError('Failed to add featured release');
+    }
   };
 
   const editRelease = async (id, fields) => {
-    await axios.put(`/api/featuredReleases/${id}`, fields);
-    fetchReleases();
+    try {
+      await updateFeaturedReleaseService(id, fields);
+      fetchReleases();
+    } catch (error) {
+      showError('Failed to update featured release');
+    }
   };
 
   const deleteRelease = async id => {
-    await axios.delete(`/api/featuredReleases/${id}`);
-    fetchReleases();
+    try {
+      await deleteFeaturedReleaseService(id);
+      fetchReleases();
+    } catch (error) {
+      showError('Failed to delete featured release');
+    }
   };
 
   return (

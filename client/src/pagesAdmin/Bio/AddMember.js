@@ -1,12 +1,15 @@
 import React from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { fetchMembers } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
 import CustomModal from '../../components/Bootstrap/CustomModal';
 import { uploadImageToFirebase } from '../../utils/firebaseImage';
+import { addMember } from '../../services/membersService';
+import normalizeUrl from '../../utils/normalizeUrl';
+import { useAlert } from '../../contexts/AlertContext';
 
 const AddMember = ({ fetchMembers }) => {
+  const { showError, showSuccess } = useAlert();
   const txtFields = [
     {
       label: 'Upload Image',
@@ -26,41 +29,47 @@ const AddMember = ({ fetchMembers }) => {
   const [uploadProgress, setUploadProgress] = React.useState(0);
 
   const onSubmit = async values => {
-    setUploading(true);
-    let imageUrl = '';
-    let fileName = '';
-    if (values.bioPic && values.bioPic.length) {
-      try {
-        fileName = Date.now() + values.bioPic[0].name;
-        imageUrl = await uploadImageToFirebase(values.bioPic[0], {
-          fileName,
-          onProgress: setUploadProgress,
-        });
-      } catch (err) {
-        setUploading(false);
-        throw err;
+    try {
+      setUploading(true);
+      let imageUrl = '';
+      let fileName = '';
+      if (values.bioPic && values.bioPic.length) {
+        try {
+          fileName = Date.now() + values.bioPic[0].name;
+          imageUrl = await uploadImageToFirebase(values.bioPic[0], {
+            fileName,
+            onProgress: setUploadProgress,
+          });
+        } catch (err) {
+          setUploading(false);
+          throw err;
+        }
       }
-    }
-    // Ensure all social fields are present
-    const socials = ['facebook', 'instagram', 'tiktok', 'youtube', 'x'];
-    for (const key of socials) {
-      if (typeof values[key] === 'undefined') {
-        values[key] = '';
+      // Ensure all social fields are present and normalize URLs
+      const socials = ['facebook', 'instagram', 'tiktok', 'youtube', 'x'];
+      for (const key of socials) {
+        if (typeof values[key] === 'undefined') {
+          values[key] = '';
+        }
       }
+      const newMember = {
+        bioPic: imageUrl,
+        name: values.name,
+        role: values.role,
+        facebook: normalizeUrl(values.facebook),
+        instagram: normalizeUrl(values.instagram),
+        tiktok: normalizeUrl(values.tiktok),
+        youtube: normalizeUrl(values.youtube),
+        x: normalizeUrl(values.x),
+      };
+      await addMember(newMember);
+      showSuccess('Member added successfully');
+      fetchMembers();
+      setUploading(false);
+    } catch (error) {
+      showError('Failed to add member');
+      setUploading(false);
     }
-    const newMember = {
-      bioPic: imageUrl,
-      name: values.name,
-      role: values.role,
-      facebook: values.facebook,
-      instagram: values.instagram,
-      tiktok: values.tiktok,
-      youtube: values.youtube,
-      x: values.x,
-    };
-    await axios.post('/api/addMember', newMember);
-    fetchMembers();
-    setUploading(false);
   };
 
   const modalProps = {

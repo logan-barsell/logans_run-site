@@ -1,5 +1,3 @@
-import './accordion.css';
-
 import React, { Component } from 'react';
 import EditItem from '../Modifiers/EditItem';
 import DeleteItem from '../Modifiers/DeleteItem';

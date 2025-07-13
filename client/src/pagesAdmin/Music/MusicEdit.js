@@ -7,39 +7,48 @@ import DeletePlayer from './DeletePlayer';
 import editPlayerFields from './editPlayerFields';
 import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import { updatePlayer, deletePlayer } from '../../services/musicPlayersService';
 import {
   Spotify,
   AppleMusic,
   YouTube,
   SoundCloud,
 } from '../../components/icons';
+import { useAlert } from '../../contexts/AlertContext';
 
 const MusicEdit = ({ fetchPlayers, players }) => {
+  const { showError, showSuccess } = useAlert();
+
   useEffect(() => {
     fetchPlayers();
   }, [fetchPlayers]);
 
-  const editPlayer = player => {
-    const path = new URL(player.spotifyLink).pathname;
-    const theme = player.bgColor ? player.bgColor : '';
-    const embedLink = `https://open.spotify.com/embed${path}?utm_source=generator${theme}`;
-    const updatedPlayer = { ...player, embedLink, bgColor: theme };
-    console.log(updatedPlayer);
-    axios
-      .post('/api/updatePlayer', updatedPlayer)
-      .then(res => fetchPlayers())
-      .catch(err => console.log(err));
+  const editPlayer = async player => {
+    try {
+      const path = new URL(player.spotifyLink).pathname;
+      const theme = player.bgColor ? player.bgColor : '';
+      const embedLink = `https://open.spotify.com/embed${path}?utm_source=generator${theme}`;
+      const updatedPlayer = { ...player, embedLink, bgColor: theme };
+
+      await updatePlayer(updatedPlayer);
+      fetchPlayers();
+      showSuccess('Music player updated successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to update music player');
+    }
   };
 
-  const deletePlayer = id => {
-    axios
-      .get(`/api/deletePlayer/${id}`)
-      .then(res => fetchPlayers())
-      .catch(err => console.log(err));
+  const handleDeletePlayer = async id => {
+    try {
+      await deletePlayer(id);
+      fetchPlayers();
+      showSuccess('Music player deleted successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to delete music player');
+    }
   };
 
-  const renderPlayers = players.map(player => {
+  const renderPlayers = (players || []).map(player => {
     const dateString = new Date(player.date).toLocaleDateString();
     const color = !player.bgColor ? '#e81d10' : '#282828';
     return (
@@ -125,7 +134,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           />
           <DeletePlayer
             player={player}
-            onDelete={deletePlayer}
+            onDelete={handleDeletePlayer}
           />
         </div>
       </div>
@@ -145,7 +154,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           id='currentPlayers'
           className='list-group'
         >
-          {players.length > 0 ? (
+          {players && players.length > 0 ? (
             renderPlayers
           ) : (
             <h3 className='no-content'>No Music</h3>
@@ -157,7 +166,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
 };
 
 function mapStateToProps({ music }) {
-  return { players: music };
+  return { players: music?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchPlayers })(MusicEdit);

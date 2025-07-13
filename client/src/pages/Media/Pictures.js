@@ -14,7 +14,7 @@ const Pictures = ({ fetchMediaImages, images }) => {
     setLimit(limit + imgCount);
   };
 
-  const renderMediaImages = images.slice(0, limit).map(image => {
+  const renderMediaImages = (images || []).slice(0, limit).map(image => {
     return (
       <div
         key={image._id}
@@ -31,7 +31,7 @@ const Pictures = ({ fetchMediaImages, images }) => {
 
   return (
     <>
-      {images.length > 0 ? (
+      {images && images.length > 0 ? (
         <>
           <div
             id='pictures'
@@ -63,7 +63,7 @@ const Pictures = ({ fetchMediaImages, images }) => {
 };
 
 function mapStateToProps({ media }) {
-  return { images: media };
+  return { images: media?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchMediaImages })(Pictures);
