@@ -1,13 +1,15 @@
 import './bioEdit.css';
 
 import React, { useState, useEffect, useReducer } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { fetchBio } from '../../redux/actions';
+import { updateBio } from '../../services/bioService';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import CurrentMembers from './CurrentMembers';
+import { useAlert } from '../../contexts/AlertContext';
 
-const BioEdit = ({ fetchBio, currentBio }) => {
+const BioEdit = ({ fetchBio, bio }) => {
+  const { showError, showSuccess } = useAlert();
   const initialState = { bio: '' };
   const [state, dispatch] = useReducer(reducer, initialState);
   const [updated, setUpdated] = useState(false);
@@ -30,19 +32,20 @@ const BioEdit = ({ fetchBio, currentBio }) => {
     setUpdated(false);
   };
 
-  const handleSubmit = () => {
-    const payload = { data: state.bio };
-    axios
-      .post('/api/updateBio', payload)
-      .then(() => {
-        setUpdated(true);
-        fetchBio();
-      })
-      .catch(err => console.log(err));
+  const handleSubmit = async () => {
+    try {
+      await updateBio({ data: state.bio });
+      setUpdated(true);
+      showSuccess('Bio updated successfully');
+      fetchBio();
+    } catch (err) {
+      console.error('Failed to update bio:', err);
+      showError('Failed to update bio');
+    }
   };
 
   const renderBio = () => {
-    return currentBio && currentBio[0]?.text;
+    return bio && bio[0]?.text;
   };
 
   return (
@@ -100,8 +103,11 @@ const BioEdit = ({ fetchBio, currentBio }) => {
   );
 };
 
-function mapStateToProps({ currentBio }) {
-  return { currentBio };
+function mapStateToProps({ currentBio, members }) {
+  return {
+    bio: currentBio?.data || [],
+    members: members?.data || [],
+  };
 }
 
 export default connect(mapStateToProps, { fetchBio })(BioEdit);

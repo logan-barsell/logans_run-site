@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchHomeImages } from '../../../redux/actions';
-import axios from 'axios';
 import { Form } from 'react-final-form';
 import { ImageUpload } from '../../../components/Forms/FieldTypes';
 import RemoveImage from './RemoveImage';
@@ -9,6 +8,11 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../../utils/firebaseImage';
+import {
+  uploadHomeImage,
+  removeHomeImage,
+} from '../../../services/mediaManagementService';
+import { useAlert } from '../../../contexts/AlertContext';
 
 function extractStoragePathFromUrl(url) {
   const match = url && url.match(/\/o\/([^?]+)/);
@@ -19,6 +23,7 @@ function extractStoragePathFromUrl(url) {
 }
 
 const CarouselEdit = ({ fetchHomeImages, images }) => {
+  const { showError, showSuccess } = useAlert();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
   const [selectedFiles, setSelectedFiles] = useState(null);
@@ -64,8 +69,7 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
       const successfulUploads = uploadResults.filter(result => result.success);
       // Add successful uploads to the database using the single route
       if (successfulUploads.length > 0) {
-        await axios.post(
-          '/api/addHomeImage',
+        await uploadHomeImage(
           successfulUploads.map(result => ({
             name: result.name,
             imgLink: result.imgLink,
@@ -75,12 +79,13 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
 
       setUploading(false);
       setUploadProgress({});
+      showSuccess('Home carousel image(s) uploaded successfully');
       fetchHomeImages();
     } catch (err) {
       setUploading(false);
       setUploadProgress({});
       console.error('Upload error:', err);
-      alert('An error occurred during upload. Please try again.');
+      showError('An error occurred during upload. Please try again.');
     }
   };
 
@@ -92,14 +97,19 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
   };
 
   const removeImage = async image => {
-    const imageName = extractStoragePathFromUrl(image.imgLink);
-    await axios.get(`/api/removeImage/${image._id}`);
     try {
-      await deleteImageFromFirebase(imageName);
+      const imageName = extractStoragePathFromUrl(image.imgLink);
+      await removeHomeImage(image._id);
+      try {
+        await deleteImageFromFirebase(imageName);
+      } catch (error) {
+        console.log(error);
+      }
+      showSuccess('Home carousel image removed successfully');
+      fetchHomeImages();
     } catch (error) {
-      console.log(error);
+      showError('Failed to remove home carousel image');
     }
-    fetchHomeImages();
   };
 
   const getUploadButtonText = () => {
@@ -185,7 +195,7 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
 };
 
 function mapStateToProps({ carouselImages }) {
-  return { images: carouselImages };
+  return { images: carouselImages?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchHomeImages })(CarouselEdit);

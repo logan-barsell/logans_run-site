@@ -1,9 +1,10 @@
 import React from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { fetchVideos } from '../../../redux/actions';
 import ModalForm from '../../../components/Forms/ModalForm';
 import CustomModal from '../../../components/Bootstrap/CustomModal';
+import { addVideo } from '../../../services/mediaManagementService';
+import { useAlert } from '../../../contexts/AlertContext';
 
 export const addVideoFields = [
   {
@@ -23,25 +24,27 @@ export const addVideoFields = [
 ];
 
 const AddVideo = ({ fetchVideos }) => {
+  const { showError, showSuccess } = useAlert();
   const fields = addVideoFields;
 
-  const onSubmit = ({ category, title, date, link }) => {
-    const path = new URL(link).pathname;
-    const embedLink = `https://www.youtube.com/embed${path}`;
-    const newVideo = {
-      category,
-      title,
-      date: date.getTime(),
-      link,
-      embedLink,
-    };
+  const onSubmit = async ({ category, title, date, link }) => {
+    try {
+      const path = new URL(link).pathname;
+      const embedLink = `https://www.youtube.com/embed${path}`;
+      const newVideo = {
+        category,
+        title,
+        date: date.getTime(),
+        link,
+        embedLink,
+      };
 
-    console.log(newVideo);
-
-    axios.post('/api/addVideo', newVideo).then(res => {
-      console.log(res);
+      await addVideo(newVideo);
+      showSuccess('Video added successfully');
       fetchVideos();
-    });
+    } catch (error) {
+      showError('Failed to add video');
+    }
   };
 
   const modalProps = {

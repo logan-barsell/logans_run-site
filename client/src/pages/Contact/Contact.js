@@ -218,7 +218,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
 };
 
 function mapStateToProps({ contactInfo }) {
-  return { contactInfo };
+  return { contactInfo: contactInfo?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchContactInfo })(ContactPage);

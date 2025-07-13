@@ -5,6 +5,13 @@ import { useSearchParams } from 'react-router-dom';
 import Pictures from './Pictures';
 import Videos from './Videos';
 
+function mapStateToProps({ media, videos }) {
+  return {
+    images: media?.data || [],
+    videos: videos?.data || [],
+  };
+}
+
 const MediaPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentTab = searchParams.get('tab');

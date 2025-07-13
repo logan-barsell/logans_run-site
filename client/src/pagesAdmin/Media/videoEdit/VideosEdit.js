@@ -7,34 +7,45 @@ import DeleteVideo from './DeleteVideo';
 import EditVideo from './EditVideo';
 import editVideoFields from './editVideoFields';
 import { fetchVideos } from '../../../redux/actions';
-import axios from 'axios';
+import {
+  updateVideo,
+  deleteVideo as deleteVideoService,
+} from '../../../services/mediaManagementService';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import VideoItem from '../../../components/Video/VideoItem';
+import { useAlert } from '../../../contexts/AlertContext';
 
 const videoCount = 6;
 const VideosEdit = ({ fetchVideos, videos }) => {
+  const { showError, showSuccess } = useAlert();
   const [limit, setLimit] = useState(videoCount);
 
   useEffect(() => {
     fetchVideos();
-  }, [fetchVideos]);
+  }, []); // Remove fetchVideos from dependency to prevent infinite loop
 
-  const editVideo = video => {
-    const path = new URL(video.link).pathname;
-    const embedLink = `https://www.youtube.com/embed${path}`;
-    const updatedVideo = { ...video, embedLink };
+  const editVideo = async video => {
+    try {
+      const path = new URL(video.link).pathname;
+      const embedLink = `https://www.youtube.com/embed${path}`;
+      const updatedVideo = { ...video, embedLink };
 
-    axios
-      .post('/api/updateVideo', updatedVideo)
-      .then(res => fetchVideos())
-      .catch(err => console.log(err));
+      await updateVideo(updatedVideo);
+      showSuccess('Video updated successfully');
+      fetchVideos();
+    } catch (err) {
+      showError('Failed to update video');
+    }
   };
 
-  const deleteVideo = id => {
-    axios
-      .get(`/api/deleteVideo/${id}`)
-      .then(res => fetchVideos())
-      .catch(err => console.log(err));
+  const deleteVideo = async id => {
+    try {
+      await deleteVideoService(id);
+      showSuccess('Video deleted successfully');
+      fetchVideos();
+    } catch (err) {
+      showError('Failed to delete video');
+    }
   };
 
   const loadMoreVids = () => {
@@ -48,7 +59,7 @@ const VideosEdit = ({ fetchVideos, videos }) => {
         <hr />
         <AddVideo />
         <VideoContainer>
-          {videos?.slice(0, limit).map(video => {
+          {(videos || [])?.slice(0, limit).map(video => {
             const categoryOption = addVideoFields[0].options.find(
               opt => opt.value === video.category
             );
@@ -76,7 +87,7 @@ const VideosEdit = ({ fetchVideos, videos }) => {
             );
           })}
         </VideoContainer>
-        {limit < videos.length && (
+        {limit < (videos?.length || 0) && (
           <div className='d-grid see-more'>
             <button
               onClick={loadMoreVids}
@@ -86,14 +97,16 @@ const VideosEdit = ({ fetchVideos, videos }) => {
             </button>
           </div>
         )}
-        {videos.length === 0 && <h3 className='no-content'>No Videos</h3>}
+        {(!videos || videos.length === 0) && (
+          <h3 className='no-content'>No Videos</h3>
+        )}
       </div>
     </>
   );
 };
 
 function mapStateToProps({ videos }) {
-  return { videos };
+  return { videos: videos?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchVideos })(VideosEdit);

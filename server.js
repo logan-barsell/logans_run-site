@@ -37,6 +37,7 @@ app.use(require('./routes/themeRoutes'));
 app.use(require('./routes/showsSettingsRoutes'));
 app.use(require('./routes/featuredVideosRoutes'));
 app.use(require('./routes/featuredReleasesRoutes'));
+app.use(require('./routes/merchConfigRoutes'));
 
 app.get('/', (req, res) => {
   res.send('EXPRESS ===> REACT');

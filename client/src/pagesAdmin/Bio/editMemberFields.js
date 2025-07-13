@@ -16,6 +16,7 @@ const editMemberFields = member => {
       type: 'text',
       initialValue: facebook,
       required: false,
+      placeholder: 'facebook.com/yourpage or https://facebook.com/yourpage',
     },
     {
       label: 'Instagram',
@@ -23,6 +24,8 @@ const editMemberFields = member => {
       type: 'text',
       initialValue: instagram,
       required: false,
+      placeholder:
+        'instagram.com/yourhandle or https://instagram.com/yourhandle',
     },
     {
       label: 'TikTok',
@@ -30,6 +33,7 @@ const editMemberFields = member => {
       type: 'text',
       initialValue: tiktok,
       required: false,
+      placeholder: 'tiktok.com/@yourhandle or https://tiktok.com/@yourhandle',
     },
     {
       label: 'YouTube',
@@ -37,8 +41,16 @@ const editMemberFields = member => {
       type: 'text',
       initialValue: youtube,
       required: false,
+      placeholder: 'youtube.com/channel or https://youtube.com/channel',
     },
-    { label: 'X', name: 'x', type: 'text', initialValue: x, required: false },
+    {
+      label: 'X',
+      name: 'x',
+      type: 'text',
+      initialValue: x,
+      required: false,
+      placeholder: 'x.com/yourhandle or https://x.com/yourhandle',
+    },
   ];
 };
 

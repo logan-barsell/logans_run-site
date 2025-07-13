@@ -1,5 +1,4 @@
 import './Bio.css';
-import vango from '../../images/logos/logansrunlogo.png';
 import React, { useEffect } from 'react';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { connect } from 'react-redux';
@@ -14,7 +13,7 @@ import {
   X as XIcon,
 } from '../../components/icons';
 
-const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
+const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   }, [fetchMembers, fetchBio]);
 
   const renderBio = () => {
-    return currentBio && currentBio[0]?.text;
+    return bio && bio[0]?.text;
   };
 
   const renderSocialIcons = member => {
@@ -101,7 +100,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
     );
   };
 
-  const renderMembers = members.map((member, index) => {
+  const renderMembers = (members || []).map((member, index) => {
     const { _id, bioPic, name, role } = member;
 
     return (
@@ -141,7 +140,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
             <div className='col-7 col-sm-auto'>
               <img
                 className='aboutuspic'
-                src={theme.bandLogoUrl || vango}
+                src={theme?.bandLogoUrl}
                 alt='Band Logo'
               />
             </div>
@@ -152,7 +151,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
           </div>
         </div>
 
-        {members.length ? (
+        {members && members.length ? (
           <div className='members'>
             <SecondaryNav label='Members' />
             <br />
@@ -164,8 +163,11 @@ const BioPage = ({ fetchMembers, members, fetchBio, currentBio }) => {
   );
 };
 
-function mapStateToProps({ members, currentBio }) {
-  return { members, currentBio };
+function mapStateToProps({ currentBio, members }) {
+  return {
+    bio: currentBio?.data || [],
+    members: members?.data || [],
+  };
 }
 
 export default connect(mapStateToProps, { fetchMembers, fetchBio })(BioPage);

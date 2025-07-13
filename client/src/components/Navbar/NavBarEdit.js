@@ -5,11 +5,11 @@ import NavLinkEdit from '../Routing/NavLinkEdit';
 import { Collapse } from 'bootstrap';
 import { ActiveContext } from '../../contexts/ActiveContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { logout } from '../../services/authService';
 
-function handleLogout() {
-  fetch('/api/logout', { method: 'POST', credentials: 'include' }).then(
-    () => (window.location.href = '/')
-  );
+async function handleLogout() {
+  await logout();
+  window.location.href = '/';
 }
 
 const TopNav = ({ routes }) => {

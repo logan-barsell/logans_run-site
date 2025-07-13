@@ -140,8 +140,10 @@ const updateFavicon = bandLogoUrl => {
 
 export const ThemeProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const theme = useSelector(state => state.theme);
-  const [isLoading, setIsLoading] = useState(true);
+  const themeState = useSelector(state => state.theme);
+  const theme = themeState?.data;
+  const isLoading = themeState?.loading || false;
+  const error = themeState?.error;
 
   useEffect(() => {
     let isMounted = true;
@@ -151,7 +153,9 @@ export const ThemeProvider = ({ children }) => {
       } catch (error) {
         console.error('Failed to load theme:', error);
       } finally {
-        if (isMounted) setIsLoading(false);
+        if (isMounted) {
+          // Loading state is now handled by Redux
+        }
       }
     };
     loadTheme();
@@ -191,8 +195,9 @@ export const ThemeProvider = ({ children }) => {
   const value = {
     theme,
     isLoading,
+    error,
     updateTheme: updateThemeData,
-    secondaryFont: theme.secondaryFont,
+    secondaryFont: theme?.secondaryFont,
   };
 
   return (

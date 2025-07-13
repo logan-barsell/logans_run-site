@@ -20,7 +20,7 @@ const Videos = ({ fetchVideos, videos }) => {
     setLimit(limit + videoCount);
   };
 
-  const filteredVideos = videos?.filter(video =>
+  const filteredVideos = (videos || [])?.filter(video =>
     category !== 'all' ? video.category === category : true
   );
 
@@ -45,7 +45,7 @@ const Videos = ({ fetchVideos, videos }) => {
       </div>
       <hr />
       <div className='videos-container'>
-        {filteredVideos.length ? (
+        {filteredVideos && filteredVideos.length ? (
           filteredVideos.slice(0, limit).map(video => (
             <Video
               key={video._id}
@@ -61,7 +61,7 @@ const Videos = ({ fetchVideos, videos }) => {
           </h3>
         )}
       </div>
-      {limit < filteredVideos.length && (
+      {limit < (filteredVideos?.length || 0) && (
         <div className='d-grid see-more'>
           <button
             onClick={seeMoreVids}
@@ -76,7 +76,7 @@ const Videos = ({ fetchVideos, videos }) => {
 };
 
 function mapStateToProps({ videos }) {
-  return { videos };
+  return { videos: videos?.data || [] };
 }
 
 export default connect(mapStateToProps, { fetchVideos })(Videos);

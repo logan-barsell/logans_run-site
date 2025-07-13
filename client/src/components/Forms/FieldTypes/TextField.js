@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field } from 'react-final-form';
 
-const TextField = ({ label, name, initialValue, required }) => {
+const TextField = ({ label, name, initialValue, required, placeholder }) => {
   // Only require if explicitly set to true
   const isRequired = required === true;
 
@@ -39,6 +39,7 @@ const TextField = ({ label, name, initialValue, required }) => {
                 id={name}
                 type='text'
                 name={name}
+                placeholder={placeholder}
                 {...input}
                 required={isRequired}
                 autoComplete='off'

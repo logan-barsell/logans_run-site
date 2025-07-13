@@ -14,7 +14,10 @@ import {
 } from '../../redux/actions';
 import VideoCarousel from '../../components/Bootstrap/VideoCarousel';
 import FeaturedReleasesCarousel from '../../components/Bootstrap/FeaturedReleasesCarousel';
-import axios from 'axios';
+import {
+  getFeaturedVideos,
+  getFeaturedReleases,
+} from '../../services/featuredContentService';
 
 const HomePage = ({
   fetchShows,
@@ -32,9 +35,9 @@ const HomePage = ({
     fetchHomeImages();
     fetchShowsSettings();
     // Fetch featured videos
-    axios.get('/api/featuredVideos').then(res => {
+    getFeaturedVideos().then(res => {
       // Sort by releaseDate descending (newest first)
-      const sorted = (res.data || []).sort(
+      const sorted = (res || []).sort(
         (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
       );
       // Map API data to VideoCarousel format
@@ -72,8 +75,8 @@ const HomePage = ({
       setFeaturedVideos(vids);
     });
     // Fetch featured releases
-    axios.get('/api/featuredReleases').then(res => {
-      setFeaturedReleases(res.data || []);
+    getFeaturedReleases().then(res => {
+      setFeaturedReleases(res || []);
     });
   }, [fetchShows, fetchHomeImages, fetchShowsSettings]);
 
@@ -181,7 +184,14 @@ const HomePage = ({
 };
 
 function mapStateToProps({ shows, carouselImages, showsSettings }) {
-  return { shows, images: carouselImages, showsSettings };
+  return {
+    shows: shows?.data || [],
+    images: carouselImages?.data || [],
+    showsSettings: showsSettings?.data || {
+      showSystem: 'custom',
+      bandsintownArtist: '',
+    },
+  };
 }
 
 export default connect(mapStateToProps, {
