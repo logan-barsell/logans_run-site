@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import StripeAlert from './StripeAlert';
+import StripeAlert from '../Alerts/StripeAlert';
 import {
   validateStripeConfig,
   isStripeConfigComplete,
-} from '../../services/stripeValidationService';
+} from '../../../services/stripeValidationService';
 
 // Stripe validation component for admin use
 const StripeValidation = ({ merchConfig, forceValidation = false }) => {

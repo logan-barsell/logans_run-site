@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { fetchMerchConfig, updateMerchConfig } from '../../redux/actions';
 import { Form, Field } from 'react-final-form';
 import { Check } from '../../components/icons';
-import StripeSetupGuide from '../../components/Storefront/StripeSetupGuide';
-import ShopifySetupGuide from '../../components/Storefront/ShopifySetupGuide';
-import ShopifyValidation from '../../components/Storefront/ShopifyValidation';
-import StripeValidation from '../../components/Storefront/StripeValidation';
+import StripeSetupGuide from '../../components/Storefront/Guides/StripeSetupGuide';
+import ShopifySetupGuide from '../../components/Storefront/Guides/ShopifySetupGuide';
+import ShopifyValidation from '../../components/Storefront/Validation/ShopifyValidation';
+import StripeValidation from '../../components/Storefront/Validation/StripeValidation';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
 

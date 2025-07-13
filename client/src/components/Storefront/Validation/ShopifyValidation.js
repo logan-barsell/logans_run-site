@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import ShopifyAlert from './ShopifyAlert';
+import ShopifyAlert from '../Alerts/ShopifyAlert';
 import {
   validateShopifyConfig,
   isShopifyConfigComplete,
-} from '../../services/shopifyService';
+} from '../../../services/shopifyService';
 
 // Shopify validation component for admin use
 const ShopifyValidation = ({ merchConfig, forceValidation = false }) => {
