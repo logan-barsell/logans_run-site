@@ -3,10 +3,11 @@ import {
   TextField,
   DateField,
   TimeField,
-  ImageUpload,
   PriceField,
   PriceFields,
+  SpotifyUrlField,
 } from './FieldTypes';
+import { ImageUploadField } from './FieldTypes/ImageUpload';
 import OptionsField from './FieldTypes/OptionsField';
 import NumberField from './FieldTypes/NumberField';
 
@@ -50,7 +51,7 @@ class RenderField extends Component {
       );
     } else if (type === 'image') {
       return (
-        <ImageUpload
+        <ImageUploadField
           label={label}
           name={name}
           initialValue={initialValue}
@@ -86,6 +87,15 @@ class RenderField extends Component {
     } else if (type === 'number') {
       return (
         <NumberField
+          label={label}
+          name={name}
+          initialValue={initialValue}
+          placeholder={placeholder}
+        />
+      );
+    } else if (type === 'spotifyUrl') {
+      return (
+        <SpotifyUrlField
           label={label}
           name={name}
           initialValue={initialValue}

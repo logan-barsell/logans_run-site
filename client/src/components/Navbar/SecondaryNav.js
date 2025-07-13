@@ -8,7 +8,7 @@ const SecondaryNav = ({ label }) => {
   return (
     <ul
       className='nav secondary-nav justify-content-center'
-      style={{ position: 'sticky', top: topNavHeight, zIndex: 1019 }}
+      style={{ position: 'sticky', top: topNavHeight, zIndex: 1000 }}
     >
       <li className='nav-item'>
         <h5 className='text-center'>{label}</h5>
