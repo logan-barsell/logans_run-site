@@ -6,12 +6,15 @@ import { Form, Field } from 'react-final-form';
 import { Check } from '../../components/icons';
 import StripeSetupGuide from '../../components/Storefront/StripeSetupGuide';
 import ShopifySetupGuide from '../../components/Storefront/ShopifySetupGuide';
+import ShopifyValidation from '../../components/Storefront/ShopifyValidation';
+import StripeValidation from '../../components/Storefront/StripeValidation';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
 
 const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
   const { showError, showSuccess } = useAlert();
   const [updated, setUpdated] = useState(false);
+  const [forceValidation, setForceValidation] = useState(false);
   const [selectedStoreType, setSelectedStoreType] = useState(
     merchConfig?.storeType || ''
   );
@@ -22,6 +25,8 @@ const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
 
   useEffect(() => {
     setSelectedStoreType(merchConfig?.storeType || '');
+    // Reset forceValidation when merchConfig changes from external updates
+    setForceValidation(false);
   }, [merchConfig]);
 
   const handleStoreTypeChange = async e => {
@@ -65,6 +70,14 @@ const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
       await updateMerchConfig(dataToSave);
       setUpdated(true);
       showSuccess('Merchandise configuration updated successfully');
+
+      // Force validation after successful save for Shopify/Stripe config
+      if (selectedStoreType === 'shopify' || selectedStoreType === 'stripe') {
+        setForceValidation(true);
+        // Reset forceValidation after a short delay
+        setTimeout(() => setForceValidation(false), 100);
+      }
+
       // Clear the success state after 3 seconds
       setTimeout(() => setUpdated(false), 3000);
     } catch (error) {
@@ -248,7 +261,6 @@ buy_btn_1Rj6noHCVtmXVGiSacAIQc0k'
               id='storefrontUrl'
               placeholder='your-store.com or https://your-store.com'
               autoComplete='off'
-              required
             />
           </>
         )}
@@ -263,6 +275,22 @@ buy_btn_1Rj6noHCVtmXVGiSacAIQc0k'
     >
       <h3>Store Configuration</h3>
       <hr />
+
+      {/* Shopify Validation - shown when Shopify is selected */}
+      {selectedStoreType === 'shopify' && (
+        <ShopifyValidation
+          merchConfig={merchConfig}
+          forceValidation={forceValidation}
+        />
+      )}
+
+      {/* Stripe Validation - shown when Stripe is selected */}
+      {selectedStoreType === 'stripe' && (
+        <StripeValidation
+          merchConfig={merchConfig}
+          forceValidation={forceValidation}
+        />
+      )}
 
       <div className='container'>
         <div className='selectCategory'>

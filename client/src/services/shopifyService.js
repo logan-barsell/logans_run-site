@@ -2,6 +2,89 @@
 import { handleServiceError } from '../utils/errorHandler';
 
 /**
+ * Make a GraphQL request to Shopify Storefront API
+ * @param {string} shopDomain - The myshopify.com domain
+ * @param {string} accessToken - Storefront API access token
+ * @param {string} query - GraphQL query string
+ * @param {Object} variables - GraphQL variables
+ * @returns {Promise<Object>} Response data and metadata
+ */
+async function makeShopifyRequest(shopDomain, accessToken, query, variables) {
+  const response = await fetch(
+    `https://${shopDomain}/api/2023-10/graphql.json`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': accessToken,
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  return {
+    data,
+    response: {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+    },
+  };
+}
+
+/**
+ * Format collection ID as GID if needed
+ * @param {string} collectionId - Collection ID (numeric or GID)
+ * @returns {string} Formatted GID
+ */
+function formatCollectionId(collectionId) {
+  return collectionId.startsWith('gid://')
+    ? collectionId
+    : `gid://shopify/Collection/${collectionId}`;
+}
+
+/**
+ * Handle Shopify API errors and return structured error information
+ * @param {Object} data - GraphQL response data
+ * @param {Object} response - HTTP response metadata
+ * @returns {Object|null} Error object or null if no errors
+ */
+function handleShopifyErrors(data, response) {
+  // Check for GraphQL errors
+  if (data.errors && data.errors.length > 0) {
+    const error = data.errors[0];
+    return {
+      message: error.message,
+      extensions: error.extensions,
+      code: error.extensions?.code,
+      response: {
+        status: response.status,
+        statusText: response.statusText,
+      },
+    };
+  }
+
+  // Check for HTTP errors
+  if (!response.ok) {
+    return {
+      message: `HTTP ${response.status}: ${response.statusText}`,
+      extensions: { code: 'HTTP_ERROR' },
+      response: {
+        status: response.status,
+        statusText: response.statusText,
+      },
+    };
+  }
+
+  return null;
+}
+
+/**
  * Fetch products from a Shopify collection using the Storefront API.
  * @param {string} shopDomain - The myshopify.com domain (e.g. 'your-store.myshopify.com')
  * @param {string} accessToken - Storefront API access token
@@ -49,39 +132,22 @@ export async function fetchShopifyProducts(
       }
     `;
 
-    // Format collectionId as GID if needed
-    const formattedCollectionId = collectionId.startsWith('gid://')
-      ? collectionId
-      : `gid://shopify/Collection/${collectionId}`;
-
-    const requestBody = {
-      query,
-      variables: {
-        collectionId: formattedCollectionId,
-        first: 50,
-      },
+    const variables = {
+      collectionId: formatCollectionId(collectionId),
+      first: 50,
     };
 
-    const response = await fetch(
-      `https://${shopDomain}/api/2023-10/graphql.json`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Storefront-Access-Token': accessToken,
-        },
-        body: JSON.stringify(requestBody),
-      }
+    const { data, response } = await makeShopifyRequest(
+      shopDomain,
+      accessToken,
+      query,
+      variables
     );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Shopify API error: ${response.status} - ${errorText}`);
-    }
-
-    const data = await response.json();
-    if (data.errors) {
-      throw new Error(data.errors[0].message);
+    // Handle errors
+    const error = handleShopifyErrors(data, response);
+    if (error) {
+      throw new Error(error.message);
     }
 
     const edges = data.data.collection?.products?.edges || [];
@@ -138,31 +204,23 @@ export async function createShopifyCheckout(
       }
     `;
 
-    const requestBody = {
-      query: mutation,
-      variables: {
-        lineItems: [
-          {
-            variantId,
-            quantity: 1,
-          },
-        ],
-      },
+    const variables = {
+      lineItems: [
+        {
+          variantId,
+          quantity: 1,
+        },
+      ],
     };
 
-    const response = await fetch(
-      `https://${shopDomain}/api/2023-10/graphql.json`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Storefront-Access-Token': accessToken,
-        },
-        body: JSON.stringify(requestBody),
-      }
+    const { data, response } = await makeShopifyRequest(
+      shopDomain,
+      accessToken,
+      mutation,
+      variables
     );
 
-    const data = await response.json();
+    // Handle GraphQL errors
     if (data.errors) {
       // Handle common dev store/permission errors gracefully
       const errorMsg = data.errors[0].message;
@@ -198,4 +256,146 @@ export async function createShopifyCheckout(
     );
     throw new Error(message);
   }
+}
+
+/**
+ * Validate Shopify configuration by making a test API call
+ * @param {string} shopDomain - The myshopify.com domain
+ * @param {string} storefrontAccessToken - Storefront API access token
+ * @param {string} collectionId - Shopify collection ID
+ * @returns {Promise<Object>} Validation result with success/error information
+ */
+export async function validateShopifyConfig(
+  shopDomain,
+  storefrontAccessToken,
+  collectionId
+) {
+  try {
+    const query = `
+      query getCollection($id: ID!) {
+        collection(id: $id) {
+          id
+          title
+          products(first: 1) {
+            edges {
+              node {
+                id
+                title
+                availableForSale
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const variables = {
+      id: formatCollectionId(collectionId),
+    };
+
+    const { data, response } = await makeShopifyRequest(
+      shopDomain,
+      storefrontAccessToken,
+      query,
+      variables
+    );
+
+    // Handle errors
+    const error = handleShopifyErrors(data, response);
+    if (error) {
+      return {
+        success: false,
+        error,
+        response: error.response,
+      };
+    }
+
+    // Check if collection exists and has products
+    if (!data.data?.collection) {
+      return {
+        success: false,
+        error: {
+          message: 'Collection not found or not accessible',
+          extensions: { code: 'COLLECTION_NOT_FOUND' },
+          response: {
+            status: response.status,
+            statusText: response.statusText,
+          },
+        },
+        response: {
+          status: response.status,
+          statusText: response.statusText,
+        },
+      };
+    }
+
+    // Check if the collection has the expected fields (indicates it's a valid collection)
+    if (!data.data.collection.id || !data.data.collection.title) {
+      return {
+        success: false,
+        error: {
+          message: 'Collection not found or not accessible',
+          extensions: { code: 'COLLECTION_NOT_FOUND' },
+          response: {
+            status: response.status,
+            statusText: response.statusText,
+          },
+        },
+        response: {
+          status: response.status,
+          statusText: response.statusText,
+        },
+      };
+    }
+
+    // Success - configuration is valid
+    return {
+      success: true,
+      data: data.data.collection,
+      response: {
+        status: response.status,
+        statusText: response.statusText,
+      },
+    };
+  } catch (error) {
+    // Network or other errors
+    let errorCode = 'NETWORK_ERROR';
+    let errorMessage = error.message;
+
+    // Check for specific network errors that indicate invalid domain
+    if (
+      error.message.includes('fetch') ||
+      error.message.includes('Failed to fetch') ||
+      error.message.includes('NetworkError') ||
+      error.message.includes('ERR_NAME_NOT_RESOLVED') ||
+      error.message.includes('ENOTFOUND')
+    ) {
+      errorCode = 'SHOP_NOT_FOUND';
+      errorMessage =
+        'The specified shop domain could not be found or is invalid.';
+    }
+
+    return {
+      success: false,
+      error: {
+        message: errorMessage,
+        extensions: { code: errorCode },
+      },
+      response: null,
+    };
+  }
+}
+
+/**
+ * Helper function to check if Shopify config is complete
+ * @param {Object} merchConfig - Merchandise configuration object
+ * @returns {boolean} True if all required Shopify fields are present
+ */
+export function isShopifyConfigComplete(merchConfig) {
+  return (
+    merchConfig?.storeType === 'shopify' &&
+    merchConfig?.shopDomain &&
+    merchConfig?.storefrontAccessToken &&
+    merchConfig?.collectionId
+  );
 }

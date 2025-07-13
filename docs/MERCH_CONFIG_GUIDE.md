@@ -63,17 +63,18 @@ Configure Store Settings
 
 **Requirements:**
 
-- External store URL
+- External store URL (optional)
 
 **Configuration:**
 
-- **Store URL**: Full URL to your external store
+- **Store URL**: Full URL to your external store (optional - if left blank, the Store nav link will not appear)
 
 ## Navigation Behavior
 
 - The "Store" nav item only appears when a valid merch config exists
 - If no config exists, the nav item is hidden and `/store` redirects to 404
-- For external stores, users are automatically redirected to the configured URL
+- For external stores with a valid URL, users are automatically redirected to the configured URL
+- For external stores with an empty URL, the Store nav link will not appear
 
 ## API Endpoints
 

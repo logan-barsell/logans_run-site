@@ -27,7 +27,7 @@ const AdminPages = () => {
   const routes = [
     { name: 'Home', value: '/home' },
     { name: 'Music', value: '/music' },
-    { name: 'Store', value: '/merch' },
+    { name: 'Store', value: '/store' },
     { name: 'Media', value: '/media' },
     { name: 'Bio', value: '/aboutus' },
     { name: 'Contact', value: '/contact' },
@@ -73,7 +73,7 @@ const AdminPages = () => {
             element={<MusicEdit />}
           />
           <Route
-            path='/merch'
+            path='/store'
             exact
             element={<MerchEdit />}
           />

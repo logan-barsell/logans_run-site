@@ -1,4 +1,5 @@
 import React from 'react';
+import './SetupGuide.css';
 
 const SetupGuide = ({ title, steps, documentation }) => {
   return (
