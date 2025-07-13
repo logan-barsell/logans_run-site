@@ -36,8 +36,8 @@ router.get('/api/merchConfig', async (req, res) => {
 
       isValid = hasValidPublishableKey && hasValidBuyButtonIds;
     } else if (merchConfig.storeType === 'external') {
-      isValid =
-        merchConfig.storefrontUrl && merchConfig.storefrontUrl.trim() !== '';
+      // External stores can have empty URLs - they just won't be accessible
+      isValid = true;
     }
 
     // Only return the config if it's valid

@@ -26,7 +26,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['theme', 'merchConfig'], // Only persist specific reducers
+  whitelist: ['theme', 'merchConfig', 'shows'], // Only persist specific reducers
 };
 
 const rootReducer = combineReducers({

@@ -51,7 +51,8 @@ const validateStripeConfig = config => {
 };
 
 const validateExternalConfig = config => {
-  return !!(config.storefrontUrl && config.storefrontUrl.trim() !== '');
+  // External stores can have empty URLs - they just won't show the nav link
+  return true;
 };
 
 /**
@@ -62,9 +63,11 @@ export const shouldShowStoreNav = merchConfig => {
     return false;
   }
 
-  // For external stores, we need a valid URL
+  // For external stores, we need a valid URL to show the nav link
   if (merchConfig.storeType === 'external') {
-    return validateExternalConfig(merchConfig);
+    return !!(
+      merchConfig.storefrontUrl && merchConfig.storefrontUrl.trim() !== ''
+    );
   }
 
   // For shopify and stripe, validate the full config
