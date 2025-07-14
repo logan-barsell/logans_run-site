@@ -13,13 +13,12 @@ const ImageUpload = forwardRef(
   (
     {
       name,
-      initialValue,
       setImage,
       multiple = false,
       onChange,
       value,
       required = false,
-      onFileChange, // <-- new prop
+      onFileChange,
     },
     ref
   ) => {

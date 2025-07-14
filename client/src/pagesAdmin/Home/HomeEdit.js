@@ -10,6 +10,13 @@ import FeaturedReleasesEdit from './releases/FeaturedReleases';
 const HomeEdit = () => {
   return (
     <>
+      <h3
+        className='text-center mt-5'
+        style={{ color: 'var(--main)' }}
+      >
+        Home
+      </h3>
+      <hr className='w-75 mx-auto' />
       <CarouselEdit />
       <FeaturedVideosEdit />
       <FeaturedReleasesEdit />

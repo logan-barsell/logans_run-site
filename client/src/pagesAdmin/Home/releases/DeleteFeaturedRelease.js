@@ -7,7 +7,8 @@ import { deleteFeaturedRelease as deleteFeaturedReleaseService } from '../../../
 const DeleteFeaturedRelease = ({ release, fetchReleases }) => {
   const { showError, showSuccess } = useAlert();
 
-  const onDelete = async id => {
+  const onDelete = async item => {
+    const id = item._id || item.id;
     try {
       if (release.coverImage) {
         await deleteImageFromFirebase(release.coverImage);
