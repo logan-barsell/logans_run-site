@@ -7,7 +7,8 @@ import { deleteShow as deleteShowService } from '../../../services/showsManageme
 const DeleteShow = ({ show, fetchShows }) => {
   const { showError, showSuccess } = useAlert();
 
-  const onDelete = async id => {
+  const onDelete = async item => {
+    const id = item._id || item.id;
     try {
       if (show && show.poster) {
         await deleteImageFromFirebase(show.poster);
