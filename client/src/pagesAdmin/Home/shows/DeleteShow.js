@@ -4,20 +4,14 @@ import { deleteImageFromFirebase } from '../../../utils/firebaseImage';
 import { useAlert } from '../../../contexts/AlertContext';
 import { deleteShow as deleteShowService } from '../../../services/showsManagementService';
 
-const DeleteShow = ({ show, shows, fetchShows }) => {
+const DeleteShow = ({ show, fetchShows }) => {
   const { showError, showSuccess } = useAlert();
 
   const onDelete = async id => {
     try {
-      const showToDelete = shows.find(s => s._id === id);
-      if (showToDelete && showToDelete.poster) {
-        try {
-          await deleteImageFromFirebase(showToDelete.poster);
-        } catch (error) {
-          console.error('Error deleting image from Firebase:', error);
-        }
+      if (show && show.poster) {
+        await deleteImageFromFirebase(show.poster);
       }
-
       await deleteShowService(id);
       showSuccess('Show deleted successfully!');
       fetchShows();
@@ -29,10 +23,12 @@ const DeleteShow = ({ show, shows, fetchShows }) => {
   return (
     <DeleteItem
       item={show}
-      variant='wide'
-      buttonText='Remove'
       title='DELETE SHOW'
-      content='Remove this show?'
+      content={
+        <>
+          Remove <span>{show.venue}</span> from shows?
+        </>
+      }
       onDelete={onDelete}
     />
   );

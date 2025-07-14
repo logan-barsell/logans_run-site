@@ -16,7 +16,6 @@ const DeleteFeaturedRelease = ({ release, fetchReleases }) => {
       showSuccess('Featured release deleted successfully');
       fetchReleases();
     } catch (error) {
-      console.log(error);
       showError('Failed to delete featured release');
     }
   };
@@ -27,7 +26,11 @@ const DeleteFeaturedRelease = ({ release, fetchReleases }) => {
       variant='wide'
       buttonText='Remove'
       title='DELETE FEATURED RELEASE'
-      content='Remove featured release?'
+      content={
+        <>
+          Remove <span>{release.title}</span> from featured releases?
+        </>
+      }
       onDelete={onDelete}
     />
   );

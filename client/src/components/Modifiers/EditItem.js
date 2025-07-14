@@ -11,7 +11,7 @@ const EditItem = ({
   title,
 }) => {
   const id = item._id || item.id;
-  const fields = editFields ? editFields(item.data || item) : null;
+  const fields = editFields ? editFields(item.data || item, false) : null;
 
   const modalProps = {
     id: `edit_item_${id}`,

@@ -76,12 +76,10 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
           <>
             <EditShow
               show={show}
-              shows={shows}
               fetchShows={fetchShows}
             />
             <DeleteShow
               show={show}
-              shows={shows}
               fetchShows={fetchShows}
             />
           </>
@@ -98,7 +96,6 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
         id='showsList'
         title='Shows'
         items={createAccordionItems()}
-        editFields={editShowFields}
       />
       <div className='d-flex mb-5'>
         <AddShow fetchShows={fetchShows} />

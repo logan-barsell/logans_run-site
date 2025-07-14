@@ -15,6 +15,7 @@ const AddMember = ({ fetchMembers }) => {
       label: 'Upload Image',
       name: 'bioPic',
       type: 'image',
+      required: true,
     },
     { label: 'Name', name: 'name', type: 'text' },
     { label: 'Role', name: 'role', type: 'text' },

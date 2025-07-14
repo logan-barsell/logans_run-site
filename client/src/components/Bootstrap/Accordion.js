@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import EditItem from '../Modifiers/EditItem';
-import DeleteItem from '../Modifiers/DeleteItem';
 
 class Accordion extends Component {
   renderSubItems(content) {
@@ -18,19 +16,9 @@ class Accordion extends Component {
 
   renderContent() {
     return this.props.items.map((item, index) => {
-      const { id, header, img, subhead, content } = item;
+      const { id, header, img, subhead, content, actions } = item;
       const headerId = `heading${id}`;
       const collapseId = `collapse${id}`;
-
-      const itemName = item.name || item.title || 'item';
-      const itemGroup = item.group || 'ITEMS';
-      const editTitle = `EDIT ${itemGroup.toUpperCase().slice(0, -1)}`;
-      const deleteTitle = `DELETE ${itemGroup.toUpperCase().slice(0, -1)}`;
-      const deleteContent = (
-        <>
-          Remove <span>{itemName}</span> from {item.group}?
-        </>
-      );
 
       return (
         <div
@@ -50,20 +38,7 @@ class Accordion extends Component {
               aria-controls={collapseId}
             >
               <span className='header'>{header}</span>
-              <div className='modify-options'>
-                <EditItem
-                  item={item}
-                  title={editTitle}
-                  editFields={this.props.editFields}
-                  onEdit={this.props.onEdit}
-                />
-                <DeleteItem
-                  item={item}
-                  onDelete={this.props.onDelete}
-                  title={deleteTitle}
-                  content={deleteContent}
-                />
-              </div>
+              <div className='modify-options'>{actions}</div>
             </button>
           </h2>
           <div

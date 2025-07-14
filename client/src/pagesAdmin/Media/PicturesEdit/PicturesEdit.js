@@ -1,6 +1,6 @@
 import './picturesEdit.css';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { fetchMediaImages } from '../../../redux/actions';
 import { Form } from 'react-final-form';
@@ -23,6 +23,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
   const [limit, setLimit] = useState(imgCount);
   const [selectedFiles, setSelectedFiles] = useState(null);
   const { showError, showSuccess } = useAlert();
+  const imageUploadRef = useRef();
 
   useEffect(() => {
     fetchMediaImages();
@@ -63,7 +64,6 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
 
       // Separate successful and failed uploads
       const successfulUploads = uploadResults.filter(result => result.success);
-      const failedUploads = uploadResults.filter(result => !result.success);
 
       // Add successful uploads to the database using the single route
       if (successfulUploads.length > 0) {
@@ -93,8 +93,12 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
 
   const onFormRestart = form => {
     form.restart();
-    const uploadInput = document.querySelector('.upload');
-    if (uploadInput) uploadInput.value = null;
+    if (
+      imageUploadRef.current &&
+      typeof imageUploadRef.current.clear === 'function'
+    ) {
+      imageUploadRef.current.clear();
+    }
     setSelectedFiles(null);
   };
 
@@ -167,6 +171,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
               }}
             >
               <ImageUploadField
+                ref={imageUploadRef}
                 name='pic'
                 setImage={setSelectedFiles}
                 multiple={true}

@@ -20,7 +20,9 @@ const DeleteItem = ({
   const ModalContent = () => {
     return (
       <>
-        <p className='modal-body deleteItem'>{content}</p>
+        <p className='modal-body deleteItem'>
+          {content || 'Remove this item?'}
+        </p>
         <div className='modal-footer'>
           <button
             type='button'

@@ -1,70 +1,41 @@
 import React from 'react';
-import ModalForm from '../../components/Forms/ModalForm';
-import CustomModal from '../../components/Bootstrap/CustomModal';
-import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
+import { fetchPlayers } from '../../redux/actions';
 import { addPlayer } from '../../services/musicPlayersService';
 import { useAlert } from '../../contexts/AlertContext';
 import {
   validateSpotifyUrl,
   generateSpotifyEmbedUrl,
 } from '../../utils/spotifyValidation';
+import AddItem from '../../components/Modifiers/AddItem';
+import { ADD_PLAYER_FIELDS } from './constants';
 
 const AddPlayer = ({ fetchPlayers }) => {
   const { showError, showSuccess } = useAlert();
 
-  const fields = [
-    {
-      label: 'Background Color',
-      name: 'bgColor',
-      type: 'options',
-      options: [
-        { name: 'Gray', value: '&theme=0' },
-        { name: 'Red', value: '' },
-      ],
-      initialValue: '&theme=0',
-    },
-    { label: 'Title', name: 'title', type: 'text' },
-    { label: 'Release Date', name: 'date', type: 'date' },
-    { label: 'Spotify Link', name: 'spotifyLink', type: 'spotifyUrl' },
-    { label: 'Apple Music Link', name: 'appleMusicLink', type: 'text' },
-    { label: 'YouTube Link', name: 'youtubeLink', type: 'text' },
-    { label: 'SoundCloud Link', name: 'soundcloudLink', type: 'text' },
-  ];
-
-  const onSubmit = async ({
-    bgColor,
-    title,
-    date,
-    spotifyLink,
-    appleMusicLink,
-    youtubeLink,
-    soundcloudLink,
-  }) => {
+  const onAdd = async fields => {
     try {
       // Validate Spotify URL
-      const spotifyValidation = validateSpotifyUrl(spotifyLink);
+      const spotifyValidation = validateSpotifyUrl(fields.spotifyLink);
       if (!spotifyValidation.isValid) {
         showError(spotifyValidation.error);
         return;
       }
 
       // Generate embed URL
-      const embedLink = generateSpotifyEmbedUrl(spotifyLink, bgColor);
+      const embedLink = generateSpotifyEmbedUrl(
+        fields.spotifyLink,
+        fields.bgColor
+      );
       if (!embedLink) {
         showError('Failed to generate Spotify embed URL');
         return;
       }
 
       const newPlayer = {
-        title,
-        date: date.getTime(),
-        bgColor,
-        spotifyLink,
+        ...fields,
+        date: fields.date?.getTime?.() || fields.date,
         embedLink,
-        appleMusicLink,
-        youtubeLink,
-        soundcloudLink,
       };
 
       await addPlayer(newPlayer);
@@ -75,48 +46,14 @@ const AddPlayer = ({ fetchPlayers }) => {
     }
   };
 
-  const modalProps = {
-    id: 'add_player',
-    label: 'add_player',
-    title: 'NEW MUSIC',
-    buttonText: 'Add Music',
-  };
-
-  const AddButton = () => {
-    return (
-      <button
-        data-bs-toggle='modal'
-        data-bs-target={`#${modalProps.id}`}
-        className='addButton btn btn-danger'
-        type='button'
-      >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='20'
-          height='20'
-          fill='currentColor'
-          className='bi bi-plus-square-fill'
-          viewBox='0 0 16 16'
-        >
-          <path d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z' />
-        </svg>
-        {modalProps.buttonText}
-      </button>
-    );
-  };
-
   return (
-    <>
-      <CustomModal
-        modalProps={modalProps}
-        modalButton={<AddButton />}
-      >
-        <ModalForm
-          fields={fields}
-          onSubmit={onSubmit}
-        />
-      </CustomModal>
-    </>
+    <AddItem
+      fields={ADD_PLAYER_FIELDS}
+      onAdd={onAdd}
+      buttonText='Add Music'
+      title='NEW MUSIC'
+      modalProps={{ id: 'add_player', label: 'add_player' }}
+    />
   );
 };
 

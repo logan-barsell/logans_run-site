@@ -4,67 +4,19 @@ import React, { useEffect } from 'react';
 import AddPlayer from './AddPlayer';
 import EditPlayer from './EditPlayer';
 import DeletePlayer from './DeletePlayer';
-import editPlayerFields from './editPlayerFields';
 import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
-import { updatePlayer, deletePlayer } from '../../services/musicPlayersService';
 import {
   Spotify,
   AppleMusic,
   YouTube,
   SoundCloud,
 } from '../../components/icons';
-import { useAlert } from '../../contexts/AlertContext';
-import {
-  validateSpotifyUrl,
-  generateSpotifyEmbedUrl,
-} from '../../utils/spotifyValidation';
 
 const MusicEdit = ({ fetchPlayers, players }) => {
-  const { showError, showSuccess } = useAlert();
-
   useEffect(() => {
     fetchPlayers();
   }, [fetchPlayers]);
-
-  const editPlayer = async player => {
-    try {
-      // Validate Spotify URL
-      const spotifyValidation = validateSpotifyUrl(player.spotifyLink);
-      if (!spotifyValidation.isValid) {
-        showError(spotifyValidation.error);
-        return;
-      }
-
-      // Generate embed URL
-      const embedLink = generateSpotifyEmbedUrl(
-        player.spotifyLink,
-        player.bgColor
-      );
-      if (!embedLink) {
-        showError('Failed to generate Spotify embed URL');
-        return;
-      }
-
-      const updatedPlayer = { ...player, embedLink };
-
-      await updatePlayer(updatedPlayer);
-      fetchPlayers();
-      showSuccess('Music player updated successfully!');
-    } catch (err) {
-      showError(err.message || 'Failed to update music player');
-    }
-  };
-
-  const handleDeletePlayer = async id => {
-    try {
-      await deletePlayer(id);
-      fetchPlayers();
-      showSuccess('Music player deleted successfully!');
-    } catch (err) {
-      showError(err.message || 'Failed to delete music player');
-    }
-  };
 
   const renderPlayers = (players || []).map(player => {
     const dateString = new Date(player.date).toLocaleDateString();
@@ -145,15 +97,8 @@ const MusicEdit = ({ fetchPlayers, players }) => {
 
         <hr />
         <div className='buttons d-flex justify-content-center'>
-          <EditPlayer
-            player={player}
-            editFields={editPlayerFields}
-            onEdit={editPlayer}
-          />
-          <DeletePlayer
-            player={player}
-            onDelete={handleDeletePlayer}
-          />
+          <EditPlayer player={player} />
+          <DeletePlayer player={player} />
         </div>
       </div>
     );
