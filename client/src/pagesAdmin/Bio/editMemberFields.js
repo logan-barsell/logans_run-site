@@ -7,6 +7,7 @@ const editMemberFields = member => {
       name: 'bioPic',
       type: 'image',
       initialValue: bioPic,
+      required: false,
     },
     { label: 'Name', name: 'name', type: 'text', initialValue: name },
     { label: 'Role', name: 'role', type: 'text', initialValue: role },

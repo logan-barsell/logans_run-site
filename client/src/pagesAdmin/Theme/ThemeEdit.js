@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { fetchTheme, updateTheme } from '../../redux/actions';
 import ImageUpload from '../../components/Forms/FieldTypes/ImageUpload';
@@ -14,6 +14,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { showError, showSuccess } = useAlert();
+  const imageUploadRef = useRef();
 
   useEffect(() => {
     fetchTheme();
@@ -49,6 +50,13 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
       await updateTheme({ ...formData, bandLogoUrl });
       setLogoFile(null);
       setUploading(false);
+      // Clear the file input and state
+      if (
+        imageUploadRef.current &&
+        typeof imageUploadRef.current.clear === 'function'
+      ) {
+        imageUploadRef.current.clear();
+      }
     } catch (err) {
       setUploading(false);
       showError(err.message || 'Failed to update theme');
@@ -94,6 +102,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
               </div>
             )}
             <ImageUpload
+              ref={imageUploadRef}
               name='bandLogo'
               setImage={setLogoFile}
               initialValue={theme.bandLogoUrl}

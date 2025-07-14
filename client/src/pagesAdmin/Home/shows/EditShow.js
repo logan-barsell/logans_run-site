@@ -8,31 +8,20 @@ import { useAlert } from '../../../contexts/AlertContext';
 import { editShowFields } from './constants';
 import { updateShow as updateShowService } from '../../../services/showsManagementService';
 
-const EditShow = ({ show, shows, fetchShows }) => {
+const EditShow = ({ show, fetchShows }) => {
   const { showError, showSuccess } = useAlert();
 
-  const onEdit = async (id, fields) => {
+  const onEdit = async fields => {
+    const id = show._id;
     try {
-      const currentShow = shows.find(s => s._id === id);
-      let posterUrl = currentShow.poster || '';
-
+      let posterUrl = show.poster || '';
       if (fields.poster && fields.poster[0]) {
         // Delete old image if it exists
-        if (currentShow.poster) {
-          try {
-            await deleteImageFromFirebase(currentShow.poster);
-          } catch (error) {
-            console.error('Error deleting old image from Firebase:', error);
-          }
+        if (show.poster) {
+          await deleteImageFromFirebase(show.poster);
         }
-
         // Upload new image
-        try {
-          posterUrl = await uploadImageToFirebase(fields.poster[0]);
-        } catch (err) {
-          showError('Failed to upload show poster');
-          throw err;
-        }
+        posterUrl = await uploadImageToFirebase(fields.poster[0]);
       }
 
       const updatedShow = {
@@ -52,6 +41,7 @@ const EditShow = ({ show, shows, fetchShows }) => {
       showSuccess('Show updated successfully!');
       fetchShows();
     } catch (err) {
+      console.error(err);
       showError(err.message || 'Failed to update show');
     }
   };
@@ -61,8 +51,6 @@ const EditShow = ({ show, shows, fetchShows }) => {
       item={show}
       editFields={editShowFields}
       onEdit={onEdit}
-      variant='wide'
-      buttonText='Edit'
       title='EDIT SHOW'
     />
   );

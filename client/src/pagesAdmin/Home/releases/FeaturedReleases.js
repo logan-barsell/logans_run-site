@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import './featuredReleases.css';
-import {
-  getFeaturedReleases,
-  addFeaturedRelease as addFeaturedReleaseService,
-} from '../../../services/featuredContentService';
+import { getFeaturedReleases } from '../../../services/featuredContentService';
 import { useAlert } from '../../../contexts/AlertContext';
 import AddFeaturedRelease from './AddFeaturedRelease';
 import EditFeaturedRelease from './EditFeaturedRelease';
@@ -30,15 +27,6 @@ const FeaturedReleasesEdit = () => {
     fetchReleases();
   }, [fetchReleases]);
 
-  const addRelease = async fields => {
-    try {
-      await addFeaturedReleaseService(fields);
-      fetchReleases();
-    } catch (error) {
-      showError('Failed to add featured release');
-    }
-  };
-
   return (
     <div
       id='featuredReleasesEdit'
@@ -46,7 +34,7 @@ const FeaturedReleasesEdit = () => {
     >
       <hr />
       <h3>Featured Releases</h3>
-      <AddFeaturedRelease onAdd={addRelease} />
+      <AddFeaturedRelease fetchReleases={fetchReleases} />
       {loading ? (
         <div>Loading...</div>
       ) : (

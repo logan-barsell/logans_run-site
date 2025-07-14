@@ -16,6 +16,7 @@ export const editShowFields = show => {
       name: 'poster',
       type: 'image',
       initialValue: poster,
+      required: false,
     },
     {
       label: 'Venue',
@@ -91,6 +92,7 @@ export const ADD_SHOW_FIELDS = [
     label: 'Upload Image',
     name: 'poster',
     type: 'image',
+    required: true,
   },
   {
     label: 'Venue',

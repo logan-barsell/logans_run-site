@@ -12,7 +12,6 @@ const DeleteFeaturedVideo = ({ video, fetchVideos }) => {
       showSuccess('Featured video deleted successfully!');
       fetchVideos();
     } catch (err) {
-      console.log(err);
       showError(err.message || 'Failed to delete featured video');
     }
   };
@@ -23,7 +22,11 @@ const DeleteFeaturedVideo = ({ video, fetchVideos }) => {
       variant='wide'
       buttonText='Remove'
       title='DELETE FEATURED VIDEO'
-      content='Remove featured video?'
+      content={
+        <>
+          Remove <span>{video.title}</span> from featured videos?
+        </>
+      }
       onDelete={onDelete}
     />
   );

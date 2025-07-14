@@ -1,74 +1,64 @@
 import React from 'react';
-import ModalForm from '../../components/Forms/ModalForm';
-import CustomModal from '../../components/Bootstrap/CustomModal';
+import { useDispatch } from 'react-redux';
+import EditItem from '../../components/Modifiers/EditItem';
+import { editPlayerFields } from './constants';
+import { updatePlayer } from '../../services/musicPlayersService';
+import { fetchPlayers } from '../../redux/actions';
+import { useAlert } from '../../contexts/AlertContext';
+import {
+  validateSpotifyUrl,
+  generateSpotifyEmbedUrl,
+} from '../../utils/spotifyValidation';
 
-const EditPlayer = ({ player, editFields, onEdit }) => {
-  const { _id } = player;
-  const fields = editFields(player);
+const EditPlayer = ({ player }) => {
+  const dispatch = useDispatch();
+  const { showError, showSuccess } = useAlert();
 
-  const onSubmit = player => {
-    const {
-      spotifyLink = '',
-      appleMusicLink = '',
-      youtubeLink = '',
-      soundcloudLink = '',
-      ...rest
-    } = player;
-    onEdit({
-      _id,
-      ...rest,
-      spotifyLink,
-      appleMusicLink,
-      youtubeLink,
-      soundcloudLink,
-    });
-  };
+  const onEdit = async fields => {
+    try {
+      // Validate Spotify URL
+      const spotifyValidation = validateSpotifyUrl(fields.spotifyLink);
+      if (!spotifyValidation.isValid) {
+        showError(spotifyValidation.error);
+        return;
+      }
 
-  const modalProps = {
-    id: `edit_player_${_id}`,
-    label: `edit_player_label_${_id}`,
-    title: `EDIT MUSIC`,
-  };
+      // Generate embed URL
+      const embedLink = generateSpotifyEmbedUrl(
+        fields.spotifyLink,
+        fields.bgColor
+      );
+      if (!embedLink) {
+        showError('Failed to generate Spotify embed URL');
+        return;
+      }
 
-  const EditButton = () => {
-    return (
-      <button
-        data-bs-toggle='modal'
-        data-bs-target={`#${modalProps.id}`}
-        className='btn btn-sm btn-dark align-middle'
-        type='button'
-      >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='20'
-          height='20'
-          fill='currentColor'
-          className='bi bi-pencil-square'
-          viewBox='0 0 16 16'
-        >
-          <path d='M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z' />
-          <path
-            fillRule='evenodd'
-            d='M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z'
-          />
-        </svg>
-        Edit
-      </button>
-    );
+      const updatedPlayer = {
+        ...fields,
+        _id: player._id,
+        embedLink,
+      };
+
+      await updatePlayer(updatedPlayer);
+      dispatch(fetchPlayers());
+      showSuccess('Music player updated successfully!');
+    } catch (err) {
+      showError(err.message || 'Failed to update music player');
+    }
   };
 
   return (
-    <>
-      <CustomModal
-        modalProps={modalProps}
-        modalButton={<EditButton />}
-      >
-        <ModalForm
-          fields={fields}
-          onSubmit={onSubmit}
-        />
-      </CustomModal>
-    </>
+    <EditItem
+      item={player}
+      editFields={editPlayerFields}
+      onEdit={onEdit}
+      variant='wide'
+      title='EDIT MUSIC'
+      modalProps={{
+        id: `edit_player_${player._id}`,
+        label: `edit_player_label_${player._id}`,
+      }}
+    />
   );
 };
 

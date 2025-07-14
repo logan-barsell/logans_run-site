@@ -5,12 +5,13 @@ export const releaseTypes = [
   { name: 'LP', value: 'LP' },
 ];
 
-export const featuredReleaseFields = (release = {}) => [
+export const featuredReleaseFields = (release = {}, required = true) => [
   {
     label: 'Cover Image',
     name: 'coverImage',
     type: 'image',
     initialValue: release.coverImage || '',
+    required,
   },
   {
     label: 'Title',
