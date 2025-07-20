@@ -2,11 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchMembers } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
-import CustomModal from '../../components/Bootstrap/CustomModal';
+import CustomModal from '../../components/Modals/CustomModal';
 import { uploadImageToFirebase } from '../../utils/firebaseImage';
 import { addMember } from '../../services/membersService';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
+import { PlusSquareFill } from '../../components/icons';
+import Button from '../../components/Button/Button';
 
 const AddMember = ({ fetchMembers }) => {
   const { showError, showSuccess } = useAlert();
@@ -84,25 +86,18 @@ const AddMember = ({ fetchMembers }) => {
 
   const AddButton = () => {
     return (
-      <button
+      <Button
         data-bs-toggle='modal'
         data-bs-target={`#${modalProps.id}`}
-        className='addButton btn btn-danger'
+        className='addButton'
+        variant='danger'
         type='button'
         disabled={uploading}
+        icon={<PlusSquareFill />}
+        iconPosition='left'
       >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='20'
-          height='20'
-          fill='currentColor'
-          className='bi bi-plus-square-fill'
-          viewBox='0 0 16 16'
-        >
-          <path d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z' />
-        </svg>
         {modalProps.buttonText}
-      </button>
+      </Button>
     );
   };
 

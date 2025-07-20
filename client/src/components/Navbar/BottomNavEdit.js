@@ -2,6 +2,7 @@ import './BottomNav.css';
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../Button/Button';
 
 const BottomNavEdit = () => {
   const navigate = useNavigate();
@@ -22,14 +23,16 @@ const BottomNavEdit = () => {
         <div className='col-md-7'>
           <div className='row justify-content-center'>
             <div className='col-auto'>
-              <button
+              <Button
                 id='updateTheme'
                 type='button'
-                className='btn btn-sm btn-danger mx-sm-3'
+                size='sm'
+                className='mx-sm-3'
+                variant='danger'
                 onClick={() => navigate('/theme')}
               >
                 Update &nbsp;Theme
-              </button>
+              </Button>
             </div>
           </div>
         </div>

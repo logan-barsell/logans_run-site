@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PicturesEdit from './PicturesEdit/PicturesEdit';
 import VideosEdit from './VideosEdit/Videos';
+import SecondaryNav from '../../components/Navbar/SecondaryNav';
 
 const MediaEdit = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,31 +21,14 @@ const MediaEdit = () => {
     setSearchParams({ tab: option.toLowerCase() });
   };
 
-  const renderedNavItems = navOptions.map((option, index) => {
-    const active = option.toLowerCase() === currentTab ? 'active' : '';
-    return (
-      <li
-        key={index}
-        className='nav-item col-auto'
-      >
-        <a
-          href='#!'
-          className={`nav-link ${active}`}
-          onClick={event => onNavClick(option, event)}
-        >
-          {option}
-        </a>
-      </li>
-    );
-  });
-
   return (
     <div id='mediaEdit'>
-      <ul className='nav main justify-content-center'>
-        <div className='text-center row align-items-center'>
-          {renderedNavItems}
-        </div>
-      </ul>
+      <SecondaryNav
+        options={navOptions}
+        currentTab={currentTab}
+        onTabClick={onNavClick}
+        showTabs={true}
+      />
       <div className='container mb-5 pb-5'>
         {currentTab === 'pictures' && <PicturesEdit />}
         {currentTab === 'videos' && <VideosEdit />}

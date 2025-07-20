@@ -21,84 +21,9 @@
   text-shadow: 1px 1px black;
 }
 
-.showad {
-  margin-bottom: 20px;
-  max-width: 366px;
-}
-
-.showinfo .card {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.showinfo li {
-  background: rgba(0, 0, 0, 0);
-}
-
-.showad img {
-  border: 3px solid black;
-  border-radius: 7px;
-}
-
-.showad .btn-dark {
-  border: 1px solid black;
-  margin: 3px 0px;
-  text-shadow: 1.5px 0.5px black;
-  background-color: rgba(0, 0, 0, 0.6);
-  border-bottom: 3px solid black;
-}
-
-.showad .btn-dark svg {
-  margin-left: 5px;
-}
-
-.showad .btn-danger {
-  text-shadow: 1.5px 0.5px var(--secondary);
-  margin-top: 3px;
-}
 #upcomingshows .card {
   font-size: 20px;
   min-width: 288px;
-}
-
-.showinfo {
-  padding: 0px;
-}
-
-.showinfo .card {
-  min-width: 288px;
-  height: inherit;
-  border: none;
-  padding-bottom: 33px;
-}
-
-.showinfo .card-title {
-  color: var(--main);
-  text-shadow: 1.5px 1px black;
-}
-
-.showinfo .card-text {
-  color: white;
-}
-
-.showinfo button {
-  margin-top: 5px;
-}
-
-.showinfo button span {
-  float: right;
-  margin-right: 10px;
-}
-
-.showinfo .list-group-item {
-  color: var(--main);
-  text-shadow: 1px 1px black;
-  position: relative;
-  z-index: 0;
-}
-
-.showinfo .list-group-item span {
-  color: white;
-  text-shadow: none;
 }
 
 @media (max-width: 500px) {
@@ -164,22 +89,6 @@
 
 #home .carousel-caption .btn {
   padding: 12px 15px;
-}
-
-#home .card {
-  background-color: rgba(0, 0, 0, 0.7);
-  border: 2px solid var(--main);
-  color: white;
-}
-
-#home .card-header {
-  background-color: var(--main);
-  color: black;
-  border-bottom: 2px solid var(--main);
-}
-
-#home .card-body {
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
 #home .list-group-item {

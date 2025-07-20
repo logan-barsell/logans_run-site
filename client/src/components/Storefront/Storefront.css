@@ -111,21 +111,6 @@
   }
 }
 
-/* Button styles */
-.shopify-storefront .btn,
-.stripe-storefront .btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.shopify-storefront .btn:disabled,
-.stripe-storefront .btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 /* Stripe Buy Button Layout */
 .stripe-storefront .store-title {
   color: var(--main);

@@ -9,6 +9,7 @@ import { fetchVideos } from '../../../redux/actions';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import VideoItem from '../../../components/Video/VideoItem';
 import { addVideoFields, VIDEO_COUNT } from './constants';
+import Button from '../../../components/Button/Button';
 
 const VideosEdit = ({ fetchVideos, videos }) => {
   const [limit, setLimit] = useState(VIDEO_COUNT);
@@ -61,12 +62,12 @@ const VideosEdit = ({ fetchVideos, videos }) => {
         </VideoContainer>
         {limit < (videos?.length || 0) && (
           <div className='d-grid see-more'>
-            <button
+            <Button
               onClick={loadMoreVids}
-              className='btn btn-danger'
+              variant='danger'
             >
               Load More Videos
-            </button>
+            </Button>
           </div>
         )}
         {(!videos || videos.length === 0) && (

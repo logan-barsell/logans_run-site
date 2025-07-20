@@ -1,0 +1,100 @@
+/* Base button styles - match App.css exactly */
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.3rem;
+  padding: 10px 22px;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn:disabled,
+.btn[disabled] {
+  background-color: var(--main);
+  color: black;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Variants - match App.css */
+.btn-danger {
+  background-color: var(--main);
+  color: black;
+  border-color: white;
+}
+.btn-danger:hover,
+.btn-danger:focus {
+  background-color: black;
+  color: white;
+  border-color: var(--main);
+}
+.btn-danger.disabled,
+.btn-danger:disabled {
+  background-color: var(--main);
+  color: black;
+}
+.btn-check:focus + .btn-danger,
+.btn-danger:focus {
+  background-color: var(--main);
+  color: black;
+}
+
+/* Sizes */
+.btn-sm {
+  padding: 4px 12px;
+  font-size: 0.85rem;
+}
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 1.25rem;
+}
+
+/* Block/full width */
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+/* Loading state */
+.btn-loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Icon alignment */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1em;
+}
+
+/* Responsive font size - match App.css */
+@media (max-width: 777px) {
+  .btn {
+    font-size: 3.5vw;
+  }
+}
+@media (max-width: 550px) {
+  .btn {
+    font-size: 4vw;
+  }
+}
+@media (max-width: 400px) {
+  .btn {
+    padding: 4px 8px;
+    font-size: 4vw;
+  }
+}
+
+/* Contextual/utility classes (keep as needed) */
+.addButton.btn {
+  margin: 27px auto;
+  max-width: 420px;
+}
+.submitForm {
+  /* If there were any specific styles for submitForm, add here */
+}

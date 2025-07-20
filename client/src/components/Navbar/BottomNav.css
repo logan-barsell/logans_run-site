@@ -112,7 +112,6 @@ a.nav-item.active {
 
 #subscribe {
   margin: 0px 30px;
-  gap: 10px;
 }
 
 @media only screen and (max-width: 485px) {

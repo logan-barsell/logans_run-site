@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check } from '../icons';
+import Button from '../Button/Button';
 
 /**
  * Reusable Save Button component with change detection
@@ -44,42 +45,30 @@ const SaveButton = ({
     }
   };
 
-  const getButtonContent = () => {
-    if (isSaving) {
-      return (
-        <>
-          {savingText}
-          <span
-            className='spinner-border spinner-border-sm ms-2'
-            role='status'
-            aria-hidden='true'
-          ></span>
-        </>
-      );
-    }
-
-    if (isSaved) {
-      return (
-        <>
-          {savedText} &nbsp;
-          <Check />
-        </>
-      );
-    }
-
-    return saveText;
-  };
+  let buttonContent;
+  let icon = null;
+  if (isSaving) {
+    buttonContent = savingText;
+  } else if (isSaved) {
+    buttonContent = savedText;
+    icon = <Check />;
+  } else {
+    buttonContent = saveText;
+  }
 
   return (
-    <button
+    <Button
       type={buttonType}
       className={className}
       disabled={isDisabled}
+      loading={isSaving}
+      icon={icon}
+      iconPosition={isSaved ? 'right' : 'left'}
       onClick={handleClick}
       {...props}
     >
-      {getButtonContent()}
-    </button>
+      {buttonContent}
+    </Button>
   );
 };
 

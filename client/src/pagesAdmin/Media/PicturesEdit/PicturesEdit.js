@@ -13,6 +13,7 @@ import {
 } from '../../../services/mediaManagementService';
 import { useAlert } from '../../../contexts/AlertContext';
 import EditImages from '../../../components/Images/EditImages';
+import Button from '../../../components/Button/Button';
 
 function extractStoragePathFromUrl(url) {
   const match = url && url.match(/\/o\/([^?]+)/);
@@ -100,12 +101,12 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
         />
         {limit < (images?.length || 0) && (
           <div className='d-grid see-more'>
-            <button
+            <Button
               onClick={seeMoreImages}
-              className='btn btn-danger'
+              variant='danger'
             >
               Load More Images
-            </button>
+            </Button>
           </div>
         )}
       </div>

@@ -88,9 +88,6 @@
 #not-found .addButton.btn {
   margin: 10px auto;
   max-width: 420px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Responsive 404 sizing */

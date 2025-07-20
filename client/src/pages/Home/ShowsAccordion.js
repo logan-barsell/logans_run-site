@@ -1,8 +1,9 @@
 import './showsAccordion.css';
-import '../../components/Bootstrap/accordion.css';
+import '../../components/Accordion/accordion.css';
 import { Ticket } from '../../components/icons';
 
 import React, { Component } from 'react';
+import Button from '../../components/Button/Button';
 class ShowsAccordion extends Component {
   renderSubItems(content) {
     return content.map(({ prefix, value }, index) => {
@@ -61,16 +62,19 @@ class ShowsAccordion extends Component {
                 </div>
                 {tixlink ? (
                   <div className='col-12 col-sm-6 w-auto align-self-center mt-2 mt-sm-0'>
-                    <a
+                    <Button
+                      as='a'
                       href={tixlink}
-                      onClick={e => window.open(e.target.href, '_blank')}
                       target='_blank'
                       rel='noreferrer'
-                      className='tix btn btn-sm btn-outline-light secondary-font'
-                      style={{ gap: '5px' }}
+                      size='sm'
+                      variant='outline-light'
+                      className='tix secondary-font'
+                      icon={<Ticket />}
+                      iconPosition='right'
                     >
-                      Tickets <Ticket />
-                    </a>
+                      Tickets
+                    </Button>
                   </div>
                 ) : null}
               </div>
@@ -98,20 +102,22 @@ class ShowsAccordion extends Component {
                 <div className='content'>
                   {this.renderSubItems(content)}
                   {tixlink ? (
-                    <a
+                    <Button
+                      as='a'
                       href={tixlink}
                       target='_blank'
                       rel='noreferrer'
-                      className='tix btn btn-outline-light secondary-font d-flex align-items-center'
+                      variant='outline-light'
+                      className='tix secondary-font d-flex align-items-center'
                       style={{
                         maxWidth: 'fit-content',
                         margin: '30px auto',
-                        gap: '5px',
                       }}
+                      icon={<Ticket />}
+                      iconPosition='right'
                     >
                       Tickets
-                      <Ticket />
-                    </a>
+                    </Button>
                   ) : null}
                 </div>
               </div>

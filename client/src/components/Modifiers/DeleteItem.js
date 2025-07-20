@@ -1,6 +1,7 @@
 import React from 'react';
-import CustomModal from '../Bootstrap/CustomModal';
-import { Close } from '../icons';
+import CustomModal from '../Modals/CustomModal';
+import { Close, TrashFill } from '../icons';
+import Button from '../Button/Button';
 
 const DeleteItem = ({
   item,
@@ -19,6 +20,8 @@ const DeleteItem = ({
     title,
   };
 
+  const iconPosition = variant === 'square' ? 'center' : 'left';
+
   const ModalContent = () => {
     return (
       <>
@@ -26,52 +29,56 @@ const DeleteItem = ({
           {content || 'Remove this item?'}
         </p>
         <div className='modal-footer'>
-          <button
+          <Button
             type='button'
-            className='btn btn-dark'
+            variant='dark'
             data-bs-dismiss='modal'
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => onDelete(item)}
             type='button'
+            variant='danger'
             data-bs-dismiss='modal'
-            className='btn btn-danger'
           >
             Delete
-          </button>
+          </Button>
         </div>
       </>
     );
   };
 
+  // Custom close button for images that preserves original styling
+  const ImageCloseButton = () => (
+    <button
+      className='closeBtn'
+      data-bs-toggle='modal'
+      data-bs-target={`#${modalProps.id}`}
+      type='button'
+    >
+      <Close />
+    </button>
+  );
+
   const DeleteButton = () => {
+    // Use custom close button for images, Button component for everything else
+    if (isImage) {
+      return <ImageCloseButton />;
+    }
+
     return (
-      <button
-        className={`btn ${isImage ? 'btn-dark closeBtn' : 'btn-sm btn-danger'}`}
-        type='button'
+      <Button
+        variant='danger'
+        size='sm'
+        icon={<TrashFill />}
         data-bs-toggle='modal'
         data-bs-target={`#${modalProps.id}`}
+        type='button'
+        iconPosition={iconPosition}
       >
-        {isImage ? (
-          <Close />
-        ) : (
-          <>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='20'
-              height='20'
-              fill='currentColor'
-              className='bi bi-trash-fill'
-              viewBox='0 0 16 16'
-            >
-              <path d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z' />
-            </svg>
-            {variant === 'wide' && buttonText}
-          </>
-        )}
-      </button>
+        {variant === 'wide' && buttonText}
+      </Button>
     );
   };
 

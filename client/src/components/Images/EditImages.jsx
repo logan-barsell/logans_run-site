@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Form } from 'react-final-form';
 import { ImageUploadField } from '../Forms/FieldTypes/ImageUpload';
 import DeleteItem from '../Modifiers/DeleteItem';
+import Button from '../Button/Button';
 import './editImages.css';
 
 const EditImages = ({
@@ -116,15 +117,17 @@ const EditImages = ({
               setImage={setSelectedFiles}
               multiple={multiple}
             />
-            <div className='d-grid gap-2'>
-              <button
+            <div className='d-grid mx-3 mt-3'>
+              <Button
                 disabled={
                   uploading || !selectedFiles || selectedFiles.length === 0
                 }
-                className='submit btn btn-danger mt-3'
+                variant='danger'
+                type='submit'
+                wide
               >
                 {getUploadButtonText()}
-              </button>
+              </Button>
             </div>
           </form>
         )}

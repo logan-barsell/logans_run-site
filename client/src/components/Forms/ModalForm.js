@@ -4,6 +4,7 @@ import React, { useRef, useState, useCallback } from 'react';
 import { Form } from 'react-final-form';
 
 import RenderField from './RenderField';
+import Button from '../Button/Button';
 
 const ModalForm = ({ onSubmit, fields }) => {
   // Create refs for all image fields
@@ -75,28 +76,28 @@ const ModalForm = ({ onSubmit, fields }) => {
             </div>
             <div className='modal-footer'>
               <div className='d-grid col-auto'>
-                <button
+                <Button
+                  variant='dark'
+                  type='button'
+                  data-bs-dismiss='modal'
                   onClick={() => {
                     onFormRestart(form);
                   }}
-                  type='button'
-                  className='btn btn-dark'
-                  data-bs-dismiss='modal'
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
               <div className='d-grid col-6'>
-                <button
+                <Button
+                  variant='danger'
+                  type='submit'
                   disabled={
                     Object.keys(form.getState().errors).length !== 0 ||
                     imageRequired
                   }
-                  className='submitForm btn btn-danger'
-                  type='submit'
                 >
                   Submit
-                </button>
+                </Button>
               </div>
             </div>
           </form>

@@ -4,6 +4,7 @@ import { CustomForm } from '../../components/Forms';
 import ErrorMessage from '../../components/ErrorMessage';
 import { login } from '../../services/authService';
 import { useAlert } from '../../contexts/AlertContext';
+import Button from '../../components/Button/Button';
 
 const Signin = () => {
   const [error, setError] = useState(null);
@@ -93,13 +94,14 @@ const Signin = () => {
               </Field>
             </div>
             <div className='d-flex'>
-              <button
+              <Button
                 type='submit'
-                className='btn btn-danger'
+                variant='danger'
                 disabled={submitting || isLoading}
+                loading={isLoading}
               >
                 {isLoading ? 'Logging in...' : 'Login'}
-              </button>
+              </Button>
             </div>
           </form>
         )}

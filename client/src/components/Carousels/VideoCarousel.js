@@ -1,6 +1,7 @@
 import React from 'react';
 import YouTubeSnippet from '../YouTubeSnippet';
 import { YouTube } from '../icons';
+import Button from '../Button/Button';
 
 function VideoCarousel({ videos }) {
   return (
@@ -33,14 +34,19 @@ function VideoCarousel({ videos }) {
                     {video.description}
                   </span>
                 )}
-                <a
+                <Button
+                  as='a'
                   href={`https://youtu.be/${video.videoId}`}
                   target='_blank'
                   rel='noreferrer'
-                  className='btn btn-sm btn-outline-light addButton d-flex gap-2 justify-content-center align-items-center'
+                  variant='outline-light'
+                  size='sm'
+                  className='addButton'
+                  iconPosition='right'
+                  icon={<YouTube />}
                 >
-                  Watch Now <YouTube />
-                </a>
+                  Watch Now
+                </Button>
               </div>
             </div>
           </div>

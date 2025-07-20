@@ -5,7 +5,9 @@ import NavLinkEdit from '../Routing/NavLinkEdit';
 import { Collapse } from 'bootstrap';
 import { ActiveContext } from '../../contexts/ActiveContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useNavHeight } from '../../contexts/NavHeightContext';
 import { logout } from '../../services/authService';
+import Button from '../Button/Button';
 
 async function handleLogout() {
   await logout();
@@ -14,6 +16,7 @@ async function handleLogout() {
 
 const TopNav = ({ routes }) => {
   const { theme } = useTheme();
+  const { setTopNavHeight } = useNavHeight();
 
   const ref = useRef();
   const { toggle, setToggle } = useContext(ActiveContext);
@@ -21,6 +24,20 @@ const TopNav = ({ routes }) => {
   const menuToggle = () => {
     setToggle(toggle => !toggle);
   };
+
+  useEffect(() => {
+    // Measure and set nav height
+    const updateHeight = () => {
+      if (ref.current) {
+        setTopNavHeight(ref.current.offsetHeight - 1);
+      }
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, [setTopNavHeight]);
 
   useEffect(() => {
     const menuCollapse = document.getElementById('menu');
@@ -75,13 +92,14 @@ const TopNav = ({ routes }) => {
               href='/'
               className='nav-item nav-link'
             >
-              <button
+              <Button
                 onClick={() => handleLogout()}
                 type='button'
-                className='btn btn-danger'
+                size='sm'
+                variant='danger'
               >
                 Log Out
-              </button>
+              </Button>
             </a>
           </div>
         </div>
