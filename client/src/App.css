@@ -73,6 +73,7 @@
 /* COLORS AND FONTS */
 :root {
   --main: #e3ff05; /* Default primary color - will be overridden by theme */
+  --main-rgb: 227, 255, 5; /* RGB for main color, for rgba() usage */
   --secondary: #f08080; /* Default secondary color - will be overridden by theme */
   --primary-font: sprayPaint; /* Default primary font - will be overridden by theme */
   --secondary-font: 'Courier New', Courier, monospace; /* Default secondary font */
@@ -148,32 +149,6 @@ textarea {
   margin-top: 22px;
   text-align: center;
   font-size: 22px;
-}
-
-.btn-danger {
-  background-color: var(--main);
-  color: black;
-  border-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btn-danger:hover {
-  background-color: black;
-  border-color: var(--main);
-}
-
-.btn-danger.disabled,
-.btn-danger:disabled {
-  background-color: var(--main);
-  color: black;
-}
-
-.btn-check:focus + .btn-danger,
-.btn-danger:focus {
-  background-color: var(--main);
-  color: black;
 }
 
 .nav-link {
@@ -283,11 +258,6 @@ hr {
   transform: scale(1.1);
 }
 
-.addButton.btn {
-  margin: 27px auto;
-  max-width: 420px;
-}
-
 #no_content {
   font-family: var(--secondary-font);
   letter-spacing: normal;
@@ -340,9 +310,14 @@ hr {
   label {
     font-size: 3vw;
   }
-  button.btn,
-  .btn {
-    font-size: 3.5vw;
+  input.form-control,
+  select.form-control,
+  .react-datepicker__input-container input,
+  .final-form .input-group-text#basic-addon1 {
+    font-size: 4vw;
+  }
+  svg {
+    height: auto;
   }
 }
 
@@ -373,10 +348,6 @@ hr {
   label {
     font-size: 4vw;
   }
-  button.btn,
-  .btn {
-    font-size: 4vw;
-  }
   input.form-control,
   select.form-control,
   .react-datepicker__input-container input,
@@ -384,7 +355,6 @@ hr {
     font-size: 4vw;
   }
   svg {
-    width: 6vw;
     height: auto;
   }
 }
@@ -403,12 +373,6 @@ hr {
 }
 
 @media (max-width: 400px) {
-  button.btn,
-  .btn {
-    padding: 4px 8px;
-    font-size: 4vw;
-  }
-
   button.navbar-toggler {
     font-size: 7vw;
   }

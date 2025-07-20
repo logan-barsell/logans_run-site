@@ -105,14 +105,13 @@ const EditableForm = ({
         {/* Render children with form context */}
         {typeof children === 'function' ? children(formContext) : children}
 
-        <div className='d-grid col-12 sm:col-6 mx-auto'>
+        <div className='mt-5 d-grid col-12 sm:col-6 mx-auto'>
           <SaveButton
             hasChanges={hasChanges}
             isDirty={isDirty}
             isSaving={isSaving}
             isSaved={isSaved}
             disabled={saveButtonDisabled}
-            className='btn btn-danger mt-5'
           />
         </div>
       </form>

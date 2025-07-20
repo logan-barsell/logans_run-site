@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { fetchMembers } from '../../redux/actions';
 import { connect } from 'react-redux';
-import Accordion from '../../components/Bootstrap/Accordion';
+import Accordion from '../../components/Accordion/Accordion';
 import AddMember from './AddMember';
 import editMemberFields from './editMemberFields';
 import {

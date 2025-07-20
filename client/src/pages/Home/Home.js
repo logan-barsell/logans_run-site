@@ -2,7 +2,7 @@ import './Home.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
 import React, { useEffect, useState } from 'react';
-import Carousel from '../../components/Bootstrap/Carousel';
+import Carousel from '../../components/Carousels/Carousel';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import ShowsAccordion from './ShowsAccordion';
 import { BandsintownWidget } from '../../components/Bandsintown';
@@ -12,8 +12,8 @@ import {
   fetchShows,
   fetchShowsSettings,
 } from '../../redux/actions';
-import VideoCarousel from '../../components/Bootstrap/VideoCarousel';
-import FeaturedReleasesCarousel from '../../components/Bootstrap/FeaturedReleasesCarousel';
+import VideoCarousel from '../../components/Carousels/VideoCarousel';
+import FeaturedReleasesCarousel from '../../components/Carousels/FeaturedReleasesCarousel';
 import {
   getFeaturedVideos,
   getFeaturedReleases,

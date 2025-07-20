@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NotFound.css';
+import Button from '../components/Button/Button';
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -37,24 +38,27 @@ const NotFound = () => {
             <hr className='my-4' />
 
             <div className='not-found-actions'>
-              <button
+              <Button
                 onClick={() => handleNavigation('/')}
-                className='addButton btn btn-danger'
+                className='addButton'
+                variant='danger'
               >
                 Back to Home
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => handleNavigation('/music')}
-                className='addButton btn btn-secondary'
+                className='addButton'
+                variant='secondary'
               >
                 Check Out Our Music
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => handleNavigation('/contact')}
-                className='addButton btn btn-dark'
+                className='addButton'
+                variant='dark'
               >
                 Get in Touch
-              </button>
+              </Button>
             </div>
           </div>
         </div>

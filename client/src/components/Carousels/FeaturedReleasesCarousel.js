@@ -1,6 +1,7 @@
 import React from 'react';
 import './featuredReleasesCarousel.css';
 import capitalize from '../../utils/capitalize';
+import Button from '../Button/Button';
 
 function FeaturedReleasesCarousel({ releases }) {
   return (
@@ -30,14 +31,16 @@ function FeaturedReleasesCarousel({ releases }) {
                   {capitalize(release.type)} &middot;{' '}
                   {new Date(release.releaseDate).getFullYear()}
                 </div>
-                <a
+                <Button
+                  as='a'
                   href={release.musicLink}
                   target='_blank'
                   rel='noreferrer'
-                  className='btn btn-outline-light featured-release-listen-btn mt-2'
+                  variant='outline-light'
+                  className='featured-release-listen-btn mt-2'
                 >
                   Listen
-                </a>
+                </Button>
               </div>
             </div>
           </div>

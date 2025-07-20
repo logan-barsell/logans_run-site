@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchVideos } from '../../redux/actions';
 import Video from './Video';
+import Button from '../../components/Button/Button';
 
 const videoCount = 6;
 const Videos = ({ fetchVideos, videos }) => {
@@ -63,12 +64,12 @@ const Videos = ({ fetchVideos, videos }) => {
       </div>
       {limit < (filteredVideos?.length || 0) && (
         <div className='d-grid see-more'>
-          <button
+          <Button
             onClick={seeMoreVids}
-            className='btn btn-danger'
+            variant='danger'
           >
             Load More Videos
-          </button>
+          </Button>
         </div>
       )}
     </div>

@@ -7,3 +7,14 @@
   z-index: 100;
   width: 100%;
 }
+
+.secondary-nav .nav-link {
+  text-shadow: none;
+}
+
+.secondary-nav .nav-link.active {
+  text-shadow: 1px 1px var(--secondary);
+  color: var(--main) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}

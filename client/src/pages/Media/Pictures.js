@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchMediaImages } from '../../redux/actions';
+import Button from '../../components/Button/Button';
 
 const imgCount = 12;
 const Pictures = ({ fetchMediaImages, images }) => {
@@ -41,12 +42,12 @@ const Pictures = ({ fetchMediaImages, images }) => {
           </div>
           {limit < images.length && (
             <div className='d-grid see-more'>
-              <button
+              <Button
                 onClick={seeMoreImages}
-                className='btn btn-danger'
+                variant='danger'
               >
                 Load More Images
-              </button>
+              </Button>
             </div>
           )}
         </>

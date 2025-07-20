@@ -13,8 +13,11 @@ import {
   X,
   TikTok,
   Envelope,
+  TelephoneFill,
+  PaperAirplaneSend,
 } from '../../components/icons';
 import emailjs from '@emailjs/browser';
+import Button from '../../components/Button/Button';
 
 const ContactPage = ({ fetchContactInfo, contactInfo }) => {
   useEffect(() => {
@@ -33,11 +36,11 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
         'z5UnqtbNDPKNGhoGS' // Public Key
       )
       .then(
-        result => {
+        _result => {
           alert('Message sent!');
           form.current.reset();
         },
-        error => {
+        _error => {
           alert('Failed to send message, please try again.');
         }
       );
@@ -56,20 +59,8 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
           <div className='jumbotron p-sm-5'>
             <h5>Contact Information</h5>
             <hr className='my-4' />
-            <p className='secondary-font'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='33'
-                height='33'
-                fill='white'
-                className='bi bi-telephone-fill'
-                viewBox='0 0 16 16'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z'
-                />
-              </svg>
+            <p className='secondary-font text-white'>
+              <TelephoneFill />
               <a href={`tel:+${contactInfo[0].phone}`}>
                 {contactInfo[0].phone.slice(0, 3)}.
                 {contactInfo[0].phone.slice(3, 6)}.
@@ -78,7 +69,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
             </p>
             <hr className='my-4' />
 
-            <p className='secondary-font'>
+            <p className='secondary-font text-white'>
               <Envelope />
               <a href={`mailto:${contactInfo[0].email}`}>
                 {contactInfo[0].email.split('@')[0]}
@@ -202,13 +193,15 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
               ></textarea>
             </div>
             <div className='d-grid gap-2'>
-              <button
-                className='btn btn-primary btn-danger'
+              <Button
                 type='submit'
                 value='send'
+                variant='danger'
+                icon={<PaperAirplaneSend />}
+                iconPosition='right'
               >
                 Send
-              </button>
+              </Button>
             </div>
           </form>
         </div>

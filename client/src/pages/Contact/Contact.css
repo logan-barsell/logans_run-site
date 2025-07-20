@@ -126,9 +126,6 @@
   #contact label {
     font-size: 3vw;
   }
-  button.btn {
-    font-size: 3.5vw;
-  }
 }
 
 @media (max-width: 750px) {
@@ -158,9 +155,6 @@
   }
   #contact label {
     font-size: 4vw;
-  }
-  button.btn {
-    font-size: 4.5vw;
   }
 }
 
