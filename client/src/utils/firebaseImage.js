@@ -72,12 +72,35 @@ export function uploadImageToFirebase(file, { onProgress, fileName } = {}) {
 }
 
 /**
+ * Safely deletes an image from Firebase Storage without failing the main operation.
+ * This is useful for delete/edit operations where image cleanup is secondary to the main operation.
+ *
+ * @param {string} imageUrlOrName - The full download URL or just the storage name.
+ * @returns {Promise<boolean>} - Returns true if deletion was successful, false if it failed.
+ */
+export async function safeDeleteImageFromFirebase(imageUrlOrName) {
+  try {
+    await deleteImageFromFirebase(imageUrlOrName);
+    return true;
+  } catch (error) {
+    console.warn('Failed to delete image from Firebase:', error);
+    return false;
+  }
+}
+
+/**
  * Deletes an image from Firebase Storage by URL or storage name.
  * @param {string} imageUrlOrName - The full download URL or just the storage name.
  * @returns {Promise<void>}
  */
 export function deleteImageFromFirebase(imageUrlOrName) {
   try {
+    // Return early if imageUrlOrName is not a valid string
+    if (!imageUrlOrName || typeof imageUrlOrName !== 'string') {
+      console.log('Invalid image URL or name provided:', imageUrlOrName);
+      return Promise.resolve();
+    }
+
     const storage = getStorage(app);
     let imageRef;
     if (imageUrlOrName.startsWith('http')) {
@@ -95,6 +118,7 @@ export function deleteImageFromFirebase(imageUrlOrName) {
 
     return deleteObject(imageRef);
   } catch (error) {
-    console.log(error);
+    console.log('Error deleting image from Firebase:', error);
+    return Promise.resolve(); // Return resolved promise to prevent unhandled rejections
   }
 }

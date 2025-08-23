@@ -11,10 +11,30 @@ export const ADD_PLAYER_FIELDS = [
   },
   { label: 'Title', name: 'title', type: 'text' },
   { label: 'Release Date', name: 'date', type: 'date' },
-  { label: 'Spotify Link', name: 'spotifyLink', type: 'spotifyUrl' },
-  { label: 'Apple Music Link', name: 'appleMusicLink', type: 'text' },
-  { label: 'YouTube Link', name: 'youtubeLink', type: 'text' },
-  { label: 'SoundCloud Link', name: 'soundcloudLink', type: 'text' },
+  {
+    label: 'Spotify Link',
+    name: 'spotifyLink',
+    type: 'spotifyUrl',
+    placeholder: 'Enter Spotify URL',
+  },
+  {
+    label: 'Apple Music Link',
+    name: 'appleMusicLink',
+    type: 'appleMusicUrl',
+    placeholder: 'Enter Apple Music URL',
+  },
+  {
+    label: 'YouTube Link',
+    name: 'youtubeLink',
+    type: 'youtubeUrl',
+    placeholder: 'Enter YouTube URL',
+  },
+  {
+    label: 'SoundCloud Link',
+    name: 'soundcloudLink',
+    type: 'soundcloudUrl',
+    placeholder: 'Enter SoundCloud URL',
+  },
 ];
 
 export const editPlayerFields = player => {
@@ -46,24 +66,28 @@ export const editPlayerFields = player => {
       name: 'spotifyLink',
       type: 'spotifyUrl',
       initialValue: spotifyLink,
+      placeholder: 'Enter Spotify URL',
     },
     {
       label: 'Apple Music Link',
       name: 'appleMusicLink',
-      type: 'text',
+      type: 'appleMusicUrl',
       initialValue: appleMusicLink,
+      placeholder: 'Enter Apple Music URL',
     },
     {
       label: 'YouTube Link',
       name: 'youtubeLink',
-      type: 'text',
+      type: 'youtubeUrl',
       initialValue: youtubeLink,
+      placeholder: 'Enter YouTube URL',
     },
     {
       label: 'SoundCloud Link',
       name: 'soundcloudLink',
-      type: 'text',
+      type: 'soundcloudUrl',
       initialValue: soundcloudLink,
+      placeholder: 'Enter SoundCloud URL',
     },
   ];
 };

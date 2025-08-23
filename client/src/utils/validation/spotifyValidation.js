@@ -3,6 +3,8 @@
  * Validates and normalizes Spotify URLs for different content types
  */
 
+import { validateUrlWithPatterns } from './formValidation';
+
 // Spotify URL patterns for different content types
 const SPOTIFY_PATTERNS = {
   track: /^https?:\/\/(?:open\.)?spotify\.com\/track\/([a-zA-Z0-9]{22})/,
@@ -17,76 +19,37 @@ const SPOTIFY_PATTERNS = {
 const SUPPORTED_TYPES = ['track', 'album', 'playlist'];
 
 /**
- * Validates a Spotify URL
+ * Validates any Spotify URL (for social media links)
+ * @param {string} url - The Spotify URL to validate
+ * @returns {object} - Validation result with isValid, type, id, and error message
+ */
+export const validateSpotifySocialUrl = url => {
+  const result = validateUrlWithPatterns(url, 'Spotify', SPOTIFY_PATTERNS);
+  return {
+    isValid: result.isValid,
+    type: result.type,
+    id: result.id,
+    error: result.error,
+  };
+};
+
+/**
+ * Validates a Spotify URL for embedding (tracks, albums, playlists only)
  * @param {string} url - The Spotify URL to validate
  * @returns {object} - Validation result with isValid, type, id, and error message
  */
 export const validateSpotifyUrl = url => {
-  if (!url || typeof url !== 'string') {
-    return {
-      isValid: false,
-      type: null,
-      id: null,
-      error: 'URL is required and must be a string',
-    };
-  }
-
-  // Trim whitespace
-  const trimmedUrl = url.trim();
-
-  if (!trimmedUrl) {
-    return {
-      isValid: false,
-      type: null,
-      id: null,
-      error: 'URL cannot be empty',
-    };
-  }
-
-  // Check if it's a valid URL format
-  try {
-    new URL(trimmedUrl);
-  } catch (error) {
-    return {
-      isValid: false,
-      type: null,
-      id: null,
-      error: 'Invalid URL format',
-    };
-  }
-
-  // Check against Spotify patterns
-  for (const [type, pattern] of Object.entries(SPOTIFY_PATTERNS)) {
-    const match = trimmedUrl.match(pattern);
-    if (match) {
-      const id = match[1];
-
-      // Check if content type is supported for embedding
-      if (!SUPPORTED_TYPES.includes(type)) {
-        return {
-          isValid: false,
-          type,
-          id,
-          error: `${
-            type.charAt(0).toUpperCase() + type.slice(1)
-          } URLs are not supported for embedding`,
-        };
-      }
-
-      return {
-        isValid: true,
-        type,
-        id,
-        error: null,
-      };
-    }
-  }
-
+  const result = validateUrlWithPatterns(
+    url,
+    'Spotify',
+    SPOTIFY_PATTERNS,
+    SUPPORTED_TYPES
+  );
   return {
-    isValid: false,
-    type: null,
-    id: null,
-    error: 'Not a valid Spotify URL. Must be a track, album, or playlist URL',
+    isValid: result.isValid,
+    type: result.type,
+    id: result.id,
+    error: result.error,
   };
 };
 

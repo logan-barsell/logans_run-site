@@ -35,7 +35,8 @@ export const featuredReleaseFields = (release = {}, required = true) => [
   {
     label: 'Music Link',
     name: 'musicLink',
-    type: 'text',
+    type: 'url',
     initialValue: release.musicLink || '',
+    placeholder: 'Enter music streaming or purchase URL',
   },
 ];

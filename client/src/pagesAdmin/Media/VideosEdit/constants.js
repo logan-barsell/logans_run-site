@@ -14,7 +14,12 @@ export const addVideoFields = [
   },
   { label: 'Title', name: 'title', type: 'text' },
   { label: 'Release Date', name: 'date', type: 'date' },
-  { label: 'YouTube Share Link', name: 'link', type: 'text' },
+  {
+    label: 'YouTube Share Link',
+    name: 'link',
+    type: 'youtubeUrl',
+    placeholder: 'Enter YouTube video URL',
+  },
 ];
 
 export const editVideoFields = video => {
@@ -33,8 +38,9 @@ export const editVideoFields = video => {
     {
       label: 'YouTube Share Link',
       name: 'link',
-      type: 'text',
+      type: 'youtubeUrl',
       initialValue: link,
+      placeholder: 'Enter YouTube video URL',
     },
   ];
 };

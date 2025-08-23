@@ -16,14 +16,26 @@ const EditMember = ({ member, fetchMembers }) => {
     try {
       let imageUrl = member.bioPic || '';
 
-      if (fields.bioPic && fields.bioPic[0]) {
+      // Only process image upload if a new file was actually selected
+      if (
+        fields.bioPic &&
+        fields.bioPic[0] &&
+        fields.bioPic[0] instanceof File
+      ) {
+        // Delete old image if it exists
         if (member.bioPic) {
           try {
             await deleteImageFromFirebase(member.bioPic);
-          } catch (err) {
-            console.log('Error deleting old image from Firebase:', err);
+          } catch (imageError) {
+            console.warn(
+              'Failed to delete old image from Firebase:',
+              imageError
+            );
+            // Continue with upload even if old image deletion fails
           }
         }
+
+        // Upload new image
         const fileName = Date.now() + fields.bioPic[0].name;
         imageUrl = await uploadImageToFirebase(fields.bioPic[0], { fileName });
       }
@@ -51,6 +63,7 @@ const EditMember = ({ member, fetchMembers }) => {
       showSuccess('Member updated successfully');
       fetchMembers();
     } catch (_error) {
+      console.log('Error updating member:', _error);
       showError('Failed to update member');
     }
   };

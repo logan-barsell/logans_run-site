@@ -33,14 +33,19 @@ const ImageUpload = forwardRef(
         setSelectedFiles(null);
         if (inputRef.current) inputRef.current.value = null;
         if (setImage) setImage(null);
+        if (onChange) onChange({ target: { name, value: null } });
         if (onFileChange) onFileChange(name, null);
       },
     }));
 
     // Handle value prop for react-final-form compatibility
+    // Only set selectedFiles if value is actually a FileList or File object
+    // Don't set it for existing image URLs (strings)
     useEffect(() => {
-      if (value) {
+      if (value && (value instanceof FileList || value instanceof File)) {
         setSelectedFiles(value);
+      } else if (!value) {
+        setSelectedFiles(null);
       }
     }, [value]);
 

@@ -71,8 +71,9 @@ export const editShowFields = show => {
     {
       label: 'Ticket Link',
       name: 'tixlink',
-      type: 'text',
+      type: 'url',
       initialValue: tixlink,
+      placeholder: 'Enter ticket purchase URL',
     },
   ];
 };
@@ -136,6 +137,7 @@ export const ADD_SHOW_FIELDS = [
   {
     label: 'Ticket Link',
     name: 'tixlink',
-    type: 'text',
+    type: 'url',
+    placeholder: 'Enter ticket purchase URL',
   },
 ];

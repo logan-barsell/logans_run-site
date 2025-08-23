@@ -14,8 +14,9 @@ export const featuredVideoFields = (video = {}) => [
   {
     label: 'YouTube Link',
     name: 'youtubeLink',
-    type: 'text',
+    type: 'youtubeUrl',
     initialValue: video.youtubeLink || '',
+    placeholder: 'Enter YouTube video URL',
   },
   {
     label: 'Start Time (seconds)',
