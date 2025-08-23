@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { CustomForm } from '../../components/Forms';
 import ErrorMessage from '../../components/ErrorMessage';
-import { login } from '../../services/authService';
+import { sendPasswordResetEmail } from '../../services/authService';
 import { useAlert } from '../../contexts/AlertContext';
 import Button from '../../components/Button/Button';
 import { Link } from 'react-router-dom';
+import { BackArrow } from '../../components/icons';
 
-const Signin = () => {
+const ForgotPassword = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -18,20 +19,17 @@ const Signin = () => {
     setIsLoading(true);
     setIsSuccess(false);
     try {
-      const data = await login(values);
+      const data = await sendPasswordResetEmail(values.email);
       if (data.success) {
         setIsSuccess(true);
-        showSuccess('Login successful! Redirecting...');
-        setTimeout(() => {
-          window.location.href = '/theme';
-        }, 1000);
+        showSuccess('Password reset email sent! Check your inbox.');
       } else {
-        const errorMessage = data.error || 'Login failed';
+        const errorMessage = data.error || 'Failed to send reset email';
         setError(errorMessage);
         showError(errorMessage);
       }
     } catch (err) {
-      const errorMessage = err.message || 'Login failed';
+      const errorMessage = err.message || 'Failed to send reset email';
       setError(errorMessage);
       showError(errorMessage);
     } finally {
@@ -41,16 +39,22 @@ const Signin = () => {
 
   const getButtonText = () => {
     if (isSuccess) return 'Success!';
-    if (isLoading) return 'Logging in...';
-    return 'Login';
+    if (isLoading) return 'Sending...';
+    return 'Send Reset Link';
   };
 
   return (
     <CustomForm
-      title='Member Login'
+      title='Forgot Password'
       className='auth-form'
-      containerId='signinPage'
+      containerId='forgotPasswordPage'
     >
+      <div className='text-center mb-4'>
+        <p className='secondary-font text-white'>
+          Enter your email address and we'll send you a link to reset your
+          password.
+        </p>
+      </div>
       <Form
         onSubmit={onSubmit}
         render={({ handleSubmit, submitting }) => (
@@ -74,29 +78,7 @@ const Signin = () => {
                       type='email'
                       className='form-control'
                       id='email'
-                      autoComplete='username'
-                      required
-                    />
-                  </>
-                )}
-              </Field>
-            </div>
-            <div className='mb-3'>
-              <Field name='password'>
-                {({ input, meta }) => (
-                  <>
-                    <label
-                      htmlFor='password'
-                      className='form-label'
-                    >
-                      Password
-                    </label>
-                    <input
-                      {...input}
-                      type='password'
-                      className='form-control'
-                      id='password'
-                      autoComplete='current-password'
+                      autoComplete='email'
                       required
                     />
                   </>
@@ -114,10 +96,11 @@ const Signin = () => {
               </Button>
               <div className='text-center mt-5'>
                 <Link
-                  to='/forgot-password'
-                  className='text-decoration-none secondary-font text-muted'
+                  to='/signin'
+                  className='text-decoration-none secondary-font text-muted d-inline-flex align-items-center gap-2'
                 >
-                  Forgot Password?
+                  <BackArrow />
+                  Back to Sign In
                 </Link>
               </div>
             </div>
@@ -128,4 +111,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default ForgotPassword;

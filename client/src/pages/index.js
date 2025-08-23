@@ -17,6 +17,8 @@ import MediaPage from './Media/Media';
 import BioPage from './Bio/Bio';
 import ContactPage from './Contact/Contact';
 import Signin from './Auth/Signin';
+import ForgotPassword from './Auth/ForgotPassword';
+import ResetPassword from './Auth/ResetPassword';
 import NotFound from './NotFound';
 import history from '../history';
 import { ActiveContext } from '../contexts/ActiveContext';
@@ -105,6 +107,16 @@ const UserPages = () => {
             path='/signin'
             exact
             element={<Signin />}
+          />
+          <Route
+            path='/forgot-password'
+            exact
+            element={<ForgotPassword />}
+          />
+          <Route
+            path='/reset-password'
+            exact
+            element={<ResetPassword />}
           />
           <Route
             path='*'

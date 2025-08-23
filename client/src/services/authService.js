@@ -68,3 +68,59 @@ export const logout = async () => {
     throw new Error(message);
   }
 };
+
+export const sendPasswordResetEmail = async email => {
+  try {
+    const response = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || `Password reset request failed: ${response.status}`
+      );
+    }
+
+    return data;
+  } catch (error) {
+    const { message } = handleServiceError(
+      error,
+      'Failed to send password reset email. Please try again.'
+    );
+    throw new Error(message);
+  }
+};
+
+export const resetPassword = async (token, newPassword) => {
+  try {
+    const response = await fetch('/api/auth/reset-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token, newPassword }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || `Password reset failed: ${response.status}`
+      );
+    }
+
+    return data;
+  } catch (error) {
+    const { message } = handleServiceError(
+      error,
+      'Failed to reset password. Please try again.'
+    );
+    throw new Error(message);
+  }
+};

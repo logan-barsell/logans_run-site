@@ -23,6 +23,9 @@ const ContactSchema = new Schema({
   appleMusic: String,
   x: String,
   tiktok: String,
+  // Password reset fields
+  resetToken: String,
+  resetTokenExpiry: Date,
 });
 
 const ContactInfo = mongoose.model('Contact', ContactSchema);

@@ -27,6 +27,7 @@ app.use(cookieParser());
 
 app.use('/public', express.static(`public`));
 
+require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
 require('./routes/homeRoutes')(app);
 require('./routes/bioRoutes')(app);
