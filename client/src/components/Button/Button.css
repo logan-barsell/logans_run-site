@@ -53,6 +53,10 @@
   font-size: 1.25rem;
 }
 
+.btn-square {
+  padding: 9px;
+}
+
 /* Block/full width */
 .btn-block {
   display: flex;

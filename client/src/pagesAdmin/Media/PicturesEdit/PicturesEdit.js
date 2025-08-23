@@ -14,6 +14,7 @@ import {
 import { useAlert } from '../../../contexts/AlertContext';
 import EditImages from '../../../components/Images/EditImages';
 import Button from '../../../components/Button/Button';
+import { PageTitle, Divider } from '../../../components/Header';
 
 function extractStoragePathFromUrl(url) {
   const match = url && url.match(/\/o\/([^?]+)/);
@@ -87,8 +88,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
   return (
     <>
       <div id='editPictures'>
-        <h3>Edit Pictures</h3>
-        <hr />
+        <PageTitle divider>Edit Pictures</PageTitle>
         <EditImages
           images={(images || []).slice(0, limit)}
           onUpload={handleUpload}

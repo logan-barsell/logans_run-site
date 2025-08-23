@@ -7,18 +7,6 @@
   justify-content: center;
 }
 
-.edit-images-container h3 {
-  color: var(--main);
-  margin-top: 33px;
-  text-align: center;
-}
-
-.edit-images-container hr {
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 44px;
-}
-
 .currentImages {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 400px));
@@ -76,12 +64,6 @@
 .edit-images-container .fileUpload:hover {
   background-color: rgba(0, 0, 0, 0.6);
   border: 2px solid black;
-}
-
-.no-content {
-  color: #aaa;
-  text-align: center;
-  margin: 44px 0;
 }
 
 @media (max-width: 450px) {

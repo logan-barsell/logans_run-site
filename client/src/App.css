@@ -141,16 +141,6 @@ textarea {
   font-family: var(--secondary-font);
 }
 
-.no-content {
-  font-family: var(--secondary-font);
-  letter-spacing: normal;
-  text-shadow: none;
-  color: var(--main);
-  margin-top: 22px;
-  text-align: center;
-  font-size: 22px;
-}
-
 .nav-link {
   color: white;
 }
@@ -198,10 +188,6 @@ p a:hover {
 .has-error .form-control:focus {
   box-shadow: none;
   -webkit-box-shadow: none;
-}
-
-hr {
-  background-color: black;
 }
 
 .modal-title {
@@ -258,16 +244,6 @@ hr {
   transform: scale(1.1);
 }
 
-#no_content {
-  font-family: var(--secondary-font);
-  letter-spacing: normal;
-  text-shadow: none;
-  color: var(--main);
-  margin: 25vw 20px;
-  text-align: center;
-  font-size: 22px;
-}
-
 .at {
   font-family: var(--secondary-font);
 }
@@ -286,9 +262,6 @@ hr {
   }
   h3 {
     font-size: 4vw;
-  }
-  #no_content {
-    font-size: 17px;
   }
 }
 

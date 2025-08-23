@@ -4,6 +4,7 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { connect } from 'react-redux';
 import { fetchBio, fetchMembers } from '../../redux/actions';
 import { useTheme } from '../../contexts/ThemeContext';
+import { PageTitle, Divider, NoContent } from '../../components/Header';
 
 import {
   Facebook,
@@ -105,7 +106,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
 
     return (
       <div key={_id}>
-        {index === 0 ? null : <hr />}
+        {index === 0 ? null : <Divider />}
         <div className='row justify-content-center mb-5 mt-4 mx-1 gap-4'>
           <div className='col-12 col-md-5 bioPic'>
             <img
@@ -115,8 +116,14 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
           </div>
           <div className='col-12 col-md-6 ind-bio'>
             <div className='row'>
-              <h3>{name}</h3>
-              <hr />
+              <PageTitle
+                as='h3'
+                className='mb-0'
+                marginClass='mb-3'
+              >
+                {name}
+              </PageTitle>
+              <Divider />
               <p>{role}</p>
               {renderSocialIcons(member)}
             </div>
@@ -157,7 +164,9 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
             <br />
             <div className='container pb-5'>{renderMembers}</div>
           </div>
-        ) : null}
+        ) : (
+          <NoContent>No Members</NoContent>
+        )}
       </div>
     </div>
   );

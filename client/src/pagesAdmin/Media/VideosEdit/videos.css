@@ -5,18 +5,6 @@
   margin-bottom: 150px;
 }
 
-#videoEdit h3 {
-  color: var(--main);
-  margin-top: 33px;
-  text-align: center;
-}
-
-#videoEdit hr {
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 44px;
-}
-
 #videoEdit .currentVideos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(318px, 1fr));

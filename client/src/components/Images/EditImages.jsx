@@ -3,6 +3,7 @@ import { Form } from 'react-final-form';
 import { ImageUploadField } from '../Forms/FieldTypes/ImageUpload';
 import DeleteItem from '../Modifiers/DeleteItem';
 import Button from '../Button/Button';
+import { NoContent } from '../Header';
 import './editImages.css';
 
 const EditImages = ({
@@ -82,7 +83,7 @@ const EditImages = ({
           </div>
         ))
       ) : (
-        <h3 className='no-content'>{emptyText}</h3>
+        <NoContent>{emptyText}</NoContent>
       )}
     </div>
   );

@@ -11,6 +11,7 @@ import {
   YouTube,
   Spotify,
 } from '../../components/icons';
+import { Divider, NoContent } from '../../components/Header';
 
 const MusicPage = ({
   fetchPlayers,
@@ -65,7 +66,7 @@ const MusicPage = ({
             loading='lazy'
           ></iframe>
 
-          <hr />
+          <Divider />
 
           {/* Music platform icons */}
           <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
@@ -133,7 +134,7 @@ const MusicPage = ({
               {(player.spotifyLink ||
                 player.appleMusicLink ||
                 player.soundcloudLink ||
-                player.youtubeLink) && <hr className='w-100 mt-3' />}
+                player.youtubeLink) && <Divider className='w-100 mt-3' />}
               <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
                 {player.spotifyLink && (
                   <a
@@ -180,12 +181,7 @@ const MusicPage = ({
           </div>
         ))
       ) : (
-        <h3
-          id='no_content'
-          className='no-content'
-        >
-          No music yet... Check back soon!
-        </h3>
+        <NoContent>No music yet... Check back soon!</NoContent>
       )}
     </div>
   );

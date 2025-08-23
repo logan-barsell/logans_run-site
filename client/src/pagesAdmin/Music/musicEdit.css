@@ -7,16 +7,6 @@
   margin-bottom: 150px;
 }
 
-#music-edit h3 {
-  color: var(--main);
-  margin-top: 33px;
-  text-align: center;
-}
-
-#music-edit hr {
-  max-width: 85%;
-}
-
 #currentPlayers {
   max-width: 888px;
   padding: 13px;
@@ -32,12 +22,6 @@
   color: white;
   border: 3px solid rgba(0, 0, 0, 0.2);
   margin-bottom: 1px;
-}
-
-#currentPlayers h3 {
-  color: var(--main);
-  font-variant: small-caps;
-  text-align: center;
 }
 
 #currentPlayers a {

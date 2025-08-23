@@ -6,6 +6,7 @@ import EditPlayer from './EditPlayer';
 import DeletePlayer from './DeletePlayer';
 import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
+import { PageTitle, Divider, NoContent } from '../../components/Header';
 import {
   Spotify,
   AppleMusic,
@@ -35,7 +36,12 @@ const MusicEdit = ({ fetchPlayers, players }) => {
         </div>
 
         <div className='d-flex w-100 justify-content-center mb-md-2'>
-          <h3>{player.title}</h3>
+          <PageTitle
+            as='h3'
+            className='mb-0'
+          >
+            {player.title}
+          </PageTitle>
         </div>
 
         <p className='mb-4 d-flex justify-content-center'>
@@ -95,7 +101,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           ></div>
         </p>
 
-        <hr />
+        <Divider />
         <div className='buttons d-flex justify-content-center'>
           <EditPlayer player={player} />
           <DeletePlayer player={player} />
@@ -110,8 +116,8 @@ const MusicEdit = ({ fetchPlayers, players }) => {
         id='music-edit'
         className='row mb-5 pb-5'
       >
-        <h3>Edit Music</h3>
-        <hr />
+        <PageTitle>Edit Music</PageTitle>
+        <Divider />
         <AddPlayer />
         <div
           id='currentPlayers'
@@ -120,7 +126,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           {players && players.length > 0 ? (
             renderPlayers
           ) : (
-            <h3 className='no-content'>No Music</h3>
+            <NoContent>No Music</NoContent>
           )}
         </div>
       </div>

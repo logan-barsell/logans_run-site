@@ -1,36 +1,33 @@
 import './videos.css';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import AddVideo from './AddVideo';
-import DeleteVideo from './DeleteVideo';
-import EditVideo from './EditVideo';
 import { fetchVideos } from '../../../redux/actions';
+import AddVideo from './AddVideo';
+import EditVideo from './EditVideo';
+import DeleteVideo from './DeleteVideo';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import VideoItem from '../../../components/Video/VideoItem';
-import { addVideoFields, VIDEO_COUNT } from './constants';
 import Button from '../../../components/Button/Button';
+import { addVideoFields } from './constants';
+import { PageTitle, Divider, NoContent } from '../../../components/Header';
 
+const videoCount = 6;
 const VideosEdit = ({ fetchVideos, videos }) => {
-  const [limit, setLimit] = useState(VIDEO_COUNT);
+  const [limit, setLimit] = useState(videoCount);
 
-  const memoizedFetchVideos = useCallback(() => {
+  useEffect(() => {
     fetchVideos();
   }, [fetchVideos]);
 
-  useEffect(() => {
-    memoizedFetchVideos();
-  }, [memoizedFetchVideos]);
-
   const loadMoreVids = () => {
-    setLimit(limit + VIDEO_COUNT);
+    setLimit(limit + videoCount);
   };
 
   return (
     <>
       <div id='videoEdit'>
-        <h3>Edit Videos</h3>
-        <hr />
+        <PageTitle divider>Edit Videos</PageTitle>
         <AddVideo fetchVideos={fetchVideos} />
         <VideoContainer>
           {(videos || [])?.slice(0, limit).map(video => {
@@ -70,9 +67,7 @@ const VideosEdit = ({ fetchVideos, videos }) => {
             </Button>
           </div>
         )}
-        {(!videos || videos.length === 0) && (
-          <h3 className='no-content'>No Videos</h3>
-        )}
+        {(!videos || videos.length === 0) && <NoContent>No Videos</NoContent>}
       </div>
     </>
   );

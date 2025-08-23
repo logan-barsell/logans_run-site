@@ -7,18 +7,6 @@
   justify-content: center;
 }
 
-#editCarousel h3 {
-  color: var(--main);
-  margin-top: 33px;
-  text-align: center;
-}
-
-#editCarousel hr {
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 44px;
-}
-
 #editCarousel .selectedFile {
   color: white;
 }
