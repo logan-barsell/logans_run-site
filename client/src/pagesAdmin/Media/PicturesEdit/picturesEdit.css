@@ -4,18 +4,6 @@
   margin-bottom: 150px;
 }
 
-#editPictures h3 {
-  color: var(--main);
-  margin-top: 33px;
-  text-align: center;
-}
-
-#editPictures hr {
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 44px;
-}
-
 #editPictures .see-more {
   max-width: 666px;
   margin: 88px auto;

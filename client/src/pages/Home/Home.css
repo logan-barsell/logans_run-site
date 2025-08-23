@@ -47,26 +47,6 @@
   text-shadow: 2px 1px black;
 }
 
-#home h3 {
-  color: var(--main);
-  text-shadow: 2px 1px black;
-}
-
-#home h4 {
-  color: var(--main);
-  text-shadow: 2px 1px black;
-}
-
-#home h5 {
-  color: var(--main);
-  text-shadow: 2px 1px black;
-}
-
-#home h6 {
-  color: var(--main);
-  text-shadow: 2px 1px black;
-}
-
 #home p {
   text-shadow: 2px 1.5px black;
 }
@@ -302,10 +282,6 @@
     font-size: 1.75rem;
   }
 
-  #home h3 {
-    font-size: 1.5rem;
-  }
-
   #home h4 {
     font-size: 1.25rem;
   }
@@ -349,10 +325,6 @@
 
   #home h2 {
     font-size: 1.5rem;
-  }
-
-  #home h3 {
-    font-size: 1.25rem;
   }
 
   #home h4 {

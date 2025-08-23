@@ -36,6 +36,7 @@ const Button = ({
     size !== 'md' ? `btn-${size}` : '',
     fullWidth ? 'btn-block' : '',
     loading ? 'btn-loading' : '',
+    iconPosition === 'center' ? 'btn-square' : '',
     className,
   ]
     .filter(Boolean)

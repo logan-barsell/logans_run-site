@@ -8,6 +8,7 @@ import StripeValidation from '../../components/Storefront/Validation/StripeValid
 import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
 import { EditableForm } from '../../components/Forms';
+import { Divider } from '../../components/Header';
 
 const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
   const { showError, showSuccess } = useAlert();
@@ -124,7 +125,7 @@ const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
           </select>
         </div>
 
-        <hr />
+        <Divider />
 
         <EditableForm
           title='Store Configuration'

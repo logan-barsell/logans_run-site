@@ -28,12 +28,6 @@
   margin-top: 30px;
 }
 
-.no-products .no-content {
-  color: var(--main);
-  text-shadow: 1px 1px var(--secondary);
-  margin-bottom: 15px;
-}
-
 /* Product Cards - following existing merch styles */
 .shopify-storefront .card,
 .stripe-storefront .card {

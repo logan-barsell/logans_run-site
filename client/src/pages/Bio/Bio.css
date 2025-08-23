@@ -42,11 +42,6 @@
   border-radius: 5px;
 }
 
-.members h3 {
-  text-align: center;
-  color: var(--main);
-  text-shadow: 2px 1px black;
-}
 .members p {
   margin: auto;
   text-align: center;

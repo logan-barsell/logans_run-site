@@ -101,13 +101,16 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                 />
               </div>
             )}
-            <ImageUpload
-              ref={imageUploadRef}
-              name='bandLogo'
-              setImage={setLogoFile}
-              initialValue={theme.bandLogoUrl}
-              onChange={handleInputChange}
-            />
+
+            <div className='mb-3'>
+              <ImageUpload
+                ref={imageUploadRef}
+                name='bandLogo'
+                setImage={setLogoFile}
+                initialValue={theme.bandLogoUrl}
+                onChange={handleInputChange}
+              />
+            </div>
           </div>
           <div className='mb-sm-3 mb-2'>
             <label

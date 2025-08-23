@@ -18,6 +18,7 @@ import {
 } from '../../components/icons';
 import emailjs from '@emailjs/browser';
 import Button from '../../components/Button/Button';
+import { PageTitle, Divider } from '../../components/Header';
 
 const ContactPage = ({ fetchContactInfo, contactInfo }) => {
   useEffect(() => {
@@ -57,8 +58,16 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
       >
         <div className='col-lg align-content-center'>
           <div className='jumbotron p-sm-5'>
-            <h5>Contact Information</h5>
-            <hr className='my-4' />
+            <PageTitle
+              as='h5'
+              marginClass='mb-3'
+            >
+              Contact Information
+            </PageTitle>
+            <Divider
+              className='my-4'
+              variant='white'
+            />
             <p className='secondary-font text-white'>
               <TelephoneFill />
               <a href={`tel:+${contactInfo[0].phone}`}>
@@ -67,7 +76,10 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 {contactInfo[0].phone.slice(6)}
               </a>
             </p>
-            <hr className='my-4' />
+            <Divider
+              className='my-4'
+              variant='white'
+            />
 
             <p className='secondary-font text-white'>
               <Envelope />
@@ -77,7 +89,10 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 {contactInfo[0].email.split('@')[1]}
               </a>
             </p>
-            <hr className='my-4' />
+            <Divider
+              className='my-4'
+              variant='white'
+            />
             <div className='socmed contact'>
               <a
                 className='hvr-grow'
@@ -151,8 +166,17 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
             ref={form}
             onSubmit={sendEmail}
           >
-            <h5 className='text-center'>Email Us</h5>
-            <hr className='mb-4' />
+            <PageTitle
+              as='h5'
+              className='text-center'
+              marginClass='mb-3'
+            >
+              Email Us
+            </PageTitle>
+            <Divider
+              className='mb-4'
+              variant='white'
+            />
             <div className='form-group'>
               <label htmlFor='name'>Name</label>
               <input

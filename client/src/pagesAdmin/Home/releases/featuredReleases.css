@@ -1,11 +1,1 @@
-#featuredReleasesEdit h3 {
-  color: var(--main);
-  margin: 33px auto;
-  text-align: center;
-}
 
-#featuredReleasesEdit hr {
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 44px;
-}

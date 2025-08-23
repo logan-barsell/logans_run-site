@@ -3,7 +3,6 @@ import Accordion from '../../../components/Accordion/Accordion';
 import AddShow from './AddShow';
 import EditShow from './EditShow';
 import DeleteShow from './DeleteShow';
-import { editShowFields } from './constants';
 import { Ticket } from '../../../components/icons';
 import Button from '../../../components/Button/Button';
 

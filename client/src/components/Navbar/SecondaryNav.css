@@ -12,6 +12,12 @@
   text-shadow: none;
 }
 
+.secondary-nav .nav-link:hover {
+  color: var(--main) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
 .secondary-nav .nav-link.active {
   text-shadow: 1px 1px var(--secondary);
   color: var(--main) !important;

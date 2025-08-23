@@ -6,6 +6,7 @@ import { useAlert } from '../../../contexts/AlertContext';
 import AddFeaturedRelease from './AddFeaturedRelease';
 import EditFeaturedRelease from './EditFeaturedRelease';
 import DeleteFeaturedRelease from './DeleteFeaturedRelease';
+import { PageTitle, Divider, NoContent } from '../../../components/Header';
 
 const FeaturedReleasesEdit = () => {
   const { showError } = useAlert();
@@ -32,16 +33,14 @@ const FeaturedReleasesEdit = () => {
       id='featuredReleasesEdit'
       className='mb-4 container'
     >
-      <hr />
-      <h3>Featured Releases</h3>
+      <Divider color='white' />
+      <PageTitle>Featured Releases</PageTitle>
       <AddFeaturedRelease fetchReleases={fetchReleases} />
       {loading ? (
         <div>Loading...</div>
       ) : (
         <VideoContainer>
-          {releases.length === 0 && (
-            <h3 className='no-content'>No Featured Releases</h3>
-          )}
+          {releases.length === 0 && <NoContent>No Featured Releases</NoContent>}
           {releases.map(release => (
             <div
               key={release._id}

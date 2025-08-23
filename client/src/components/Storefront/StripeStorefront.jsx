@@ -1,11 +1,12 @@
 import React from 'react';
 import './Storefront.css';
+import { NoContent } from '../Header';
 
 const StripeStorefront = ({ paymentLinkIds, publishableKey }) => {
   if (!paymentLinkIds || paymentLinkIds.length === 0) {
     return (
       <div className='no-products'>
-        <h3 className='no-content'>No products available</h3>
+        <NoContent>No products available</NoContent>
         <p>Check back soon for new merchandise!</p>
       </div>
     );

@@ -6,17 +6,12 @@ import CurrentShows from './shows/CurrentShows';
 import CarouselEdit from './carousel/CarouselEdit';
 import FeaturedVideosEdit from './videos/FeaturedVideosEdit';
 import FeaturedReleasesEdit from './releases/FeaturedReleases';
+import { PageTitle, Divider } from '../../components/Header';
 
 const HomeEdit = () => {
   return (
     <>
-      <h3
-        className='text-center mt-5'
-        style={{ color: 'var(--main)' }}
-      >
-        Home
-      </h3>
-      <hr className='w-75 mx-auto' />
+      <PageTitle divider>Home</PageTitle>
       <CarouselEdit />
       <FeaturedVideosEdit />
       <FeaturedReleasesEdit />

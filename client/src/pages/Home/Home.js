@@ -18,6 +18,7 @@ import {
   getFeaturedVideos,
   getFeaturedReleases,
 } from '../../services/featuredContentService';
+import { PageTitle, Divider } from '../../components/Header';
 
 const HomePage = ({
   fetchShows,
@@ -142,10 +143,13 @@ const HomePage = ({
       {/* FEATURED RELEASES */}
       {featuredReleases.length > 0 && (
         <>
-          <h3 className='text-center mt-5 text-white secondary-font'>
+          <PageTitle
+            divider
+            color='white'
+            className='secondary-font'
+          >
             New Releases
-          </h3>
-          <hr className='w-75 mx-auto bg-white' />
+          </PageTitle>
           <FeaturedReleasesCarousel releases={featuredReleases} />
         </>
       )}

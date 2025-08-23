@@ -72,7 +72,7 @@
 }
 
 .setup-guide .accordion-body strong {
-  color: var(--main);
+  color: var(--secondary);
   font-weight: 600;
   font-family: var(--secondary-font);
 }

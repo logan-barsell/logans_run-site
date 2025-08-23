@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchVideos } from '../../redux/actions';
 import Video from './Video';
 import Button from '../../components/Button/Button';
+import { Divider, NoContent } from '../../components/Header';
 
 const videoCount = 6;
 const Videos = ({ fetchVideos, videos }) => {
@@ -44,7 +45,7 @@ const Videos = ({ fetchVideos, videos }) => {
           <option value='vlogs'>Vlogs</option>
         </select>
       </div>
-      <hr />
+      <Divider />
       <div className='videos-container'>
         {filteredVideos && filteredVideos.length ? (
           filteredVideos.slice(0, limit).map(video => (
@@ -54,12 +55,7 @@ const Videos = ({ fetchVideos, videos }) => {
             />
           ))
         ) : (
-          <h3
-            id='no_content'
-            className='no-content'
-          >
-            No videos yet... check back soon!
-          </h3>
+          <NoContent>No videos yet... check back soon!</NoContent>
         )}
       </div>
       {limit < (filteredVideos?.length || 0) && (

@@ -23,17 +23,6 @@
   }
 }
 
-#contact h5 {
-  color: var(--main);
-  text-shadow: 2px 1px black;
-}
-
-@media (min-width: 576px) {
-  #contact .p-sm-5 {
-    padding: 88px 44px;
-  }
-}
-
 #contact a {
   color: var(--main);
   text-shadow: 2px 1px black;
@@ -45,10 +34,6 @@
 
 #contact a:hover {
   text-decoration: underline;
-}
-
-#contact hr {
-  background-color: white;
 }
 
 .socmed.contact {
@@ -120,9 +105,6 @@
   #contact p {
     font-size: 2.5vw;
   }
-  #contact h5 {
-    font-size: 3.5vw;
-  }
   #contact label {
     font-size: 3vw;
   }
@@ -149,9 +131,6 @@
 @media (max-width: 550px) {
   #contact img {
     width: 10vw;
-  }
-  #contact h5 {
-    font-size: 4.5vw;
   }
   #contact label {
     font-size: 4vw;

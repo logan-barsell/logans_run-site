@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NoContent } from '../Header';
 
 class Accordion extends Component {
   renderSubItems(content) {
@@ -78,7 +79,7 @@ class Accordion extends Component {
           {this.props.items.length ? (
             this.renderContent()
           ) : (
-            <h3 className='no-content'>No {this.props.title}</h3>
+            <NoContent>No {this.props.title}</NoContent>
           )}
         </div>
       </>

@@ -7,6 +7,7 @@ import { useAlert } from '../../../contexts/AlertContext';
 import AddFeaturedVideo from './AddFeaturedVideo';
 import EditFeaturedVideo from './EditFeaturedVideo';
 import DeleteFeaturedVideo from './DeleteFeaturedVideo';
+import { PageTitle, Divider, NoContent } from '../../../components/Header';
 
 const FeaturedVideosEdit = () => {
   const [videos, setVideos] = useState([]);
@@ -30,14 +31,12 @@ const FeaturedVideosEdit = () => {
       id='featuredVideosEdit'
       className='mb-4 container'
     >
-      <hr />
-      <h3>Featured Videos</h3>
+      <Divider />
+      <PageTitle>Featured Videos</PageTitle>
       <AddFeaturedVideo fetchVideos={fetchVideos} />
       {
         <VideoContainer>
-          {videos.length === 0 && (
-            <h3 className='no-content'>No Featured Videos</h3>
-          )}
+          {videos.length === 0 && <NoContent>No Featured Videos</NoContent>}
           {videos.map(video => (
             <VideoItem
               key={video._id}

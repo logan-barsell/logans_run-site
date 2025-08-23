@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NotFound.css';
 import Button from '../components/Button/Button';
+import { PageTitle, Divider } from '../components/Header';
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -26,16 +27,21 @@ const NotFound = () => {
                 <h1>4O4</h1>
               </div>
 
-              <h5 style={{ marginTop: '20px' }}>Page Not Found</h5>
+              <PageTitle
+                as='h5'
+                style={{ marginTop: '20px' }}
+              >
+                Page Not Found
+              </PageTitle>
             </div>
 
-            <hr className='my-4' />
+            <Divider className='my-4' />
 
             <p className='secondary-font'>
               Oops! Looks like you've wandered off the beaten path. The page
               you're looking for doesn't exist or has moved.
             </p>
-            <hr className='my-4' />
+            <Divider className='my-4' />
 
             <div className='not-found-actions'>
               <Button

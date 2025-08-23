@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchMediaImages } from '../../redux/actions';
 import Button from '../../components/Button/Button';
+import { NoContent } from '../../components/Header';
 
 const imgCount = 12;
 const Pictures = ({ fetchMediaImages, images }) => {
@@ -52,12 +53,7 @@ const Pictures = ({ fetchMediaImages, images }) => {
           )}
         </>
       ) : (
-        <h3
-          id='no_content'
-          className='no-content'
-        >
-          No pictures yet... check back soon!
-        </h3>
+        <NoContent>No pictures yet... check back soon!</NoContent>
       )}
     </>
   );
