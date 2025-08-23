@@ -1,22 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const FeaturedVideo = require('../models/FeaturedVideo');
-const jwt = require('jsonwebtoken');
-
-// JWT authentication middleware (copied from contactRoutes.js)
-function requireAuth(req, res, next) {
-  const token = req.cookies && req.cookies.token;
-  if (!token) {
-    return res.status(401).json({ authenticated: false });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ authenticated: false });
-  }
-}
+const { requireAuth } = require('../middleware/auth');
 
 // GET all featured videos (public, sorted by releaseDate desc)
 router.get('/api/featuredVideos', async (req, res) => {

@@ -117,6 +117,14 @@ body {
   color: darkred;
 }
 
+.main-color {
+  color: var(--main);
+}
+
+.secondary-color {
+  color: var(--secondary);
+}
+
 @media (max-width: 350px) {
   h5 {
     font-size: 7vw;
