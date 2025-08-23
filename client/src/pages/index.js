@@ -2,7 +2,12 @@ import '../App.css';
 import '@stripe/stripe-js';
 
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom';
 import TopNav from '../components/Navbar/TopNav';
 import BottomNav from '../components/Navbar/BottomNav';
 import HomePage from './Home/Home';
@@ -50,6 +55,26 @@ const UserPages = () => {
             path='/'
             exact
             element={<HomePage />}
+          />
+          <Route
+            path='/home'
+            exact
+            element={
+              <Navigate
+                to='/'
+                replace
+              />
+            }
+          />
+          <Route
+            path='/theme'
+            exact
+            element={
+              <Navigate
+                to='/'
+                replace
+              />
+            }
           />
           <Route
             path='/music'

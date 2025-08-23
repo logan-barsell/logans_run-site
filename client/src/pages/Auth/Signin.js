@@ -9,14 +9,17 @@ import Button from '../../components/Button/Button';
 const Signin = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const { showError, showSuccess } = useAlert();
 
   const onSubmit = async values => {
     setError(null);
     setIsLoading(true);
+    setIsSuccess(false);
     try {
       const data = await login(values);
       if (data.success) {
+        setIsSuccess(true);
         showSuccess('Login successful! Redirecting...');
         setTimeout(() => {
           window.location.href = '/theme';
@@ -33,6 +36,12 @@ const Signin = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getButtonText = () => {
+    if (isSuccess) return 'Success!';
+    if (isLoading) return 'Logging in...';
+    return 'Login';
   };
 
   return (
@@ -96,11 +105,11 @@ const Signin = () => {
             <div className='d-flex'>
               <Button
                 type='submit'
-                variant='danger'
-                disabled={submitting || isLoading}
+                variant={isSuccess ? 'success' : 'danger'}
+                disabled={submitting || isLoading || isSuccess}
                 loading={isLoading}
               >
-                {isLoading ? 'Logging in...' : 'Login'}
+                {getButtonText()}
               </Button>
             </div>
           </form>
