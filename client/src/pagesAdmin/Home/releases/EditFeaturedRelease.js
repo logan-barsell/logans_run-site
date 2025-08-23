@@ -13,15 +13,30 @@ const EditFeaturedRelease = ({ release, fetchReleases }) => {
 
   const onEdit = async fields => {
     try {
-      let newImageUrl;
+      let newImageUrl = release.coverImage; // Keep existing image by default
       let oldImageUrl = release.coverImage;
-      if (fields.coverImage && fields.coverImage[0]) {
+
+      // Only process image upload if a new file was actually selected
+      if (
+        fields.coverImage &&
+        fields.coverImage[0] &&
+        fields.coverImage[0] instanceof File
+      ) {
         // Delete old image if exists
         if (oldImageUrl) {
-          await deleteImageFromFirebase(oldImageUrl);
+          try {
+            await deleteImageFromFirebase(oldImageUrl);
+          } catch (imageError) {
+            console.warn(
+              'Failed to delete old image from Firebase:',
+              imageError
+            );
+            // Continue with upload even if old image deletion fails
+          }
         }
         newImageUrl = await uploadImageToFirebase(fields.coverImage[0]);
       }
+
       const payload = {
         ...fields,
         coverImage: newImageUrl,

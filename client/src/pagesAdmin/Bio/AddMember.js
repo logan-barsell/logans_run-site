@@ -21,11 +21,41 @@ const AddMember = ({ fetchMembers }) => {
     },
     { label: 'Name', name: 'name', type: 'text' },
     { label: 'Role', name: 'role', type: 'text' },
-    { label: 'Facebook', name: 'facebook', type: 'text', required: false },
-    { label: 'Instagram', name: 'instagram', type: 'text', required: false },
-    { label: 'TikTok', name: 'tiktok', type: 'text', required: false },
-    { label: 'YouTube', name: 'youtube', type: 'text', required: false },
-    { label: 'X', name: 'x', type: 'text', required: false },
+    {
+      label: 'Facebook',
+      name: 'facebook',
+      type: 'facebookUrl',
+      required: false,
+      placeholder: 'Enter Facebook URL',
+    },
+    {
+      label: 'Instagram',
+      name: 'instagram',
+      type: 'instagramUrl',
+      required: false,
+      placeholder: 'Enter Instagram URL',
+    },
+    {
+      label: 'TikTok',
+      name: 'tiktok',
+      type: 'tiktokUrl',
+      required: false,
+      placeholder: 'Enter TikTok URL',
+    },
+    {
+      label: 'YouTube',
+      name: 'youtube',
+      type: 'youtubeSocialUrl',
+      required: false,
+      placeholder: 'Enter YouTube URL',
+    },
+    {
+      label: 'X',
+      name: 'x',
+      type: 'xUrl',
+      required: false,
+      placeholder: 'Enter X (Twitter) URL',
+    },
   ];
 
   const [uploading, setUploading] = React.useState(false);

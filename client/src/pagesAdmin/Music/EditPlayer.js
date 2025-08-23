@@ -5,10 +5,8 @@ import { editPlayerFields } from './constants';
 import { updatePlayer } from '../../services/musicPlayersService';
 import { fetchPlayers } from '../../redux/actions';
 import { useAlert } from '../../contexts/AlertContext';
-import {
-  validateSpotifyUrl,
-  generateSpotifyEmbedUrl,
-} from '../../utils/spotifyValidation';
+import { validateSpotifyUrl } from '../../utils/validation';
+import { generateSpotifyEmbedUrl } from '../../utils/validation/spotifyValidation';
 
 const EditPlayer = ({ player }) => {
   const dispatch = useDispatch();

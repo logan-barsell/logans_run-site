@@ -5,6 +5,7 @@ import './Button.css';
  * Flexible, reusable Button component
  *
  * Props:
+ * - as: HTML element or React component to render as (default: 'button')
  * - variant: 'danger' | 'dark' | 'secondary' | 'primary' | etc. (default: 'danger')
  * - size: 'sm' | 'md' | 'lg' (default: 'md')
  * - icon: React node (optional)
@@ -18,6 +19,7 @@ import './Button.css';
  * - ...rest: other button props
  */
 const Button = ({
+  as: Component = 'button',
   variant = 'danger',
   size = 'md',
   icon,
@@ -42,11 +44,14 @@ const Button = ({
     .filter(Boolean)
     .join(' ');
 
+  // Don't pass type prop to non-button elements
+  const elementProps = Component === 'button' ? { type } : {};
+
   return (
-    <button
-      type={type}
+    <Component
       className={btnClass}
       disabled={disabled || loading}
+      {...elementProps}
       {...rest}
     >
       {loading && (
@@ -66,7 +71,7 @@ const Button = ({
       {icon && iconPosition === 'right' && (
         <span className='btn-icon ms-2'>{icon}</span>
       )}
-    </button>
+    </Component>
   );
 };
 

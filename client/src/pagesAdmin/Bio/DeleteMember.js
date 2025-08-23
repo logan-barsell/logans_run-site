@@ -10,9 +10,16 @@ const DeleteMember = ({ member, fetchMembers }) => {
   const onDelete = async item => {
     const id = item._id || item.id;
     try {
+      // Try to delete image, but don't fail the entire operation if it fails
       if (member && member.bioPic) {
-        await deleteImageFromFirebase(member.bioPic);
+        try {
+          await deleteImageFromFirebase(member.bioPic);
+        } catch (imageError) {
+          console.warn('Failed to delete image from Firebase:', imageError);
+          // Continue with record deletion even if image deletion fails
+        }
       }
+
       await deleteMemberService(id);
       showSuccess('Member deleted successfully');
       fetchMembers();

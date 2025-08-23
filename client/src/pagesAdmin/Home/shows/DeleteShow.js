@@ -10,9 +10,16 @@ const DeleteShow = ({ show, fetchShows }) => {
   const onDelete = async item => {
     const id = item._id || item.id;
     try {
+      // Try to delete image, but don't fail the entire operation if it fails
       if (show && show.poster) {
-        await deleteImageFromFirebase(show.poster);
+        try {
+          await deleteImageFromFirebase(show.poster);
+        } catch (imageError) {
+          console.warn('Failed to delete image from Firebase:', imageError);
+          // Continue with record deletion even if image deletion fails
+        }
       }
+
       await deleteShowService(id);
       showSuccess('Show deleted successfully!');
       fetchShows();

@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchPlayers } from '../../redux/actions';
+import ModalForm from '../../components/Forms/ModalForm';
+import { validateSpotifyUrl } from '../../utils/validation';
+import { generateSpotifyEmbedUrl } from '../../utils/validation/spotifyValidation';
 import { addPlayer } from '../../services/musicPlayersService';
 import { useAlert } from '../../contexts/AlertContext';
-import {
-  validateSpotifyUrl,
-  generateSpotifyEmbedUrl,
-} from '../../utils/spotifyValidation';
 import AddItem from '../../components/Modifiers/AddItem';
 import { ADD_PLAYER_FIELDS } from './constants';
 

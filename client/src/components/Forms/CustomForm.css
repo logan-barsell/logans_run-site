@@ -29,7 +29,7 @@
 }
 
 /* Form elements */
-.custom-form-container label {
+.custom-form-container label.form-label {
   color: var(--main);
 }
 

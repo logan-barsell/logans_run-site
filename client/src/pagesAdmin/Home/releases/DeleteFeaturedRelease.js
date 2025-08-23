@@ -10,9 +10,16 @@ const DeleteFeaturedRelease = ({ release, fetchReleases }) => {
   const onDelete = async item => {
     const id = item._id || item.id;
     try {
+      // Try to delete image, but don't fail the entire operation if it fails
       if (release.coverImage) {
-        await deleteImageFromFirebase(release.coverImage);
+        try {
+          await deleteImageFromFirebase(release.coverImage);
+        } catch (imageError) {
+          console.warn('Failed to delete image from Firebase:', imageError);
+          // Continue with record deletion even if image deletion fails
+        }
       }
+
       await deleteFeaturedReleaseService(id);
       showSuccess('Featured release deleted successfully');
       fetchReleases();

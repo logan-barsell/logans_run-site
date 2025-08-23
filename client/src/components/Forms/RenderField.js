@@ -5,11 +5,25 @@ import {
   TimeField,
   PriceField,
   PriceFields,
-  SpotifyUrlField,
 } from './FieldTypes';
 import { ImageUploadField } from './FieldTypes/ImageUpload';
 import OptionsField from './FieldTypes/OptionsField';
 import NumberField from './FieldTypes/NumberField';
+import {
+  validateSpotifyUrl,
+  validateSpotifySocialUrl,
+  validateAppleMusicUrl,
+  validateYouTubeUrl,
+  validateSoundCloudUrl,
+  validateFacebookUrl,
+  validateInstagramUrl,
+  validateTikTokUrl,
+  validateYouTubeSocialUrl,
+  validateXUrl,
+  validateEmail,
+  validatePhone,
+  validateUrl,
+} from '../../utils/validation';
 
 // Forward ref for image fields
 const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
@@ -31,6 +45,36 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         name={name}
         placeholder={placeholder}
         initialValue={initialValue}
+      />
+    );
+  } else if (type === 'email') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        placeholder={placeholder || 'Enter email address'}
+        initialValue={initialValue}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateEmail(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Please enter a valid email address'
+      />
+    );
+  } else if (type === 'phone') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        placeholder={placeholder || 'Enter phone number'}
+        initialValue={initialValue}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validatePhone(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Please enter a valid 10-digit US phone number'
       />
     );
   } else if (type === 'date') {
@@ -99,11 +143,167 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
     );
   } else if (type === 'spotifyUrl') {
     return (
-      <SpotifyUrlField
+      <TextField
         label={label}
         name={name}
         initialValue={initialValue}
-        placeholder={placeholder}
+        placeholder={placeholder || 'Enter Spotify URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateSpotifyUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: Track, Album, or Playlist URLs from Spotify (e.g., open.spotify.com/...)'
+      />
+    );
+  } else if (type === 'spotifySocialUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter Spotify URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateSpotifySocialUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Any valid Spotify URL (profile, track, album, playlist, etc.)'
+      />
+    );
+  } else if (type === 'appleMusicUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter Apple Music URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateAppleMusicUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: Album, Song, Playlist, or Artist URLs from Apple Music (e.g., music.apple.com/...)'
+      />
+    );
+  } else if (type === 'youtubeUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter YouTube URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateYouTubeUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: Video, Playlist, or Channel URLs from YouTube (e.g., youtube.com/watch?v=... or youtu.be/...)'
+      />
+    );
+  } else if (type === 'soundcloudUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter SoundCloud URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateSoundCloudUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: Track, Playlist, or Artist URLs from SoundCloud (e.g., soundcloud.com/...)'
+      />
+    );
+  } else if (type === 'facebookUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter Facebook URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateFacebookUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: Facebook page or profile URLs'
+      />
+    );
+  } else if (type === 'instagramUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter Instagram URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateInstagramUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: Instagram profile URLs'
+      />
+    );
+  } else if (type === 'tiktokUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter TikTok URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateTikTokUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: TikTok profile URLs'
+      />
+    );
+  } else if (type === 'youtubeSocialUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter YouTube URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateYouTubeSocialUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: YouTube channel or user URLs'
+      />
+    );
+  } else if (type === 'xUrl') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter X (Twitter) URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateXUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Supported formats: X (Twitter) profile URLs'
+      />
+    );
+  } else if (type === 'url') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder || 'Enter URL'}
+        validate={value => {
+          if (!value) return undefined;
+          const validation = validateUrl(value);
+          return validation.isValid ? undefined : validation.error;
+        }}
+        helperText='Enter a valid URL (e.g., example.com or https://example.com)'
       />
     );
   }

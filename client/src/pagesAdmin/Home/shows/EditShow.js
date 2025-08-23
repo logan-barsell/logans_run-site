@@ -15,10 +15,24 @@ const EditShow = ({ show, fetchShows }) => {
     const id = show._id;
     try {
       let posterUrl = show.poster || '';
-      if (fields.poster && fields.poster[0]) {
+
+      // Only process image upload if a new file was actually selected
+      if (
+        fields.poster &&
+        fields.poster[0] &&
+        fields.poster[0] instanceof File
+      ) {
         // Delete old image if it exists
         if (show.poster) {
-          await deleteImageFromFirebase(show.poster);
+          try {
+            await deleteImageFromFirebase(show.poster);
+          } catch (imageError) {
+            console.warn(
+              'Failed to delete old image from Firebase:',
+              imageError
+            );
+            // Continue with upload even if old image deletion fails
+          }
         }
         // Upload new image
         posterUrl = await uploadImageToFirebase(fields.poster[0]);
