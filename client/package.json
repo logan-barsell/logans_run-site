@@ -1,9 +1,8 @@
 {
-  "name": "logans_run-site",
+  "name": "bandsyte-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@reduxjs/toolkit": "^1.8.3",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",

@@ -75,7 +75,7 @@ const TopNav = ({ routes }) => {
           className='navbar-brand yesdevil hvr-grow'
           href='/'
         >
-          {theme.siteTitle || "Logan's Run"}
+          {theme.siteTitle || 'Bandsyte'}
         </a>
         <button
           className='navbar-toggler'

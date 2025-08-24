@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Logans Run authentication system provides a secure, enterprise-grade authentication experience with token-based authentication, session management, and comprehensive security features.
+The Bandsyte authentication system provides a secure, enterprise-grade authentication experience with token-based authentication, session management, and comprehensive security features for band website management.
 
 ## 🔐 **Core Features**
 

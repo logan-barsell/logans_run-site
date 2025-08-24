@@ -1,6 +1,6 @@
 import './Contact.css';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchContactInfo } from '../../redux/actions';
 import {
@@ -16,35 +16,50 @@ import {
   TelephoneFill,
   PaperAirplaneSend,
 } from '../../components/icons';
-import emailjs from '@emailjs/browser';
 import Button from '../../components/Button/Button';
 import { PageTitle, Divider } from '../../components/Header';
+import { useAlert } from '../../contexts/AlertContext';
+import { sendContactMessage } from '../../services/contactService';
 
 const ContactPage = ({ fetchContactInfo, contactInfo }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showSuccess, showError } = useAlert();
+
   useEffect(() => {
     fetchContactInfo();
   }, []);
 
   const form = useRef();
 
-  const sendEmail = e => {
+  const sendEmail = async e => {
     e.preventDefault();
-    emailjs
-      .sendForm(
-        'service_gibfdre', // Service ID
-        'template_d0jvy6q', // Template ID
-        form.current,
-        'z5UnqtbNDPKNGhoGS' // Public Key
-      )
-      .then(
-        _result => {
-          alert('Message sent!');
-          form.current.reset();
-        },
-        _error => {
-          alert('Failed to send message, please try again.');
-        }
-      );
+    setIsSubmitting(true);
+
+    const formData = new FormData(form.current);
+    const contactData = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      title: formData.get('title'),
+      message: formData.get('message'),
+    };
+
+    try {
+      const result = await sendContactMessage(contactData);
+
+      if (result.success) {
+        showSuccess("Message sent successfully! We'll get back to you soon.");
+        form.current.reset();
+      } else {
+        showError(
+          result.message || 'Failed to send message. Please try again.'
+        );
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      showError(error.message || 'Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return contactInfo ? (
@@ -152,10 +167,10 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   <AppleMusic />
                 </a>
               )}
-              {contactInfo.soundcloud && (
+              {contactInfo.soundCloud && (
                 <a
                   className='hvr-grow'
-                  href={contactInfo.soundcloud}
+                  href={contactInfo.soundCloud}
                   target='_blank'
                   rel='noreferrer'
                 >
@@ -172,10 +187,10 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   <X />
                 </a>
               )}
-              {contactInfo.tiktok && (
+              {contactInfo.tikTok && (
                 <a
                   className='hvr-grow'
-                  href={contactInfo.tiktok}
+                  href={contactInfo.tikTok}
                   target='_blank'
                   rel='noreferrer'
                 >
@@ -201,6 +216,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
               className='mb-4'
               variant='white'
             />
+
             <div className='form-group'>
               <label htmlFor='name'>Name</label>
               <input
@@ -245,10 +261,11 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                 type='submit'
                 value='send'
                 variant='danger'
+                disabled={isSubmitting}
                 icon={<PaperAirplaneSend />}
                 iconPosition='right'
               >
-                Send
+                {isSubmitting ? 'Sending...' : 'Send'}
               </Button>
             </div>
           </form>

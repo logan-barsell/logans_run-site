@@ -1,30 +1,34 @@
-import React, { useRef } from 'react';
-import emailjs from '@emailjs/browser';
+import React, { useRef, useState } from 'react';
 import CustomModal from '../Modals/CustomModal';
 import Button from '../Button/Button';
 import { Envelope } from '../../components/icons';
+import { useAlert } from '../../contexts/AlertContext';
+import { signupNewsletter } from '../../services/contactService';
 
 const NewsletterModal = () => {
-  const newsletterForm = useRef();
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showSuccess, showError } = useAlert();
 
-  const sendNewsletter = e => {
+  const sendNewsletter = async e => {
     e.preventDefault();
-    emailjs
-      .sendForm(
-        'service_gibfdre', // Service ID
-        'template_l2r8dyy', // Newsletter Template ID
-        newsletterForm.current,
-        'z5UnqtbNDPKNGhoGS' // Public Key
-      )
-      .then(
-        result => {
-          alert('Thank you for subscribing!');
-          newsletterForm.current.reset();
-        },
-        error => {
-          alert('Failed to subscribe, please try again.');
-        }
-      );
+    setIsSubmitting(true);
+
+    try {
+      const result = await signupNewsletter(email);
+
+      if (result.success) {
+        showSuccess('Thank you for subscribing to our newsletter!');
+        setEmail('');
+      } else {
+        showError(result.message || 'Failed to subscribe. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error subscribing to newsletter:', error);
+      showError(error.message || 'Failed to subscribe. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const modalProps = {
@@ -56,7 +60,6 @@ const NewsletterModal = () => {
     >
       <form
         className='form-inline newsletter justify-content-center'
-        ref={newsletterForm}
         onSubmit={sendNewsletter}
       >
         <div className='modal-body'>
@@ -66,7 +69,10 @@ const NewsletterModal = () => {
               name='email'
               type='email'
               placeholder='Enter your email here'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
           <ul id='newsDetails'>
@@ -82,6 +88,7 @@ const NewsletterModal = () => {
             type='button'
             variant='dark'
             data-bs-dismiss='modal'
+            disabled={isSubmitting}
           >
             Close
           </Button>
@@ -89,10 +96,10 @@ const NewsletterModal = () => {
             id='newsSub'
             className='my-2 my-sm-0'
             variant='outline-light'
-            value='send'
             type='submit'
+            disabled={isSubmitting}
           >
-            Join
+            {isSubmitting ? 'Subscribing...' : 'Join'}
           </Button>
         </div>
       </form>

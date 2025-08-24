@@ -11,6 +11,10 @@
   color: black;
 }
 
+#newsSub:disabled {
+  color: black;
+}
+
 #newsDetails {
   font-size: 17px;
   font-family: var(--secondary-font);

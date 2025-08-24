@@ -2,7 +2,12 @@ const bcrypt = require('bcrypt');
 const config = require('../config');
 const UserService = require('./userService');
 const TokenService = require('./tokenService');
-const { sendEmail } = require('./emailService');
+const {
+  sendEmailVerification,
+  sendPasswordReset,
+  sendPasswordResetSuccess,
+} = require('./emailService');
+const themeService = require('./themeService');
 const { AppError } = require('../middleware/errorHandler');
 const redisClient = require('../utils/redisClient');
 const logger = require('../utils/logger');
@@ -105,7 +110,10 @@ const signup = async options => {
   }
 
   // send email for account verification
-  await sendEmailVerification(newUser._id.toString(), newUser.adminEmail);
+  await sendEmailVerificationWithToken(
+    newUser._id.toString(),
+    newUser.adminEmail
+  );
 
   await SessionService.createSession(newUser._id.toString(), {
     ipAddress: ip,
@@ -138,7 +146,7 @@ const signup = async options => {
 };
 
 // Send Verification Email
-async function sendEmailVerification(userId, email, role = 'USER') {
+async function sendEmailVerificationWithToken(userId, email, role = 'USER') {
   const expiresAt = addDays(3); // 3 days from now
   const verificationToken = TokenService.generateSignedToken({
     userId,
@@ -156,16 +164,13 @@ async function sendEmailVerification(userId, email, role = 'USER') {
     }
   );
 
+  // Get the actual band name from theme
+  const theme = await themeService.getTheme();
+  const bandName = theme.siteTitle || config.appName;
+
   // Send verification email
   const verificationLink = `${config.clientURL}/auth/verify-email?token=${verificationToken}`;
-  // TODO: Send verification email
-
-  const isAdmin = role === 'ADMIN' || role === 'SUPERADMIN';
-  const subject = isAdmin ? 'Admin Invitation' : 'Verify Your Email';
-  const html = isAdmin
-    ? `You have been invited to join ${config.appName} as a ${role}. Click the link below to verify your email and get started.\n\nAccount Verification: ${verificationLink}`
-    : `Click here to verify: ${verificationLink}`;
-  await sendEmail(email, subject, html);
+  await sendEmailVerification(email, verificationLink, role, bandName);
 }
 
 // Verify Email
@@ -226,13 +231,13 @@ async function requestPasswordReset(email) {
     EX: RESET_TOKEN_EXPIRY,
   });
 
+  // Get the actual band name from theme
+  const theme = await themeService.getTheme();
+  const bandName = theme.siteTitle || config.appName;
+
   // Send reset email
-  const resetUrl = `${config.clientURL}/auth/reset-password?token=${resetToken}`;
-  await sendEmail(
-    user.adminEmail,
-    'Password Reset',
-    `Click here to reset: ${resetUrl}`
-  );
+  const resetUrl = `${config.clientURL}/reset-password?token=${resetToken}`;
+  await sendPasswordReset(user.adminEmail, resetUrl, bandName);
   logger.info(`📧 Password reset email sent to user ${user._id}`);
 }
 
@@ -251,6 +256,12 @@ async function resetPassword(token, newPassword) {
     throw new AppError('Invalid reset token', 400);
   }
 
+  // Get user details for email notification
+  const user = await UserService.findUserById(payload.userId);
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
   // Update user with the new password
   const { uuid } = await UserService.saveNewPassword(
     payload.userId,
@@ -260,13 +271,20 @@ async function resetPassword(token, newPassword) {
   // Delete the token from Redis
   await redisClient.del(`password-reset:${payload.userId}`);
 
+  // Get the actual band name from theme
+  const theme = await themeService.getTheme();
+  const bandName = theme.siteTitle || config.appName;
+
+  // Send success notification email
+  await sendPasswordResetSuccess(user.adminEmail, bandName);
+
   logger.info(`🔑 Password successfully reset for user ${uuid}`);
 }
 
 const AuthService = {
   login,
   signup,
-  sendEmailVerification,
+  sendEmailVerificationWithToken,
   verifyEmail,
   requestPasswordReset,
   resetPassword,

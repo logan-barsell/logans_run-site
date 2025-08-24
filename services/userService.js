@@ -443,9 +443,9 @@ class UserService {
       }
 
       const defaultUser = new User({
-        bandName: process.env.DEFAULT_BAND_NAME || 'Logans Run',
-        adminEmail: process.env.ADMIN_EMAIL || 'admin@logansrun.com',
-        password: process.env.DEFAULT_ADMIN_PASSWORD || 'LogansRun2024!',
+        bandName: process.env.DEFAULT_BAND_NAME || 'Bandsyte',
+        adminEmail: process.env.ADMIN_EMAIL || 'admin@bandsyte.com',
+        password: process.env.DEFAULT_ADMIN_PASSWORD || 'Bandsyte2024!',
         adminPhone: process.env.ADMIN_PHONE || '',
         firstName: 'Admin',
         lastName: 'User',

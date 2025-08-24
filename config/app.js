@@ -17,7 +17,7 @@ const config = {
   apiURL: `${serverUrl}/api`,
   clientURL: clientUrl,
   domain: getDomain(serverUrl),
-  appName: 'Logans Run',
+  appName: 'Bandsyte',
 };
 
 module.exports = config;

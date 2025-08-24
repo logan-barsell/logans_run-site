@@ -46,72 +46,88 @@ const BottomNav = ({
           </div>
         </div>
 
-        {contactInfo && contactInfo[0] && (
+        {contactInfo && (
           <div className='iconsNav col-auto justify-content-center mx-auto'>
-            <a
-              className=''
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].facebook}
-            >
-              <Facebook />
-            </a>
-            <a
-              className='w'
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].instagram}
-            >
-              <Instagram />
-            </a>
-            <a
-              className=''
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].youtube}
-            >
-              <YouTube />
-            </a>
-            <a
-              className=''
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].spotify}
-            >
-              <Spotify />
-            </a>
-            <a
-              className=''
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].appleMusic}
-            >
-              <AppleMusic />
-            </a>
-            <a
-              className=''
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].soundcloud}
-            >
-              <SoundCloud />
-            </a>
-            <a
-              className=''
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].x}
-            >
-              <X />
-            </a>
-            <a
-              className=''
-              target='_blank'
-              rel='noreferrer'
-              href={contactInfo[0].tiktok}
-            >
-              <TikTok />
-            </a>
+            {contactInfo.facebook && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.facebook}
+              >
+                <Facebook />
+              </a>
+            )}
+            {contactInfo.instagram && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.instagram}
+              >
+                <Instagram />
+              </a>
+            )}
+            {contactInfo.youtube && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.youtube}
+              >
+                <YouTube />
+              </a>
+            )}
+            {contactInfo.spotify && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.spotify}
+              >
+                <Spotify />
+              </a>
+            )}
+            {contactInfo.appleMusic && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.appleMusic}
+              >
+                <AppleMusic />
+              </a>
+            )}
+            {contactInfo.soundCloud && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.soundCloud}
+              >
+                <SoundCloud />
+              </a>
+            )}
+            {contactInfo.x && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.x}
+              >
+                <X />
+              </a>
+            )}
+            {contactInfo.tikTok && (
+              <a
+                className=''
+                target='_blank'
+                rel='noreferrer'
+                href={contactInfo.tikTok}
+              >
+                <TikTok />
+              </a>
+            )}
           </div>
         )}
       </nav>
@@ -178,7 +194,7 @@ const BottomNav = ({
 
 function mapStateToProps({ contactInfo, theme }) {
   return {
-    contactInfo: contactInfo?.data || [],
+    contactInfo: contactInfo?.data || null,
     theme: theme?.data || null,
   };
 }

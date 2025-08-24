@@ -28,3 +28,28 @@ export const updateContact = async contactData => {
     throw new Error(message);
   }
 };
+
+// Send Contact Form Message
+export const sendContactMessage = async contactData => {
+  try {
+    const response = await api.post('/send-message', contactData);
+    return response.data; // Return full response for success/error handling
+  } catch (error) {
+    const { message } = handleServiceError(error, 'Failed to send message');
+    throw new Error(message);
+  }
+};
+
+// Newsletter Signup
+export const signupNewsletter = async email => {
+  try {
+    const response = await api.post('/newsletter-signup', { email });
+    return response.data; // Return full response for success/error handling
+  } catch (error) {
+    const { message } = handleServiceError(
+      error,
+      'Failed to subscribe to newsletter'
+    );
+    throw new Error(message);
+  }
+};

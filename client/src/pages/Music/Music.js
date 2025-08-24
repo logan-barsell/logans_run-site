@@ -44,8 +44,8 @@ const MusicPage = ({
     return null;
   };
 
-  const spotifyEmbedLink = contactInfo?.[0]?.spotify
-    ? getSpotifyEmbedLink(contactInfo[0].spotify)
+  const spotifyEmbedLink = contactInfo?.spotify
+    ? getSpotifyEmbedLink(contactInfo.spotify)
     : null;
 
   return (
@@ -70,9 +70,9 @@ const MusicPage = ({
 
           {/* Music platform icons */}
           <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
-            {contactInfo?.[0]?.spotify && (
+            {contactInfo?.spotify && (
               <a
-                href={contactInfo[0].spotify}
+                href={contactInfo.spotify}
                 target='_blank'
                 rel='noreferrer'
                 className='hvr-grow'
@@ -80,9 +80,9 @@ const MusicPage = ({
                 <Spotify />
               </a>
             )}
-            {contactInfo?.[0]?.appleMusic && (
+            {contactInfo?.appleMusic && (
               <a
-                href={contactInfo[0].appleMusic}
+                href={contactInfo.appleMusic}
                 target='_blank'
                 rel='noreferrer'
                 className='hvr-grow'
@@ -90,9 +90,9 @@ const MusicPage = ({
                 <AppleMusic />
               </a>
             )}
-            {contactInfo?.[0]?.soundcloud && (
+            {contactInfo?.soundCloud && (
               <a
-                href={contactInfo[0].soundcloud}
+                href={contactInfo.soundCloud}
                 target='_blank'
                 rel='noreferrer'
                 className='hvr-grow'
@@ -100,9 +100,9 @@ const MusicPage = ({
                 <SoundCloud />
               </a>
             )}
-            {contactInfo?.[0]?.youtube && (
+            {contactInfo?.youtube && (
               <a
-                href={contactInfo[0].youtube}
+                href={contactInfo.youtube}
                 target='_blank'
                 rel='noreferrer'
                 className='hvr-grow'
@@ -190,7 +190,7 @@ const MusicPage = ({
 function mapStateToProps({ music, contactInfo }) {
   return {
     players: music?.data || [],
-    contactInfo: contactInfo?.data || [],
+    contactInfo: contactInfo?.data || null,
   };
 }
 
