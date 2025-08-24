@@ -7,6 +7,12 @@ import { useAlert } from '../../contexts/AlertContext';
 import Button from '../../components/Button/Button';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { BackArrow } from '../../components/icons';
+import {
+  validatePassword,
+  calculatePasswordStrength,
+  getPasswordStrengthColor,
+  getPasswordStrengthText,
+} from '../../utils/validation';
 
 const ResetPassword = () => {
   const [error, setError] = useState(null);
@@ -29,12 +35,17 @@ const ResetPassword = () => {
   const validatePasswords = values => {
     const errors = {};
 
+    // Validate password strength
     if (!values.password) {
       errors.password = 'Password is required';
-    } else if (values.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+    } else {
+      const passwordValidation = validatePassword(values.password);
+      if (!passwordValidation.isValid) {
+        errors.password = passwordValidation.errors[0]; // Show first error
+      }
     }
 
+    // Validate confirm password
     if (!values.confirmPassword) {
       errors.confirmPassword = 'Please confirm your password';
     } else if (
@@ -114,14 +125,17 @@ const ResetPassword = () => {
       containerId='resetPasswordPage'
     >
       <div className='text-center mb-4'>
-        <p className='secondary-font text-white'>
+        <p className='secondary-font text-white small small-sm'>
           Enter your new password below.
+          <br />
+          Password must be at least 8 characters with uppercase, lowercase,
+          number, and special character.
         </p>
       </div>
       <Form
         onSubmit={onSubmit}
         validate={validatePasswords}
-        render={({ handleSubmit, submitting, hasValidationErrors }) => (
+        render={({ handleSubmit, submitting, hasValidationErrors, values }) => (
           <form
             onSubmit={handleSubmit}
             className='mt-4'
@@ -131,12 +145,29 @@ const ResetPassword = () => {
               <Field name='password'>
                 {({ input, meta }) => (
                   <>
-                    <label
-                      htmlFor='password'
-                      className='form-label'
-                    >
-                      New Password
-                    </label>
+                    <div className='d-flex justify-content-between align-items-center mb-1'>
+                      <label
+                        htmlFor='password'
+                        className='form-label mb-0'
+                      >
+                        New Password
+                      </label>
+                      {values.password && (
+                        <small
+                          className={`text-${getPasswordStrengthColor(
+                            calculatePasswordStrength(values.password)
+                          )} d-none d-sm-inline`}
+                          style={{
+                            fontFamily: 'var(--secondary-font)',
+                            fontSize: '0.75rem',
+                          }}
+                        >
+                          {getPasswordStrengthText(
+                            calculatePasswordStrength(values.password)
+                          )}
+                        </small>
+                      )}
+                    </div>
                     <input
                       {...input}
                       type='password'
@@ -147,12 +178,27 @@ const ResetPassword = () => {
                       autoComplete='new-password'
                       required
                     />
+                    {values.password && (
+                      <small
+                        className={`text-${getPasswordStrengthColor(
+                          calculatePasswordStrength(values.password)
+                        )} d-sm-none mt-1`}
+                        style={{
+                          fontFamily: 'var(--secondary-font)',
+                          fontSize: '0.7rem',
+                        }}
+                      >
+                        {getPasswordStrengthText(
+                          calculatePasswordStrength(values.password)
+                        )}
+                      </small>
+                    )}
                     {meta.touched && meta.error && (
                       <div
                         className='invalid-feedback d-block'
                         style={{
                           fontFamily: 'var(--secondary-font)',
-                          fontSize: '0.875rem',
+                          fontSize: '0.8rem',
                         }}
                       >
                         {meta.error}
@@ -187,7 +233,7 @@ const ResetPassword = () => {
                         className='invalid-feedback d-block'
                         style={{
                           fontFamily: 'var(--secondary-font)',
-                          fontSize: '0.875rem',
+                          fontSize: '0.8rem',
                         }}
                       >
                         {meta.error}

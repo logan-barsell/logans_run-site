@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const addPlayer = async playerData => {
   try {
     const response = await api.post('/addPlayer', playerData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to add music player');
     throw new Error(message);
@@ -15,7 +15,7 @@ export const addPlayer = async playerData => {
 export const updatePlayer = async playerData => {
   try {
     const response = await api.post('/updatePlayer', playerData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -28,7 +28,7 @@ export const updatePlayer = async playerData => {
 export const deletePlayer = async playerId => {
   try {
     const response = await api.get(`/deletePlayer/${playerId}`);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,

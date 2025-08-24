@@ -28,3 +28,7 @@ dev.js
 /client/public/images
 
 config/serviceAccountKey.json
+
+# logs
+/logs
+*.log

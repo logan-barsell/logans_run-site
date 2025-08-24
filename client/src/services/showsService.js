@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const getShows = async () => {
   try {
     const response = await api.get('/shows');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to load shows');
     throw new Error(message);
@@ -16,7 +16,7 @@ export const getShows = async () => {
 export const getShowsSettings = async () => {
   try {
     const response = await api.get('/showsSettings');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -30,7 +30,7 @@ export const getShowsSettings = async () => {
 export const updateShowsSettings = async settings => {
   try {
     const response = await api.post('/updateShowsSettings', settings);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,

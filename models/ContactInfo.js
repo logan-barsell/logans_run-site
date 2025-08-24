@@ -1,20 +1,22 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const bcrypt = require('bcrypt');
 
-// Used as the admin user model for authentication (single admin only). Password is hashed before storing.
+// Public-facing contact information for the band/artist
 
 const ContactSchema = new Schema({
-  name: String,
-  phone: String,
-  email: {
+  // Public Contact Information
+  publicEmail: {
     type: String,
-    default: process.env.ADMIN_EMAIL,
+    trim: true,
+    lowercase: true,
   },
-  password: {
+
+  publicPhone: {
     type: String,
-    default: bcrypt.hashSync(process.env.DEFAULT_PASSWORD || 'admin', 10),
+    trim: true,
   },
+
+  // Social Media Links (public-facing)
   facebook: String,
   instagram: String,
   youtube: String,
@@ -23,9 +25,23 @@ const ContactSchema = new Schema({
   appleMusic: String,
   x: String,
   tiktok: String,
-  // Password reset fields
-  resetToken: String,
-  resetTokenExpiry: Date,
+
+  // Timestamps
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+// Update the updatedAt field before saving
+ContactSchema.pre('save', function (next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 const ContactInfo = mongoose.model('Contact', ContactSchema);

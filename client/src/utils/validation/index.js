@@ -3,7 +3,7 @@
  * All validation functions are exported from this single location
  */
 
-// Form validation (email, phone, general URL)
+// Form validation
 export {
   validateEmail,
   validatePhone,
@@ -20,7 +20,7 @@ export {
   validateXUrl,
 } from './socialMediaValidation';
 
-// Music platform validation
+// Music URL validation
 export {
   validateAppleMusicUrl,
   validateYouTubeUrl,
@@ -32,3 +32,11 @@ export {
   validateSpotifyUrl,
   validateSpotifySocialUrl,
 } from './spotifyValidation';
+
+// Password validation
+export {
+  validatePassword,
+  calculatePasswordStrength,
+  getPasswordStrengthColor,
+  getPasswordStrengthText,
+} from './passwordValidation';

@@ -47,7 +47,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
       );
   };
 
-  return contactInfo[0] ? (
+  return contactInfo ? (
     <div
       className='container fadeIn'
       id='contact'
@@ -68,96 +68,120 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
               className='my-4'
               variant='white'
             />
-            <p className='secondary-font text-white'>
-              <TelephoneFill />
-              <a href={`tel:+${contactInfo[0].phone}`}>
-                {contactInfo[0].phone.slice(0, 3)}.
-                {contactInfo[0].phone.slice(3, 6)}.
-                {contactInfo[0].phone.slice(6)}
-              </a>
-            </p>
-            <Divider
-              className='my-4'
-              variant='white'
-            />
+            {contactInfo.publicPhone && (
+              <>
+                <p className='secondary-font text-white'>
+                  <TelephoneFill />
+                  <a href={`tel:+${contactInfo.publicPhone}`}>
+                    {contactInfo.publicPhone.slice(0, 3)}.
+                    {contactInfo.publicPhone.slice(3, 6)}.
+                    {contactInfo.publicPhone.slice(6)}
+                  </a>
+                </p>
+                <Divider
+                  className='my-4'
+                  variant='white'
+                />
+              </>
+            )}
 
-            <p className='secondary-font text-white'>
-              <Envelope />
-              <a href={`mailto:${contactInfo[0].email}`}>
-                {contactInfo[0].email.split('@')[0]}
-                <span>@</span>
-                {contactInfo[0].email.split('@')[1]}
-              </a>
-            </p>
-            <Divider
-              className='my-4'
-              variant='white'
-            />
+            {contactInfo.publicEmail && (
+              <>
+                <p className='secondary-font text-white'>
+                  <Envelope />
+                  <a href={`mailto:${contactInfo.publicEmail}`}>
+                    {contactInfo.publicEmail.split('@')[0]}
+                    <span>@</span>
+                    {contactInfo.publicEmail.split('@')[1]}
+                  </a>
+                </p>
+                <Divider
+                  className='my-4'
+                  variant='white'
+                />
+              </>
+            )}
             <div className='socmed contact'>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].facebook}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <Facebook />
-              </a>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].instagram}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <Instagram />
-              </a>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].youtube}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <YouTube />
-              </a>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].spotify}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <Spotify />
-              </a>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].appleMusic}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <AppleMusic />
-              </a>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].soundcloud}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <SoundCloud />
-              </a>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].x}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <X />
-              </a>
-              <a
-                className='hvr-grow'
-                href={contactInfo[0].tiktok}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <TikTok />
-              </a>
+              {contactInfo.facebook && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.facebook}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <Facebook />
+                </a>
+              )}
+              {contactInfo.instagram && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.instagram}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <Instagram />
+                </a>
+              )}
+              {contactInfo.youtube && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.youtube}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <YouTube />
+                </a>
+              )}
+              {contactInfo.spotify && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.spotify}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <Spotify />
+                </a>
+              )}
+              {contactInfo.appleMusic && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.appleMusic}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <AppleMusic />
+                </a>
+              )}
+              {contactInfo.soundcloud && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.soundcloud}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <SoundCloud />
+                </a>
+              )}
+              {contactInfo.x && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.x}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <X />
+                </a>
+              )}
+              {contactInfo.tiktok && (
+                <a
+                  className='hvr-grow'
+                  href={contactInfo.tiktok}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <TikTok />
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -235,7 +259,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
 };
 
 function mapStateToProps({ contactInfo }) {
-  return { contactInfo: contactInfo?.data || [] };
+  return { contactInfo: contactInfo?.data || null };
 }
 
 export default connect(mapStateToProps, { fetchContactInfo })(ContactPage);

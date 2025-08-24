@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const getHomeImages = async () => {
   try {
     const response = await api.get('/getHomeImages');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,

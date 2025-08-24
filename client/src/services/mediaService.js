@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const getMediaImages = async () => {
   try {
     const response = await api.get('/getMediaImages');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -19,7 +19,7 @@ export const getMediaImages = async () => {
 export const getVideos = async () => {
   try {
     const response = await api.get('/getVideos');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to load videos');
     throw new Error(message);

@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const addMember = async memberData => {
   try {
     const response = await api.post('/addMember', memberData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to add member');
     throw new Error(message);
@@ -15,7 +15,7 @@ export const addMember = async memberData => {
 export const updateMember = async (memberId, memberData) => {
   try {
     const response = await api.post(`/updateMember/${memberId}`, memberData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to update member');
     throw new Error(message);
@@ -25,7 +25,7 @@ export const updateMember = async (memberId, memberData) => {
 export const deleteMember = async memberId => {
   try {
     const response = await api.get(`/deleteMember/${memberId}`);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to delete member');
     throw new Error(message);
