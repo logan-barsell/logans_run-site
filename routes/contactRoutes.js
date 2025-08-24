@@ -1,6 +1,8 @@
+const express = require('express');
+const router = express.Router();
 const contactController = require('../controllers/contactController');
 
-module.exports = app => {
-  app.get('/api/getContactInfo', contactController.getContactInfo);
-  app.post('/api/updateContact', contactController.updateContact);
-};
+router.get('/getContactInfo', contactController.getContactInfo);
+router.post('/updateContact', contactController.updateContact);
+
+module.exports = router;

@@ -88,7 +88,8 @@ const requestLogger =
             }
           }
 
-          return `${method} ${url} ${status} ${responseTime}ms`;
+          // Return empty string to prevent Morgan from writing to stdout
+          return '';
         },
         {
           stream: {

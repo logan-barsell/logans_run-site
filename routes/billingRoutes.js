@@ -1,13 +1,15 @@
+const express = require('express');
+const router = express.Router();
 const billingController = require('../controllers/billingController');
 
-module.exports = app => {
-  app.get('/api/products', billingController.getProducts);
-  app.post(
-    '/api/create-checkout-session',
-    billingController.createCheckoutSession
-  );
-  app.get('/api/shipping', billingController.getShipping);
-  app.post('/api/products', billingController.createProduct);
-  app.put('/api/products/:id', billingController.updateProduct);
-  app.delete('/api/products/:id', billingController.deactivateProduct);
-};
+router.get('/products', billingController.getProducts);
+router.post(
+  '/create-checkout-session',
+  billingController.createCheckoutSession
+);
+router.get('/shipping', billingController.getShipping);
+router.post('/products', billingController.createProduct);
+router.put('/products/:id', billingController.updateProduct);
+router.delete('/products/:id', billingController.deactivateProduct);
+
+module.exports = router;

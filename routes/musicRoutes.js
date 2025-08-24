@@ -1,9 +1,11 @@
+const express = require('express');
+const router = express.Router();
 const musicController = require('../controllers/musicController');
 
-module.exports = app => {
-  app.post('/api/addPlayer', musicController.addPlayer);
-  app.post('/api/updatePlayer', musicController.updatePlayer);
-  app.get('/api/deletePlayer/:id', musicController.deletePlayer);
-  app.get('/api/getPlayer/:id', musicController.getPlayer);
-  app.get('/api/getPlayers', musicController.getPlayers);
-};
+router.post('/addPlayer', musicController.addPlayer);
+router.post('/updatePlayer', musicController.updatePlayer);
+router.get('/deletePlayer/:id', musicController.deletePlayer);
+router.get('/getPlayer/:id', musicController.getPlayer);
+router.get('/getPlayers', musicController.getPlayers);
+
+module.exports = router;

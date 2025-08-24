@@ -1,11 +1,13 @@
+const express = require('express');
+const router = express.Router();
 const mediaController = require('../controllers/mediaController');
 
-module.exports = app => {
-  app.post('/api/updateVideo', mediaController.updateVideo);
-  app.get('/api/deleteVideo/:id', mediaController.deleteVideo);
-  app.get('/api/getVideos', mediaController.getVideos);
-  app.post('/api/addVideo', mediaController.addVideo);
-  app.get('/api/getMediaImages', mediaController.getMediaImages);
-  app.get('/api/removeMediaImage/:id', mediaController.removeMediaImage);
-  app.post('/api/addMediaImage', mediaController.addMediaImage);
-};
+router.post('/updateVideo', mediaController.updateVideo);
+router.get('/deleteVideo/:id', mediaController.deleteVideo);
+router.get('/getVideos', mediaController.getVideos);
+router.post('/addVideo', mediaController.addVideo);
+router.get('/getMediaImages', mediaController.getMediaImages);
+router.get('/removeMediaImage/:id', mediaController.removeMediaImage);
+router.post('/addMediaImage', mediaController.addMediaImage);
+
+module.exports = router;
