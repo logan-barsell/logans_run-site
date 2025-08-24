@@ -11,27 +11,6 @@ const logLevels = {
   debug: 4,
 };
 
-// Log format
-const logFormat = winston.format.combine(
-  winston.format.timestamp(),
-  winston.format.errors({ stack: true }),
-  winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
-    let log = `${timestamp} [${level.toUpperCase()}]: ${message}`;
-
-    // Add stack trace if available
-    if (stack) {
-      log += `\n${stack}`;
-    }
-
-    // Add additional metadata if present
-    if (Object.keys(meta).length > 0) {
-      log += `\nMetadata: ${JSON.stringify(meta, null, 2)}`;
-    }
-
-    return log;
-  })
-);
-
 // Create logs directory if it doesn't exist
 const fs = require('fs');
 const logsDir = path.join(__dirname, '../logs');
@@ -55,13 +34,21 @@ const fileTransport = new DailyRotateFile({
 // Console transport for development
 const consoleTransport = new winston.transports.Console({
   format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.simple(),
-    winston.format.printf(({ timestamp, level, message, stack }) => {
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
+      // Create a clean log format without any padding or colorization
       let log = `${timestamp} [${level.toUpperCase()}]: ${message}`;
+
+      // Add stack trace if available
       if (stack) {
         log += `\n${stack}`;
       }
+
+      // Add additional metadata if present (without extra indentation)
+      if (Object.keys(meta).length > 0) {
+        log += `\nMetadata: ${JSON.stringify(meta)}`;
+      }
+
       return log;
     })
   ),
@@ -73,7 +60,6 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'test' ? 'silent' : LOG_LEVEL,
   levels: logLevels,
-  format: logFormat,
   transports: [fileTransport, consoleTransport],
   // Handle uncaught exceptions
   exceptionHandlers: [

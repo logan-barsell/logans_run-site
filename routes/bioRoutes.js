@@ -1,10 +1,12 @@
+const express = require('express');
+const router = express.Router();
 const bioController = require('../controllers/bioController');
 
-module.exports = app => {
-  app.get('/api/bio', bioController.getBio);
-  app.post('/api/updateBio', bioController.updateBio);
-  app.post('/api/addMember', bioController.addMember);
-  app.get('/api/deleteMember/:id', bioController.deleteMember);
-  app.get('/api/members', bioController.getMembers);
-  app.post('/api/updateMember/:id', bioController.updateMember);
-};
+router.get('/bio', bioController.getBio);
+router.post('/updateBio', bioController.updateBio);
+router.post('/addMember', bioController.addMember);
+router.get('/deleteMember/:id', bioController.deleteMember);
+router.get('/members', bioController.getMembers);
+router.post('/updateMember/:id', bioController.updateMember);
+
+module.exports = router;

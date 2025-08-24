@@ -10,8 +10,13 @@ import { logout } from '../../services/authService';
 import Button from '../Button/Button';
 
 async function handleLogout() {
-  await logout();
-  window.location.href = '/';
+  try {
+    await logout();
+    window.location.href = '/';
+  } catch (error) {
+    console.error('Logout failed:', error);
+    window.location.href = '/';
+  }
 }
 
 const TopNav = ({ routes }) => {
@@ -88,19 +93,20 @@ const TopNav = ({ routes }) => {
               routes={routes}
               menuToggle={menuToggle}
             />
-            <a
-              href='/'
-              className='nav-item nav-link'
-            >
+            <div className='nav-item nav-link'>
               <Button
-                onClick={() => handleLogout()}
+                onClick={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleLogout();
+                }}
                 type='button'
                 size='sm'
                 variant='danger'
               >
                 Log Out
               </Button>
-            </a>
+            </div>
           </div>
         </div>
       </div>

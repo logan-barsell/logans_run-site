@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   // Band Information
@@ -15,6 +16,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
     lowercase: true,
+    unique: true,
   },
 
   adminPhone: {
@@ -26,6 +28,59 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+
+  // User details
+  firstName: {
+    type: String,
+    trim: true,
+  },
+
+  lastName: {
+    type: String,
+    trim: true,
+  },
+
+  fullName: {
+    type: String,
+    trim: true,
+  },
+
+  // Role and status
+  role: {
+    type: String,
+    enum: ['USER', 'ADMIN', 'SUPERADMIN'],
+    default: 'USER',
+  },
+
+  userType: {
+    type: String,
+    enum: ['USER', 'ADMIN'],
+    default: 'USER',
+  },
+
+  status: {
+    type: String,
+    enum: ['ACTIVE', 'INACTIVE'],
+    default: 'ACTIVE',
+  },
+
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+
+  // Account management
+  invitedByUUID: {
+    type: String,
+  },
+
+  deactivatedByUUID: {
+    type: String,
+  },
+
+  deactivatedAt: {
+    type: Date,
   },
 
   // Password Reset
@@ -53,6 +108,12 @@ const userSchema = new mongoose.Schema({
 // Update the updatedAt field before saving
 userSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
+
+  // Generate full name if firstName and lastName are provided
+  if (this.firstName && this.lastName) {
+    this.fullName = `${this.firstName} ${this.lastName}`;
+  }
+
   next();
 });
 
@@ -82,5 +143,14 @@ userSchema.methods.isResetTokenValid = function () {
     this.resetTokenExpiry > Date.now()
   );
 };
+
+// Virtual for UUID (using _id as UUID equivalent)
+userSchema.virtual('uuid').get(function () {
+  return this._id.toString();
+});
+
+// Ensure virtual fields are serialized
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model('User', userSchema);

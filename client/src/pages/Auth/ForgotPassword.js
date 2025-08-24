@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { CustomForm } from '../../components/Forms';
 import ErrorMessage from '../../components/ErrorMessage';
-import { sendPasswordResetEmail } from '../../services/authService';
+import { requestPasswordReset } from '../../services/authService';
 import { useAlert } from '../../contexts/AlertContext';
 import Button from '../../components/Button/Button';
 import { Link } from 'react-router-dom';
@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     setIsLoading(true);
     setIsSuccess(false);
     try {
-      const data = await sendPasswordResetEmail(values.email);
+      const data = await requestPasswordReset(values.email);
       if (data.success) {
         setIsSuccess(true);
         showSuccess('Password reset email sent! Check your inbox.');
