@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const getTheme = async () => {
   try {
     const response = await api.get('/theme');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -19,7 +19,7 @@ export const getTheme = async () => {
 export const updateTheme = async themeData => {
   try {
     const response = await api.post('/updateTheme', themeData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,

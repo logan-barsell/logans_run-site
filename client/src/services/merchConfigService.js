@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export async function getMerchConfig() {
   try {
     const res = await apiClient.get('/merchConfig');
-    return res.data;
+    return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -19,7 +19,7 @@ export async function getMerchConfig() {
 export async function getMerchConfigAdmin() {
   try {
     const res = await apiClient.get('/merchConfig/admin');
-    return res.data;
+    return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -33,7 +33,7 @@ export async function getMerchConfigAdmin() {
 export async function updateMerchConfig(data) {
   try {
     const res = await apiClient.post('/merchConfig', data);
-    return res.data;
+    return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -47,7 +47,7 @@ export async function updateMerchConfig(data) {
 export async function deleteMerchConfig() {
   try {
     const res = await apiClient.delete('/merchConfig');
-    return res.data;
+    return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,

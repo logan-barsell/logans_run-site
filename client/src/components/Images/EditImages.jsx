@@ -125,7 +125,7 @@ const EditImages = ({
                 }
                 variant='danger'
                 type='submit'
-                wide
+                fullWidth
               >
                 {getUploadButtonText()}
               </Button>

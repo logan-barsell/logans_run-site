@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const uploadMediaImage = async imageData => {
   try {
     const response = await api.post('/addMediaImage', imageData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -18,7 +18,7 @@ export const uploadMediaImage = async imageData => {
 export const removeMediaImage = async imageId => {
   try {
     const response = await api.get(`/removeMediaImage/${imageId}`);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -32,7 +32,7 @@ export const removeMediaImage = async imageId => {
 export const uploadHomeImage = async imageData => {
   try {
     const response = await api.post('/addHomeImage', imageData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -45,7 +45,7 @@ export const uploadHomeImage = async imageData => {
 export const removeHomeImage = async imageId => {
   try {
     const response = await api.get(`/removeImage/${imageId}`);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -59,7 +59,7 @@ export const removeHomeImage = async imageId => {
 export const addVideo = async videoData => {
   try {
     const response = await api.post('/addVideo', videoData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to add video');
     throw new Error(message);
@@ -69,7 +69,7 @@ export const addVideo = async videoData => {
 export const updateVideo = async videoData => {
   try {
     const response = await api.post('/updateVideo', videoData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to update video');
     throw new Error(message);
@@ -79,7 +79,7 @@ export const updateVideo = async videoData => {
 export const deleteVideo = async videoId => {
   try {
     const response = await api.get(`/deleteVideo/${videoId}`);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to delete video');
     throw new Error(message);

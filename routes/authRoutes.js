@@ -1,176 +1,203 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const ContactInfo = require('../models/ContactInfo');
-const crypto = require('crypto');
 const { requireAuth } = require('../middleware/auth');
+const {
+  loginLimiter,
+  resetPassLimiter,
+  forgotPassLimiter,
+} = require('../middleware/rateLimiter');
+const userService = require('../services/userService');
+const { validatePassword } = require('../utils/validation/passwordValidation');
+const logger = require('../utils/logger');
 
 module.exports = app => {
-  // Initialize admin user if it doesn't exist
-  const initializeAdmin = async () => {
-    try {
-      const existingContact = await ContactInfo.findOne();
-      if (!existingContact) {
-        const hashedPassword = await bcrypt.hash('admin123', 10);
-        const contactInfo = new ContactInfo({
-          name: 'contactData',
-          email: 'admin@example.com',
-          password: hashedPassword,
-          phone: '',
-          facebook: '',
-          instagram: '',
-          youtube: '',
-          spotify: '',
-          appleMusic: '',
-          soundcloud: '',
-          x: '',
-          tiktok: '',
-        });
-        await contactInfo.save();
-        console.log('Admin user initialized');
-      }
-    } catch (err) {
-      console.error('Error initializing admin user:', err);
-    }
-  };
-
-  // Call initialization on startup
-  initializeAdmin();
+  // Apply rate limiting to auth routes
+  app.use('/api/login', loginLimiter);
+  app.use('/api/auth/forgot-password', forgotPassLimiter);
+  app.use('/api/auth/reset-password', resetPassLimiter);
 
   // Login endpoint
-  app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
+  app.post('/api/login', async (req, res, next) => {
     try {
-      const contactInfo = await ContactInfo.findOne();
-      if (!contactInfo || email !== contactInfo.email) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+      const { email, password } = req.body;
+
+      // Basic input validation
+      if (!email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: 'Email and password are required',
+        });
       }
 
-      const valid = await bcrypt.compare(password, contactInfo.password);
-      if (!valid) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
+      // Authenticate user
+      const user = await userService.authenticateUser(email, password);
 
-      const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-      });
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user._id, email: user.adminEmail },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      // Set cookie
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-        maxAge: 60 * 60 * 1000, // 1 hour
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
       });
-      res.json({ success: true });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Login failed' });
-    }
-  });
 
-  // Forgot password endpoint
-  app.post('/api/auth/forgot-password', async (req, res) => {
-    const { email } = req.body;
+      logger.info(`User logged in successfully: ${user.adminEmail}`);
 
-    try {
-      const contactInfo = await ContactInfo.findOne();
-      if (!contactInfo || email !== contactInfo.email) {
-        // Don't reveal if email exists or not for security
-        return res.json({
-          success: true,
-          message: 'If the email exists, a reset link has been sent.',
-        });
-      }
-
-      // Generate reset token
-      const resetToken = crypto.randomBytes(32).toString('hex');
-      const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
-
-      // Store reset token in contact info (you might want to create a separate model for this)
-      await ContactInfo.updateOne(
-        { name: 'contactData' },
-        {
-          resetToken,
-          resetTokenExpiry,
-        }
-      );
-
-      // TODO: SEND PASSWORD RESET EMAIL
-      const resetLink = `${req.protocol}://${req.get(
-        'host'
-      )}/reset-password?token=${resetToken}`;
-      console.log('Password reset link:', resetLink);
-
-      res.json({
+      res.status(200).json({
         success: true,
-        message: 'If the email exists, a reset link has been sent.',
+        message: 'Login successful',
+        data: {
+          user: {
+            id: user._id,
+            bandName: user.bandName,
+            adminEmail: user.adminEmail,
+          },
+        },
       });
-    } catch (err) {
-      console.error('Password reset error:', err);
-      res
-        .status(500)
-        .json({ error: 'Failed to process password reset request' });
+    } catch (error) {
+      logger.error('Login error:', error);
+      res.status(401).json({
+        success: false,
+        message: 'Invalid credentials',
+      });
     }
   });
 
-  // Reset password endpoint
-  app.post('/api/auth/reset-password', async (req, res) => {
-    const { token, newPassword } = req.body;
-
+  // Check authentication status
+  app.get('/api/me', requireAuth, async (req, res, next) => {
     try {
-      const contactInfo = await ContactInfo.findOne({
-        resetToken: token,
-        resetTokenExpiry: { $gt: new Date() },
+      const user = await userService.getUserById(req.user.id);
+      res.status(200).json({
+        success: true,
+        data: {
+          user: {
+            id: user._id,
+            bandName: user.bandName,
+            adminEmail: user.adminEmail,
+          },
+        },
       });
-
-      if (!contactInfo) {
-        return res
-          .status(400)
-          .json({ error: 'Invalid or expired reset token' });
-      }
-
-      // Hash new password
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      // Update password and clear reset token
-      await ContactInfo.updateOne(
-        { name: 'contactData' },
-        {
-          password: hashedPassword,
-          resetToken: null,
-          resetTokenExpiry: null,
-        }
-      );
-
-      // TODO: SEND PASSWORD RESET SUCCESS EMAIL
-
-      res.json({ success: true, message: 'Password reset successfully' });
-    } catch (err) {
-      console.error('Password reset error:', err);
-      res.status(500).json({ error: 'Failed to reset password' });
-    }
-  });
-
-  // Endpoint to check authentication status
-  app.get('/api/me', (req, res) => {
-    const token = req.cookies && req.cookies.token;
-    if (!token) {
-      return res.json({ authenticated: false });
-    }
-    try {
-      jwt.verify(token, process.env.JWT_SECRET);
-      return res.json({ authenticated: true });
-    } catch (err) {
-      return res.json({ authenticated: false });
+    } catch (error) {
+      logger.error('Auth check error:', error);
+      res.status(401).json({
+        success: false,
+        message: 'Authentication failed',
+      });
     }
   });
 
   // Logout endpoint
   app.post('/api/logout', (req, res) => {
-    res.cookie('token', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      maxAge: 0,
+    res.clearCookie('token');
+    logger.info('User logged out');
+    res.status(200).json({
+      success: true,
+      message: 'Logout successful',
     });
-    res.json({ success: true });
+  });
+
+  // Forgot password endpoint
+  app.post('/api/auth/forgot-password', async (req, res, next) => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({
+          success: false,
+          message: 'Email is required',
+        });
+      }
+
+      const { resetToken } = await userService.setPasswordResetToken(email);
+
+      // In development, log the reset link
+      if (process.env.NODE_ENV !== 'production') {
+        const resetLink = `${
+          process.env.REACT_APP_DOMAIN || 'http://localhost:3000'
+        }/reset-password?token=${resetToken}`;
+        logger.info(`Password reset link (DEV ONLY): ${resetLink}`);
+      }
+
+      // In production, you would send an email here
+      // await sendPasswordResetEmail(email, resetToken);
+
+      res.status(200).json({
+        success: true,
+        message: 'Password reset email sent successfully',
+      });
+    } catch (error) {
+      // Don't reveal if email exists or not for security
+      logger.error('Forgot password error:', error);
+      res.status(200).json({
+        success: true,
+        message: 'If the email exists, a password reset link has been sent',
+      });
+    }
+  });
+
+  // Reset password endpoint
+  app.post('/api/auth/reset-password', async (req, res, next) => {
+    try {
+      const { token, newPassword } = req.body;
+
+      if (!token || !newPassword) {
+        return res.status(400).json({
+          success: false,
+          message: 'Token and new password are required',
+        });
+      }
+
+      // Validate password strength
+      const passwordValidation = validatePassword(newPassword);
+      if (!passwordValidation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password does not meet requirements',
+          errors: passwordValidation.errors,
+        });
+      }
+
+      await userService.resetPassword(token, newPassword);
+
+      res.status(200).json({
+        success: true,
+        message: 'Password reset successfully',
+      });
+    } catch (error) {
+      logger.error('Reset password error:', error);
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Password reset failed',
+      });
+    }
+  });
+
+  // Initialize default user (admin only)
+  app.post('/api/auth/initialize', async (req, res, next) => {
+    try {
+      const user = await userService.initializeDefaultUser();
+      res.status(200).json({
+        success: true,
+        data: {
+          user: {
+            id: user._id,
+            bandName: user.bandName,
+            adminEmail: user.adminEmail,
+          },
+        },
+        message: 'Default user initialized successfully',
+      });
+    } catch (error) {
+      logger.error('Initialize user error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to initialize default user',
+      });
+    }
   });
 };

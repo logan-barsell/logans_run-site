@@ -9,7 +9,8 @@ const AuthWrapper = ({ children }) => {
     const checkAuthentication = async () => {
       try {
         const data = await checkAuth();
-        setAuthenticated(!!data.authenticated);
+        // Check if the response indicates successful authentication
+        setAuthenticated(data.success && data.data && data.data.user);
       } catch (err) {
         console.error('Auth check failed:', err);
         setAuthenticated(false);

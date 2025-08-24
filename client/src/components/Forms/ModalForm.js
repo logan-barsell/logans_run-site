@@ -139,8 +139,10 @@ const ModalForm = ({ onSubmit, fields }) => {
         render={({ handleSubmit, form, values, errors }) => {
           // Check for changes whenever values change
           const changed = !compareValues(initialValues, values);
+          // Update hasChanges state if it changed
           if (changed !== hasChanges) {
-            setHasChanges(changed);
+            // Use requestAnimationFrame to defer the state update
+            requestAnimationFrame(() => setHasChanges(changed));
           }
 
           const handleFormSubmit = async event => {

@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const getFeaturedReleases = async () => {
   try {
     const response = await api.get('/featuredReleases');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -18,7 +18,7 @@ export const getFeaturedReleases = async () => {
 export const addFeaturedRelease = async releaseData => {
   try {
     const response = await api.post('/featuredReleases', releaseData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -31,7 +31,7 @@ export const addFeaturedRelease = async releaseData => {
 export const updateFeaturedRelease = async (id, releaseData) => {
   try {
     const response = await api.put(`/featuredReleases/${id}`, releaseData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -44,7 +44,7 @@ export const updateFeaturedRelease = async (id, releaseData) => {
 export const deleteFeaturedRelease = async id => {
   try {
     const response = await api.delete(`/featuredReleases/${id}`);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -58,7 +58,7 @@ export const deleteFeaturedRelease = async id => {
 export const getFeaturedVideos = async () => {
   try {
     const response = await api.get('/featuredVideos');
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -71,7 +71,7 @@ export const getFeaturedVideos = async () => {
 export const addFeaturedVideo = async videoData => {
   try {
     const response = await api.post('/featuredVideos', videoData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -84,7 +84,7 @@ export const addFeaturedVideo = async videoData => {
 export const updateFeaturedVideo = async (id, videoData) => {
   try {
     const response = await api.put(`/featuredVideos/${id}`, videoData);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -97,7 +97,7 @@ export const updateFeaturedVideo = async (id, videoData) => {
 export const deleteFeaturedVideo = async id => {
   try {
     const response = await api.delete(`/featuredVideos/${id}`);
-    return response.data;
+    return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(
       error,

@@ -1,24 +1,6 @@
-const ContactInfo = require('../models/ContactInfo');
+const contactController = require('../controllers/contactController');
 
 module.exports = app => {
-  app.get('/api/getContactInfo', async (req, res) => {
-    try {
-      const info = await ContactInfo.find();
-      res.status(200).send(info);
-    } catch (err) {
-      res.status(500).send(err);
-    }
-  });
-
-  app.post('/api/updateContact', async (req, res) => {
-    const updatedInfo = req.body;
-    try {
-      await ContactInfo.updateOne({ name: 'contactData' }, updatedInfo, {
-        upsert: true,
-      });
-      res.status(200).send(req.body);
-    } catch (err) {
-      res.status(500).send(err);
-    }
-  });
+  app.get('/api/getContactInfo', contactController.getContactInfo);
+  app.post('/api/updateContact', contactController.updateContact);
 };

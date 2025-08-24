@@ -3,6 +3,7 @@ import { useTheme } from './contexts/ThemeContext';
 import { useSelector } from 'react-redux';
 import { NavHeightProvider } from './contexts/NavHeightContext';
 import { AlertProvider } from './contexts/AlertContext';
+import monitoringService from './services/monitoringService';
 
 import React, { createContext } from 'react';
 import Admin from './pagesAdmin';
@@ -22,6 +23,11 @@ function App() {
   const metaDescription = bioText || defaultDescription;
   const bandName = theme?.siteTitle || "Logan's Run";
   const bandLogo = theme?.bandLogoUrl;
+
+  React.useEffect(() => {
+    // Initialize monitoring
+    monitoringService.init();
+  }, []);
 
   React.useEffect(() => {
     if (theme && theme.bandLogoUrl) {

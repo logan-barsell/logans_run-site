@@ -32,9 +32,9 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
     if (!value) return null; // Empty values are valid (optional fields)
 
     switch (name) {
-      case 'email':
+      case 'publicEmail':
         return validateEmail(value);
-      case 'phone':
+      case 'publicPhone':
         return validatePhone(value);
       case 'facebook':
         return validateFacebookUrl(value);
@@ -75,8 +75,8 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
 
   // Transform data before saving (normalize URLs and phone)
   const transformData = formData => ({
-    email: formData.email,
-    phone: normalizePhone(formData.phone),
+    publicEmail: formData.publicEmail,
+    publicPhone: normalizePhone(formData.publicPhone),
     facebook: normalizeUrl(formData.facebook),
     instagram: normalizeUrl(formData.instagram),
     youtube: normalizeUrl(formData.youtube),
@@ -92,8 +92,8 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
     if (!initial || !current) return false;
 
     const formFields = [
-      'email',
-      'phone',
+      'publicEmail',
+      'publicPhone',
       'facebook',
       'instagram',
       'youtube',
@@ -104,11 +104,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
       'tiktok',
     ];
 
-    return formFields.every(field => {
-      const initialValue = initial[field] || '';
-      const currentValue = current[field] || '';
-      return initialValue === currentValue;
-    });
+    return formFields.every(field => initial[field] === current[field]);
   };
 
   const handleSave = async data => {
@@ -132,9 +128,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
       <EditableForm
         title='Update Contact Info'
         containerId='contactEdit'
-        initialData={
-          contactInfo && contactInfo.length > 0 ? contactInfo[0] : null
-        }
+        initialData={contactInfo || null}
         onSave={handleSave}
         onSuccess={handleSuccess}
         onError={handleError}
@@ -149,7 +143,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
             <>
               <div className='mb-3'>
                 <label
-                  htmlFor='email'
+                  htmlFor='publicEmail'
                   className='form-label'
                   style={{ color: 'var(--main)' }}
                 >
@@ -158,16 +152,15 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 <input
                   type='email'
                   className={`form-control ${
-                    validationErrors.email ? 'is-invalid' : ''
+                    validationErrors.publicEmail ? 'is-invalid' : ''
                   }`}
-                  id='email'
-                  name='email'
-                  value={formData.email || ''}
+                  id='publicEmail'
+                  name='publicEmail'
+                  value={formData.publicEmail || ''}
                   onChange={handleChange}
-                  placeholder='Enter email address'
-                  required
+                  placeholder='Enter public email address'
                 />
-                {validationErrors.email && (
+                {validationErrors.publicEmail && (
                   <div
                     className='invalid-feedback'
                     style={{
@@ -175,13 +168,13 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                       fontSize: '0.875rem',
                     }}
                   >
-                    {validationErrors.email}
+                    {validationErrors.publicEmail}
                   </div>
                 )}
               </div>
               <div className='mb-3'>
                 <label
-                  htmlFor='phone'
+                  htmlFor='publicPhone'
                   className='form-label'
                   style={{ color: 'var(--main)' }}
                 >
@@ -190,15 +183,15 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                 <input
                   type='tel'
                   className={`form-control ${
-                    validationErrors.phone ? 'is-invalid' : ''
+                    validationErrors.publicPhone ? 'is-invalid' : ''
                   }`}
-                  id='phone'
-                  name='phone'
-                  value={formData.phone || ''}
+                  id='publicPhone'
+                  name='publicPhone'
+                  value={formData.publicPhone || ''}
                   onChange={handleChange}
-                  placeholder='Enter phone number'
+                  placeholder='Enter public phone number'
                 />
-                {validationErrors.phone && (
+                {validationErrors.publicPhone && (
                   <div
                     className='invalid-feedback'
                     style={{
@@ -206,7 +199,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
                       fontSize: '0.875rem',
                     }}
                   >
-                    {validationErrors.phone}
+                    {validationErrors.publicPhone}
                   </div>
                 )}
               </div>
@@ -467,7 +460,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
 };
 
 function mapStateToProps({ contactInfo }) {
-  return { contactInfo: contactInfo?.data || [] };
+  return { contactInfo: contactInfo?.data || null };
 }
 
 export default connect(mapStateToProps, { fetchContactInfo })(ContactEdit);

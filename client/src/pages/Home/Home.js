@@ -84,6 +84,12 @@ const HomePage = ({
   const accordionItems = [];
 
   const createAccordionItems = () => {
+    // Safety check: ensure shows is an array
+    if (!Array.isArray(shows)) {
+      console.error('Shows is not an array:', shows);
+      return;
+    }
+
     shows.map(show => {
       const {
         _id,
