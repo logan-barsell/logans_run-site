@@ -312,7 +312,7 @@ class AuthController {
         });
       }
 
-      await AuthService.sendEmailVerification(
+      await AuthService.sendEmailVerificationWithToken(
         user._id.toString(),
         user.adminEmail,
         user.role

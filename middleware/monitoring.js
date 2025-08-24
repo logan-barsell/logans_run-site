@@ -104,7 +104,7 @@ const requestLogger =
  * Performance monitoring configuration
  */
 const statusMonitorConfig = {
-  title: 'Logans Run API Status',
+  title: 'Bandsyte API Status',
   theme: 'default.css',
   path: '/status',
   spans: [

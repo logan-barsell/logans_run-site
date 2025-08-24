@@ -1,7 +1,7 @@
 {
-  "name": "logans_run-site",
+  "name": "bandsyte-platform",
   "version": "1.0.0",
-  "description": "",
+  "description": "Professional band website platform by Bandsyte",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.873.0",
     "@stripe/react-stripe-js": "^1.10.0",
     "@stripe/stripe-js": "^1.35.0",
     "axios": "^1.11.0",

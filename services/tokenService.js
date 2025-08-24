@@ -79,7 +79,7 @@ async function verifyRefreshToken(token, ip, userAgent) {
     logger.warn(
       `🚨 Refresh token reuse detected for user ${decoded.uuid} from IP: ${ip}`
     );
-    // TODO: Implement Email or Slack alerts
+    // TODO: Send security alert email to user about suspicious activity
     await UserService.endAllUserSessions(decoded.id, true); // Revoke all tokens and end sessions
     throw new AppError('Suspicious activity detected - Token reuse', 403);
   }
@@ -88,7 +88,7 @@ async function verifyRefreshToken(token, ip, userAgent) {
     logger.warn(
       `⚠️ Possible token theft for user ${decoded.uuid} - Different IP/device detected`
     );
-    // TODO: Implement Email or Slack alerts
+    // TODO: Send security alert email to user about device change
     await UserService.endAllUserSessions(decoded.id, true); // Revoke all tokens and end sessions
     throw new AppError(
       'Suspicious activity detected - Token used from a different device',

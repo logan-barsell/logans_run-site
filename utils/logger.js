@@ -89,7 +89,7 @@ if (process.env.AWS_CLOUDWATCH === 'enabled' && process.env.AWS_ACCESS_KEY_ID) {
     const WinstonCloudWatch = require('winston-cloudwatch');
     logger.add(
       new WinstonCloudWatch({
-        logGroupName: 'LogansRunLogs',
+        logGroupName: 'BandsyteLogs',
         logStreamName: 'backend',
         awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
         awsSecretKey: process.env.AWS_SECRET_ACCESS_KEY,

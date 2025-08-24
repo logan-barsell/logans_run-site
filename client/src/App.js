@@ -21,7 +21,7 @@ function App() {
 
   const defaultDescription = 'Welcome to the official site!';
   const metaDescription = bioText || defaultDescription;
-  const bandName = theme?.siteTitle || "Logan's Run";
+  const bandName = theme?.siteTitle || 'Bandsyte';
   const bandLogo = theme?.bandLogoUrl;
 
   React.useEffect(() => {
