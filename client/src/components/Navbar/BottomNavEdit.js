@@ -24,14 +24,14 @@ const BottomNavEdit = () => {
           <div className='row justify-content-center'>
             <div className='col-auto'>
               <Button
-                id='updateTheme'
+                id='updateSettings'
                 type='button'
                 size='sm'
                 className='mx-sm-3'
                 variant='danger'
-                onClick={() => navigate('/theme')}
+                onClick={() => navigate('/settings')}
               >
-                Update &nbsp;Theme
+                Theme & Settings
               </Button>
             </div>
           </div>

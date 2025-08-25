@@ -16,7 +16,7 @@ import MerchEdit from './Merch/MerchEdit';
 import MediaEdit from './Media/MediaEdit';
 import BioEdit from './Bio/BioEdit';
 import ContactEdit from './Contact/ContactEdit';
-import ThemeEdit from './Theme/ThemeEdit';
+import Settings from './Settings/Settings';
 import history from '../history';
 import BottomNavEdit from '../components/Navbar/BottomNavEdit';
 import { ActiveContext } from '../contexts/ActiveContext';
@@ -46,62 +46,66 @@ const AdminPages = () => {
   const [toggle, setToggle] = useState(false);
 
   return (
-    <>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+    >
       <ActiveContext.Provider
         value={{ activeIndex, setActiveIndex, toggle, setToggle }}
       >
         <TopNavEdit routes={routes} />
-        <Routes>
-          <Route
-            path='/'
-            exact
-            element={
-              <Navigate
-                to='/theme'
-                replace
-              />
-            }
-          />
-          <Route
-            path='/home'
-            exact
-            element={<HomeEdit />}
-          />
-          <Route
-            path='/music'
-            exact
-            element={<MusicEdit />}
-          />
-          <Route
-            path='/store'
-            exact
-            element={<MerchEdit />}
-          />
-          <Route
-            path='/media'
-            exact
-            element={<MediaEdit />}
-          />
-          <Route
-            path='/aboutus'
-            exact
-            element={<BioEdit />}
-          />
-          <Route
-            path='/contact'
-            exact
-            element={<ContactEdit />}
-          />
-          <Route
-            path='/theme'
-            exact
-            element={<ThemeEdit />}
-          />
-        </Routes>
-        {location.pathname !== '/theme' && <BottomNavEdit />}
+        <div style={{ flex: 1 }}>
+          <Routes>
+            <Route
+              path='/'
+              exact
+              element={
+                <Navigate
+                  to='/settings'
+                  replace
+                />
+              }
+            />
+            <Route
+              path='/home'
+              exact
+              element={<HomeEdit />}
+            />
+            <Route
+              path='/music'
+              exact
+              element={<MusicEdit />}
+            />
+            <Route
+              path='/store'
+              exact
+              element={<MerchEdit />}
+            />
+            <Route
+              path='/media'
+              exact
+              element={<MediaEdit />}
+            />
+            <Route
+              path='/aboutus'
+              exact
+              element={<BioEdit />}
+            />
+            <Route
+              path='/contact'
+              exact
+              element={<ContactEdit />}
+            />
+            <Route
+              path='/settings'
+              exact
+              element={<Settings />}
+            />
+          </Routes>
+        </div>
+        {location.pathname !== '/settings' && <BottomNavEdit />}
         <AlertContainer />
       </ActiveContext.Provider>
-    </>
+    </div>
   );
 };
 

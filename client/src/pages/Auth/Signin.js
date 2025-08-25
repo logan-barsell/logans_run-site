@@ -23,7 +23,7 @@ const Signin = () => {
         setIsSuccess(true);
         showSuccess('Login successful! Redirecting...');
         setTimeout(() => {
-          window.location.href = '/theme';
+          window.location.href = '/settings';
         }, 1000);
       } else {
         const errorMessage = data.error || 'Login failed';

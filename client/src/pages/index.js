@@ -47,86 +47,90 @@ const UserPages = () => {
   const [toggle, setToggle] = useState(false);
 
   return (
-    <>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+    >
       <ActiveContext.Provider
         value={{ activeIndex, setActiveIndex, toggle, setToggle }}
       >
         <TopNav routes={routes} />
-        <Routes>
-          <Route
-            path='/'
-            exact
-            element={<HomePage />}
-          />
-          <Route
-            path='/home'
-            exact
-            element={
-              <Navigate
-                to='/'
-                replace
-              />
-            }
-          />
-          <Route
-            path='/theme'
-            exact
-            element={
-              <Navigate
-                to='/'
-                replace
-              />
-            }
-          />
-          <Route
-            path='/music'
-            exact
-            element={<MusicPage />}
-          />
-          <Route
-            path='/store'
-            exact
-            element={<StorePage />}
-          />
-          <Route
-            path='/media'
-            exact
-            element={<MediaPage />}
-          />
-          <Route
-            path='/bio'
-            exact
-            element={<BioPage />}
-          />
-          <Route
-            path='/contact'
-            exact
-            element={<ContactPage />}
-          />
-          <Route
-            path='/signin'
-            exact
-            element={<Signin />}
-          />
-          <Route
-            path='/forgot-password'
-            exact
-            element={<ForgotPassword />}
-          />
-          <Route
-            path='/reset-password'
-            exact
-            element={<ResetPassword />}
-          />
-          <Route
-            path='*'
-            element={<NotFound />}
-          />
-        </Routes>
+        <div style={{ flex: 1 }}>
+          <Routes>
+            <Route
+              path='/'
+              exact
+              element={<HomePage />}
+            />
+            <Route
+              path='/home'
+              exact
+              element={
+                <Navigate
+                  to='/'
+                  replace
+                />
+              }
+            />
+            <Route
+              path='/settings'
+              exact
+              element={
+                <Navigate
+                  to='/'
+                  replace
+                />
+              }
+            />
+            <Route
+              path='/music'
+              exact
+              element={<MusicPage />}
+            />
+            <Route
+              path='/store'
+              exact
+              element={<StorePage />}
+            />
+            <Route
+              path='/media'
+              exact
+              element={<MediaPage />}
+            />
+            <Route
+              path='/bio'
+              exact
+              element={<BioPage />}
+            />
+            <Route
+              path='/contact'
+              exact
+              element={<ContactPage />}
+            />
+            <Route
+              path='/signin'
+              exact
+              element={<Signin />}
+            />
+            <Route
+              path='/forgot-password'
+              exact
+              element={<ForgotPassword />}
+            />
+            <Route
+              path='/reset-password'
+              exact
+              element={<ResetPassword />}
+            />
+            <Route
+              path='*'
+              element={<NotFound />}
+            />
+          </Routes>
+        </div>
         <BottomNav routes={routes} />
         <AlertContainer />
       </ActiveContext.Provider>
-    </>
+    </div>
   );
 };
 
