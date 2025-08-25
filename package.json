@@ -11,7 +11,8 @@
     "build": "npm run build --prefix client",
     "install-client": "npm install --prefix client",
     "heroku-postbuild": "npm run install-client && npm run build",
-    "generate-secret": "node scripts/generateJWTSecret.js"
+    "generate-secret": "node scripts/generateJWTSecret.js",
+    "migrate-theme": "node migrations/addThemeFields.js"
   },
   "keywords": [],
   "author": "",

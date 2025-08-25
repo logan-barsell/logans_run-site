@@ -65,17 +65,70 @@ const TopNav = ({ routes }) => {
     };
   });
 
+  // Determine header display content
+  const getHeaderContent = () => {
+    const headerDisplay = theme?.headerDisplay || 'band-name-and-logo';
+
+    switch (headerDisplay) {
+      case 'band-name-only':
+        return theme?.siteTitle || 'Bandsyte';
+      case 'logo-only':
+        return theme?.bandLogoUrl ? (
+          <img
+            src={theme.bandLogoUrl}
+            alt={theme?.siteTitle || 'Band Logo'}
+          />
+        ) : (
+          theme?.siteTitle || 'Bandsyte'
+        );
+      case 'band-name-and-logo':
+      default:
+        return (
+          <>
+            {theme?.bandLogoUrl && (
+              <img
+                src={theme.bandLogoUrl}
+                alt={theme?.siteTitle || 'Band Logo'}
+              />
+            )}
+            {theme?.siteTitle || 'Bandsyte'}
+          </>
+        );
+    }
+  };
+
+  // Determine header position class
+  const getHeaderPositionClass = () => {
+    const headerPosition = theme?.headerPosition || 'left';
+
+    switch (headerPosition) {
+      case 'center':
+        return 'navbar-container-center';
+      case 'right':
+        return 'navbar-container-right';
+      case 'left':
+      default:
+        return 'navbar-container-left';
+    }
+  };
+
+  // Determine header display class
+  const getHeaderDisplayClass = () => {
+    const headerDisplay = theme?.headerDisplay || 'band-name-and-logo';
+    return `header-${headerDisplay.replace(/-/g, '-')}`;
+  };
+
   return (
     <nav
       ref={ref}
       className='navbar navbar-expand-lg navbar-light sticky-top'
     >
-      <div className='container-fluid'>
+      <div className={`container-fluid d-flex ${getHeaderPositionClass()}`}>
         <a
-          className='navbar-brand yesdevil hvr-grow'
+          className={`navbar-brand yesdevil hvr-grow ${getHeaderDisplayClass()}`}
           href='/'
         >
-          {theme.siteTitle || 'Bandsyte'}
+          {getHeaderContent()}
         </a>
         <button
           className='navbar-toggler'

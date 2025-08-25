@@ -75,6 +75,7 @@
   --main: #e3ff05; /* Default primary color - will be overridden by theme */
   --main-rgb: 227, 255, 5; /* RGB for main color, for rgba() usage */
   --secondary: #f08080; /* Default secondary color - will be overridden by theme */
+  --background: #272727; /* Default background color - will be overridden by theme */
   --primary-font: sprayPaint; /* Default primary font - will be overridden by theme */
   --secondary-font: 'Courier New', Courier, monospace; /* Default secondary font */
 }
@@ -83,7 +84,7 @@ html,
 body {
   font-family: var(--primary-font), Arial, sans-serif;
   font-size: 22px;
-  background-color: #272727;
+  background-color: var(--background);
   letter-spacing: normal;
 }
 

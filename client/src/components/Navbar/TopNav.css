@@ -10,9 +10,49 @@
   text-shadow: 2px 1px var(--secondary);
 }
 
+/* Header display mode styles */
+.navbar-brand.yesdevil.header-band-name-only {
+  font-size: 35px;
+}
+
+.navbar-brand.yesdevil.header-logo-only img {
+  height: 60px;
+  width: auto;
+  max-width: 300px;
+}
+
+.navbar-brand.yesdevil.header-band-name-and-logo {
+  font-size: 35px;
+}
+
+.navbar-brand.yesdevil.header-band-name-and-logo img {
+  height: 60px;
+  width: auto;
+  max-width: 200px;
+  margin-right: 15px;
+}
+
 @media (max-width: 2000px) {
   .navbar-light .navbar-brand.yesdevil {
     font-size: 2.5vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-only {
+    font-size: 2.5vw;
+  }
+
+  .navbar-brand.yesdevil.header-logo-only img {
+    height: 4vw;
+    max-width: 20vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo {
+    font-size: 1.8vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo img {
+    height: 4vw;
+    max-width: 15vw;
   }
 }
 
@@ -20,17 +60,71 @@
   .navbar-light .navbar-brand.yesdevil {
     font-size: 4vw;
   }
+
+  .navbar-brand.yesdevil.header-band-name-only {
+    font-size: 4vw;
+  }
+
+  .navbar-brand.yesdevil.header-logo-only img {
+    height: 6vw;
+    max-width: 25vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo {
+    font-size: 3vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo img {
+    height: 6vw;
+    max-width: 20vw;
+  }
 }
 
 @media (max-width: 650px) {
   .navbar-light .navbar-brand.yesdevil {
     font-size: 6vw;
   }
+
+  .navbar-brand.yesdevil.header-band-name-only {
+    font-size: 6vw;
+  }
+
+  .navbar-brand.yesdevil.header-logo-only img {
+    height: 8vw;
+    max-width: 30vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo {
+    font-size: 4.5vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo img {
+    height: 8vw;
+    max-width: 25vw;
+  }
 }
 
 @media (max-width: 500px) {
   .navbar-light .navbar-brand.yesdevil {
     font-size: 8vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-only {
+    font-size: 8vw;
+  }
+
+  .navbar-brand.yesdevil.header-logo-only img {
+    height: 10vw;
+    max-width: 35vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo {
+    font-size: 6vw;
+  }
+
+  .navbar-brand.yesdevil.header-band-name-and-logo img {
+    height: 10vw;
+    max-width: 30vw;
   }
 }
 
@@ -144,4 +238,119 @@ nav {
 .cartQuantity {
   background-color: var(--secondary);
   border: 1px solid var(--main);
+}
+
+/* Header positioning layouts */
+.navbar-container-left {
+  /* Default layout - no changes needed */
+}
+
+.navbar-container-center {
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.navbar-container-center .navbar-brand {
+  order: 1;
+  margin-bottom: 10px;
+  /* Ensure it's truly centered */
+  position: relative;
+  z-index: 1;
+}
+
+.navbar-container-center .navbar-collapse {
+  order: 2;
+  width: 100%;
+}
+
+.navbar-container-center .navbar-toggler {
+  order: 3;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.navbar-container-right {
+  /* Standard row layout, but we'll position brand to the right */
+}
+
+.navbar-container-right .navbar-brand {
+  order: 2;
+  margin-left: auto;
+}
+
+.navbar-container-right .navbar-collapse {
+  order: 1;
+  flex-grow: 1;
+}
+
+.navbar-container-right .navbar-toggler {
+  order: 3;
+}
+
+/* Mobile responsive positioning */
+@media (max-width: 991px) {
+  .navbar-container-center {
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: relative;
+    width: 100%;
+  }
+
+  .navbar-container-center .navbar-brand {
+    order: unset !important;
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+    text-align: center;
+    position: static !important;
+    transform: none !important;
+    z-index: 1;
+    flex-grow: 0 !important;
+  }
+
+  .navbar-container-center .navbar-toggler {
+    position: absolute !important;
+    right: 15px;
+    top: 15px;
+    transform: none;
+    z-index: 2;
+    order: unset !important;
+  }
+
+  .navbar-container-center .navbar-toggler[aria-expanded='true'] {
+    top: 15px;
+    transform: none;
+  }
+
+  .navbar-container-center .navbar-collapse {
+    width: 100%;
+    order: unset !important;
+  }
+
+  .navbar-container-center .navbar-collapse.show {
+    display: block !important;
+  }
+
+  .navbar-container-right {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .navbar-container-right .navbar-brand {
+    order: 2;
+    margin-left: 0;
+  }
+
+  .navbar-container-right .navbar-toggler {
+    order: 1;
+  }
+
+  .navbar-container-right .navbar-collapse {
+    order: 3;
+    width: 100%;
+  }
 }

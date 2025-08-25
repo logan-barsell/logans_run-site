@@ -41,7 +41,7 @@ const BottomNav = ({
         <div className='col-md-7 my-2'>
           <div className='row justify-content-center'>
             <div className='col-auto'>
-              <NewsletterModal />
+              {theme?.newsletterEnabled !== false && <NewsletterModal />}
             </div>
           </div>
         </div>
@@ -184,6 +184,34 @@ const BottomNav = ({
               href='.'
             >
               {process.env.REACT_APP_DOMAIN || 'your-domain.com'}
+            </a>
+          </p>
+        </div>
+        {/* Powered by Bandsyte */}
+        <div
+          style={{
+            background: 'rgba(0, 0, 0, 0.3)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '0.5rem 0',
+            textAlign: 'center',
+          }}
+        >
+          <p
+            className='secondary-font'
+            style={{ marginBottom: '0' }}
+          >
+            Powered by{' '}
+            <a
+              href='https://bandsyte.com'
+              target='_blank'
+              rel='noopener noreferrer'
+              style={{
+                color: 'var(--main)',
+                textDecoration: 'none',
+                fontWeight: '600',
+              }}
+            >
+              Bandsyte
             </a>
           </p>
         </div>

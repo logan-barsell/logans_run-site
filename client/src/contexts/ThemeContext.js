@@ -21,6 +21,9 @@ const updateCSSVariables = theme => {
   if (theme.secondaryColor) {
     root.style.setProperty('--secondary', theme.secondaryColor);
   }
+  if (theme.backgroundColor) {
+    root.style.setProperty('--background', theme.backgroundColor);
+  }
   if (theme.primaryFont) {
     root.style.setProperty('--primary-font', theme.primaryFont);
   }
