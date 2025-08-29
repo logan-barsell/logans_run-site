@@ -87,6 +87,27 @@ class HomeService {
       await newShow.save();
 
       logger.info('New show added successfully');
+
+      // Send newsletter notification for new show
+      try {
+        const NewsletterService = require('./newsletterService');
+        await NewsletterService.sendContentNotification('show', {
+          title: newShow.venue || 'New Show',
+          date: newShow.date,
+          venue: newShow.venue,
+          location: newShow.location,
+          description: `New show at ${newShow.venue}${
+            newShow.location ? ` in ${newShow.location}` : ''
+          }`,
+        });
+      } catch (notificationError) {
+        logger.error(
+          'Failed to send newsletter notification for new show:',
+          notificationError
+        );
+        // Don't throw error - show was still added successfully
+      }
+
       return newShow;
     } catch (error) {
       logger.error('Error adding show:', error);

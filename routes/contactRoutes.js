@@ -7,6 +7,7 @@ const {
   sendNewsletterSignupNotification,
 } = require('../services/emailService');
 const themeService = require('../services/themeService');
+const NewsletterService = require('../services/newsletterService');
 const logger = require('../utils/logger');
 
 // GET contact information
@@ -69,6 +70,13 @@ router.post('/newsletter-signup', async (req, res) => {
       });
     }
 
+    // Add subscriber to database
+    const result = await NewsletterService.addSubscriber(email, 'website');
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
     // Get the actual band name from theme
     const theme = await themeService.getTheme();
     const bandName = theme.siteTitle || 'Bandsyte';
@@ -94,6 +102,77 @@ router.post('/newsletter-signup', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to subscribe to newsletter',
+    });
+  }
+});
+
+// GET unsubscribe from newsletter
+router.get('/unsubscribe', async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: 'Unsubscribe token is required',
+      });
+    }
+
+    const result = await NewsletterService.unsubscribe(token);
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully unsubscribed from newsletter',
+    });
+  } catch (error) {
+    logger.error('❌ Newsletter unsubscribe failed:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to unsubscribe from newsletter',
+    });
+  }
+});
+
+// GET newsletter statistics (admin only)
+router.get('/newsletter-stats', async (req, res) => {
+  try {
+    const stats = await NewsletterService.getStats();
+
+    res.status(200).json({
+      success: true,
+      data: stats,
+    });
+  } catch (error) {
+    logger.error('❌ Failed to get newsletter stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get newsletter statistics',
+    });
+  }
+});
+
+// GET all newsletter subscribers (admin only)
+router.get('/newsletter-subscribers', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    const result = await NewsletterService.getActiveSubscribers(page, limit);
+
+    res.status(200).json({
+      success: true,
+      data: result.subscribers,
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    logger.error('❌ Failed to get newsletter subscribers:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get newsletter subscribers',
     });
   }
 });

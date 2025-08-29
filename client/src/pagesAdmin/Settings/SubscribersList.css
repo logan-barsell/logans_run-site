@@ -1,0 +1,160 @@
+/* Subscribers List Container */
+.subscribers-list-wrapper {
+  margin-bottom: 50px;
+  padding-bottom: 50px;
+}
+
+/* Bootstrap Table Theme Overrides */
+.card .table {
+  color: white !important;
+  margin-bottom: 0 !important;
+}
+
+.card .table thead th {
+  background-color: var(--accordion-bg) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  font-family: var(--secondary-font) !important;
+}
+
+.card .table td {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  font-family: var(--secondary-font) !important;
+}
+
+.card .table tbody tr:nth-child(even) {
+  background-color: var(--accordion-content-light) !important;
+}
+
+.card .table tbody tr:nth-child(odd) {
+  background-color: var(--accordion-content-bg) !important;
+}
+
+.card .table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Remove Bootstrap's default table border */
+.card .table > :not(:first-child) {
+  border-top: none !important;
+}
+
+/* Ensure table-responsive works properly with sidebar */
+.table-responsive {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* Container-based responsive table */
+.card {
+  container-type: inline-size;
+}
+
+/* Pagination styling */
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.pagination .page-link {
+  border-radius: 0.25rem;
+  margin: 0 2px;
+  transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+  background-color: var(--accordion-bg) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: var(--accordion-bg) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  cursor: not-allowed;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+  .pagination {
+    justify-content: center;
+  }
+
+  .pagination .page-link {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8rem;
+    min-width: 32px;
+  }
+}
+
+@media (max-width: 576px) {
+  .pagination .page-link {
+    padding: 0.25rem 0.3rem;
+    font-size: 0.7rem;
+    min-width: 28px;
+    height: 32px;
+  }
+
+  .pagination .page-link[style*='fontSize: 1.2rem'] {
+    font-size: 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination .page-link {
+    padding: 0.2rem 0.25rem;
+    font-size: 0.65rem;
+    min-width: 26px;
+    height: 30px;
+  }
+
+  .pagination .page-link[style*='fontSize: 1.2rem'] {
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Table responds to container size, not viewport size */
+@container (max-width: 800px) {
+  .table-responsive {
+    overflow-x: auto !important;
+  }
+
+  .card .table thead th {
+    padding: 12px 8px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .card .table td {
+    padding: 12px 8px !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+@container (max-width: 600px) {
+  .table-responsive {
+    overflow-x: auto !important;
+  }
+
+  .card .table thead th {
+    padding: 10px 6px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .card .table td {
+    padding: 10px 6px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .card .table .badge {
+    font-size: 0.7rem !important;
+  }
+}
