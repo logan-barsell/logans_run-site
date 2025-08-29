@@ -567,46 +567,85 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                   value={formData.primaryFont || ''}
                   onChange={handleInputChange}
                 >
-                  <optgroup label='Custom Fonts'>
-                    <option value='sprayPaint'>SprayPaint (Custom)</option>
-                  </optgroup>
-                  <optgroup label='Edgy/Rock'>
-                    <option value='BebasNeue'>Bebas Neue (Ultra Bold)</option>
-                    <option value='Anton'>Anton (Heavy Impact)</option>
-                    <option value='Oswald'>
-                      Oswald (Condensed Industrial)
+                  <optgroup label='🎸 ROCK/METAL'>
+                    <option value='MetalMania'>MetalMania (Heavy Metal)</option>
+                    <option value='Butcherman'>
+                      Butcherman (Horror Metal)
                     </option>
+                    <option value='RoadRage'>RoadRage (Aggressive Rock)</option>
+                    <option value='RubikBurned'>
+                      RubikBurned (Burned Effect)
+                    </option>
+                    <option value='RubikGlitch'>
+                      RubikGlitch (Digital Glitch)
+                    </option>
+                    <option value='RubikWetPaint'>
+                      RubikWetPaint (Graffiti Style)
+                    </option>
+                    <option value='Bungee'>Bungee (Bold Impact)</option>
+                    <option value='BungeeHairline'>
+                      BungeeHairline (Thin Impact)
+                    </option>
+                    <option value='Bangers'>Bangers (Comic Impact)</option>
+                    <option value='Barrio'>Barrio (Urban Street)</option>
+                    <option value='Frijole'>Frijole (Western Rock)</option>
+                    <option value='Griffy'>Griffy (Gothic Horror)</option>
+                    <option value='JollyLodger'>
+                      JollyLodger (Spooky Fun)
+                    </option>
+                    <option value='Lacquer'>Lacquer (Liquid Metal)</option>
+                    <option value='PirataOne'>PirataOne (Pirate Rock)</option>
+                    <option value='Anton'>Anton (Heavy Impact)</option>
+                    <option value='BebasNeue'>Bebas Neue (Ultra Bold)</option>
+                    <option value='Creepster'>Creepster (Horror)</option>
+                    <option value='Righteous'>Righteous (Futuristic)</option>
+                    <option value='sprayPaint'>SprayPaint (Graffiti)</option>
                   </optgroup>
-                  <optgroup label='60s/70s Hippy'>
-                    <option value='Pacifico'>Pacifico (Hippy Vibes)</option>
-                  </optgroup>
-                  <optgroup label='Metal/Horror'>
-                    <option value='Creepster'>Creepster (Horror Metal)</option>
-                    <option value='Sancreek'>Sancreek (Western Horror)</option>
-                  </optgroup>
-                  <optgroup label='Punk/Graffiti'>
+                  <optgroup label='🕰️ RETRO/VINTAGE'>
+                    <option value='Asimovian'>Asimovian (Sci-Fi Retro)</option>
+                    <option value='SixCaps'>SixCaps (All Caps Retro)</option>
+                    <option value='Smokum'>Smokum (Western Retro)</option>
+                    <option value='Rye'>Rye (Western Vintage)</option>
+                    <option value='TradeWinds'>
+                      TradeWinds (Pirate Vintage)
+                    </option>
+                    <option value='IMFellEnglishSC'>
+                      IMFellEnglishSC (Victorian)
+                    </option>
                     <option value='VT323'>VT323 (Retro Terminal)</option>
+                    <option value='Sancreek'>Sancreek (Western)</option>
                   </optgroup>
-                  <optgroup label='Hand-Drawn/Rock'>
+                  <optgroup label='🎭 DRAMATIC/ARTISTIC'>
+                    <option value='Ewert'>Ewert (Swash Display)</option>
+                    <option value='FrederickatheGreat'>
+                      FrederickatheGreat (Ornate Display)
+                    </option>
+                    <option value='GlassAntiqua'>GlassAntiqua (Antique)</option>
+                    <option value='Lancelot'>Lancelot (Medieval)</option>
+                    <option value='Macondo'>Macondo (Artistic)</option>
+                  </optgroup>
+                  <optgroup label='✍️ HAND-DRAWN/CASUAL'>
+                    <option value='LondrinaSketch'>
+                      LondrinaSketch (Sketch Style)
+                    </option>
+                    <option value='Caveat'>Caveat (Handwriting)</option>
+                    <option value='SmoochSans'>SmoochSans (Casual)</option>
+                    <option value='AmaticSC'>AmaticSC (Handwritten)</option>
+                    <option value='Chicle'>Chicle (Bubble Gum)</option>
                     <option value='Kalam'>Kalam (Hand-Drawn)</option>
                     <option value='IndieFlower'>Indie Flower (Playful)</option>
-                    <option value='ArchitectsDaughter'>
-                      Architects Daughter (Sketchy)
-                    </option>
-                    <option value='ComicNeue'>Comic Neue (Comic Style)</option>
                   </optgroup>
-                  <optgroup label='Fun/Bold'>
-                    <option value='Righteous'>Righteous (Futuristic)</option>
+                  <optgroup label='🎪 FUN/PLAYFUL'>
+                    <option value='Aladin'>Aladin (Magic)</option>
+                    <option value='Bahiana'>Bahiana (Tropical)</option>
+                    <option value='CaesarDressing'>
+                      CaesarDressing (Roman Fun)
+                    </option>
+                    <option value='Danfo'>Danfo (Variable Fun)</option>
+                    <option value='Fascinate'>Fascinate (Fascinating)</option>
+                    <option value='Iceland'>Iceland (Cool)</option>
                     <option value='Lobster'>Lobster (Fun & Bold)</option>
-                  </optgroup>
-                  <optgroup label='Classic'>
-                    <option value='Courier New'>
-                      Courier New (Retro/Vintage)
-                    </option>
-                    <option value='Orbitron'>Orbitron (Futuristic)</option>
-                    <option value='RobotoCondensed'>
-                      Roboto Condensed (Clean)
-                    </option>
+                    <option value='Pacifico'>Pacifico (Hippy Vibes)</option>
                   </optgroup>
                 </select>
               </div>
@@ -625,45 +664,44 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                   value={formData.secondaryFont || ''}
                   onChange={handleInputChange}
                 >
-                  <optgroup label='Custom Fonts'>
-                    <option value='sprayPaint'>SprayPaint (Custom)</option>
-                  </optgroup>
-                  <optgroup label='Edgy/Rock'>
-                    <option value='BebasNeue'>Bebas Neue (Ultra Bold)</option>
-                    <option value='Anton'>Anton (Heavy Impact)</option>
-                    <option value='Oswald'>
-                      Oswald (Condensed Industrial)
+                  <optgroup label='🕰️ RETRO/VINTAGE'>
+                    <option value='CourierPrime'>
+                      CourierPrime (Typewriter)
                     </option>
-                  </optgroup>
-                  <optgroup label='60s/70s Hippy'>
-                    <option value='Pacifico'>Pacifico (Hippy Vibes)</option>
-                  </optgroup>
-                  <optgroup label='Metal/Horror'>
-                    <option value='Creepster'>Creepster (Horror Metal)</option>
-                    <option value='Sancreek'>Sancreek (Western Horror)</option>
-                  </optgroup>
-                  <optgroup label='Punk/Graffiti'>
-                    <option value='VT323'>VT323 (Retro Terminal)</option>
-                  </optgroup>
-                  <optgroup label='Hand-Drawn/Rock'>
-                    <option value='Kalam'>Kalam (Hand-Drawn)</option>
-                    <option value='IndieFlower'>Indie Flower (Playful)</option>
-                    <option value='ArchitectsDaughter'>
-                      Architects Daughter (Sketchy)
+                    <option value='SpecialElite'>
+                      SpecialElite (Typewriter)
                     </option>
-                    <option value='ComicNeue'>Comic Neue (Comic Style)</option>
-                  </optgroup>
-                  <optgroup label='Fun/Bold'>
-                    <option value='Righteous'>Righteous (Futuristic)</option>
-                    <option value='Lobster'>Lobster (Fun & Bold)</option>
-                  </optgroup>
-                  <optgroup label='Classic'>
+                    <option value='XanhMono'>XanhMono (Monospace)</option>
+                    <option value='Oranienbaum'>
+                      Oranienbaum (Classic Serif)
+                    </option>
                     <option value='Courier New'>
                       Courier New (Retro/Vintage)
                     </option>
-                    <option value='Orbitron'>Orbitron (Futuristic)</option>
-                    <option value='RobotoCondensed'>
-                      Roboto Condensed (Clean)
+                    <option value='VT323'>VT323 (Retro Terminal)</option>
+                  </optgroup>
+                  <optgroup label='🎭 DRAMATIC/ARTISTIC'>
+                    <option value='CormorantUnicase'>
+                      CormorantUnicase (Elegant Display)
+                    </option>
+                    <option value='Bellefair'>Bellefair (Elegant Serif)</option>
+                    <option value='Italiana'>Italiana (Elegant Serif)</option>
+                  </optgroup>
+                  <optgroup label='✍️ HAND-DRAWN/CASUAL'>
+                    <option value='ArchitectsDaughter'>
+                      Architects Daughter (Sketchy)
+                    </option>
+                    <option value='Caveat'>Caveat (Handwriting)</option>
+                    <option value='SmoochSans'>SmoochSans (Casual)</option>
+                    <option value='AmaticSC'>AmaticSC (Handwritten)</option>
+                  </optgroup>
+                  <optgroup label='📖 READABLE/CLASSIC'>
+                    <option value='Oswald'>
+                      Oswald (Condensed Industrial)
+                    </option>
+                    <option value='EpundaSlab'>EpundaSlab (Slab Serif)</option>
+                    <option value='InstrumentSerif'>
+                      InstrumentSerif (Serif)
                     </option>
                   </optgroup>
                 </select>

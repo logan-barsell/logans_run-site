@@ -13,9 +13,11 @@
 }
 
 .btn:disabled,
-.btn[disabled] {
+.btn[disabled],
+a.btn:disabled,
+a.btn[disabled] {
   background-color: var(--main);
-  color: black;
+  color: black !important;
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -33,9 +35,11 @@
   border-color: var(--main);
 }
 .btn-danger.disabled,
-.btn-danger:disabled {
+.btn-danger:disabled,
+a.btn-danger.disabled,
+a.btn-danger:disabled {
   background-color: var(--main);
-  color: black;
+  color: black !important;
 }
 .btn-check:focus + .btn-danger,
 .btn-danger:focus {

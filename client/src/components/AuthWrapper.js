@@ -25,7 +25,7 @@ const AuthWrapper = ({ children }) => {
 
   // Show loading state while checking authentication
   if (authLoading) {
-    return <div>Loading...</div>;
+    return null; // Let Pace handle the loading UI
   }
 
   return children({ authenticated, setAuthenticated });
