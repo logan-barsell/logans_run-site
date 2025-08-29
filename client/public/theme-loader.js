@@ -78,20 +78,221 @@
       root.style.setProperty('--main', theme.primaryColor);
     if (theme.secondaryColor)
       root.style.setProperty('--secondary', theme.secondaryColor);
-    if (theme.primaryFont)
-      root.style.setProperty('--primary-font', theme.primaryFont);
+    if (theme.primaryFont) {
+      let fontStack = '';
+      switch (theme.primaryFont) {
+        // ROCK/METAL FONTS
+        case 'MetalMania':
+          fontStack = "'MetalMania', cursive";
+          break;
+        case 'Butcherman':
+          fontStack = "'Butcherman', cursive";
+          break;
+        case 'RoadRage':
+          fontStack = "'RoadRage', cursive";
+          break;
+        case 'RubikBurned':
+          fontStack = "'RubikBurned', cursive";
+          break;
+        case 'RubikGlitch':
+          fontStack = "'RubikGlitch', cursive";
+          break;
+        case 'RubikWetPaint':
+          fontStack = "'RubikWetPaint', cursive";
+          break;
+        case 'Bungee':
+          fontStack = "'Bungee', cursive";
+          break;
+        case 'BungeeHairline':
+          fontStack = "'BungeeHairline', cursive";
+          break;
+        case 'Bangers':
+          fontStack = "'Bangers', cursive";
+          break;
+        case 'Barrio':
+          fontStack = "'Barrio', cursive";
+          break;
+        case 'Frijole':
+          fontStack = "'Frijole', cursive";
+          break;
+        case 'Griffy':
+          fontStack = "'Griffy', cursive";
+          break;
+        case 'JollyLodger':
+          fontStack = "'JollyLodger', cursive";
+          break;
+        case 'Lacquer':
+          fontStack = "'Lacquer', cursive";
+          break;
+        case 'PirataOne':
+          fontStack = "'PirataOne', cursive";
+          break;
+        // RETRO/VINTAGE FONTS
+        case 'Asimovian':
+          fontStack = "'Asimovian', monospace";
+          break;
+        case 'SixCaps':
+          fontStack = "'SixCaps', sans-serif";
+          break;
+        case 'Smokum':
+          fontStack = "'Smokum', cursive";
+          break;
+        case 'Rye':
+          fontStack = "'Rye', cursive";
+          break;
+        case 'TradeWinds':
+          fontStack = "'TradeWinds', cursive";
+          break;
+        case 'IMFellEnglishSC':
+          fontStack = "'IMFellEnglishSC', serif";
+          break;
+        // DRAMATIC/ARTISTIC FONTS
+        case 'Ewert':
+          fontStack = "'Ewert', cursive";
+          break;
+        case 'FrederickatheGreat':
+          fontStack = "'FrederickatheGreat', cursive";
+          break;
+        case 'GlassAntiqua':
+          fontStack = "'GlassAntiqua', serif";
+          break;
+        case 'Lancelot':
+          fontStack = "'Lancelot', cursive";
+          break;
+        case 'Macondo':
+          fontStack = "'Macondo', cursive";
+          break;
+        // HAND-DRAWN/CASUAL FONTS
+        case 'LondrinaSketch':
+          fontStack = "'LondrinaSketch', cursive";
+          break;
+        case 'Caveat':
+          fontStack = "'Caveat', cursive";
+          break;
+        case 'SmoochSans':
+          fontStack = "'SmoochSans', cursive";
+          break;
+        case 'AmaticSC':
+          fontStack = "'AmaticSC', cursive";
+          break;
+        case 'Chicle':
+          fontStack = "'Chicle', cursive";
+          break;
+        // FUN/PLAYFUL FONTS
+        case 'Aladin':
+          fontStack = "'Aladin', cursive";
+          break;
+        case 'Bahiana':
+          fontStack = "'Bahiana', cursive";
+          break;
+        case 'CaesarDressing':
+          fontStack = "'CaesarDressing', cursive";
+          break;
+        case 'Danfo':
+          fontStack = "'Danfo', cursive";
+          break;
+        case 'Fascinate':
+          fontStack = "'Fascinate', cursive";
+          break;
+        case 'Iceland':
+          fontStack = "'Iceland', cursive";
+          break;
+        // EXISTING FONTS
+        case 'Anton':
+          fontStack = "'Anton', sans-serif";
+          break;
+        case 'BebasNeue':
+          fontStack = "'Bebas Neue', sans-serif";
+          break;
+        case 'Creepster':
+          fontStack = "'Creepster', cursive";
+          break;
+        case 'IndieFlower':
+          fontStack = "'Indie Flower', cursive";
+          break;
+        case 'Kalam':
+          fontStack = "'Kalam', cursive";
+          break;
+        case 'Lobster':
+          fontStack = "'Lobster', cursive";
+          break;
+        case 'Pacifico':
+          fontStack = "'Pacifico', cursive";
+          break;
+        case 'Righteous':
+          fontStack = "'Righteous', cursive";
+          break;
+        case 'Sancreek':
+          fontStack = "'Sancreek', cursive";
+          break;
+        case 'sprayPaint':
+          fontStack = "'sprayPaint', cursive";
+          break;
+        case 'VT323':
+          fontStack = "'VT323', monospace";
+          break;
+        default:
+          fontStack = "'Anton', sans-serif";
+          break;
+      }
+      root.style.setProperty('--primary-font', fontStack);
+    }
 
     if (theme.secondaryFont) {
-      let fontStack = "'Courier New', Courier, monospace";
+      let fontStack = "'Oswald', sans-serif";
       switch (theme.secondaryFont) {
-        case 'Fira Mono':
-          fontStack = "'Fira Mono', 'Courier New', Courier, monospace";
+        // RETRO/VINTAGE FONTS
+        case 'CourierPrime':
+          fontStack = "'CourierPrime', monospace";
           break;
-        case 'JetBrains Mono':
-          fontStack = "'JetBrains Mono', 'Courier New', Courier, monospace";
+        case 'SpecialElite':
+          fontStack = "'SpecialElite', monospace";
           break;
-        case 'Roboto Mono':
-          fontStack = "'Roboto Mono', 'Courier New', Courier, monospace";
+        case 'XanhMono':
+          fontStack = "'XanhMono', monospace";
+          break;
+        case 'Oranienbaum':
+          fontStack = "'Oranienbaum', serif";
+          break;
+        // DRAMATIC/ARTISTIC FONTS
+        case 'CormorantUnicase':
+          fontStack = "'CormorantUnicase', serif";
+          break;
+        case 'Bellefair':
+          fontStack = "'Bellefair', serif";
+          break;
+        case 'Italiana':
+          fontStack = "'Italiana', serif";
+          break;
+        // HAND-DRAWN/CASUAL FONTS
+        case 'ArchitectsDaughter':
+          fontStack = "'Architects Daughter', cursive";
+          break;
+        case 'Caveat':
+          fontStack = "'Caveat', cursive";
+          break;
+        case 'SmoochSans':
+          fontStack = "'SmoochSans', cursive";
+          break;
+        case 'AmaticSC':
+          fontStack = "'AmaticSC', cursive";
+          break;
+        // READABLE/CLASSIC FONTS
+        case 'Oswald':
+          fontStack = "'Oswald', sans-serif";
+          break;
+        case 'EpundaSlab':
+          fontStack = "'EpundaSlab', serif";
+          break;
+        case 'InstrumentSerif':
+          fontStack = "'InstrumentSerif', serif";
+          break;
+        // EXISTING FONTS
+        case 'Courier New':
+          fontStack = "'Courier New', Courier, monospace";
+          break;
+        case 'VT323':
+          fontStack = "'VT323', monospace";
           break;
       }
       root.style.setProperty('--secondary-font', fontStack);
