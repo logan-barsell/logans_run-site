@@ -2,6 +2,8 @@ const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 const logger = require('../utils/logger');
 const config = require('../config');
 const emailTemplates = require('../templates');
+const Theme = require('../models/Theme');
+const { getEmailColors } = require('../utils/colorPalettes');
 
 // Initialize AWS SES client
 const sesClient = new SESClient({
@@ -44,45 +46,63 @@ async function sendEmail(
     if (templateType && emailTemplates[templateType]) {
       let template;
 
+      // Fetch theme data for email styling
+      let theme = null;
+      try {
+        theme = await Theme.findOne();
+      } catch (error) {
+        logger.warn('Could not fetch theme for email template:', error.message);
+      }
+
+      // Get email colors based on theme
+      const emailColors = theme ? getEmailColors(theme) : getEmailColors({});
+
       // Handle different template parameter patterns
       if (templateType === 'contactNotification') {
         template = emailTemplates[templateType](
           templateData.contactData,
-          templateData.bandName
+          templateData.bandName,
+          emailColors
         );
       } else if (templateType === 'welcomeEmail') {
         template = emailTemplates[templateType](
           templateData.bandName,
-          templateData.dashboardUrl
+          templateData.dashboardUrl,
+          emailColors
         );
       } else if (templateType === 'newsletterConfirmation') {
         template = emailTemplates[templateType](
           templateData.bandName,
-          templateData.email
+          templateData.email,
+          emailColors
         );
       } else if (templateType === 'newsletterSignupNotification') {
         template = emailTemplates[templateType](
           templateData.fanEmail,
-          templateData.bandName
+          templateData.bandName,
+          emailColors
         );
       } else if (templateType === 'passwordReset') {
         // Password reset template only needs link and bandName
         template = emailTemplates[templateType](
           templateData.link,
-          templateData.bandName
+          templateData.bandName,
+          emailColors
         );
       } else if (templateType === 'passwordResetSuccess') {
         // Password reset success template needs bandName and timestamp
         template = emailTemplates[templateType](
           templateData.bandName,
-          templateData.timestamp
+          templateData.timestamp,
+          emailColors
         );
       } else {
         // Default pattern for emailVerification
         template = emailTemplates[templateType](
           templateData.link,
           templateData.role,
-          templateData.bandName
+          templateData.bandName,
+          emailColors
         );
       }
 

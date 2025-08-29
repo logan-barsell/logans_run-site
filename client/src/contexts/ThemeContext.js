@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTheme, updateTheme } from '../redux/actions';
+import { getColorPalette } from '../utils/colorPalettes';
 
 const ThemeContext = createContext();
 
@@ -21,27 +22,85 @@ const updateCSSVariables = theme => {
   if (theme.secondaryColor) {
     root.style.setProperty('--secondary', theme.secondaryColor);
   }
+
+  // Use color palette for background colors
   if (theme.backgroundColor) {
-    root.style.setProperty('--background', theme.backgroundColor);
+    const palette = getColorPalette(theme.backgroundColor);
+    root.style.setProperty('--background', palette.background);
+    root.style.setProperty('--navbar-bg', palette.navbar);
+    root.style.setProperty('--secondary-nav-bg', palette.secondaryNav);
+    root.style.setProperty('--accordion-bg', palette.accordion);
+    root.style.setProperty('--accordion-content-bg', palette.accordionContent);
+    root.style.setProperty(
+      '--accordion-content-light',
+      palette.accordionContentLight
+    );
+    root.style.setProperty('--modal-bg', palette.modalBackground);
+    root.style.setProperty('--form-bg', palette.formBackground);
+    root.style.setProperty('--form-focus-bg', palette.formFocusBackground);
+    root.style.setProperty('--table-bg', palette.tableBackground);
+    root.style.setProperty('--dropdown-bg', palette.dropdownBackground);
   }
+
   if (theme.primaryFont) {
     root.style.setProperty('--primary-font', theme.primaryFont);
   }
   if (theme.secondaryFont) {
     let fontStack = '';
     switch (theme.secondaryFont) {
-      case 'Fira Mono':
-        fontStack = "'Fira Mono', 'Courier New', Courier, monospace";
+      case 'Anton':
+        fontStack = "'Anton', sans-serif";
         break;
-      case 'JetBrains Mono':
-        fontStack = "'JetBrains Mono', 'Courier New', Courier, monospace";
+      case 'ArchitectsDaughter':
+        fontStack = "'Architects Daughter', cursive";
         break;
-      case 'Roboto Mono':
-        fontStack = "'Roboto Mono', 'Courier New', Courier, monospace";
+      case 'BebasNeue':
+        fontStack = "'Bebas Neue', sans-serif";
+        break;
+      case 'ComicNeue':
+        fontStack = "'Comic Neue', cursive";
         break;
       case 'Courier New':
-      default:
         fontStack = "'Courier New', Courier, monospace";
+        break;
+      case 'Creepster':
+        fontStack = "'Creepster', cursive";
+        break;
+      case 'IndieFlower':
+        fontStack = "'Indie Flower', cursive";
+        break;
+      case 'Kalam':
+        fontStack = "'Kalam', cursive";
+        break;
+      case 'Lobster':
+        fontStack = "'Lobster', cursive";
+        break;
+      case 'Orbitron':
+        fontStack = "'Orbitron', sans-serif";
+        break;
+      case 'Oswald':
+        fontStack = "'Oswald', sans-serif";
+        break;
+      case 'Pacifico':
+        fontStack = "'Pacifico', cursive";
+        break;
+      case 'Righteous':
+        fontStack = "'Righteous', cursive";
+        break;
+      case 'RobotoCondensed':
+        fontStack = "'Roboto Condensed', sans-serif";
+        break;
+      case 'Sancreek':
+        fontStack = "'Sancreek', cursive";
+        break;
+      case 'sprayPaint':
+        fontStack = "'sprayPaint', cursive";
+        break;
+      case 'VT323':
+        fontStack = "'VT323', monospace";
+        break;
+      default:
+        fontStack = "'Roboto Condensed', sans-serif";
         break;
     }
     root.style.setProperty('--secondary-font', fontStack);

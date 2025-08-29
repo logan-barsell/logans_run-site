@@ -7,9 +7,10 @@
  *
  * @param {string} bandName - The band's name
  * @param {string} email - The subscriber's email
+ * @param {Object} colors - Theme colors for email styling
  * @returns {Object} Template with subject and HTML
  */
-const newsletterConfirmation = (bandName, email) => ({
+const newsletterConfirmation = (bandName, email, colors = {}) => ({
   subject: `You're In The Loop - ${bandName} Newsletter`,
   html: `
     <!DOCTYPE html>
@@ -21,10 +22,16 @@ const newsletterConfirmation = (bandName, email) => ({
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .header { background: ${colors.header || '#27ae60'}; color: ${
+    colors.headerText || 'white'
+  }; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: ${
+          colors.content || '#f9f9f9'
+        }; padding: 30px; border-radius: 0 0 10px 10px; }
         .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .highlight { background: #e8f5e8; border-left: 4px solid #27ae60; padding: 15px; margin: 20px 0; }
+        .highlight { background: #e8f5e8; border-left: 4px solid ${
+          colors.primary || '#27ae60'
+        }; padding: 15px; margin: 20px 0; }
       </style>
     </head>
     <body>

@@ -38,7 +38,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
           className='mx-1'
         >
           {' '}
-          <Facebook />{' '}
+          <Facebook style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.instagram)
@@ -51,7 +51,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
           className='mx-1'
         >
           {' '}
-          <Instagram />{' '}
+          <Instagram style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.tiktok)
@@ -64,7 +64,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
           className='mx-1'
         >
           {' '}
-          <TikTok />{' '}
+          <TikTok style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.youtube)
@@ -77,7 +77,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
           className='mx-1'
         >
           {' '}
-          <YouTube />{' '}
+          <YouTube style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.x)
@@ -90,7 +90,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
           className='mx-1'
         >
           {' '}
-          <XIcon />{' '}
+          <XIcon style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (!icons.length) return null;
@@ -172,10 +172,11 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
   );
 };
 
-function mapStateToProps({ currentBio, members }) {
+function mapStateToProps({ currentBio, members, theme }) {
   return {
     bio: currentBio?.data || [],
     members: members?.data || [],
+    theme: theme?.data || null,
   };
 }
 

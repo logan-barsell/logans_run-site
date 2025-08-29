@@ -5,7 +5,7 @@
 #contact .jumbotron {
   margin-top: 33px;
   margin-bottom: 2rem;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--form-bg);
   border-radius: 0.3rem;
   padding: 4rem 2rem;
   border: 4px solid rgba(240, 128, 128, 0.3);
@@ -70,12 +70,12 @@
 }
 
 #contact .form-control {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--form-bg);
   color: white;
 }
 
 #contact .form-control:focus {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--form-focus-bg);
   color: white;
 }
 

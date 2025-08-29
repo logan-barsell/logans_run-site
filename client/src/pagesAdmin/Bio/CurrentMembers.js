@@ -13,7 +13,7 @@ import {
   X as XIcon,
 } from '../../components/icons';
 
-const CurrentMembers = ({ fetchMembers, members }) => {
+const CurrentMembers = ({ fetchMembers, members, theme }) => {
   useEffect(() => {
     fetchMembers();
   }, []);
@@ -30,7 +30,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
           className='mx-1'
         >
           {' '}
-          <Facebook />{' '}
+          <Facebook style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.instagram)
@@ -43,7 +43,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
           className='mx-1'
         >
           {' '}
-          <Instagram />{' '}
+          <Instagram style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.tiktok)
@@ -56,7 +56,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
           className='mx-1'
         >
           {' '}
-          <TikTok />{' '}
+          <TikTok style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.youtube)
@@ -69,7 +69,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
           className='mx-1'
         >
           {' '}
-          <YouTube />{' '}
+          <YouTube style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (member.x)
@@ -82,7 +82,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
           className='mx-1'
         >
           {' '}
-          <XIcon />{' '}
+          <XIcon style={theme?.socialMediaIconStyle || 'default'} />{' '}
         </a>
       );
     if (!icons.length) return null;
@@ -156,8 +156,11 @@ const CurrentMembers = ({ fetchMembers, members }) => {
   );
 };
 
-function mapStateToProps({ members }) {
-  return { members: members?.data || [] };
+function mapStateToProps({ members, theme }) {
+  return {
+    members: members?.data || [],
+    theme,
+  };
 }
 
 export default connect(mapStateToProps, { fetchMembers })(CurrentMembers);

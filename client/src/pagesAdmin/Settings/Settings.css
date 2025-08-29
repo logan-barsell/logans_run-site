@@ -1,7 +1,7 @@
 /* Settings Page Styles */
 .settings-container {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: var(--background);
 }
 
 /* Sidebar Animations */
@@ -275,12 +275,35 @@ nav,
   box-shadow: 0 0 0 0.2rem rgba(var(--secondary-rgb), 0.25) !important;
 }
 
+/* Color swatch styles */
+.color-swatch {
+  transition: all 0.2s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.color-swatch.selected {
+  box-shadow: 0 0 0 2px var(--secondary), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Focus color for inputs */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus,
+.form-control-color:focus {
+  border-color: var(--secondary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(var(--secondary-rgb), 0.25) !important;
+}
+
 /* Ensure secondary color variable is available */
 :root {
-  --secondary-rgb: 0, 0, 0; /* Default fallback */
+  --secondary-rgb: 240, 128, 128;
 }
 
 /* Update secondary color when theme changes */
 [data-theme] {
-  --secondary-rgb: 0, 0, 0; /* Will be overridden by theme */
+  --secondary-rgb: 240, 128, 128;
 }

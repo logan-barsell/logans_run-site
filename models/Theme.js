@@ -2,17 +2,26 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ThemeSchema = new Schema({
-  siteTitle: String,
-  primaryColor: String,
-  secondaryColor: String,
-  primaryFont: String,
-  bandLogoUrl: String,
-  secondaryFont: { type: String, default: 'Courier New' },
-  catchPhrase: { type: String, default: 'Welcome to our site' },
-  // paceTheme: { type: String, default: 'center-atom' },
-  paceTheme: { type: String, default: 'center-atom' },
+  // Site Information
+  siteTitle: {
+    type: String,
+    trim: true,
+    default: "Logan's Run",
+  },
+  greeting: {
+    type: String,
+    trim: true,
+  },
+  introduction: {
+    type: String,
+    trim: true,
+  },
+  bandLogoUrl: {
+    type: String,
+    trim: true,
+  },
 
-  // Header/Navbar Customizations
+  // Header & Navigation
   headerDisplay: {
     type: String,
     enum: ['band-name-only', 'band-name-and-logo', 'logo-only'],
@@ -24,18 +33,108 @@ const ThemeSchema = new Schema({
     default: 'left',
   },
 
-  // Background Color
-  backgroundColor: { type: String, default: '#272727' },
+  // Colors
+  primaryColor: {
+    type: String,
+    default: '#000000',
+  },
+  secondaryColor: {
+    type: String,
+    default: '#000000',
+  },
+  backgroundColor: {
+    type: String,
+    enum: [
+      'black',
+      'purple',
+      'red',
+      'green',
+      'teal',
+      'blue',
+      'burgundy',
+      'gray',
+      'brown',
+      'pink',
+      'white',
+    ],
+    default: 'black',
+  },
+
+  // Typography
+  primaryFont: {
+    type: String,
+    enum: [
+      'Anton',
+      'ArchitectsDaughter',
+      'BebasNeue',
+      'ComicNeue',
+      'Creepster',
+      'IndieFlower',
+      'Kalam',
+      'Lobster',
+      'Orbitron',
+      'Oswald',
+      'Pacifico',
+      'Righteous',
+      'RobotoCondensed',
+      'Sancreek',
+      'sprayPaint',
+      'VT323',
+    ],
+    default: 'Anton',
+  },
+  secondaryFont: {
+    type: String,
+    enum: [
+      'Anton',
+      'ArchitectsDaughter',
+      'BebasNeue',
+      'ComicNeue',
+      'Courier New',
+      'Creepster',
+      'IndieFlower',
+      'Kalam',
+      'Lobster',
+      'Orbitron',
+      'Oswald',
+      'Pacifico',
+      'Righteous',
+      'RobotoCondensed',
+      'Sancreek',
+      'sprayPaint',
+      'VT323',
+    ],
+    default: 'RobotoCondensed',
+  },
 
   // Social Media Icons
   socialMediaIconStyle: {
     type: String,
-    enum: ['default', 'minimal', 'colorful', 'outlined', 'filled'],
+    enum: ['default', 'colorful'],
     default: 'default',
   },
 
   // Newsletter Settings
-  newsletterEnabled: { type: Boolean, default: true },
+  enableNewsletter: {
+    type: Boolean,
+    default: true,
+  },
+
+  // Timestamps
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+// Update the updatedAt field before saving
+ThemeSchema.pre('save', function (next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 const Theme = mongoose.model('Theme', ThemeSchema);

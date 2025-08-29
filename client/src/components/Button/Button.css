@@ -28,7 +28,7 @@
 }
 .btn-danger:hover,
 .btn-danger:focus {
-  background-color: black;
+  background-color: var(--accordion-bg);
   color: white;
   border-color: var(--main);
 }

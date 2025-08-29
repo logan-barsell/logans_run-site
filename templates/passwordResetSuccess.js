@@ -8,11 +8,13 @@
  *
  * @param {string} bandName - Band name for branding
  * @param {string} timestamp - When the reset occurred
+ * @param {Object} colors - Theme colors for email styling
  * @returns {Object} Template with subject and HTML
  */
 const passwordResetSuccess = (
   bandName = 'Bandsyte',
-  timestamp = new Date().toLocaleString()
+  timestamp = new Date().toLocaleString(),
+  colors = {}
 ) => ({
   subject: `Password Reset Successful - ${bandName} Admin`,
   html: `
@@ -25,12 +27,20 @@ const passwordResetSuccess = (
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .header { background: ${colors.header || '#27ae60'}; color: ${
+    colors.headerText || 'white'
+  }; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: ${
+          colors.content || '#f9f9f9'
+        }; padding: 30px; border-radius: 0 0 10px 10px; }
         .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
         .success { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; margin: 20px 0; }
         .security { background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .bandsyte-brand { background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
+        .bandsyte-brand { background: ${
+          colors.footer || '#f8f9fa'
+        }; border: 1px solid ${
+    colors.border || '#dee2e6'
+  }; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
       </style>
     </head>
     <body>

@@ -13,7 +13,7 @@
 }
 
 .accordion .accordion-collapse {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--accordion-content-bg);
 }
 
 .accordion .accordion-header .btn-sm {
@@ -27,12 +27,12 @@
 }
 
 .accordion .accordion-button {
-  background-color: black;
+  background-color: var(--accordion-bg);
   color: var(--main);
 }
 
 .accordion .accordion-button:not(.collapsed) {
-  background-color: black;
+  background-color: var(--accordion-bg);
 }
 
 .accordion-button::after {
@@ -85,7 +85,7 @@
 
 .accordion .content {
   color: var(--main);
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--accordion-content-light);
   border-radius: 14px;
   padding: 27px;
   margin-top: 7px;

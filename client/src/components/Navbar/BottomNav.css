@@ -100,8 +100,8 @@ footer h5 {
 
 .footer-copyright {
   color: white;
-  border-top: 1px solid black;
-  background-color: black;
+  border-top: 1px solid var(--navbar-bg);
+  background-color: var(--navbar-bg);
   opacity: 0.4;
 }
 

@@ -7,9 +7,14 @@
  *
  * @param {string} fanEmail - The fan's email address
  * @param {string} bandName - The band's name
+ * @param {Object} colors - Theme colors for email styling
  * @returns {Object} Template with subject and HTML
  */
-const newsletterSignupNotification = (fanEmail, bandName = 'Bandsyte') => ({
+const newsletterSignupNotification = (
+  fanEmail,
+  bandName = 'Bandsyte',
+  colors = {}
+) => ({
   subject: `New Newsletter Signup - ${bandName}`,
   html: `
     <!DOCTYPE html>
@@ -21,11 +26,21 @@ const newsletterSignupNotification = (fanEmail, bandName = 'Bandsyte') => ({
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .header { background: ${colors.header || '#27ae60'}; color: ${
+    colors.headerText || 'white'
+  }; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: ${
+          colors.content || '#f9f9f9'
+        }; padding: 30px; border-radius: 0 0 10px 10px; }
         .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .highlight { background: #e8f5e8; border-left: 4px solid #27ae60; padding: 15px; margin: 20px 0; }
-        .bandsyte-brand { background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
+        .highlight { background: #e8f5e8; border-left: 4px solid ${
+          colors.primary || '#27ae60'
+        }; padding: 15px; margin: 20px; }
+        .bandsyte-brand { background: ${
+          colors.footer || '#f8f9fa'
+        }; border: 1px solid ${
+    colors.border || '#dee2e6'
+  }; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
       </style>
     </head>
     <body>

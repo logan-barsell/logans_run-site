@@ -130,7 +130,7 @@
 
 nav {
   font-size: 21px;
-  background-color: black;
+  background-color: var(--navbar-bg);
   overflow: hidden;
   height: 100%;
   min-height: 90px;
@@ -241,10 +241,6 @@ nav {
 }
 
 /* Header positioning layouts */
-.navbar-container-left {
-  /* Default layout - no changes needed */
-}
-
 .navbar-container-center {
   flex-direction: column;
   align-items: center;

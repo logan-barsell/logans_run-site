@@ -17,11 +17,21 @@ const migrations = [
   },
   {
     version: 2,
-    name: 'Add catchPhrase field',
+    name: 'Add greeting and introduction fields',
     run: async () => {
-      const themes = await Theme.find({ catchPhrase: { $exists: false } });
+      const themes = await Theme.find({
+        $or: [
+          { greeting: { $exists: false } },
+          { introduction: { $exists: false } },
+        ],
+      });
       for (const theme of themes) {
-        theme.catchPhrase = 'Welcome to our site';
+        if (!theme.greeting) {
+          theme.greeting = 'HELLO.';
+        }
+        if (!theme.introduction) {
+          theme.introduction = 'Welcome to our site';
+        }
         await theme.save();
       }
       console.log(`Applied migration: ${migrations[1].name}`);

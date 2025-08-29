@@ -10,9 +10,15 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "npm run build --prefix client",
     "install-client": "npm install --prefix client",
-    "heroku-postbuild": "npm run install-client && npm run build",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
     "generate-secret": "node scripts/generateJWTSecret.js",
-    "migrate-theme": "node migrations/addThemeFields.js"
+    "migrate-theme": "node migrations/addThemeFields.js",
+    "migrate-background": "node migrations/updateBackgroundColor.js",
+    "migrate-social-icons": "node migrations/addSocialMediaIconStyle.js",
+    "migrate-new-themes": "node migrations/addNewBackgroundThemes.js",
+    "migrate-brown": "node migrations/addBrownTheme.js",
+    "migrate-fix-fonts": "node migrations/fixSecondaryFont.js",
+    "migrate-greeting-intro": "node migrations/migrationRunner.js"
   },
   "keywords": [],
   "author": "",

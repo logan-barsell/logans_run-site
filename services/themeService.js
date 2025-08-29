@@ -31,7 +31,8 @@ class ThemeService {
           secondaryColor: '#f08080',
           primaryFont: 'SprayPaint',
           secondaryFont: 'Courier New',
-          catchPhrase: 'Welcome to our site',
+          greeting: 'HELLO.',
+          introduction: 'Welcome to our site',
           paceTheme: 'center-atom',
         });
         logger.info('Default theme created');
@@ -48,12 +49,16 @@ class ThemeService {
 
         // Check and fix other required fields
         if (!theme.secondaryFont) {
-          updates.secondaryFont = 'Courier New';
+          updates.secondaryFont = 'RobotoCondensed';
           needsUpdate = true;
         }
 
-        if (!theme.catchPhrase) {
-          updates.catchPhrase = 'Welcome';
+        if (!theme.greeting) {
+          updates.greeting = 'HELLO.';
+          needsUpdate = true;
+        }
+        if (!theme.introduction) {
+          updates.introduction = 'Welcome to our site';
           needsUpdate = true;
         }
 
