@@ -12,7 +12,7 @@ const schemaValidators = {
 
     // Check for missing fields and set defaults
     if (!theme.paceTheme) {
-      updates.paceTheme = 'center-atom';
+      updates.paceTheme = 'minimal';
       needsUpdate = true;
     }
 

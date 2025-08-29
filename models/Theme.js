@@ -156,6 +156,28 @@ const ThemeSchema = new Schema({
     default: 'default',
   },
 
+  // Pace Loader Theme
+  paceTheme: {
+    type: String,
+    enum: [
+      'minimal',
+      'loading-bar',
+      'flash',
+      'center-circle',
+      'corner-indicator',
+      'center-radar',
+      'material',
+      'center-simple',
+      'barber-shop',
+      'bounce',
+      'big-counter',
+      'fill-left',
+      'mac-osx',
+      'center-atom',
+    ],
+    default: 'minimal',
+  },
+
   // Newsletter Settings
   enableNewsletter: {
     type: Boolean,

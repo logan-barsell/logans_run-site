@@ -274,7 +274,7 @@ const updatePaceTheme = paceTheme => {
   existingLinks.forEach(link => link.remove());
 
   // Load new pace theme CSS
-  const themeName = paceTheme || 'center-atom';
+  const themeName = paceTheme || 'minimal';
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = `/themes/pace/${themeName}.css`;

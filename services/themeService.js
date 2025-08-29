@@ -33,7 +33,7 @@ class ThemeService {
           secondaryFont: 'Courier New',
           greeting: 'HELLO.',
           introduction: 'Welcome to our site',
-          paceTheme: 'center-atom',
+          paceTheme: 'minimal',
         });
         logger.info('Default theme created');
       } else {
@@ -43,7 +43,7 @@ class ThemeService {
 
         // Check and fix paceTheme
         if (!theme.paceTheme) {
-          updates.paceTheme = 'center-atom';
+          updates.paceTheme = 'minimal';
           needsUpdate = true;
         }
 
