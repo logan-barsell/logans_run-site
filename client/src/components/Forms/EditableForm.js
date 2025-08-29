@@ -48,9 +48,18 @@ const EditableForm = ({
 
   const handleInputChange = e => {
     const { name, value } = e.target;
+
+    // Handle boolean values (for radio buttons and checkboxes)
+    let processedValue = value;
+    if (value === 'true') {
+      processedValue = true;
+    } else if (value === 'false') {
+      processedValue = false;
+    }
+
     setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: processedValue,
     }));
     setIsSaved(false);
   };

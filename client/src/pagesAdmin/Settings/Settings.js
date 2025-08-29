@@ -24,7 +24,7 @@ const Settings = ({ user, theme }) => {
   // Check screen size and auto-collapse sidebar on mobile
   useEffect(() => {
     const checkMobile = () => {
-      if (window.innerWidth <= 700) {
+      if (window.innerWidth <= 825) {
         setSidebarOpen(false); // Auto-collapse on mobile
       } else {
         setSidebarOpen(true); // Auto-expand on desktop
@@ -106,9 +106,7 @@ const Settings = ({ user, theme }) => {
           marginLeft: sidebarOpen ? '0' : '0',
         }}
       >
-        <div className='container-fluid'>
-          {CurrentComponent && <CurrentComponent />}
-        </div>
+        {CurrentComponent && <CurrentComponent />}
       </div>
     </div>
   );

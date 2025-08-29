@@ -183,6 +183,18 @@ const ThemeSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  notifyOnNewShows: {
+    type: Boolean,
+    default: false,
+  },
+  notifyOnNewMusic: {
+    type: Boolean,
+    default: false,
+  },
+  notifyOnNewVideos: {
+    type: Boolean,
+    default: false,
+  },
 
   // Timestamps
   createdAt: {

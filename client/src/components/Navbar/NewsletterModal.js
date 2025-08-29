@@ -20,6 +20,26 @@ const NewsletterModal = () => {
       if (result.success) {
         showSuccess('Thank you for subscribing to our newsletter!');
         setEmail('');
+        // Close the modal on successful subscription
+        const modal = document.getElementById('newsletterModal');
+        if (modal) {
+          // Use Bootstrap's modal API if available
+          if (window.bootstrap && window.bootstrap.Modal) {
+            const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
+            if (bootstrapModal) {
+              bootstrapModal.hide();
+            }
+          } else {
+            // Fallback: manually hide the modal
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+            document.body.classList.remove('modal-open');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+              backdrop.remove();
+            }
+          }
+        }
       } else {
         showError(result.message || 'Failed to subscribe. Please try again.');
       }

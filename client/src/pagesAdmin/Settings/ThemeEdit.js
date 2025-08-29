@@ -41,28 +41,21 @@ const themeDisplayNames = {
 // Social Media Icon Preview Component
 const SocialMediaIconPreview = ({ style = 'default' }) => {
   return (
-    <div className='d-flex align-items-center  gap-2 mt-2'>
+    <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
       <span
         className='secondary-font'
         style={{ fontSize: '14px', opacity: 0.8, color: 'white' }}
       >
         Preview:
       </span>
-      <div className='d-flex gap-1 justify-content-center align-items-center text-white'>
+      <div className='d-flex gap-1 justify-content-center align-items-center text-white flex-wrap'>
         <Facebook style={style} />
-
         <Instagram style={style} />
-
         <YouTube style={style} />
-
         <Spotify style={style} />
-
         <AppleMusic style={style} />
-
         <SoundCloud style={style} />
-
         <X style={style} />
-
         <TikTok style={style} />
       </div>
     </div>
@@ -103,7 +96,10 @@ const VisualColorSelector = ({
       </div>
 
       {/* Visual Color Swatches */}
-      <div className='d-flex flex-wrap gap-2 mb-2'>
+      <div
+        className='d-flex flex-wrap gap-2 mb-2'
+        style={{ justifyContent: 'flex-start' }}
+      >
         {preselectedColors.map(color => (
           <div
             key={color.value}
@@ -112,8 +108,8 @@ const VisualColorSelector = ({
             }`}
             onClick={() => handleColorSelect(color.value)}
             style={{
-              width: '40px',
-              height: '40px',
+              width: 'clamp(32px, 4vw, 40px)',
+              height: 'clamp(32px, 4vw, 40px)',
               borderRadius: '8px',
               backgroundColor: color.value,
               border:
@@ -123,6 +119,7 @@ const VisualColorSelector = ({
               cursor: 'pointer',
               transition: 'all 0.2s ease',
               position: 'relative',
+              flexShrink: 0,
             }}
             title={color.name}
           >
@@ -151,8 +148,8 @@ const VisualColorSelector = ({
           className={`color-swatch ${isCustomColor ? 'selected' : ''}`}
           onClick={() => setShowColorPicker(!showColorPicker)}
           style={{
-            width: '40px',
-            height: '40px',
+            width: 'clamp(32px, 4vw, 40px)',
+            height: 'clamp(32px, 4vw, 40px)',
             borderRadius: '8px',
             backgroundColor: isCustomColor ? value : 'transparent',
             border: isCustomColor
@@ -161,6 +158,7 @@ const VisualColorSelector = ({
             cursor: 'pointer',
             transition: 'all 0.2s ease',
             position: 'relative',
+            flexShrink: 0,
             backgroundImage: isCustomColor
               ? 'none'
               : 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
@@ -316,7 +314,13 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
               <div className='mb-sm-3 mb-2 text-white d-flex flex-column align-items-center'>
                 <label className='form-label'>Band Logo</label>
                 {(logoFile || theme.bandLogoUrl) && (
-                  <div style={{ marginBottom: 12 }}>
+                  <div
+                    style={{
+                      marginBottom: 12,
+                      width: '100%',
+                      textAlign: 'center',
+                    }}
+                  >
                     <img
                       src={
                         logoFile
@@ -325,8 +329,11 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                       }
                       alt='Band Logo Preview'
                       style={{
-                        maxWidth: 200,
+                        maxWidth: '100%',
+                        height: 'auto',
+                        maxHeight: '200px',
                         display: 'block',
+                        margin: '0 auto',
                       }}
                     />
                   </div>

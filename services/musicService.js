@@ -67,6 +67,24 @@ class MusicService {
       await newPlayer.save();
 
       logger.info('New Spotify player added successfully');
+
+      // Send newsletter notification for new music
+      try {
+        const NewsletterService = require('./newsletterService');
+        await NewsletterService.sendContentNotification('music', {
+          title: newPlayer.title || 'New Music',
+          artist: newPlayer.artist,
+          album: newPlayer.album,
+          description: `New music: ${newPlayer.title || 'New track'}`,
+        });
+      } catch (notificationError) {
+        logger.error(
+          'Failed to send newsletter notification for new music:',
+          notificationError
+        );
+        // Don't throw error - music was still added successfully
+      }
+
       return newPlayer;
     } catch (error) {
       logger.error('Error adding Spotify player:', error);

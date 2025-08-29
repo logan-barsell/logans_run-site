@@ -84,6 +84,25 @@ class MediaService {
       await video.save();
 
       logger.info('New video added successfully');
+
+      // Send newsletter notification for new video
+      try {
+        const NewsletterService = require('./newsletterService');
+        await NewsletterService.sendContentNotification('video', {
+          title: video.title || 'New Video',
+          description: video.category
+            ? `New ${video.category} video`
+            : 'New video uploaded',
+          duration: video.duration,
+        });
+      } catch (notificationError) {
+        logger.error(
+          'Failed to send newsletter notification for new video:',
+          notificationError
+        );
+        // Don't throw error - video was still added successfully
+      }
+
       return video;
     } catch (error) {
       logger.error('Error adding video:', error);

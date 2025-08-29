@@ -545,7 +545,7 @@ p a:hover {
   select.form-control,
   .react-datepicker__input-container input,
   .final-form .input-group-text#basic-addon1 {
-    font-size: 4vw;
+    font-size: 3vw;
   }
   svg {
     height: auto;

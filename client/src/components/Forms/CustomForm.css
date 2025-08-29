@@ -3,7 +3,7 @@
   height: fit-content;
   padding: 0px 18px;
   margin-top: 81px;
-  margin-bottom: 150px;
+  margin-bottom: 75px;
 }
 
 .custom-form-title {
@@ -17,7 +17,7 @@
   margin: auto;
   padding: 66px;
   max-width: 666px;
-  margin-bottom: 100px;
+  margin-bottom: 30px;
   background-color: var(--form-bg);
   border-radius: 0.3rem;
   border: 4px solid var(--accordion-content-light);
@@ -77,6 +77,14 @@
   .custom-form-container textarea.form-control {
     font-size: 0.85rem;
     line-height: 1.4;
+  }
+
+  .custom-form-container .form-control {
+    font-size: 0.9rem;
+  }
+
+  .custom-form-container .form-label {
+    font-size: 0.9rem;
   }
 }
 
