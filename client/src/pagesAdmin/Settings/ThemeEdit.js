@@ -736,6 +736,59 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                   style={formData.socialMediaIconStyle || 'default'}
                 />
               </div>
+
+              <div className='mb-sm-3 mb-2'>
+                <label
+                  htmlFor='paceTheme'
+                  className='form-label'
+                >
+                  Loading Animation Style
+                </label>
+                <select
+                  className='form-control'
+                  id='paceTheme'
+                  name='paceTheme'
+                  value={formData.paceTheme || 'minimal'}
+                  onChange={handleInputChange}
+                >
+                  <optgroup label='🎯 Center Positioned'>
+                    <option value='minimal'>Minimal (Ultra Clean)</option>
+                    <option value='center-circle'>
+                      Center Circle (3D Rotating)
+                    </option>
+                    <option value='center-radar'>
+                      Center Radar (Radar Scan)
+                    </option>
+                    <option value='center-simple'>
+                      Center Simple (Minimal Bar)
+                    </option>
+                    <option value='material'>Material (Material Design)</option>
+                    <option value='big-counter'>
+                      Big Counter (Large Percentage)
+                    </option>
+                    <option value='center-atom'>
+                      Center Atom (Spinning Atom)
+                    </option>
+                  </optgroup>
+                  <optgroup label='📊 Progress Bars'>
+                    <option value='loading-bar'>Loading Bar (Top Bar)</option>
+                    <option value='barber-shop'>
+                      Barber Shop (Striped Bar)
+                    </option>
+                    <option value='fill-left'>
+                      Fill Left (Left to Right Fill)
+                    </option>
+                    <option value='mac-osx'>Mac OS X (Sleek Top Bar)</option>
+                  </optgroup>
+                  <optgroup label='🎨 Special Effects'>
+                    <option value='flash'>Flash (Top Flash)</option>
+                    <option value='corner-indicator'>
+                      Corner Indicator (Corner Animation)
+                    </option>
+                    <option value='bounce'>Bounce (Bouncing Ball)</option>
+                  </optgroup>
+                </select>
+              </div>
             </div>
           </>
         );
