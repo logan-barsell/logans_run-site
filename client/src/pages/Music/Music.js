@@ -18,6 +18,7 @@ const MusicPage = ({
   fetchContactInfo,
   players,
   contactInfo,
+  theme,
 }) => {
   useEffect(() => {
     fetchPlayers();
@@ -77,7 +78,7 @@ const MusicPage = ({
                 rel='noreferrer'
                 className='hvr-grow'
               >
-                <Spotify />
+                <Spotify style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo?.appleMusic && (
@@ -87,7 +88,7 @@ const MusicPage = ({
                 rel='noreferrer'
                 className='hvr-grow'
               >
-                <AppleMusic />
+                <AppleMusic style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo?.soundCloud && (
@@ -97,7 +98,7 @@ const MusicPage = ({
                 rel='noreferrer'
                 className='hvr-grow'
               >
-                <SoundCloud />
+                <SoundCloud style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo?.youtube && (
@@ -107,7 +108,7 @@ const MusicPage = ({
                 rel='noreferrer'
                 className='hvr-grow'
               >
-                <YouTube />
+                <YouTube style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
           </div>
@@ -119,18 +120,18 @@ const MusicPage = ({
           <div key={player._id}>
             <SecondaryNav label={player.title} />
             <div className='audioPlayer container'>
-              <iframe
-                style={{ 'border-radius': '12px' }}
-                src={player.embedLink}
-                width='100%'
-                height='360px'
-                allowfullscreen=''
-                allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-                loading='lazy'
-                title={player.title}
-              ></iframe>
-
-              {/* Music platform icons for individual players */}
+              <div className='player-container'>
+                <iframe
+                  title={player.title}
+                  style={{ 'border-radius': '12px' }}
+                  src={player.embedLink}
+                  width='100%'
+                  height='360px'
+                  allowfullscreen=''
+                  allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+                  loading='lazy'
+                ></iframe>
+              </div>
               {(player.spotifyLink ||
                 player.appleMusicLink ||
                 player.soundcloudLink ||
@@ -143,7 +144,7 @@ const MusicPage = ({
                     rel='noreferrer'
                     className='hvr-grow'
                   >
-                    <Spotify />
+                    <Spotify style={theme?.socialMediaIconStyle || 'default'} />
                   </a>
                 )}
                 {player.appleMusicLink && (
@@ -153,7 +154,9 @@ const MusicPage = ({
                     rel='noreferrer'
                     className='hvr-grow'
                   >
-                    <AppleMusic />
+                    <AppleMusic
+                      style={theme?.socialMediaIconStyle || 'default'}
+                    />
                   </a>
                 )}
                 {player.soundcloudLink && (
@@ -163,7 +166,9 @@ const MusicPage = ({
                     rel='noreferrer'
                     className='hvr-grow'
                   >
-                    <SoundCloud />
+                    <SoundCloud
+                      style={theme?.socialMediaIconStyle || 'default'}
+                    />
                   </a>
                 )}
                 {player.youtubeLink && (
@@ -173,7 +178,7 @@ const MusicPage = ({
                     rel='noreferrer'
                     className='hvr-grow'
                   >
-                    <YouTube />
+                    <YouTube style={theme?.socialMediaIconStyle || 'default'} />
                   </a>
                 )}
               </div>
@@ -187,10 +192,11 @@ const MusicPage = ({
   );
 };
 
-function mapStateToProps({ music, contactInfo }) {
+function mapStateToProps({ music, contactInfo, theme }) {
   return {
     players: music?.data || [],
-    contactInfo: contactInfo?.data || null,
+    contactInfo: contactInfo?.data || {},
+    theme: theme?.data || null,
   };
 }
 

@@ -7,9 +7,14 @@
  *
  * @param {Object} contactData - Contact form data
  * @param {string} bandName - Band name for branding
+ * @param {Object} colors - Theme colors for email styling
  * @returns {Object} Template with subject and HTML
  */
-const contactNotification = (contactData, bandName = 'Bandsyte') => ({
+const contactNotification = (
+  contactData,
+  bandName = 'Bandsyte',
+  colors = {}
+) => ({
   subject: `New Fan Message - ${bandName}`,
   html: `
     <!DOCTYPE html>
@@ -21,13 +26,23 @@ const contactNotification = (contactData, bandName = 'Bandsyte') => ({
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .header { background: ${colors.header || '#3498db'}; color: ${
+    colors.headerText || 'white'
+  }; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: ${
+          colors.content || '#f9f9f9'
+        }; padding: 30px; border-radius: 0 0 10px 10px; }
         .field { margin-bottom: 20px; }
         .field-label { font-weight: bold; color: #555; margin-bottom: 5px; }
-        .field-value { background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #3498db; }
+        .field-value { background: white; padding: 15px; border-radius: 5px; border-left: 4px solid ${
+          colors.primary || '#3498db'
+        }; }
         .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .bandsyte-brand { background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
+        .bandsyte-brand { background: ${
+          colors.footer || '#f8f9fa'
+        }; border: 1px solid ${
+    colors.border || '#dee2e6'
+  }; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
       </style>
     </head>
     <body>

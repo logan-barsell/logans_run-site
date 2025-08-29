@@ -33,7 +33,7 @@
 .stripe-storefront .card {
   max-width: 350px;
   margin: 20px auto;
-  background-color: black;
+  background-color: var(--accordion-bg);
   border: 1px solid white;
   overflow: hidden;
 }

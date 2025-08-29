@@ -75,7 +75,64 @@
   --main: #e3ff05; /* Default primary color - will be overridden by theme */
   --main-rgb: 227, 255, 5; /* RGB for main color, for rgba() usage */
   --secondary: #f08080; /* Default secondary color - will be overridden by theme */
-  --background: #272727; /* Default background color - will be overridden by theme */
+  --background: #000000; /* Default background color - will be overridden by theme */
+  --navbar-bg: #000000; /* Default navbar background - will be overridden by theme */
+  --secondary-nav-bg: rgba(
+    0,
+    0,
+    0,
+    0.8
+  ); /* Default secondary nav background - will be overridden by theme */
+  --accordion-bg: #000000; /* Default accordion background - will be overridden by theme */
+  --accordion-content-bg: rgba(
+    0,
+    0,
+    0,
+    0.9
+  ); /* Default accordion content background - will be overridden by theme */
+  --accordion-content-light: rgba(
+    0,
+    0,
+    0,
+    0.4
+  ); /* Default accordion content light background - will be overridden by theme */
+  --background-light: #404040; /* Default light background - will be overridden by theme */
+  --modal-bg: rgba(
+    0,
+    0,
+    0,
+    0.4
+  ); /* Default modal background - will be overridden by theme */
+  --form-bg: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Default form background - will be overridden by theme */
+  --form-focus-bg: rgba(
+    0,
+    0,
+    0,
+    0.7
+  ); /* Default form focus background - will be overridden by theme */
+  --table-bg: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Default table background - will be overridden by theme */
+  --table-striped-bg: rgba(
+    0,
+    0,
+    0,
+    0.3
+  ); /* Default table striped background - will be overridden by theme */
+  --dropdown-bg: rgba(
+    0,
+    0,
+    0,
+    0.9
+  ); /* Default dropdown background - will be overridden by theme */
   --primary-font: sprayPaint; /* Default primary font - will be overridden by theme */
   --secondary-font: 'Courier New', Courier, monospace; /* Default secondary font */
 }
@@ -204,7 +261,7 @@ p a:hover {
 }
 
 .modal-content {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--modal-bg);
   border: 2px solid var(--main);
   color: var(--main);
 }
@@ -371,13 +428,13 @@ input:-webkit-autofill,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.6) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--form-bg) inset !important;
   -webkit-text-fill-color: white !important;
   caret-color: white;
   transition: background-color 9999s ease-in-out 0s;
 }
 
 input:-internal-autofill-selected {
-  background-color: rgba(0, 0, 0, 0.6) !important;
+  background-color: var(--form-bg) !important;
   color: white !important;
 }

@@ -21,13 +21,13 @@ import { PageTitle, Divider } from '../../components/Header';
 import { useAlert } from '../../contexts/AlertContext';
 import { sendContactMessage } from '../../services/contactService';
 
-const ContactPage = ({ fetchContactInfo, contactInfo }) => {
+const ContactPage = ({ fetchContactInfo, contactInfo, theme }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showSuccess, showError } = useAlert();
 
   useEffect(() => {
     fetchContactInfo();
-  }, []);
+  }, [fetchContactInfo]);
 
   const form = useRef();
 
@@ -124,7 +124,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <Facebook />
+                  <Facebook style={theme?.socialMediaIconStyle || 'default'} />
                 </a>
               )}
               {contactInfo.instagram && (
@@ -134,7 +134,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <Instagram />
+                  <Instagram style={theme?.socialMediaIconStyle || 'default'} />
                 </a>
               )}
               {contactInfo.youtube && (
@@ -144,7 +144,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <YouTube />
+                  <YouTube style={theme?.socialMediaIconStyle || 'default'} />
                 </a>
               )}
               {contactInfo.spotify && (
@@ -154,7 +154,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <Spotify />
+                  <Spotify style={theme?.socialMediaIconStyle || 'default'} />
                 </a>
               )}
               {contactInfo.appleMusic && (
@@ -164,7 +164,9 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <AppleMusic />
+                  <AppleMusic
+                    style={theme?.socialMediaIconStyle || 'default'}
+                  />
                 </a>
               )}
               {contactInfo.soundCloud && (
@@ -174,7 +176,9 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <SoundCloud />
+                  <SoundCloud
+                    style={theme?.socialMediaIconStyle || 'default'}
+                  />
                 </a>
               )}
               {contactInfo.x && (
@@ -184,17 +188,17 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <X />
+                  <X style={theme?.socialMediaIconStyle || 'default'} />
                 </a>
               )}
-              {contactInfo.tikTok && (
+              {contactInfo.tiktok && (
                 <a
                   className='hvr-grow'
-                  href={contactInfo.tikTok}
+                  href={contactInfo.tiktok}
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <TikTok />
+                  <TikTok style={theme?.socialMediaIconStyle || 'default'} />
                 </a>
               )}
             </div>
@@ -275,8 +279,11 @@ const ContactPage = ({ fetchContactInfo, contactInfo }) => {
   ) : null;
 };
 
-function mapStateToProps({ contactInfo }) {
-  return { contactInfo: contactInfo?.data || null };
+function mapStateToProps({ contactInfo, theme }) {
+  return {
+    contactInfo: contactInfo?.data, // Access the data property from the contactInfo reducer
+    theme: theme?.data || null,
+  };
 }
 
 export default connect(mapStateToProps, { fetchContactInfo })(ContactPage);

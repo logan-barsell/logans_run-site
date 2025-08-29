@@ -19,7 +19,7 @@ const SidebarNav = ({
         minWidth: sidebarOpen ? '300px' : '60px',
         maxWidth: sidebarOpen ? '300px' : '60px',
         width: sidebarOpen ? '300px' : '60px',
-        backgroundColor: 'black',
+        backgroundColor: 'var(--navbar-bg)',
         transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         overflow: 'visible',
       }}

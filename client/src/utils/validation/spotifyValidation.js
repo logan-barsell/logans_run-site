@@ -7,12 +7,17 @@ import { validateUrlWithPatterns } from './formValidation';
 
 // Spotify URL patterns for different content types
 const SPOTIFY_PATTERNS = {
-  track: /^https?:\/\/(?:open\.)?spotify\.com\/track\/([a-zA-Z0-9]{22})/,
-  album: /^https?:\/\/(?:open\.)?spotify\.com\/album\/([a-zA-Z0-9]{22})/,
-  playlist: /^https?:\/\/(?:open\.)?spotify\.com\/playlist\/([a-zA-Z0-9]{22})/,
-  artist: /^https?:\/\/(?:open\.)?spotify\.com\/artist\/([a-zA-Z0-9]{22})/,
-  episode: /^https?:\/\/(?:open\.)?spotify\.com\/episode\/([a-zA-Z0-9]{22})/,
-  show: /^https?:\/\/(?:open\.)?spotify\.com\/show\/([a-zA-Z0-9]{22})/,
+  track:
+    /^https?:\/\/(?:open\.)?spotify\.com\/track\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+  album:
+    /^https?:\/\/(?:open\.)?spotify\.com\/album\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+  playlist:
+    /^https?:\/\/(?:open\.)?spotify\.com\/playlist\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+  artist:
+    /^https?:\/\/(?:open\.)?spotify\.com\/artist\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+  episode:
+    /^https?:\/\/(?:open\.)?spotify\.com\/episode\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+  show: /^https?:\/\/(?:open\.)?spotify\.com\/show\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
 };
 
 // Supported content types for embedding
@@ -39,12 +44,27 @@ export const validateSpotifySocialUrl = url => {
  * @returns {object} - Validation result with isValid, type, id, and error message
  */
 export const validateSpotifyUrl = url => {
+  // Try direct validation first
+  for (const [type, pattern] of Object.entries(SPOTIFY_PATTERNS)) {
+    const match = url.match(pattern);
+    if (match && SUPPORTED_TYPES.includes(type)) {
+      return {
+        isValid: true,
+        type: type,
+        id: match[1],
+        error: null,
+      };
+    }
+  }
+
+  // Fallback to the original validation
   const result = validateUrlWithPatterns(
     url,
     'Spotify',
     SPOTIFY_PATTERNS,
     SUPPORTED_TYPES
   );
+
   return {
     isValid: result.isValid,
     type: result.type,
@@ -71,20 +91,28 @@ export const normalizeSpotifyUrl = url => {
 /**
  * Generates an embed URL from a Spotify URL
  * @param {string} url - The Spotify URL
- * @param {string} theme - Theme parameter (optional)
+ * @param {string} theme - Theme parameter (auto, 0 for dark, 1 for light)
  * @returns {string|null} - Embed URL or null if invalid
  */
-export const generateSpotifyEmbedUrl = (url, theme = '') => {
+export const generateSpotifyEmbedUrl = (url, theme = 'auto') => {
   const validation = validateSpotifyUrl(url);
 
   if (!validation.isValid) {
     return null;
   }
 
+  // Try a simpler approach first - just use the basic embed URL
   const baseEmbedUrl = `https://open.spotify.com/embed/${validation.type}/${validation.id}`;
-  const themeParam = theme ? `&theme=${theme}` : '';
 
-  return `${baseEmbedUrl}?utm_source=generator${themeParam}`;
+  // For 'auto' theme, don't add any theme parameter (like the working artist embed)
+  let finalUrl;
+  if (theme === 'auto' || !theme) {
+    finalUrl = `${baseEmbedUrl}?utm_source=generator`;
+  } else {
+    finalUrl = `${baseEmbedUrl}?utm_source=generator&theme=${theme}`;
+  }
+
+  return finalUrl;
 };
 
 /**

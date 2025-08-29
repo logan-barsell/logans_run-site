@@ -27,7 +27,7 @@ const Modal = ({ modalProps, children, modalButton }) => {
 
             <button
               type='button'
-              className='btn-close'
+              className='custom-close-btn'
               data-bs-dismiss='modal'
               aria-label='Close'
             >

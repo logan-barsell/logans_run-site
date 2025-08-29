@@ -5,7 +5,7 @@ import { handleServiceError } from '../utils/errorHandler';
 export const getContactInfo = async () => {
   try {
     const response = await api.get('/getContactInfo');
-    return response.data.data; // Extract data from { success: true, data: [...] }
+    return response.data.data; // Extract data from { success: true, data: {...} }
   } catch (error) {
     const { message } = handleServiceError(
       error,
@@ -19,7 +19,7 @@ export const getContactInfo = async () => {
 export const updateContact = async contactData => {
   try {
     const response = await api.post('/updateContact', contactData);
-    return response.data.data; // Extract data from { success: true, data: [...] }
+    return response.data.data; // Extract data from { success: true, data: {...} }
   } catch (error) {
     const { message } = handleServiceError(
       error,

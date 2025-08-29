@@ -4,10 +4,11 @@ export const ADD_PLAYER_FIELDS = [
     name: 'bgColor',
     type: 'options',
     options: [
-      { name: 'Gray', value: '&theme=0' },
-      { name: 'Red', value: '' },
+      { name: 'Auto (from artwork)', value: 'auto' },
+      { name: 'Dark', value: '0' },
+      { name: 'Light', value: '1' },
     ],
-    initialValue: '&theme=0',
+    initialValue: 'auto',
   },
   { label: 'Title', name: 'title', type: 'text' },
   { label: 'Release Date', name: 'date', type: 'date' },
@@ -48,19 +49,39 @@ export const editPlayerFields = player => {
     soundcloudLink,
   } = player;
 
+  // Convert date to proper Date object for the date picker
+  let formattedDate = null;
+  if (date) {
+    try {
+      formattedDate = new Date(date);
+      // Check if the date is valid
+      if (isNaN(formattedDate.getTime())) {
+        formattedDate = null;
+      }
+    } catch (error) {
+      formattedDate = null;
+    }
+  }
+
   return [
     {
       label: 'Background Color',
       name: 'bgColor',
       type: 'options',
       options: [
-        { name: 'Gray', value: '&theme=0' },
-        { name: 'Red', value: '' },
+        { name: 'Auto (from artwork)', value: 'auto' },
+        { name: 'Dark', value: '0' },
+        { name: 'Light', value: '1' },
       ],
-      initialValue: bgColor,
+      initialValue: bgColor || '0',
     },
     { label: 'Title', name: 'title', type: 'text', initialValue: title },
-    { label: 'Release Date', name: 'date', type: 'date', initialValue: date },
+    {
+      label: 'Release Date',
+      name: 'date',
+      type: 'date',
+      initialValue: formattedDate,
+    },
     {
       label: 'Spotify Link',
       name: 'spotifyLink',

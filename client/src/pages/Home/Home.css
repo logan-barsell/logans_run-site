@@ -115,7 +115,7 @@
 }
 
 #home .modal-content {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--dropdown-bg);
   border: 2px solid var(--main);
 }
 
@@ -128,13 +128,13 @@
 }
 
 #home .form-control {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--form-bg);
   border-color: var(--main);
   color: white;
 }
 
 #home .form-control:focus {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--form-focus-bg);
   border-color: var(--secondary);
   color: white;
   box-shadow: 0 0 0 0.2rem rgba(240, 128, 128, 0.25);
@@ -158,11 +158,11 @@
 }
 
 #home .table td {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--table-bg);
 }
 
 #home .table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--table-striped-bg);
 }
 
 #home .table-hover tbody tr:hover {
@@ -171,7 +171,7 @@
 }
 
 #home .dropdown-menu {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--dropdown-bg);
   border: 1px solid var(--main);
 }
 
@@ -383,7 +383,7 @@
 }
 
 .home-content-below-carousel {
-  background: #272727;
+  background: var(--background);
   position: relative;
   z-index: 2;
 }

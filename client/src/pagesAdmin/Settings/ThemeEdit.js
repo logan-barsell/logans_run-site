@@ -1,13 +1,237 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchTheme, updateTheme } from '../../redux/actions';
+import EditableForm from '../../components/Forms/EditableForm';
 import ImageUpload from '../../components/Forms/FieldTypes/ImageUpload';
-import { EditableForm } from '../../components/Forms';
+import { useAlert } from '../../contexts/AlertContext';
+import {
+  Facebook,
+  Instagram,
+  YouTube,
+  Spotify,
+  AppleMusic,
+  SoundCloud,
+  X,
+  TikTok,
+} from '../../components/icons';
+import {
+  getColorPalette,
+  getPreselectedColors,
+  getColorName,
+} from '../../utils/colorPalettes';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
-import { useAlert } from '../../contexts/AlertContext';
+
+// Theme display names mapping
+const themeDisplayNames = {
+  black: 'Black',
+  purple: 'Purple',
+  red: 'Red',
+  green: 'Green',
+  teal: 'Teal',
+  blue: 'Blue',
+  burgundy: 'Burgundy',
+  gray: 'Gray',
+  brown: 'Brown',
+  pink: 'Pink',
+};
+
+// Social Media Icon Preview Component
+const SocialMediaIconPreview = ({ style = 'default' }) => {
+  return (
+    <div className='d-flex align-items-center  gap-2 mt-2'>
+      <span
+        className='secondary-font'
+        style={{ fontSize: '14px', opacity: 0.8, color: 'white' }}
+      >
+        Preview:
+      </span>
+      <div className='d-flex gap-1 justify-content-center align-items-center text-white'>
+        <Facebook style={style} />
+
+        <Instagram style={style} />
+
+        <YouTube style={style} />
+
+        <Spotify style={style} />
+
+        <AppleMusic style={style} />
+
+        <SoundCloud style={style} />
+
+        <X style={style} />
+
+        <TikTok style={style} />
+      </div>
+    </div>
+  );
+};
+
+// Visual Color Selector Component
+const VisualColorSelector = ({
+  label,
+  value,
+  onChange,
+  name,
+  type = 'primary',
+}) => {
+  const preselectedColors = getPreselectedColors(type);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
+  const handleColorSelect = colorValue => {
+    onChange({ target: { name, value: colorValue } });
+  };
+
+  const handleColorPickerChange = e => {
+    onChange(e);
+  };
+
+  const currentColorName = getColorName(type, value);
+  const isCustomColor = !preselectedColors.find(color => color.value === value);
+
+  return (
+    <div className='mb-sm-3 mb-2'>
+      <div className='d-flex align-items-center gap-3 mb-2'>
+        <label
+          className='form-label mb-0'
+          style={{ minWidth: '120px' }}
+        >
+          {label}
+        </label>
+      </div>
+
+      {/* Visual Color Swatches */}
+      <div className='d-flex flex-wrap gap-2 mb-2'>
+        {preselectedColors.map(color => (
+          <div
+            key={color.value}
+            className={`color-swatch ${
+              value === color.value ? 'selected' : ''
+            }`}
+            onClick={() => handleColorSelect(color.value)}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '8px',
+              backgroundColor: color.value,
+              border:
+                value === color.value
+                  ? '3px solid white'
+                  : '2px solid rgba(255, 255, 255, 0.3)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              position: 'relative',
+            }}
+            title={color.name}
+          >
+            {value === color.value && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                  filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.8))',
+                }}
+              >
+                ✓
+              </div>
+            )}
+          </div>
+        ))}
+
+        {/* Custom Color Swatch */}
+        <div
+          className={`color-swatch ${isCustomColor ? 'selected' : ''}`}
+          onClick={() => setShowColorPicker(!showColorPicker)}
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '8px',
+            backgroundColor: isCustomColor ? value : 'transparent',
+            border: isCustomColor
+              ? '3px solid white'
+              : '2px solid rgba(255, 255, 255, 0.3)',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            position: 'relative',
+            backgroundImage: isCustomColor
+              ? 'none'
+              : 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
+            backgroundSize: '10px 10px',
+            backgroundPosition: '0 0, 0 5px, 5px -5px, -5px 0px',
+          }}
+          title='Custom Color'
+        >
+          {isCustomColor && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.8))',
+              }}
+            >
+              ✓
+            </div>
+          )}
+        </div>
+
+        {/* Hidden Color Picker */}
+        <input
+          type='color'
+          className='form-control form-control-color'
+          name={name}
+          value={value}
+          onChange={handleColorPickerChange}
+          style={{
+            position: 'absolute',
+            opacity: 0,
+            pointerEvents: 'none',
+            width: '1px',
+            height: '1px',
+          }}
+          ref={input => {
+            if (input && showColorPicker) {
+              input.click();
+              setShowColorPicker(false);
+            }
+          }}
+        />
+      </div>
+
+      {/* Color Info */}
+      <div className='d-flex align-items-center gap-2'>
+        <span
+          className='secondary-font'
+          style={{ fontSize: '14px', opacity: 0.8, color: 'white' }}
+        >
+          Selected: {currentColorName}
+        </span>
+        <div
+          style={{
+            width: '20px',
+            height: '20px',
+            backgroundColor: value,
+            border: '1px solid white',
+            borderRadius: '4px',
+          }}
+        />
+      </div>
+    </div>
+  );
+};
 
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   const [logoFile, setLogoFile] = useState(null);
@@ -21,12 +245,13 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   }, [fetchTheme]);
 
   const handleSaveTheme = async formData => {
-    try {
-      setUploading(true);
-      let bandLogoUrl = theme.bandLogoUrl;
+    setUploading(true);
+    let bandLogoUrl = formData.bandLogoUrl;
 
+    try {
+      // Handle logo upload if there's a new file
       if (logoFile) {
-        // Delete old image if exists
+        // Delete old logo if it exists
         if (theme.bandLogoUrl) {
           try {
             await deleteImageFromFirebase(theme.bandLogoUrl);
@@ -47,7 +272,8 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
       }
 
       // Update theme
-      await updateTheme({ ...formData, bandLogoUrl });
+      const dataToSave = { ...formData, bandLogoUrl };
+      await updateTheme(dataToSave);
       setLogoFile(null);
       setUploading(false);
       // Clear the file input and state
@@ -58,6 +284,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
         imageUploadRef.current.clear();
       }
     } catch (err) {
+      console.error('Save theme error:', err);
       setUploading(false);
       showError(err.message || 'Failed to update theme');
       throw err;
@@ -82,16 +309,6 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
       onError={handleError}
     >
       {({ formData, handleInputChange }) => {
-        const handleCheckboxChange = e => {
-          const { name, checked } = e.target;
-          handleInputChange({
-            target: {
-              name,
-              value: checked,
-            },
-          });
-        };
-
         return (
           <>
             {/* Basic Information */}
@@ -109,9 +326,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                       alt='Band Logo Preview'
                       style={{
                         maxWidth: 200,
-                        maxHeight: 200,
                         display: 'block',
-                        borderRadius: 8,
                       }}
                     />
                   </div>
@@ -148,19 +363,38 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
 
               <div className='mb-sm-3 mb-2'>
                 <label
-                  htmlFor='catchPhrase'
+                  htmlFor='greeting'
                   className='form-label'
                 >
-                  Catch Phrase
+                  Greeting
                 </label>
                 <input
                   type='text'
                   className='form-control'
-                  id='catchPhrase'
-                  name='catchPhrase'
-                  value={formData.catchPhrase || ''}
+                  id='greeting'
+                  name='greeting'
+                  value={formData.greeting || ''}
                   onChange={handleInputChange}
-                  placeholder='Enter your catch phrase'
+                  placeholder='Enter your greeting (e.g., HELLO., WELCOME., ROCK ON.)'
+                  autoComplete='off'
+                />
+              </div>
+
+              <div className='mb-sm-3 mb-2'>
+                <label
+                  htmlFor='introduction'
+                  className='form-label'
+                >
+                  Introduction
+                </label>
+                <input
+                  type='text'
+                  className='form-control'
+                  id='introduction'
+                  name='introduction'
+                  value={formData.introduction || ''}
+                  onChange={handleInputChange}
+                  placeholder='Enter your introduction (e.g., We are a punk rock band from Seattle)'
                   autoComplete='off'
                 />
               </div>
@@ -221,55 +455,94 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
 
             {/* Colors */}
             <div className='mb-4'>
-              <div className='mb-sm-3 mb-2'>
-                <label
-                  htmlFor='primaryColor'
-                  className='form-label'
-                >
-                  Primary Color
-                </label>
-                <input
-                  type='color'
-                  className='form-control form-control-color'
-                  id='primaryColor'
-                  name='primaryColor'
-                  value={formData.primaryColor || '#000000'}
-                  onChange={handleInputChange}
-                />
-              </div>
+              <VisualColorSelector
+                label='Primary Color'
+                value={formData.primaryColor || '#000000'}
+                onChange={handleInputChange}
+                name='primaryColor'
+                type='primary'
+              />
+
+              <VisualColorSelector
+                label='Secondary Color'
+                value={formData.secondaryColor || '#000000'}
+                onChange={handleInputChange}
+                name='secondaryColor'
+                type='secondary'
+              />
 
               <div className='mb-sm-3 mb-2'>
-                <label
-                  htmlFor='secondaryColor'
-                  className='form-label'
+                <label className='form-label'>Background Color Theme</label>
+                <div className='d-flex flex-wrap gap-2'>
+                  {Object.entries(themeDisplayNames).map(
+                    ([name, displayName]) => {
+                      const colors = getColorPalette(name);
+                      return (
+                        <div
+                          key={name}
+                          className={`color-swatch ${
+                            formData.backgroundColor === name ? 'selected' : ''
+                          }`}
+                          onClick={() =>
+                            handleInputChange({
+                              target: {
+                                name: 'backgroundColor',
+                                value: name,
+                              },
+                            })
+                          }
+                          style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '8px',
+                            backgroundColor: colors.primary,
+                            border:
+                              formData.backgroundColor === name
+                                ? `3px solid ${colors.secondary}`
+                                : '2px solid rgba(255, 255, 255, 0.3)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            position: 'relative',
+                          }}
+                          title={displayName}
+                        >
+                          {formData.backgroundColor === name && (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                color: 'white',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                                textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                                filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.8))',
+                              }}
+                            >
+                              ✓
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+                <div
+                  className='mt-2 secondary-font'
+                  style={{ fontSize: '14px', opacity: 0.8, color: 'white' }}
                 >
-                  Secondary Color
-                </label>
-                <input
-                  type='color'
-                  className='form-control form-control-color'
-                  id='secondaryColor'
-                  name='secondaryColor'
-                  value={formData.secondaryColor || '#000000'}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className='mb-sm-3 mb-2'>
-                <label
-                  htmlFor='backgroundColor'
-                  className='form-label'
-                >
-                  Background Color
-                </label>
-                <input
-                  type='color'
-                  className='form-control form-control-color'
-                  id='backgroundColor'
-                  name='backgroundColor'
-                  value={formData.backgroundColor || '#272727'}
-                  onChange={handleInputChange}
-                />
+                  {formData.backgroundColor && (
+                    <span>
+                      Selected:{' '}
+                      <strong>
+                        {themeDisplayNames[formData.backgroundColor] ||
+                          formData.backgroundColor.charAt(0).toUpperCase() +
+                            formData.backgroundColor.slice(1)}
+                      </strong>
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -295,7 +568,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                   onChange={handleInputChange}
                 >
                   <optgroup label='Custom Fonts'>
-                    <option value='SprayPaint'>SprayPaint (Custom)</option>
+                    <option value='sprayPaint'>SprayPaint (Custom)</option>
                   </optgroup>
                   <optgroup label='Edgy/Rock'>
                     <option value='BebasNeue'>Bebas Neue (Ultra Bold)</option>
@@ -330,6 +603,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                     <option value='Courier New'>
                       Courier New (Retro/Vintage)
                     </option>
+                    <option value='Orbitron'>Orbitron (Futuristic)</option>
                     <option value='RobotoCondensed'>
                       Roboto Condensed (Clean)
                     </option>
@@ -352,7 +626,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                   onChange={handleInputChange}
                 >
                   <optgroup label='Custom Fonts'>
-                    <option value='SprayPaint'>SprayPaint (Custom)</option>
+                    <option value='sprayPaint'>SprayPaint (Custom)</option>
                   </optgroup>
                   <optgroup label='Edgy/Rock'>
                     <option value='BebasNeue'>Bebas Neue (Ultra Bold)</option>
@@ -387,6 +661,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                     <option value='Courier New'>
                       Courier New (Retro/Vintage)
                     </option>
+                    <option value='Orbitron'>Orbitron (Futuristic)</option>
                     <option value='RobotoCondensed'>
                       Roboto Condensed (Clean)
                     </option>
@@ -417,39 +692,11 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                   onChange={handleInputChange}
                 >
                   <option value='default'>Default</option>
-                  <option value='minimal'>Minimal</option>
                   <option value='colorful'>Colorful</option>
-                  <option value='outlined'>Outlined</option>
-                  <option value='filled'>Filled</option>
                 </select>
-              </div>
-
-              <div className='mb-sm-3 mb-2'>
-                <div className='form-check'>
-                  <input
-                    className='form-check-input'
-                    type='checkbox'
-                    id='newsletterEnabled'
-                    name='newsletterEnabled'
-                    checked={formData.newsletterEnabled !== false}
-                    onChange={handleCheckboxChange}
-                    style={{
-                      backgroundColor:
-                        formData.newsletterEnabled !== false
-                          ? 'var(--main)'
-                          : 'transparent',
-                      borderColor: 'var(--main)',
-                      color: 'white',
-                    }}
-                  />
-                  <label
-                    className='form-check-label secondary-font'
-                    htmlFor='newsletterEnabled'
-                    style={{ color: 'white' }}
-                  >
-                    Enable Newsletter Signup
-                  </label>
-                </div>
+                <SocialMediaIconPreview
+                  style={formData.socialMediaIconStyle || 'default'}
+                />
               </div>
             </div>
           </>

@@ -21,7 +21,28 @@ const MusicEdit = ({ fetchPlayers, players }) => {
 
   const renderPlayers = (players || []).map(player => {
     const dateString = new Date(player.date).toLocaleDateString();
-    const color = !player.bgColor ? '#e81d10' : '#282828';
+
+    // Determine theme color based on bgColor value
+    let color;
+    let borderStyle;
+    switch (player.bgColor) {
+      case 'auto':
+      case '':
+        color = 'transparent'; // Transparent for auto theme
+        borderStyle = '2px solid #666666'; // Outline for auto theme
+        break;
+      case '0':
+        color = '#282828'; // Dark gray for dark theme
+        borderStyle = 'none';
+        break;
+      case '1':
+        color = '#FFFFFF'; // White for light theme
+        borderStyle = 'none';
+        break;
+      default:
+        color = 'transparent'; // Default to transparent
+        borderStyle = '2px solid #666666';
+    }
     return (
       <div
         key={player._id}
@@ -97,7 +118,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           <span>Theme </span> &nbsp;
           <div
             className='theme'
-            style={{ backgroundColor: `${color}` }}
+            style={{ backgroundColor: `${color}`, border: `${borderStyle}` }}
           ></div>
         </p>
 

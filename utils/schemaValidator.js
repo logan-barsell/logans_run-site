@@ -21,8 +21,12 @@ const schemaValidators = {
       needsUpdate = true;
     }
 
-    if (!theme.catchPhrase) {
-      updates.catchPhrase = 'Welcome to our site';
+    if (!theme.greeting) {
+      updates.greeting = 'HELLO.';
+      needsUpdate = true;
+    }
+    if (!theme.introduction) {
+      updates.introduction = 'Welcome to our site';
       needsUpdate = true;
     }
 

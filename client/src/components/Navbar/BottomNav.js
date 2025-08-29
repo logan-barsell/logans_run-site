@@ -50,82 +50,82 @@ const BottomNav = ({
           <div className='iconsNav col-auto justify-content-center mx-auto'>
             {contactInfo.facebook && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
                 href={contactInfo.facebook}
               >
-                <Facebook />
+                <Facebook style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo.instagram && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
                 href={contactInfo.instagram}
               >
-                <Instagram />
+                <Instagram style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo.youtube && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
                 href={contactInfo.youtube}
               >
-                <YouTube />
+                <YouTube style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo.spotify && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
                 href={contactInfo.spotify}
               >
-                <Spotify />
+                <Spotify style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo.appleMusic && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
                 href={contactInfo.appleMusic}
               >
-                <AppleMusic />
+                <AppleMusic style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo.soundCloud && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
                 href={contactInfo.soundCloud}
               >
-                <SoundCloud />
+                <SoundCloud style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {contactInfo.x && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
                 href={contactInfo.x}
               >
-                <X />
+                <X style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
-            {contactInfo.tikTok && (
+            {contactInfo.tiktok && (
               <a
-                className=''
+                className='hvr-grow'
                 target='_blank'
                 rel='noreferrer'
-                href={contactInfo.tikTok}
+                href={contactInfo.tiktok}
               >
-                <TikTok />
+                <TikTok style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
           </div>
@@ -136,9 +136,9 @@ const BottomNav = ({
         <div className='container-fluid text-center text-md-left'>
           <div className='row'>
             <div className='col-md-7'>
-              <h5 className='text-uppercase'>HELLO.</h5>
+              <h5 className='text-uppercase'>{theme?.greeting || 'HELLO.'}</h5>
               <p className='secondary-font'>
-                {theme?.catchPhrase || 'Welcome to our site'}.
+                {theme?.introduction || 'Welcome to our site'}.
               </p>
             </div>
             <div className='col-md-5'>
