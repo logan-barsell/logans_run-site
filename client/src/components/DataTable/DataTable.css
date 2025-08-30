@@ -1,0 +1,64 @@
+/* DataTable Component Styles */
+.data-table-wrapper {
+  margin-top: 1rem;
+}
+
+.data-table-wrapper .table {
+  color: white;
+  font-family: var(--secondary-font);
+}
+
+.data-table-wrapper .table th {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-family: var(--secondary-font);
+  font-weight: 600;
+}
+
+.data-table-wrapper .table td {
+  border-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-family: var(--secondary-font);
+}
+
+.data-table-wrapper .table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.data-table-wrapper .pagination-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.data-table-wrapper .page-link {
+  border-radius: 4px;
+  margin: 0 2px;
+}
+
+.data-table-wrapper .page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.data-table-wrapper .page-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.data-table-wrapper .page-item.disabled .page-link {
+  background-color: var(--accordion-content-bg);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .data-table-wrapper .table-responsive {
+    font-size: 0.875rem;
+  }
+
+  .data-table-wrapper .table th,
+  .data-table-wrapper .table td {
+    padding: 0.5rem 0.25rem;
+  }
+}

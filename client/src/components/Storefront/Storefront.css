@@ -130,8 +130,6 @@
 .stripe-storefront .product-item {
   width: 100%;
   max-width: 350px;
-  display: flex;
-  justify-content: center;
 }
 
 /* Stripe-specific styling */

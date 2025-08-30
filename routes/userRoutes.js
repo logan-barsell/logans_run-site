@@ -6,4 +6,10 @@ const { requireAuth } = require('../middleware/auth');
 router.get('/me', requireAuth, userController.getCurrentUser);
 router.put('/me', requireAuth, userController.updateUser);
 
+// Security endpoints
+router.put('/change-password', requireAuth, userController.changePassword);
+router.get('/sessions', requireAuth, userController.getSessions);
+router.delete('/sessions/:sessionId', requireAuth, userController.endSession);
+router.delete('/sessions', requireAuth, userController.endAllOtherSessions);
+
 module.exports = router;

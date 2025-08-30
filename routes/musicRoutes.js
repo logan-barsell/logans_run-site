@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const musicController = require('../controllers/musicController');
+const { requireAuth } = require('../middleware/auth');
 
-router.post('/addPlayer', musicController.addPlayer);
-router.post('/updatePlayer', musicController.updatePlayer);
-router.get('/deletePlayer/:id', musicController.deletePlayer);
-router.get('/getPlayer/:id', musicController.getPlayer);
+// Public routes (used by public site)
 router.get('/getPlayers', musicController.getPlayers);
+
+// Admin routes (require authentication)
+router.post('/addPlayer', requireAuth, musicController.addPlayer);
+router.post('/updatePlayer', requireAuth, musicController.updatePlayer);
+router.get('/deletePlayer/:id', requireAuth, musicController.deletePlayer);
+router.get('/getPlayer/:id', requireAuth, musicController.getPlayer);
 
 module.exports = router;

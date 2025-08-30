@@ -1,4 +1,5 @@
 const Session = require('../models/Session');
+const logger = require('../utils/logger');
 
 const baseFields = {
   sessionId: true,
@@ -74,10 +75,96 @@ async function getSessions(userId, page, limit) {
   return { sessions, count };
 }
 
+/**
+ * Ends a specific session for a user.
+ * @param {string} sessionId - The ID of the session to end.
+ * @param {string} userId - The ID of the user.
+ * @returns {Object|null} The ended session or null if not found.
+ */
+async function endSession(sessionId, userId) {
+  const session = await Session.findOne({ sessionId, userId, isActive: true });
+
+  if (!session) {
+    return null;
+  }
+
+  const now = new Date();
+  const logoutTime = session.expiresAt < now ? session.expiresAt : now;
+
+  await Session.findByIdAndUpdate(session._id, {
+    logoutTime,
+    isActive: false,
+  });
+
+  return session;
+}
+
+/**
+ * Ends all other sessions for a user (excluding the current one).
+ * @param {string} userId - The ID of the user.
+ * @param {string} currentSessionId - The ID of the current session to keep.
+ * @returns {number} The count of sessions ended.
+ */
+async function endAllOtherSessions(userId, currentSessionId) {
+  const sessions = await Session.find({
+    userId,
+    isActive: true,
+    sessionId: { $ne: currentSessionId },
+  });
+
+  for (const session of sessions) {
+    const now = new Date();
+    const logoutTime = session.expiresAt < now ? session.expiresAt : now;
+    await Session.findByIdAndUpdate(session._id, {
+      logoutTime,
+      isActive: false,
+    });
+  }
+
+  return sessions.length;
+}
+
+/**
+ * Get the current active session for a user based on request context.
+ * @param {string} userId - The ID of the user.
+ * @param {Object} req - The request object containing IP and user agent.
+ * @returns {Object|null} The current session or null if not found.
+ */
+async function getCurrentSession(userId, req) {
+  try {
+    const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
+
+    // Try to find session by IP and user agent first (most specific)
+    let session = await Session.findOne({
+      userId,
+      isActive: true,
+      ipAddress,
+      userAgent,
+    });
+
+    // If not found, try to find any active session for this user
+    if (!session) {
+      session = await Session.findOne({
+        userId,
+        isActive: true,
+      });
+    }
+
+    return session;
+  } catch (error) {
+    logger.error('Error getting current session:', error);
+    return null;
+  }
+}
+
 const SessionService = {
   createSession,
   endAllSessions,
   getSessions,
+  endSession,
+  endAllOtherSessions,
+  getCurrentSession,
 };
 
 module.exports = SessionService;

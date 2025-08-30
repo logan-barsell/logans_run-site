@@ -1,0 +1,107 @@
+/* Tab Navigation Component Styles */
+.tab-navigation {
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tab-navigation .nav-tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  position: relative;
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.tab-navigation .nav-link {
+  color: white;
+  border: none;
+  background: transparent;
+  padding: 0.75rem 1rem;
+  font-size: 16px;
+  font-family: var(--secondary-font);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  position: relative;
+  border-bottom: 2px solid transparent; /* Reserve space for indicator */
+  border-radius: 8px 8px 0 0; /* Rounded top corners */
+}
+
+.tab-navigation .nav-link:hover {
+  color: var(--main);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent; /* Keep transparent on hover */
+}
+
+.tab-navigation .nav-link.active {
+  color: var(--main);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent; /* Remove static border */
+}
+
+/* Sliding indicator */
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--main);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  border-radius: 1px; /* Slightly rounded indicator */
+}
+
+.tab-navigation .tab-icon {
+  margin-right: 0.5rem;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .tab-navigation .nav-tabs {
+    flex-direction: column;
+    padding: 0.25rem;
+  }
+
+  .tab-navigation .nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-bottom: 0.25rem;
+    text-align: center;
+    border-bottom: 2px solid transparent !important;
+  }
+
+  .tab-navigation .nav-link:last-child {
+    margin-bottom: 0;
+  }
+
+  .tab-navigation .tab-icon {
+    font-size: 16px;
+    margin-right: 0.5rem;
+  }
+
+  /* Hide sliding indicator on mobile */
+  .tab-indicator {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-navigation .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 13px;
+  }
+
+  .tab-navigation .tab-icon {
+    font-size: 14px;
+    margin-right: 0.25rem;
+  }
+}

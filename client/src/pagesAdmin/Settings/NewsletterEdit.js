@@ -4,7 +4,6 @@ import { fetchTheme, updateTheme } from '../../redux/actions';
 import EditableForm from '../../components/Forms/EditableForm';
 import { RadioField } from '../../components/Forms/FieldTypes';
 import { useAlert } from '../../contexts/AlertContext';
-import SubscribersList from './SubscribersList';
 
 const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
   const { showSuccess, showError } = useAlert();
@@ -25,8 +24,9 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
         initialData={theme}
         onSave={handleSubmit}
         fetchData={fetchTheme}
-        title='Newsletter Configuration'
+        title=''
         description='Configure newsletter settings and automatic notification preferences.'
+        showTitle={false}
       >
         {({ formData, handleInputChange }) => {
           const isNewsletterEnabled = formData.enableNewsletter === true;
@@ -181,9 +181,6 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
           );
         }}
       </EditableForm>
-
-      {/* Subscribers List */}
-      <SubscribersList />
     </>
   );
 };

@@ -37,7 +37,17 @@ const FeaturedReleasesEdit = () => {
       <PageTitle>Featured Releases</PageTitle>
       <AddFeaturedRelease fetchReleases={fetchReleases} />
       {loading ? (
-        <div>Loading...</div>
+        <div
+          className='d-flex justify-content-center align-items-center'
+          style={{ minHeight: '200px' }}
+        >
+          <div
+            className='spinner-border text-light'
+            role='status'
+          >
+            <span className='visually-hidden'>Loading...</span>
+          </div>
+        </div>
       ) : (
         <VideoContainer>
           {releases.length === 0 && <NoContent>No Featured Releases</NoContent>}

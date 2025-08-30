@@ -19,6 +19,8 @@ const MusicPage = ({
   players,
   contactInfo,
   theme,
+  loading,
+  error,
 }) => {
   useEffect(() => {
     fetchPlayers();
@@ -115,7 +117,28 @@ const MusicPage = ({
         </div>
       )}
 
-      {players && players.length > 0 ? (
+      {/* Show loading state while fetching players */}
+      {loading ? (
+        <div
+          className='d-flex justify-content-center align-items-center'
+          style={{ minHeight: '200px' }}
+        >
+          <div
+            className='spinner-border text-light'
+            role='status'
+          >
+            <span className='visually-hidden'>Loading...</span>
+          </div>
+        </div>
+      ) : error ? (
+        <div
+          className='alert alert-danger'
+          role='alert'
+        >
+          <i className='fas fa-exclamation-triangle me-2'></i>
+          {error}
+        </div>
+      ) : players && players.length > 0 ? (
         players.map(player => (
           <div key={player._id}>
             <SecondaryNav label={player.title} />
@@ -197,6 +220,8 @@ function mapStateToProps({ music, contactInfo, theme }) {
     players: music?.data || [],
     contactInfo: contactInfo?.data || {},
     theme: theme?.data || null,
+    loading: music?.loading || false,
+    error: music?.error || null,
   };
 }
 
