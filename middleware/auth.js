@@ -1,6 +1,7 @@
 const TokenService = require('../services/tokenService');
 const { AppError } = require('./errorHandler');
 const UserService = require('../services/userService');
+const SessionService = require('../services/sessionService');
 const { clearAuthCookies } = require('../utils/cookie-utils');
 const logger = require('../utils/logger');
 
@@ -47,9 +48,10 @@ async function requireAuth(req, res, next) {
 
   const logoutUser = async () => {
     clearAuthCookies(res);
-    const id = req.user?._id?.toString();
+    const id = req.user?.id || req.user?._id?.toString();
     if (id) {
       await UserService.endAllUserSessions(id, true);
+      await TokenService.revokeRefreshTokens(id);
     }
   };
 
@@ -75,7 +77,18 @@ async function requireAuth(req, res, next) {
       throw new AppError('Forbidden - Account deactivated', 403);
     }
 
+    // NEW: Validate that the current session is still active
+    const currentSession = await SessionService.getCurrentSession(
+      decoded.id,
+      req
+    );
+    if (!currentSession || !currentSession.isActive) {
+      await logoutUser();
+      throw new AppError('Unauthorized - Session has been ended', 401);
+    }
+
     req.user = user;
+    req.session = currentSession;
     next();
   } catch (error) {
     await logoutUser();

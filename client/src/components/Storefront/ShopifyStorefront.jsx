@@ -17,10 +17,16 @@ const ShopifyStorefront = ({
 }) => {
   const { showError } = useAlert();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
+      if (!shopDomain || !storefrontAccessToken || !collectionId) {
+        return;
+      }
+
       try {
+        setLoading(true);
         const productList = await fetchShopifyProducts(
           shopDomain,
           storefrontAccessToken,
@@ -30,12 +36,12 @@ const ShopifyStorefront = ({
       } catch (err) {
         console.error('Error fetching Shopify products:', err);
         showError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (shopDomain && storefrontAccessToken && collectionId) {
-      fetchProducts();
-    }
+    fetchProducts();
   }, [shopDomain, storefrontAccessToken, collectionId, showError]);
 
   const handleCheckout = async variantId => {
@@ -52,6 +58,24 @@ const ShopifyStorefront = ({
     }
   };
 
+  // Show loading state while fetching products
+  if (loading) {
+    return (
+      <div
+        className='d-flex justify-content-center align-items-center'
+        style={{ minHeight: '200px' }}
+      >
+        <div
+          className='spinner-border text-light'
+          role='status'
+        >
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show no products only after loading is complete and no products
   if (products.length === 0) {
     return (
       <div className='no-products'>

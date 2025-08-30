@@ -6,7 +6,7 @@ import Button from '../../components/Button/Button';
 import { Divider, NoContent } from '../../components/Header';
 
 const videoCount = 6;
-const Videos = ({ fetchVideos, videos }) => {
+const Videos = ({ fetchVideos, videos, loading, error }) => {
   const [category, setCategory] = useState('all');
   const [limit, setLimit] = useState(videoCount);
 
@@ -25,6 +25,36 @@ const Videos = ({ fetchVideos, videos }) => {
   const filteredVideos = (videos || [])?.filter(video =>
     category !== 'all' ? video.category === category : true
   );
+
+  // Show loading state while fetching data
+  if (loading) {
+    return (
+      <div
+        className='d-flex justify-content-center align-items-center'
+        style={{ minHeight: '200px' }}
+      >
+        <div
+          className='spinner-border text-light'
+          role='status'
+        >
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if fetch failed
+  if (error) {
+    return (
+      <div
+        className='alert alert-danger'
+        role='alert'
+      >
+        <i className='fas fa-exclamation-triangle me-2'></i>
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -73,7 +103,11 @@ const Videos = ({ fetchVideos, videos }) => {
 };
 
 function mapStateToProps({ videos }) {
-  return { videos: videos?.data || [] };
+  return {
+    videos: videos?.data || [],
+    loading: videos?.loading || false,
+    error: videos?.error || null,
+  };
 }
 
 export default connect(mapStateToProps, { fetchVideos })(Videos);

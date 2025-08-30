@@ -13,7 +13,7 @@ import { addVideoFields } from './constants';
 import { PageTitle, Divider, NoContent } from '../../../components/Header';
 
 const videoCount = 6;
-const VideosEdit = ({ fetchVideos, videos }) => {
+const VideosEdit = ({ fetchVideos, videos, loading, error }) => {
   const [limit, setLimit] = useState(videoCount);
 
   useEffect(() => {
@@ -23,6 +23,42 @@ const VideosEdit = ({ fetchVideos, videos }) => {
   const loadMoreVids = () => {
     setLimit(limit + videoCount);
   };
+
+  // Show loading state while fetching videos
+  if (loading) {
+    return (
+      <div id='videoEdit'>
+        <PageTitle divider>Edit Videos</PageTitle>
+        <div
+          className='d-flex justify-content-center align-items-center'
+          style={{ minHeight: '200px' }}
+        >
+          <div
+            className='spinner-border text-light'
+            role='status'
+          >
+            <span className='visually-hidden'>Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if fetch failed
+  if (error) {
+    return (
+      <div id='videoEdit'>
+        <PageTitle divider>Edit Videos</PageTitle>
+        <div
+          className='alert alert-danger'
+          role='alert'
+        >
+          <i className='fas fa-exclamation-triangle me-2'></i>
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -74,7 +110,11 @@ const VideosEdit = ({ fetchVideos, videos }) => {
 };
 
 function mapStateToProps({ videos }) {
-  return { videos: videos?.data || [] };
+  return {
+    videos: videos?.data || [],
+    loading: videos?.loading || false,
+    error: videos?.error || null,
+  };
 }
 
 export default connect(mapStateToProps, { fetchVideos })(VideosEdit);

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const contactController = require('../controllers/contactController');
+const { requireAuth } = require('../middleware/auth');
 const {
   sendContactNotification,
   sendNewsletterConfirmation,
@@ -138,7 +139,7 @@ router.get('/unsubscribe', async (req, res) => {
 });
 
 // GET newsletter statistics (admin only)
-router.get('/newsletter-stats', async (req, res) => {
+router.get('/newsletter-stats', requireAuth, async (req, res) => {
   try {
     const stats = await NewsletterService.getStats();
 
@@ -156,7 +157,7 @@ router.get('/newsletter-stats', async (req, res) => {
 });
 
 // GET all newsletter subscribers (admin only)
-router.get('/newsletter-subscribers', async (req, res) => {
+router.get('/newsletter-subscribers', requireAuth, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
