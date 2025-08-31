@@ -87,6 +87,22 @@ const userSchema = new mongoose.Schema({
   resetToken: String,
   resetTokenExpiry: Date,
 
+  // Two-Factor Authentication
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false,
+  },
+  twoFactorCode: String,
+  twoFactorCodeExpiry: Date,
+
+  // Security Preferences
+  securityPreferences: {
+    loginAlerts: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   // Account Settings
   isActive: {
     type: Boolean,
@@ -141,6 +157,15 @@ userSchema.methods.isResetTokenValid = function () {
     this.resetToken &&
     this.resetTokenExpiry &&
     this.resetTokenExpiry > Date.now()
+  );
+};
+
+// Method to check if 2FA code is valid
+userSchema.methods.isTwoFactorCodeValid = function () {
+  return (
+    this.twoFactorCode &&
+    this.twoFactorCodeExpiry &&
+    this.twoFactorCodeExpiry > Date.now()
   );
 };
 

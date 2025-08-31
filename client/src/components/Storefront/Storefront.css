@@ -64,6 +64,7 @@
   font-size: 14px;
   margin-bottom: 15px;
   line-height: 1.4;
+  font-family: var(--secondary-font);
 }
 
 .shopify-storefront .price,

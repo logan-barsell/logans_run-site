@@ -15,6 +15,7 @@ router.use('/reset-password', resetPassLimiter);
 
 // Authentication endpoints
 router.post('/login', authController.login);
+router.post('/complete-2fa', authController.completeTwoFactorLogin);
 router.post('/signup', authController.signup);
 router.post('/logout', requireAuth, authController.logout);
 router.post('/refresh', authController.refresh);
@@ -30,10 +31,5 @@ router.post('/reset-password', authController.resetPassword);
 
 // User initialization endpoint
 router.post('/initialize', authController.initializeDefaultUser);
-
-// Legacy endpoints for backward compatibility
-router.post('/legacy/login', authController.login);
-router.get('/legacy/me', requireAuth, authController.checkAuth);
-router.post('/legacy/logout', requireAuth, authController.logout);
 
 module.exports = router;

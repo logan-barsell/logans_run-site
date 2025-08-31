@@ -7,10 +7,9 @@
  *
  * @param {string} bandName - The band's name
  * @param {string} email - The subscriber's email
- * @param {Object} colors - Theme colors for email styling
  * @returns {Object} Template with subject and HTML
  */
-const newsletterConfirmation = (bandName, email, colors = {}) => ({
+const newsletterConfirmation = (bandName, email) => ({
   subject: `You're In The Loop - ${bandName} Newsletter`,
   html: `
     <!DOCTYPE html>
@@ -20,18 +19,17 @@ const newsletterConfirmation = (bandName, email, colors = {}) => ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Newsletter Subscription Confirmed - ${bandName}</title>
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: ${colors.header || '#27ae60'}; color: ${
-    colors.headerText || 'white'
-  }; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: ${
-          colors.content || '#f9f9f9'
-        }; padding: 30px; border-radius: 0 0 10px 10px; }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .highlight { background: #e8f5e8; border-left: 4px solid ${
-          colors.primary || '#27ae60'
-        }; padding: 15px; margin: 20px 0; }
+        .header { background: #000000; color: white !important; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; color: #333 !important; }
+        .content p { color: #333 !important; }
+        .content h2 { color: #333 !important; }
+        .content strong { color: #333 !important; }
+        .footer { text-align: center; margin-top: 30px; color: #333 !important; font-size: 14px; }
+        .highlight { background: #e8f5e8; border-left: 4px solid #27ae60; padding: 15px; margin: 20px 0; color: #155724 !important; }
+        .highlight p { color: #155724 !important; }
+        .highlight strong { color: #155724 !important; }
       </style>
     </head>
     <body>

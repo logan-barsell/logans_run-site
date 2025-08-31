@@ -1,5 +1,6 @@
 const showModel = require('../models/Show');
 const HomeImage = require('../models/HomeImage');
+const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 
 class HomeService {
@@ -90,7 +91,6 @@ class HomeService {
 
       // Send newsletter notification for new show
       try {
-        const NewsletterService = require('./newsletterService');
         await NewsletterService.sendContentNotification('show', {
           title: newShow.venue || 'New Show',
           date: newShow.date,

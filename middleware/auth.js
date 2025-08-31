@@ -4,6 +4,7 @@ const UserService = require('../services/userService');
 const SessionService = require('../services/sessionService');
 const { clearAuthCookies } = require('../utils/cookie-utils');
 const logger = require('../utils/logger');
+const crypto = require('crypto');
 
 // Validate JWT_SECRET on startup
 const validateJWTSecret = () => {
@@ -23,7 +24,6 @@ const validateJWTSecret = () => {
     }
 
     // For development, generate a temporary secret
-    const crypto = require('crypto');
     const tempSecret = crypto.randomBytes(64).toString('hex');
     process.env.JWT_SECRET = tempSecret;
     logger.info('   Generated temporary JWT_SECRET for development.');
@@ -48,10 +48,14 @@ async function requireAuth(req, res, next) {
 
   const logoutUser = async () => {
     clearAuthCookies(res);
-    const id = req.user?.id || req.user?._id?.toString();
-    if (id) {
-      await UserService.endAllUserSessions(id, true);
-      await TokenService.revokeRefreshTokens(id);
+    const sessionId = req.user?.sessionId;
+    const userId = req.user?.id;
+
+    if (sessionId && userId) {
+      // End only the current session
+      await SessionService.endSession(sessionId, userId);
+      // Revoke only the current session's refresh token
+      await TokenService.revokeSessionRefreshToken(sessionId);
     }
   };
 
@@ -79,15 +83,19 @@ async function requireAuth(req, res, next) {
 
     // NEW: Validate that the current session is still active
     const currentSession = await SessionService.getCurrentSession(
-      decoded.id,
-      req
+      decoded.sessionId,
+      decoded.id
     );
     if (!currentSession || !currentSession.isActive) {
       await logoutUser();
       throw new AppError('Unauthorized - Session has been ended', 401);
     }
 
-    req.user = user;
+    req.user = {
+      ...user.toObject(),
+      sessionId: decoded.sessionId,
+      id: decoded.id,
+    };
     req.session = currentSession;
     next();
   } catch (error) {
@@ -96,22 +104,4 @@ async function requireAuth(req, res, next) {
   }
 }
 
-// Legacy requireAuth for backward compatibility
-function requireAuthLegacy(req, res, next) {
-  const token = req.cookies && req.cookies.token;
-  if (!token) {
-    return res.status(401).json({ authenticated: false });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    logger.warn(
-      `Authentication failed for IP: ${req.ip}, Error: ${err.message}`
-    );
-    return res.status(401).json({ authenticated: false });
-  }
-}
-
-module.exports = { requireAuth, requireAuthLegacy };
+module.exports = { requireAuth };

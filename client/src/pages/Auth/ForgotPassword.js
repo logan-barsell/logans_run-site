@@ -88,7 +88,7 @@ const ForgotPassword = () => {
             <div className='d-flex flex-column gap-2'>
               <Button
                 type='submit'
-                variant={isSuccess ? 'success' : 'danger'}
+                variant='danger'
                 disabled={submitting || isLoading || isSuccess}
                 loading={isLoading}
               >

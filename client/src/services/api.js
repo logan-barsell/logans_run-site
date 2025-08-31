@@ -1,5 +1,5 @@
 import axios from 'axios';
-import csrfService from './csrfService';
+import * as csrfService from './csrfService';
 
 // You can set REACT_APP_API_BASE_URL in your .env file, or fallback to relative path
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';

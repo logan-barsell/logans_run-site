@@ -1,23 +1,23 @@
 /**
- * Password Reset Template
+ * Two-Factor Authentication Code Email Template
  *
  * Used for:
- * - Password reset requests
- * - Security-related email communications
+ * - Two-factor authentication verification codes
+ * - Secure login verification
  *
- * @param {string} resetLink - The password reset URL
+ * @param {string} code - The 6-digit verification code
  * @param {string} bandName - Band name for branding
  * @returns {Object} Template with subject and HTML
  */
-const passwordReset = (resetLink, bandName = 'Bandsyte') => ({
-  subject: `Reset Your Password - ${bandName} Admin`,
+const twoFactorCode = (code, bandName = 'Bandsyte') => ({
+  subject: `Your Login Code - ${bandName} Admin`,
   html: `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Password Reset - ${bandName} Admin</title>
+      <title>Your Login Code - ${bandName} Admin</title>
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -26,9 +26,9 @@ const passwordReset = (resetLink, bandName = 'Bandsyte') => ({
         .content p { color: #333 !important; }
         .content h2 { color: #333 !important; }
         .content strong { color: #333 !important; }
-        .button { display: inline-block; background: #000000; color: white !important; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; border: none; transition: all 0.3s ease; }
-        .button:hover { background: #333333; color: white !important; text-decoration: none; }
         .footer { text-align: center; margin-top: 30px; color: #333 !important; font-size: 14px; }
+        .code-container { background: #ffffff; border: 3px solid #000000; padding: 30px; border-radius: 10px; margin: 30px 0; text-align: center; }
+        .code { font-size: 36px; font-weight: bold; color: #000000 !important; letter-spacing: 8px; font-family: 'Courier New', monospace; }
         .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; color: #856404 !important; }
         .warning p { color: #856404 !important; }
         .warning strong { color: #856404 !important; }
@@ -41,27 +41,38 @@ const passwordReset = (resetLink, bandName = 'Bandsyte') => ({
       <div class="container">
         <div class="header">
           <h1>${bandName}</h1>
-          <p>Password Reset</p>
+          <p>🔐 Two-Factor Authentication</p>
         </div>
         <div class="content">
-          <h2>🔐 Let's Get You Back In</h2>
+          <h2>Your Login Verification Code</h2>
           <p>Hey <strong>${bandName}</strong> admin,</p>
-          <p>Looks like you need to reset your password for your website. No worries, we've got you covered!</p>
-          <div style="text-align: center;">
-            <a href="${resetLink}" class="button">Reset Password</a>
+          <p>You're logging into your admin account. Use the verification code below to complete your login:</p>
+          
+          <div class="code-container">
+            <div class="code">${code}</div>
           </div>
+          
           <div class="warning">
-            <strong>Heads up:</strong> This link expires in 1 hour for security.
+            <p><strong>⚠️ Security Notice:</strong></p>
+            <ul>
+              <li>This code expires in <strong>5 minutes</strong></li>
+              <li>Never share this code with anyone</li>
+              <li>If you didn't request this code, please secure your account immediately</li>
+            </ul>
           </div>
+          
           <div class="security">
-            <strong>Security check:</strong> If you didn't request this reset, just ignore this email. Your password stays the same.
+            <p><strong>ℹ️ Having trouble?</strong></p>
+            <ul>
+              <li>Make sure you're entering the code correctly</li>
+              <li>Request a new code if this one has expired</li>
+              <li>Contact support if you continue to have issues</li>
+            </ul>
           </div>
-          <p>If the button doesn't work, copy and paste this link:</p>
-          <p style="word-break: break-all; color: #e74c3c;">${resetLink}</p>
         </div>
         <div class="bandsyte-brand">
           <p><strong>Bandsyte</strong> - Professional Band Websites</p>
-          <p>This password reset was sent by your Bandsyte website platform.</p>
+          <p>This verification code was sent by your Bandsyte website platform.</p>
         </div>
         <div class="footer">
           <p>&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
@@ -73,4 +84,4 @@ const passwordReset = (resetLink, bandName = 'Bandsyte') => ({
   `,
 });
 
-module.exports = passwordReset;
+module.exports = twoFactorCode;

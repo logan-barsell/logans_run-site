@@ -2,12 +2,9 @@ const bcrypt = require('bcrypt');
 const config = require('../config');
 const UserService = require('./userService');
 const TokenService = require('./tokenService');
-const {
-  sendEmailVerification,
-  sendPasswordReset,
-  sendPasswordResetSuccess,
-} = require('./emailService');
-const themeService = require('./themeService');
+const EmailService = require('./emailService');
+const ThemeService = require('./themeService');
+const TwoFactorService = require('./twoFactorService');
 const { AppError } = require('../middleware/errorHandler');
 const redisClient = require('../utils/redisClient');
 const logger = require('../utils/logger');
@@ -39,15 +36,27 @@ const login = async options => {
     throw new AppError('Invalid email or password', 401);
   }
 
-  try {
-    // Try to end existing sessions, but don't fail if there are none
-    try {
-      await UserService.endAllUserSessions(user._id.toString(), true);
-    } catch (sessionError) {
-      // Ignore session ending errors
-    }
+  // Check if 2FA is enabled
+  if (user.twoFactorEnabled) {
+    // Automatically send 2FA code
+    const theme = await ThemeService.getTheme();
+    const bandName = theme.siteTitle || 'Bandsyte';
 
-    await SessionService.createSession(user._id.toString(), {
+    await TwoFactorService.sendTwoFactorCode(user._id.toString(), bandName);
+
+    // Return user info but require 2FA verification
+    return {
+      requiresTwoFactor: true,
+      userId: user._id.toString(),
+      user: formatUser(user),
+      codeSent: true,
+    };
+  }
+
+  // Proceed with normal login if 2FA is not enabled
+  let session;
+  try {
+    session = await SessionService.createSession(user._id.toString(), {
       ipAddress: ip,
       userAgent,
       expiresAt: addDays(7), // Expires in 7 days
@@ -59,15 +68,61 @@ const login = async options => {
   const accessToken = TokenService.generateAccessToken({
     id: user._id.toString(),
     uuid: user.uuid,
-    role: user.role,
-    userType: user.userType,
+    sessionId: session.sessionId,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
       id: user._id.toString(),
       uuid: user.uuid,
-      role: user.role,
-      userType: user.userType,
+      sessionId: session.sessionId,
+    },
+    ip,
+    userAgent
+  );
+  return {
+    accessToken,
+    refreshToken,
+    user: formatUser(user),
+  };
+};
+
+const completeTwoFactorLogin = async options => {
+  const { userId, ip, userAgent } = options;
+
+  const user = await UserService.findUserById(userId);
+
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  if (user.status === 'INACTIVE')
+    throw new AppError('Account is inactive, please contact support', 403);
+
+  if (!user.twoFactorEnabled) {
+    throw new AppError('Two-factor authentication is not enabled', 400);
+  }
+
+  let session;
+  try {
+    session = await SessionService.createSession(user._id.toString(), {
+      ipAddress: ip,
+      userAgent,
+      expiresAt: addDays(7), // Expires in 7 days
+    });
+  } catch (error) {
+    throw error;
+  }
+
+  const accessToken = TokenService.generateAccessToken({
+    id: user._id.toString(),
+    uuid: user.uuid,
+    sessionId: session.sessionId,
+  });
+  const refreshToken = await TokenService.generateRefreshToken(
+    {
+      id: user._id.toString(),
+      uuid: user.uuid,
+      sessionId: session.sessionId,
     },
     ip,
     userAgent
@@ -165,12 +220,17 @@ async function sendEmailVerificationWithToken(userId, email, role = 'USER') {
   );
 
   // Get the actual band name from theme
-  const theme = await themeService.getTheme();
+  const theme = await ThemeService.getTheme();
   const bandName = theme.siteTitle || config.appName;
 
   // Send verification email
   const verificationLink = `${config.clientURL}/auth/verify-email?token=${verificationToken}`;
-  await sendEmailVerification(email, verificationLink, role, bandName);
+  await EmailService.sendEmailVerification(
+    email,
+    verificationLink,
+    role,
+    bandName
+  );
 }
 
 // Verify Email
@@ -232,12 +292,12 @@ async function requestPasswordReset(email) {
   });
 
   // Get the actual band name from theme
-  const theme = await themeService.getTheme();
+  const theme = await ThemeService.getTheme();
   const bandName = theme.siteTitle || config.appName;
 
   // Send reset email
   const resetUrl = `${config.clientURL}/reset-password?token=${resetToken}`;
-  await sendPasswordReset(user.adminEmail, resetUrl, bandName);
+  await EmailService.sendPasswordReset(user.adminEmail, resetUrl, bandName);
   logger.info(`📧 Password reset email sent to user ${user._id}`);
 }
 
@@ -272,17 +332,18 @@ async function resetPassword(token, newPassword) {
   await redisClient.del(`password-reset:${payload.userId}`);
 
   // Get the actual band name from theme
-  const theme = await themeService.getTheme();
+  const theme = await ThemeService.getTheme();
   const bandName = theme.siteTitle || config.appName;
 
   // Send success notification email
-  await sendPasswordResetSuccess(user.adminEmail, bandName);
+  await EmailService.sendPasswordResetSuccess(user.adminEmail, bandName);
 
   logger.info(`🔑 Password successfully reset for user ${uuid}`);
 }
 
 const AuthService = {
   login,
+  completeTwoFactorLogin,
   signup,
   sendEmailVerificationWithToken,
   verifyEmail,

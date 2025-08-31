@@ -1,4 +1,5 @@
 const SpotifyPlayer = require('../models/SpotifyPlayer');
+const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 
 // Spotify URL validation patterns
@@ -70,7 +71,6 @@ class MusicService {
 
       // Send newsletter notification for new music
       try {
-        const NewsletterService = require('./newsletterService');
         await NewsletterService.sendContentNotification('music', {
           title: newPlayer.title || 'New Music',
           artist: newPlayer.artist,

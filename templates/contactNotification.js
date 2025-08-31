@@ -7,14 +7,9 @@
  *
  * @param {Object} contactData - Contact form data
  * @param {string} bandName - Band name for branding
- * @param {Object} colors - Theme colors for email styling
  * @returns {Object} Template with subject and HTML
  */
-const contactNotification = (
-  contactData,
-  bandName = 'Bandsyte',
-  colors = {}
-) => ({
+const contactNotification = (contactData, bandName = 'Bandsyte') => ({
   subject: `New Fan Message - ${bandName}`,
   html: `
     <!DOCTYPE html>
@@ -24,25 +19,18 @@ const contactNotification = (
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>New Contact Message - ${bandName}</title>
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: ${colors.header || '#3498db'}; color: ${
-    colors.headerText || 'white'
-  }; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: ${
-          colors.content || '#f9f9f9'
-        }; padding: 30px; border-radius: 0 0 10px 10px; }
+        .header { background: #000000; color: white !important; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; color: #333 !important; }
+        .content p { color: #333 !important; }
+        .content h2 { color: #333 !important; }
+        .content strong { color: #333 !important; }
         .field { margin-bottom: 20px; }
-        .field-label { font-weight: bold; color: #555; margin-bottom: 5px; }
-        .field-value { background: white; padding: 15px; border-radius: 5px; border-left: 4px solid ${
-          colors.primary || '#3498db'
-        }; }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .bandsyte-brand { background: ${
-          colors.footer || '#f8f9fa'
-        }; border: 1px solid ${
-    colors.border || '#dee2e6'
-  }; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
+        .field-label { font-weight: bold; color: #555 !important; margin-bottom: 5px; }
+        .field-value { background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #3498db; color: #333 !important; }
+        .footer { text-align: center; margin-top: 30px; color: #333 !important; font-size: 14px; }
+        .bandsyte-brand { background: #000000; color: white !important; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
       </style>
     </head>
     <body>

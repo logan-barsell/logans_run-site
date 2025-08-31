@@ -1,27 +1,33 @@
 /**
- * Password Reset Success Template
+ * Login Alert Template
  *
  * Used for:
- * - Confirming successful password reset
- * - Security notification to user
- * - Alerting user of account activity
+ * - Notifying users of successful logins
+ * - Login activity monitoring
+ * - Account access notifications
  *
  * @param {string} bandName - Band name for branding
- * @param {string} timestamp - When the reset occurred
+ * @param {string} timestamp - When the login occurred
+ * @param {string} ipAddress - IP address of the login
+ * @param {string} userAgent - Device/browser information
+ * @param {string} location - Approximate location (if available)
  * @returns {Object} Template with subject and HTML
  */
-const passwordResetSuccess = (
+const loginAlert = (
   bandName = 'Bandsyte',
-  timestamp = new Date().toLocaleString()
+  timestamp = new Date().toLocaleString(),
+  ipAddress = 'Unknown',
+  userAgent = 'Unknown',
+  location = 'Unknown'
 ) => ({
-  subject: `Password Reset Successful - ${bandName} Admin`,
+  subject: `Login Alert - ${bandName} Admin`,
   html: `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Password Reset Successful - ${bandName} Admin</title>
+      <title>Login Alert - ${bandName} Admin</title>
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -34,8 +40,9 @@ const passwordResetSuccess = (
         .success { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; margin: 20px 0; color: #155724 !important; }
         .success p { color: #155724 !important; }
         .success strong { color: #155724 !important; }
-        .security { background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 20px 0; color: #0c5460 !important; }
-        .security strong { color: #0c5460 !important; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 20px 0; color: #0c5460 !important; }
+        .info p { color: #0c5460 !important; }
+        .info strong { color: #0c5460 !important; }
         .bandsyte-brand { background: #000000; color: white !important; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
       </style>
     </head>
@@ -43,32 +50,37 @@ const passwordResetSuccess = (
       <div class="container">
         <div class="header">
           <h1>${bandName}</h1>
-          <p>Password Reset Successful</p>
+          <p>🔐 Login Alert</p>
         </div>
         <div class="content">
-          <h2>🔐 Password Successfully Reset!</h2>
+          <h2>Successful Login Detected</h2>
           <p>Hey <strong>${bandName}</strong> admin,</p>
-          <p>Your password has been successfully reset and your account is secure.</p>
+          <p>We wanted to let you know that someone successfully logged into your admin account.</p>
           
           <div class="success">
-            <p><strong>✅ Reset completed:</strong> ${timestamp}</p>
-            <p><strong>✅ Account status:</strong> Active and secure</p>
-          </div>
-          
-          <div class="security">
-            <strong>🔒 Security reminder:</strong>
+            <p><strong>✅ Login Details:</strong></p>
             <ul>
-              <li>Your new password is now active</li>
-              <li>You can log in with your new password</li>
-              <li>If you didn't reset your password, contact support immediately</li>
+              <li><strong>Time:</strong> ${timestamp}</li>
+              <li><strong>IP Address:</strong> ${ipAddress}</li>
+              <li><strong>Device:</strong> ${userAgent}</li>
+              <li><strong>Location:</strong> ${location}</li>
             </ul>
           </div>
           
-          <p>You're all set to get back to managing your <strong>${bandName}</strong> website!</p>
+          <div class="info">
+            <p><strong>ℹ️ What this means:</strong></p>
+            <ul>
+              <li>This was a successful login to your admin account</li>
+              <li>If this was you, no action is needed</li>
+              <li>If this was not you, please change your password immediately</li>
+            </ul>
+          </div>
+          
+          <p>If you have any concerns about this login activity, please contact our support team.</p>
         </div>
         <div class="bandsyte-brand">
           <p><strong>Bandsyte</strong> - Professional Band Websites</p>
-          <p>This security notification was sent by your Bandsyte website platform.</p>
+          <p>This login notification was sent by your Bandsyte website platform.</p>
         </div>
         <div class="footer">
           <p>&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
@@ -80,4 +92,4 @@ const passwordResetSuccess = (
   `,
 });
 
-module.exports = passwordResetSuccess;
+module.exports = loginAlert;

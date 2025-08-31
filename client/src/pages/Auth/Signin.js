@@ -5,13 +5,14 @@ import ErrorMessage from '../../components/ErrorMessage';
 import { login } from '../../services/authService';
 import { useAlert } from '../../contexts/AlertContext';
 import Button from '../../components/Button/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signin = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const { showError, showSuccess } = useAlert();
+  const navigate = useNavigate();
 
   const onSubmit = async values => {
     setError(null);
@@ -20,6 +21,23 @@ const Signin = () => {
     try {
       const data = await login(values);
       if (data.success) {
+        // Check if 2FA is required
+        if (data.requiresTwoFactor) {
+          // Show success message that code was sent
+          showSuccess(data.message || 'Verification code sent to your email');
+
+          // Navigate to 2FA verification page
+          navigate('/2fa-verification', {
+            state: {
+              userId: data.data.userId,
+              user: data.data.user,
+              bandName: data.data.user.bandName || 'Bandsyte',
+            },
+          });
+          return;
+        }
+
+        // Normal login success
         setIsSuccess(true);
         showSuccess('Login successful! Redirecting...');
         setTimeout(() => {
@@ -106,7 +124,7 @@ const Signin = () => {
             <div className='d-flex flex-column gap-2'>
               <Button
                 type='submit'
-                variant={isSuccess ? 'success' : 'danger'}
+                variant='danger'
                 disabled={submitting || isLoading || isSuccess}
                 loading={isLoading}
               >
