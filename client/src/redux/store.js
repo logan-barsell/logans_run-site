@@ -21,6 +21,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { themeReducer } from './reducers/themeReducer';
 import { merchConfigReducer } from './reducers/merchConfigReducer';
+import { authReducer } from './reducers/authReducer';
 
 const persistConfig = {
   key: 'root',
@@ -30,6 +31,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  auth: authReducer,
   music: musicReducer,
   videos: videosReducer,
   media: mediaReducer,

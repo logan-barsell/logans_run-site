@@ -135,15 +135,7 @@ const completeTwoFactorLogin = async options => {
 };
 
 const signup = async options => {
-  const {
-    email,
-    password,
-    firstName,
-    lastName,
-    userType = 'USER',
-    ip,
-    userAgent,
-  } = options;
+  const { email, password, userType = 'USER', ip, userAgent } = options;
 
   const existingUser = await UserService.findUserByEmail(email);
 
@@ -154,8 +146,6 @@ const signup = async options => {
   const newUser = await UserService.createUser({
     adminEmail: email,
     password,
-    firstName,
-    lastName,
     role: 'USER',
     userType,
   });

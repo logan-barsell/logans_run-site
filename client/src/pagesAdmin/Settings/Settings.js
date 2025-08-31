@@ -6,7 +6,6 @@ import {
   ShieldLock,
   Person,
   CreditCard,
-  Gear,
 } from '../../components/icons';
 import './Settings.css';
 import SidebarNav from './SidebarNav';
@@ -15,9 +14,8 @@ import NewsletterSettings from './NewsletterSettings';
 import SecuritySettings from './SecuritySettings';
 import AccountSettings from './AccountSettings';
 import BillingSettings from './BillingSettings';
-import GeneralSettings from './GeneralSettings';
 
-const Settings = ({ user, theme }) => {
+const Settings = ({ theme }) => {
   const [currentTab, setCurrentTab] = useState('theme');
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -68,12 +66,6 @@ const Settings = ({ user, theme }) => {
       icon: <CreditCard />,
       component: BillingSettings,
     },
-    {
-      id: 'general',
-      label: 'General',
-      icon: <Gear />,
-      component: GeneralSettings,
-    },
   ];
 
   const currentTabData = tabs.find(tab => tab.id === currentTab);
@@ -91,7 +83,6 @@ const Settings = ({ user, theme }) => {
     >
       {/* Sidebar */}
       <SidebarNav
-        user={user}
         tabs={tabs}
         currentTab={currentTabData}
         sidebarOpen={sidebarOpen}
@@ -113,7 +104,6 @@ const Settings = ({ user, theme }) => {
 };
 
 const mapStateToProps = state => ({
-  user: state.auth?.user || null,
   theme: state.theme?.data || null,
 });
 

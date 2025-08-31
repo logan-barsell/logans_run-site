@@ -214,7 +214,6 @@ const preselectedColors = {
     { name: 'Navy', value: '#000080' },
     { name: 'Teal', value: '#008080' },
     { name: 'Maroon', value: '#800000' },
-    { name: 'Lime', value: '#00ff00' },
   ],
 };
 

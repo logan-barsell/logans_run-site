@@ -15,9 +15,6 @@ const TokenService = require('./tokenService');
 
 const baseFields = {
   uuid: true,
-  firstName: true,
-  lastName: true,
-  fullName: true,
   adminEmail: true,
   adminPhone: true,
   status: true,
@@ -363,13 +360,10 @@ async function findUsers(options = {}) {
 
     const where = {};
 
-    // Apply search filtering (checks name(s) & email)
+    // Apply search filtering (checks email)
     const searchTerm = search?.trim();
     if (searchTerm) {
-      where.$or = [
-        { adminEmail: { $regex: searchTerm, $options: 'i' } },
-        { fullName: { $regex: searchTerm, $options: 'i' } },
-      ];
+      where.$or = [{ adminEmail: { $regex: searchTerm, $options: 'i' } }];
     }
 
     // Apply type filtering
@@ -517,8 +511,6 @@ async function initializeDefaultUser() {
       adminEmail: process.env.ADMIN_EMAIL || 'admin@bandsyte.com',
       password: process.env.DEFAULT_ADMIN_PASSWORD || 'Bandsyte2024!',
       adminPhone: process.env.ADMIN_PHONE || '',
-      firstName: 'Admin',
-      lastName: 'User',
       role: 'ADMIN',
       userType: 'ADMIN',
       status: 'ACTIVE',

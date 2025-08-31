@@ -30,22 +30,6 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  // User details
-  firstName: {
-    type: String,
-    trim: true,
-  },
-
-  lastName: {
-    type: String,
-    trim: true,
-  },
-
-  fullName: {
-    type: String,
-    trim: true,
-  },
-
   // Role and status
   role: {
     type: String,
@@ -124,12 +108,6 @@ const userSchema = new mongoose.Schema({
 // Update the updatedAt field before saving
 userSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
-
-  // Generate full name if firstName and lastName are provided
-  if (this.firstName && this.lastName) {
-    this.fullName = `${this.firstName} ${this.lastName}`;
-  }
-
   next();
 });
 
