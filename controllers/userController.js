@@ -9,26 +9,15 @@ const bcrypt = require('bcrypt');
 const logger = require('../utils/logger');
 
 /**
- * Get current user information
- */
-async function getCurrentUser(req, res, next) {
-  try {
-    const user = await UserService.getUserById(req.user.id);
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    next(new AppError('Failed to fetch user information', 500));
-  }
-}
-
-/**
  * Update user information
  */
 async function updateUser(req, res, next) {
   try {
-    const user = await UserService.updateUser(req.user.id, req.body);
+    const user = await UserService.updateUserWithIdentifier(
+      req.user.id,
+      req.body,
+      true
+    );
     res.status(200).json({
       success: true,
       data: user,
@@ -246,7 +235,6 @@ function getLocationInfo(ipAddress) {
 }
 
 module.exports = {
-  getCurrentUser,
   updateUser,
   initializeDefaultUser,
   changePassword,

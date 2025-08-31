@@ -3,7 +3,6 @@ import { ChevronLeft, ChevronRight } from '../../components/icons';
 import SideNavTab from './SideNavTab';
 
 const SidebarNav = ({
-  user,
   tabs,
   currentTab,
   sidebarOpen,

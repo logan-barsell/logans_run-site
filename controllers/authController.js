@@ -157,7 +157,7 @@ async function completeTwoFactorLogin(req, res, next) {
  */
 async function signup(req, res, next) {
   try {
-    const { email, password, firstName, lastName, userType } = req.body;
+    const { email, password, userType } = req.body;
 
     // Basic input validation
     if (!email || !password) {
@@ -173,8 +173,6 @@ async function signup(req, res, next) {
     const result = await AuthService.signup({
       email,
       password,
-      firstName,
-      lastName,
       userType,
       ip,
       userAgent,
@@ -249,22 +247,14 @@ async function refresh(req, res, next) {
 }
 
 /**
- * Check authentication status
+ * Check authentication status and return full user data
  */
 async function checkAuth(req, res, next) {
   try {
     const user = await UserService.getUserById(req.user._id);
     res.status(200).json({
       success: true,
-      data: {
-        user: {
-          id: user._id,
-          bandName: user.bandName,
-          adminEmail: user.adminEmail,
-          verified: user.verified,
-          status: user.status,
-        },
-      },
+      data: user, // Return full user object like /user/me
     });
   } catch (error) {
     logger.error('Auth check error:', error);

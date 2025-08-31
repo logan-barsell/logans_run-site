@@ -433,8 +433,4 @@ const SecuritySettings = () => {
   );
 };
 
-const mapStateToProps = state => ({
-  user: state.auth?.user || null,
-});
-
-export default connect(mapStateToProps)(SecuritySettings);
+export default SecuritySettings;
