@@ -5,8 +5,12 @@ const redisClient = require('../utils/redisClient');
 const logger = require('../utils/logger');
 const { daysToSeconds } = require('../utils/dates');
 const UserService = require('./userService');
+const SessionService = require('./sessionService');
 const { setAuthCookies } = require('../utils/cookie-utils');
 const { getClientIp } = require('../utils/request-utils');
+const EmailService = require('./emailService');
+const ThemeService = require('./themeService');
+const Session = require('../models/Session');
 
 const ACCESS_TOKEN_SECRET =
   process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET;
@@ -16,8 +20,8 @@ const REFRESH_TOKEN_SECRET =
 // Generate Access Token (1 hour expiry)
 function generateAccessToken(token) {
   try {
-    const { id, uuid, role, userType } = token;
-    return jwt.sign({ id, uuid, role, userType }, ACCESS_TOKEN_SECRET, {
+    const { id, uuid, sessionId } = token;
+    return jwt.sign({ id, uuid, sessionId }, ACCESS_TOKEN_SECRET, {
       expiresIn: '1h',
     });
   } catch (error) {
@@ -28,18 +32,19 @@ function generateAccessToken(token) {
 // Generate Refresh Token (7 days expiry) & Store in Redis
 async function generateRefreshToken(token, ip, userAgent) {
   try {
-    const { id, uuid, role, userType } = token;
+    const { id, uuid, sessionId } = token;
     const refreshToken = jwt.sign(
-      { id, uuid, role, userType },
+      { id, uuid, sessionId },
       REFRESH_TOKEN_SECRET,
       {
         expiresIn: '7d',
       }
     );
     await redisClient.set(
-      `refreshToken:${id}`,
+      `refreshToken:${sessionId}`,
       JSON.stringify({
         token: refreshToken,
+        userId: id,
         ip,
         userAgent,
       }),
@@ -65,12 +70,13 @@ function verifyAccessToken(token) {
 // Verify Refresh Token & Ensure It Matches Stored Token
 async function verifyRefreshToken(token, ip, userAgent) {
   const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
-  const storedData = await redisClient.get(`refreshToken:${decoded.id}`);
+  const storedData = await redisClient.get(`refreshToken:${decoded.sessionId}`);
 
   if (!storedData) throw new AppError('Refresh token not found', 401);
 
   const {
     token: storedToken,
+    userId,
     ip: storedIp,
     userAgent: storedUserAgent,
   } = JSON.parse(storedData);
@@ -79,8 +85,33 @@ async function verifyRefreshToken(token, ip, userAgent) {
     logger.warn(
       `🚨 Refresh token reuse detected for user ${decoded.uuid} from IP: ${ip}`
     );
-    // TODO: Send security alert email to user about suspicious activity
-    await UserService.endAllUserSessions(decoded.id, true); // Revoke all tokens and end sessions
+
+    // Send security alert email to user about suspicious activity
+    try {
+      const user = await UserService.findUserById(userId);
+      if (user && user.adminEmail) {
+        const theme = await ThemeService.getTheme();
+        const bandName = theme.siteTitle || 'Bandsyte';
+
+        await EmailService.sendSecurityAlert(
+          user.adminEmail,
+          bandName,
+          'token_reuse',
+          ip,
+          userAgent,
+          'Unknown'
+        );
+        logger.info(`📧 Security alert sent to user ${userId} for token reuse`);
+      }
+    } catch (emailError) {
+      logger.error(
+        'Failed to send security alert for token reuse:',
+        emailError
+      );
+      // Don't fail the security check if email fails
+    }
+
+    await UserService.endAllUserSessions(userId, true); // Revoke all tokens and end sessions
     throw new AppError('Suspicious activity detected - Token reuse', 403);
   }
 
@@ -88,7 +119,34 @@ async function verifyRefreshToken(token, ip, userAgent) {
     logger.warn(
       `⚠️ Possible token theft for user ${decoded.uuid} - Different IP/device detected`
     );
-    // TODO: Send security alert email to user about device change
+
+    // Send security alert email to user about device change
+    try {
+      const user = await UserService.findUserById(decoded.id);
+      if (user && user.adminEmail) {
+        const theme = await ThemeService.getTheme();
+        const bandName = theme.siteTitle || 'Bandsyte';
+
+        await EmailService.sendSecurityAlert(
+          user.adminEmail,
+          bandName,
+          'device_change',
+          ip,
+          userAgent,
+          'Unknown'
+        );
+        logger.info(
+          `📧 Security alert sent to user ${decoded.id} for device change`
+        );
+      }
+    } catch (emailError) {
+      logger.error(
+        'Failed to send security alert for device change:',
+        emailError
+      );
+      // Don't fail the security check if email fails
+    }
+
     await UserService.endAllUserSessions(decoded.id, true); // Revoke all tokens and end sessions
     throw new AppError(
       'Suspicious activity detected - Token used from a different device',
@@ -112,18 +170,36 @@ async function refreshAccessToken(req, res) {
 
   const decoded = await verifyRefreshToken(oldRefreshToken, ip, userAgent);
 
+  // Update existing session instead of creating new one
+  await SessionService.updateSession(decoded.sessionId, {
+    updatedAt: new Date(),
+  });
+
   const newAccessToken = generateAccessToken(decoded);
   const newRefreshToken = await generateRefreshToken(decoded, ip, userAgent);
 
   setAuthCookies(res, newAccessToken, newRefreshToken);
 
-  logger.info(`✅ New tokens issued for user ${decoded.id}`);
+  logger.info(
+    `✅ New tokens issued for user ${decoded.id}, session ${decoded.sessionId}`
+  );
   return { userId: decoded.id, accessToken: newAccessToken };
 }
 
-// Revoke All Refresh Tokens for a User
+// Revoke Refresh Token for a Specific Session
+async function revokeSessionRefreshToken(sessionId) {
+  await redisClient.del(`refreshToken:${sessionId}`);
+}
+
+// Revoke All Refresh Tokens for a User (for "End All Sessions")
 async function revokeRefreshTokens(userId) {
-  await redisClient.del(`refreshToken:${userId}`);
+  // Get all active sessions for the user
+  const sessions = await Session.find({ userId, isActive: true });
+
+  // Revoke refresh tokens for each session
+  for (const session of sessions) {
+    await redisClient.del(`refreshToken:${session.sessionId}`);
+  }
 }
 
 function generateSignedToken(payload) {
@@ -162,6 +238,7 @@ const TokenService = {
   verifyRefreshToken,
   refreshAccessToken,
   revokeRefreshTokens,
+  revokeSessionRefreshToken,
   generateSignedToken,
   verifySignedToken,
 };

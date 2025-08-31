@@ -1,6 +1,6 @@
 const NewsletterSubscriber = require('../models/NewsletterSubscriber');
 const Theme = require('../models/Theme');
-const { sendEmail } = require('./emailService');
+const EmailService = require('./emailService');
 const newsletterNotification = require('../templates/newsletterNotification');
 const logger = require('../utils/logger');
 
@@ -181,7 +181,7 @@ class NewsletterService {
             subscriber.unsubscribeToken
           );
 
-          await sendEmail({
+          await EmailService.sendEmail({
             to: subscriber.email,
             subject: emailTemplate.subject,
             html: emailTemplate.html,

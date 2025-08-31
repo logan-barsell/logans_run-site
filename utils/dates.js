@@ -25,6 +25,17 @@ function addHours(hours) {
 }
 
 /**
+ * Adds minutes to current date
+ * @param {number} minutes - Number of minutes to add
+ * @returns {Date} New date
+ */
+function addMinutes(minutes) {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() + minutes);
+  return date;
+}
+
+/**
  * Converts days to seconds
  * @param {number} days - Number of days
  * @returns {number} Seconds
@@ -45,6 +56,7 @@ function hoursToSeconds(hours) {
 module.exports = {
   addDays,
   addHours,
+  addMinutes,
   daysToSeconds,
   hoursToSeconds,
 };

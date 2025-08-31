@@ -2,6 +2,11 @@ const setupRoutes = app => {
   // API Routes
   app.use('/api/auth', require('../routes/authRoutes'));
   app.use('/api/user', require('../routes/userRoutes'));
+  app.use('/api/2fa', require('../routes/twoFactorRoutes'));
+  app.use(
+    '/api/security-preferences',
+    require('../routes/securityPreferencesRoutes')
+  );
   app.use('/api', require('../routes/billingRoutes'));
   app.use('/api', require('../routes/homeRoutes'));
   app.use('/api', require('../routes/bioRoutes'));

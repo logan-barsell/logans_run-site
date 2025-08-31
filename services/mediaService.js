@@ -1,5 +1,6 @@
 const MediaImage = require('../models/MediaImage');
 const Video = require('../models/Video');
+const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 
 class MediaService {
@@ -87,7 +88,6 @@ class MediaService {
 
       // Send newsletter notification for new video
       try {
-        const NewsletterService = require('./newsletterService');
         await NewsletterService.sendContentNotification('video', {
           title: video.title || 'New Video',
           description: video.category

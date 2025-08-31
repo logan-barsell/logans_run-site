@@ -34,27 +34,7 @@ async function createSession(userId, sessionData) {
 }
 
 /**
- * Ends all active sessions for a user.
- * @param {string} userId - The ID of the user.
- * @returns {number} The count of sessions updated.
- */
-async function endAllSessions(userId) {
-  const sessions = await Session.find({ userId, isActive: true });
-
-  for (const session of sessions) {
-    const now = new Date();
-    const logoutTime = session.expiresAt < now ? session.expiresAt : now;
-    await Session.findByIdAndUpdate(session._id, {
-      logoutTime,
-      isActive: false,
-    });
-  }
-
-  return sessions.length;
-}
-
-/**
- * Retrieves paginated sessions for a user.
+ * Retrieves paginated active sessions for a user.
  * @param {string} userId - The ID of the user.
  * @param {number} page - The page number (1-indexed).
  * @param {number} limit - The number of sessions per page.
@@ -64,12 +44,12 @@ async function getSessions(userId, page, limit) {
   const skip = (page - 1) * limit;
 
   const [sessions, count] = await Promise.all([
-    Session.find({ userId })
-      .sort({ createdAt: -1 })
+    Session.find({ userId, isActive: true })
+      .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(limit)
       .select(baseFields),
-    Session.countDocuments({ userId }),
+    Session.countDocuments({ userId, isActive: true }),
   ]);
 
   return { sessions, count };
@@ -125,31 +105,39 @@ async function endAllOtherSessions(userId, currentSessionId) {
 }
 
 /**
- * Get the current active session for a user based on request context.
- * @param {string} userId - The ID of the user.
- * @param {Object} req - The request object containing IP and user agent.
+ * Update an existing session.
+ * @param {string} sessionId - The ID of the session to update.
+ * @param {Object} updateData - Data to update in the session.
+ * @returns {Object|null} The updated session or null if not found.
+ */
+async function updateSession(sessionId, updateData) {
+  try {
+    const session = await Session.findOneAndUpdate(
+      { sessionId, isActive: true },
+      { ...updateData, updatedAt: new Date() },
+      { new: true }
+    );
+    return session;
+  } catch (error) {
+    logger.error('Error updating session:', error);
+    return null;
+  }
+}
+
+/**
+ * Get the current active session for a user based on sessionId from token.
+ * @param {string} sessionId - The ID of the session from JWT token.
+ * @param {string} userId - The ID of the user for security validation.
  * @returns {Object|null} The current session or null if not found.
  */
-async function getCurrentSession(userId, req) {
+async function getCurrentSession(sessionId, userId) {
   try {
-    const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
-    const userAgent = req.headers['user-agent'] || 'unknown';
-
-    // Try to find session by IP and user agent first (most specific)
-    let session = await Session.findOne({
+    // Direct lookup by sessionId, validate userId for security
+    const session = await Session.findOne({
+      sessionId,
       userId,
       isActive: true,
-      ipAddress,
-      userAgent,
     });
-
-    // If not found, try to find any active session for this user
-    if (!session) {
-      session = await Session.findOne({
-        userId,
-        isActive: true,
-      });
-    }
 
     return session;
   } catch (error) {
@@ -160,10 +148,10 @@ async function getCurrentSession(userId, req) {
 
 const SessionService = {
   createSession,
-  endAllSessions,
   getSessions,
   endSession,
   endAllOtherSessions,
+  updateSession,
   getCurrentSession,
 };
 

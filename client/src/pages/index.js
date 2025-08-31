@@ -19,6 +19,7 @@ import ContactPage from './Contact/Contact';
 import Signin from './Auth/Signin';
 import ForgotPassword from './Auth/ForgotPassword';
 import ResetPassword from './Auth/ResetPassword';
+import TwoFactorVerification from './Auth/TwoFactorVerification';
 import NotFound from './NotFound';
 import history from '../history';
 import { ActiveContext } from '../contexts/ActiveContext';
@@ -120,6 +121,11 @@ const UserPages = () => {
               path='/reset-password'
               exact
               element={<ResetPassword />}
+            />
+            <Route
+              path='/2fa-verification'
+              exact
+              element={<TwoFactorVerification />}
             />
             <Route
               path='*'

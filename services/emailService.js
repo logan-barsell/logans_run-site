@@ -96,6 +96,21 @@ async function sendEmail(
           templateData.timestamp,
           emailColors
         );
+      } else if (templateType === 'loginAlert') {
+        // Login alert template needs bandName, timestamp, ipAddress, userAgent, location
+        template = emailTemplates[templateType](
+          templateData.bandName,
+          templateData.timestamp,
+          templateData.ipAddress,
+          templateData.userAgent,
+          templateData.location
+        );
+      } else if (templateType === 'twoFactorCode') {
+        // Two-factor code template needs code and bandName
+        template = emailTemplates[templateType](
+          templateData.code,
+          templateData.bandName
+        );
       } else {
         // Default pattern for emailVerification
         template = emailTemplates[templateType](
@@ -226,6 +241,56 @@ async function sendPasswordResetSuccess(to, bandName = 'Bandsyte') {
   });
 }
 
+/**
+ * Send security alert notification
+ */
+async function sendSecurityAlert(
+  to,
+  bandName = 'Bandsyte',
+  alertType = 'suspicious_activity',
+  ipAddress = 'Unknown',
+  userAgent = 'Unknown',
+  location = 'Unknown'
+) {
+  return sendEmail(to, null, null, 'securityAlert', {
+    bandName,
+    alertType,
+    timestamp: new Date().toLocaleString(),
+    ipAddress,
+    userAgent,
+    location,
+  });
+}
+
+/**
+ * Send login alert notification
+ */
+async function sendLoginAlert(
+  to,
+  bandName = 'Bandsyte',
+  ipAddress = 'Unknown',
+  userAgent = 'Unknown',
+  location = 'Unknown'
+) {
+  return sendEmail(to, null, null, 'loginAlert', {
+    bandName,
+    timestamp: new Date().toLocaleString(),
+    ipAddress,
+    userAgent,
+    location,
+  });
+}
+
+/**
+ * Send two-factor authentication code
+ */
+async function sendTwoFactorCode(to, code, bandName = 'Bandsyte') {
+  return sendEmail(to, null, null, 'twoFactorCode', {
+    code,
+    bandName,
+  });
+}
+
 module.exports = {
   sendEmail,
   sendEmailVerification,
@@ -235,4 +300,7 @@ module.exports = {
   sendContactNotification,
   sendNewsletterConfirmation,
   sendNewsletterSignupNotification,
+  sendSecurityAlert,
+  sendLoginAlert,
+  sendTwoFactorCode,
 };

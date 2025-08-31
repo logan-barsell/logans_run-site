@@ -1,107 +1,111 @@
 import { handleServiceError } from '../utils/errorHandler';
 
-class CSRFService {
-  constructor() {
-    this.token = null;
-    this.tokenPromise = null;
+// Module-level state for token caching
+let token = null;
+let tokenPromise = null;
+
+/**
+ * Get CSRF token from server
+ * Caches the token to avoid multiple requests
+ */
+async function getToken() {
+  // If we already have a token, return it
+  if (token) {
+    return token;
   }
 
-  /**
-   * Get CSRF token from server
-   * Caches the token to avoid multiple requests
-   */
-  async getToken() {
-    // If we already have a token, return it
-    if (this.token) {
-      return this.token;
+  // If we're already fetching a token, wait for that request
+  if (tokenPromise) {
+    return tokenPromise;
+  }
+
+  // Fetch new token
+  tokenPromise = fetchToken();
+  token = await tokenPromise;
+  tokenPromise = null;
+
+  return token;
+}
+
+/**
+ * Fetch CSRF token from server
+ */
+async function fetchToken() {
+  try {
+    const response = await fetch('/api/csrf-token', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    // If we're already fetching a token, wait for that request
-    if (this.tokenPromise) {
-      return this.tokenPromise;
-    }
-
-    // Fetch new token
-    this.tokenPromise = this.fetchToken();
-    this.token = await this.tokenPromise;
-    this.tokenPromise = null;
-
-    return this.token;
-  }
-
-  /**
-   * Fetch CSRF token from server
-   */
-  async fetchToken() {
-    try {
-      const response = await fetch('/api/csrf-token', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Cache-Control': 'no-cache',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data.data.csrfToken;
-    } catch (error) {
-      const { message } = handleServiceError(error, 'Failed to get CSRF token');
-      throw new Error(message);
-    }
-  }
-
-  /**
-   * Clear cached token (call when token becomes invalid)
-   */
-  clearToken() {
-    this.token = null;
-    this.tokenPromise = null;
-  }
-
-  /**
-   * Add CSRF token to request headers
-   */
-  async addTokenToHeaders(headers = {}) {
-    const token = await this.getToken();
-    return {
-      ...headers,
-      'X-CSRF-Token': token,
-    };
-  }
-
-  /**
-   * Add CSRF token to form data
-   */
-  async addTokenToFormData(formData) {
-    const token = await this.getToken();
-    const newFormData = new FormData();
-
-    // Copy existing form data
-    for (const [key, value] of formData.entries()) {
-      newFormData.append(key, value);
-    }
-
-    // Add CSRF token
-    newFormData.append('_csrf', token);
-
-    return newFormData;
-  }
-
-  /**
-   * Add CSRF token to JSON body
-   */
-  async addTokenToBody(body = {}) {
-    const token = await this.getToken();
-    return {
-      ...body,
-      _csrf: token,
-    };
+    const data = await response.json();
+    return data.data.csrfToken;
+  } catch (error) {
+    const { message } = handleServiceError(error, 'Failed to get CSRF token');
+    throw new Error(message);
   }
 }
 
-// Export singleton instance
-export default new CSRFService();
+/**
+ * Clear cached token (call when token becomes invalid)
+ */
+function clearToken() {
+  token = null;
+  tokenPromise = null;
+}
+
+/**
+ * Add CSRF token to request headers
+ */
+async function addTokenToHeaders(headers = {}) {
+  const csrfToken = await getToken();
+  return {
+    ...headers,
+    'X-CSRF-Token': csrfToken,
+  };
+}
+
+/**
+ * Add CSRF token to form data
+ */
+async function addTokenToFormData(formData) {
+  const csrfToken = await getToken();
+  const newFormData = new FormData();
+
+  // Copy existing form data
+  for (const [key, value] of formData.entries()) {
+    newFormData.append(key, value);
+  }
+
+  // Add CSRF token
+  newFormData.append('_csrf', csrfToken);
+
+  return newFormData;
+}
+
+/**
+ * Add CSRF token to JSON body
+ */
+async function addTokenToBody(body = {}) {
+  const csrfToken = await getToken();
+  return {
+    ...body,
+    _csrf: csrfToken,
+  };
+}
+
+// Export functions
+export {
+  getToken,
+  fetchToken,
+  clearToken,
+  addTokenToHeaders,
+  addTokenToFormData,
+  addTokenToBody,
+};

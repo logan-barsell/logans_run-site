@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { NavHeightProvider } from './contexts/NavHeightContext';
 import { AlertProvider } from './contexts/AlertContext';
 import { AuthProvider } from './contexts/AuthContext';
-import monitoringService from './services/monitoringService';
+import { init as initMonitoring } from './services/monitoringService';
 
 import React, { createContext } from 'react';
 import Admin from './pagesAdmin';
@@ -27,7 +27,7 @@ function App() {
 
   React.useEffect(() => {
     // Initialize monitoring
-    monitoringService.init();
+    initMonitoring();
   }, []);
 
   React.useEffect(() => {

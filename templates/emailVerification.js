@@ -8,14 +8,12 @@
  * @param {string} verificationLink - The verification URL
  * @param {string} role - User role (USER, ADMIN, SUPERADMIN)
  * @param {string} bandName - Band name for branding
- * @param {Object} colors - Theme colors for email styling
  * @returns {Object} Template with subject and HTML
  */
 const emailVerification = (
   verificationLink,
   role = 'USER',
-  bandName = 'Bandsyte',
-  colors = {}
+  bandName = 'Bandsyte'
 ) => ({
   subject:
     role === 'ADMIN' || role === 'SUPERADMIN'
@@ -33,26 +31,20 @@ const emailVerification = (
           : 'Email Verification'
       }</title>
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: ${colors.header || '#667eea'}; color: ${
-    colors.headerText || 'white'
-  }; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: ${
-          colors.content || '#f9f9f9'
-        }; padding: 30px; border-radius: 0 0 10px 10px; }
-        .button { display: inline-block; background: linear-gradient(135deg, ${
-          colors.button || '#667eea'
-        } 0%, ${colors.secondary || '#764ba2'} 100%); color: ${
-    colors.buttonText || 'white'
-  }; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .bandsyte-brand { background: ${
-          colors.footer || '#f8f9fa'
-        }; border: 1px solid ${
-    colors.border || '#dee2e6'
-  }; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center; }
+        .header { background: #000000; color: white !important; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; color: #333 !important; }
+        .content p { color: #333 !important; }
+        .content h2 { color: #333 !important; }
+        .content strong { color: #333 !important; }
+        .button { display: inline-block; background: #000000; color: white !important; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; border: none; transition: all 0.3s ease; }
+        .button:hover { background: #333333; color: white !important; text-decoration: none; }
+        .footer { text-align: center; margin-top: 30px; color: #333 !important; font-size: 14px; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; color: #856404 !important; }
+        .warning p { color: #856404 !important; }
+        .warning strong { color: #856404 !important; }
+        .bandsyte-brand { background: #000000; color: white !important; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
       </style>
     </head>
     <body>

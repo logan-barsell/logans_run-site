@@ -163,7 +163,7 @@ const newsletterNotification = (
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           }
           .header { 
-            background: ${colors.primary || '#27ae60'}; 
+            background: #000000; 
             color: white; 
             padding: 40px 30px; 
             text-align: center; 
@@ -183,24 +183,25 @@ const newsletterNotification = (
             padding: 40px 30px; 
           }
           .content h2 {
-            color: ${colors.primary || '#27ae60'};
+            color: #27ae60;
             margin-top: 0;
             font-size: 24px;
           }
           .content-details {
             background: #f8f9fa;
-            border-left: 4px solid ${colors.primary || '#27ae60'};
+            border-left: 4px solid #27ae60;
             padding: 20px;
             margin: 20px 0;
             border-radius: 0 5px 5px 0;
+            color: #333;
           }
           .content-details h3 {
             margin-top: 0;
-            color: ${colors.primary || '#27ae60'};
+            color: #27ae60;
           }
           .cta-button {
             display: inline-block;
-            background: ${colors.primary || '#27ae60'};
+            background: #27ae60;
             color: white;
             padding: 15px 30px;
             text-decoration: none;
@@ -210,7 +211,7 @@ const newsletterNotification = (
             text-align: center;
           }
           .cta-button:hover {
-            background: ${colors.secondary || '#219a52'};
+            background: #219a52;
           }
           .footer { 
             background: #f8f9fa; 

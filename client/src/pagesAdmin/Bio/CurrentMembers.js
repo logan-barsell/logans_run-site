@@ -5,6 +5,7 @@ import Accordion from '../../components/Accordion/Accordion';
 import AddMember from './AddMember';
 import EditMember from './EditMember';
 import DeleteMember from './DeleteMember';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
   Facebook,
   Instagram,
@@ -13,7 +14,9 @@ import {
   X as XIcon,
 } from '../../components/icons';
 
-const CurrentMembers = ({ fetchMembers, members, theme }) => {
+const CurrentMembers = ({ fetchMembers, members }) => {
+  const { theme } = useTheme();
+
   useEffect(() => {
     fetchMembers();
   }, []);
@@ -156,10 +159,9 @@ const CurrentMembers = ({ fetchMembers, members, theme }) => {
   );
 };
 
-function mapStateToProps({ members, theme }) {
+function mapStateToProps({ members }) {
   return {
     members: members?.data || [],
-    theme,
   };
 }
 

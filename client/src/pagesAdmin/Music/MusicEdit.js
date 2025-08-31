@@ -7,6 +7,7 @@ import DeletePlayer from './DeletePlayer';
 import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
 import { PageTitle, Divider, NoContent } from '../../components/Header';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
   Spotify,
   AppleMusic,
@@ -15,6 +16,8 @@ import {
 } from '../../components/icons';
 
 const MusicEdit = ({ fetchPlayers, players }) => {
+  const { theme } = useTheme();
+
   useEffect(() => {
     fetchPlayers();
   }, [fetchPlayers]);
@@ -75,7 +78,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
                 className='hvr-grow'
                 title='Spotify'
               >
-                <Spotify />
+                <Spotify style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {player.appleMusicLink && (
@@ -86,7 +89,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
                 className='hvr-grow'
                 title='Apple Music'
               >
-                <AppleMusic />
+                <AppleMusic style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {player.youtubeLink && (
@@ -97,7 +100,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
                 className='hvr-grow'
                 title='YouTube'
               >
-                <YouTube />
+                <YouTube style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
             {player.soundcloudLink && (
@@ -108,7 +111,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
                 className='hvr-grow'
                 title='SoundCloud'
               >
-                <SoundCloud />
+                <SoundCloud style={theme?.socialMediaIconStyle || 'default'} />
               </a>
             )}
           </div>

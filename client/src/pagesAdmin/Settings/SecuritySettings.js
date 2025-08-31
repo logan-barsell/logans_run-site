@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { useAlert } from '../../contexts/AlertContext';
-import securityService from '../../services/securityService';
+import * as securityService from '../../services/securityService';
+import * as SecurityPreferencesService from '../../services/securityPreferencesService';
 import PasswordField from '../../components/Forms/FieldTypes/PasswordField';
 import { RadioField } from '../../components/Forms/FieldTypes';
 import Button from '../../components/Button/Button';
@@ -9,68 +10,81 @@ import TabNavigation from '../../components/Tabs/TabNavigation';
 import EditableForm from '../../components/Forms/EditableForm';
 import { DataTable } from '../../components/DataTable';
 import { ShieldLock, People, Gear } from '../../components/icons';
+import {
+  calculatePasswordStrength,
+  getPasswordStrengthColor,
+  getPasswordStrengthText,
+} from '../../utils/validation';
 
-const SecuritySettings = ({ user }) => {
+const SecuritySettings = () => {
   const { showSuccess, showError } = useAlert();
-  const [activeTab, setActiveTab] = useState('password');
+  const [activeTab, setActiveTab] = useState('preferences');
   const [sessions, setSessions] = useState([]);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-  });
-  const [passwordStrength, setPasswordStrength] = useState(null);
+
   const [securityPreferences, setSecurityPreferences] = useState({
-    emailNotifications: true,
-    loginAlerts: true,
+    loginAlerts: false, // Default to false - login alerts can be annoying
     sessionTimeout: 7, // days
+    twoFactorEnabled: false,
   });
 
-  // Load sessions on component mount
-  useEffect(() => {
-    loadSessions();
-  }, []);
-
-  const loadSessions = async () => {
+  const loadSessions = useCallback(async () => {
     try {
       setLoading(true);
       const response = await securityService.getSessions();
       setSessions(response.sessions || response.data?.sessions || []);
+      setCurrentSessionId(response.data?.currentSessionId || null);
     } catch (error) {
       console.error('Error loading sessions:', error);
       showError('Failed to load sessions');
     } finally {
       setLoading(false);
     }
-  };
+  }, [showError]);
 
-  const handlePasswordChange = async e => {
-    e.preventDefault();
+  // Load security preferences
+  const loadSecurityPreferences = useCallback(async () => {
+    try {
+      const response =
+        await SecurityPreferencesService.getSecurityPreferences();
+      if (response.success) {
+        setSecurityPreferences(prev => ({
+          ...prev,
+          loginAlerts: response.data.loginAlerts,
+          twoFactorEnabled: response.data.twoFactorEnabled,
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading security preferences:', error);
+    }
+  }, []);
 
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
+  // Load sessions and security preferences on component mount
+  useEffect(() => {
+    loadSessions();
+    loadSecurityPreferences();
+  }, [loadSessions, loadSecurityPreferences]);
+
+  const handlePasswordChange = async formData => {
+    if (formData.newPassword !== formData.confirmPassword) {
       showError('New passwords do not match');
       return;
     }
 
-    if (!passwordStrength?.isValid) {
-      showError('Password does not meet strength requirements');
+    const passwordValidation = calculatePasswordStrength(formData.newPassword);
+    if (passwordValidation === 'very-weak' || passwordValidation === 'weak') {
+      showError('Password is too weak. Please use a stronger password.');
       return;
     }
 
     try {
       setLoading(true);
       await securityService.changePassword(
-        passwordData.currentPassword,
-        passwordData.newPassword
+        formData.currentPassword,
+        formData.newPassword
       );
       showSuccess('Password changed successfully!');
-      setPasswordData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-      });
-      setPasswordStrength(null);
     } catch (error) {
       console.error('Error changing password:', error);
       showError(error.response?.data?.message || 'Failed to change password');
@@ -91,14 +105,6 @@ const SecuritySettings = ({ user }) => {
   };
 
   const handleEndAllOtherSessions = async () => {
-    if (
-      !window.confirm(
-        'Are you sure you want to end all other sessions? This will log you out of all other devices.'
-      )
-    ) {
-      return;
-    }
-
     try {
       const response = await securityService.endAllOtherSessions();
       showSuccess(`Ended ${response.data.endedCount} other sessions`);
@@ -106,6 +112,34 @@ const SecuritySettings = ({ user }) => {
     } catch (error) {
       console.error('Error ending other sessions:', error);
       showError('Failed to end other sessions');
+    }
+  };
+
+  const handleSavePreferences = async formData => {
+    try {
+      setLoading(true);
+
+      // Update security preferences via API
+      const result = await SecurityPreferencesService.updateSecurityPreferences(
+        {
+          loginAlerts: formData.loginAlerts,
+          twoFactorEnabled: formData.twoFactorEnabled,
+        }
+      );
+
+      if (!result.success) {
+        showError(result.message || 'Failed to update security preferences');
+        return;
+      }
+
+      // Update local state
+      setSecurityPreferences(formData);
+      showSuccess('Security preferences updated successfully');
+    } catch (error) {
+      console.error('Error saving security preferences:', error);
+      showError('Failed to save security preferences');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,6 +164,16 @@ const SecuritySettings = ({ user }) => {
       render: session => (
         <div className='d-flex align-items-center'>
           <div>
+            {session.sessionId === currentSessionId && (
+              <div className='mb-1'>
+                <span
+                  className='badge bg-primary'
+                  style={{ fontSize: '0.7rem' }}
+                >
+                  Current Session
+                </span>
+              </div>
+            )}
             <div style={{ fontWeight: 'bold', color: 'white' }}>
               {session.device} {getDeviceIcon(session.device)}
             </div>
@@ -167,21 +211,29 @@ const SecuritySettings = ({ user }) => {
   const sessionRowActions = session => {
     if (!session.isActive) return null;
 
+    const isCurrentSession = session.sessionId === currentSessionId;
+
     return (
       <Button
         variant='outline-danger'
         size='sm'
         onClick={() => handleEndSession(session.sessionId)}
+        disabled={isCurrentSession}
+        title={
+          isCurrentSession
+            ? 'Use logout to end your current session'
+            : 'End this session'
+        }
       >
-        End Session
+        {isCurrentSession ? 'Current Session' : 'End Session'}
       </Button>
     );
   };
 
   const tabs = [
+    { id: 'preferences', label: 'Security Preferences', icon: <Gear /> },
     { id: 'password', label: 'Update Password', icon: <ShieldLock /> },
     { id: 'sessions', label: 'Active Sessions', icon: <People /> },
-    { id: 'preferences', label: 'Security Preferences', icon: <Gear /> },
   ];
 
   return (
@@ -193,10 +245,53 @@ const SecuritySettings = ({ user }) => {
         onTabChange={setActiveTab}
       />
 
+      {/* Security Preferences Tab */}
+      {activeTab === 'preferences' && (
+        <EditableForm
+          initialData={securityPreferences}
+          onSave={handleSavePreferences}
+          title=''
+          description='Configure your security notification and session preferences.'
+          showTitle={false}
+        >
+          {({ formData, handleInputChange }) => (
+            <>
+              <div className='mb-4'>
+                <RadioField
+                  label='Login Alerts'
+                  name='loginAlerts'
+                  value={formData.loginAlerts}
+                  onChange={handleInputChange}
+                  toggle={true}
+                  enabledText='Get notified when someone logs into your account'
+                  disabledText='No login alerts'
+                />
+              </div>
+
+              <div className='mb-4'>
+                <RadioField
+                  label='Two-Factor Authentication'
+                  name='twoFactorEnabled'
+                  value={formData.twoFactorEnabled}
+                  onChange={handleInputChange}
+                  toggle={true}
+                  enabledText='Email verification code required to login'
+                  disabledText='Email verification code not required for login'
+                />
+              </div>
+            </>
+          )}
+        </EditableForm>
+      )}
+
       {/* Password Tab */}
       {activeTab === 'password' && (
         <EditableForm
-          initialData={passwordData}
+          initialData={{
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          }}
           onSave={handlePasswordChange}
           title=''
           description='Update your password to keep your account secure. Use a strong password with at least 8 characters.'
@@ -208,91 +303,76 @@ const SecuritySettings = ({ user }) => {
                 <PasswordField
                   label='Current Password'
                   name='currentPassword'
-                  value={passwordData.currentPassword}
-                  onChange={e =>
-                    setPasswordData(prev => ({
-                      ...prev,
-                      currentPassword: e.target.value,
-                    }))
-                  }
+                  value={formData.currentPassword || ''}
+                  onChange={handleInputChange}
                   required
                   placeholder='Enter your current password'
                 />
               </div>
 
               <div className='mb-sm-3 mb-2'>
-                <PasswordField
-                  label='New Password'
-                  name='newPassword'
-                  value={passwordData.newPassword}
-                  onChange={e =>
-                    setPasswordData(prev => ({
-                      ...prev,
-                      newPassword: e.target.value,
-                    }))
-                  }
-                  onStrengthChange={setPasswordStrength}
-                  showStrengthIndicator={true}
-                  required
-                  placeholder='Enter your new password'
-                />
-              </div>
-
-              {/* Password Strength Indicator */}
-              {passwordStrength && (
-                <div className='mt-2 mb-3'>
-                  <div className='d-flex align-items-center mb-2'>
-                    <span
-                      className='me-2'
-                      style={{ fontSize: '14px', color: 'white' }}
-                    >
-                      Strength:
-                    </span>
-                    <span
+                <div className='d-flex justify-content-between align-items-center mb-1'>
+                  <label
+                    htmlFor='newPassword'
+                    className='form-label mb-0'
+                  >
+                    New Password
+                  </label>
+                  {formData.newPassword && (
+                    <small
+                      className={`text-${getPasswordStrengthColor(
+                        calculatePasswordStrength(formData.newPassword)
+                      )} d-none d-sm-inline`}
                       style={{
-                        color: passwordStrength.isValid ? '#28a745' : '#dc3545',
-                        fontWeight: 'bold',
-                        fontSize: '14px',
+                        fontFamily: 'var(--secondary-font)',
+                        fontSize: '0.75rem',
                       }}
                     >
-                      {passwordStrength.isValid
-                        ? '✓ Strong'
-                        : '⚠️ Needs improvement'}
-                    </span>
-                  </div>
-                  {!passwordStrength.isValid &&
-                    passwordStrength.feedback.length > 0 && (
-                      <div
-                        className='alert alert-warning py-2'
-                        style={{ fontSize: '12px' }}
-                      >
-                        <strong>Requirements:</strong>
-                        <ul className='mb-0 mt-1'>
-                          {passwordStrength.feedback.map((req, index) => (
-                            <li key={index}>{req}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                      {getPasswordStrengthText(
+                        calculatePasswordStrength(formData.newPassword)
+                      )}
+                    </small>
+                  )}
                 </div>
-              )}
+                <input
+                  type='password'
+                  className='form-control'
+                  id='newPassword'
+                  name='newPassword'
+                  value={formData.newPassword || ''}
+                  onChange={handleInputChange}
+                  required
+                  placeholder='Enter your new password'
+                  autoComplete='new-password'
+                />
+                {formData.newPassword && (
+                  <small
+                    className={`text-${getPasswordStrengthColor(
+                      calculatePasswordStrength(formData.newPassword)
+                    )} d-sm-none mt-1`}
+                    style={{
+                      fontFamily: 'var(--secondary-font)',
+                      fontSize: '0.7rem',
+                    }}
+                  >
+                    {getPasswordStrengthText(
+                      calculatePasswordStrength(formData.newPassword)
+                    )}
+                  </small>
+                )}
+              </div>
 
               <div className='mb-sm-3 mb-2'>
                 <PasswordField
                   label='Confirm New Password'
                   name='confirmPassword'
-                  value={passwordData.confirmPassword}
-                  onChange={e =>
-                    setPasswordData(prev => ({
-                      ...prev,
-                      confirmPassword: e.target.value,
-                    }))
-                  }
+                  value={formData.confirmPassword || ''}
+                  onChange={handleInputChange}
                   required
                   placeholder='Confirm your new password'
                   helperText={
-                    passwordData.confirmPassword &&
-                    passwordData.newPassword !== passwordData.confirmPassword
+                    formData.confirmPassword &&
+                    formData.newPassword !== formData.confirmPassword
                       ? 'Passwords do not match'
                       : ''
                   }
@@ -348,66 +428,6 @@ const SecuritySettings = ({ user }) => {
             getRowKey={session => session.sessionId || session.id}
           />
         </div>
-      )}
-
-      {/* Security Preferences Tab */}
-      {activeTab === 'preferences' && (
-        <EditableForm
-          initialData={securityPreferences}
-          onSave={() => {}} // No save functionality for now
-          title=''
-          description='Configure your security notification and session preferences.'
-          showTitle={false}
-        >
-          {({ formData, handleInputChange }) => (
-            <>
-              <div className='mb-4'>
-                <RadioField
-                  label='Email Notifications'
-                  name='emailNotifications'
-                  value={securityPreferences.emailNotifications}
-                  onChange={e =>
-                    setSecurityPreferences(prev => ({
-                      ...prev,
-                      emailNotifications: e.target.value === 'true',
-                    }))
-                  }
-                  toggle={true}
-                  enabledText='Receive email notifications for security events'
-                  disabledText='No email notifications for security events'
-                />
-              </div>
-
-              <div className='mb-4'>
-                <RadioField
-                  label='Login Alerts'
-                  name='loginAlerts'
-                  value={securityPreferences.loginAlerts}
-                  onChange={e =>
-                    setSecurityPreferences(prev => ({
-                      ...prev,
-                      loginAlerts: e.target.value === 'true',
-                    }))
-                  }
-                  toggle={true}
-                  enabledText='Get notified when someone logs into your account'
-                  disabledText='No login alerts'
-                />
-              </div>
-
-              <div className='alert alert-info'>
-                <strong>Coming Soon:</strong> Additional security features
-                including:
-                <ul className='mb-0 mt-2'>
-                  <li>Two-factor authentication (2FA)</li>
-                  <li>Security audit log</li>
-                  <li>Advanced session management</li>
-                  <li>IP whitelisting</li>
-                </ul>
-              </div>
-            </>
-          )}
-        </EditableForm>
       )}
     </div>
   );
