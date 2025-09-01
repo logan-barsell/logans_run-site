@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Palette,
   EnvelopeFill,
@@ -16,8 +17,14 @@ import AccountSettings from './AccountSettings';
 import BillingSettings from './BillingSettings';
 
 const Settings = ({ theme }) => {
-  const [currentTab, setCurrentTab] = useState('theme');
+  const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Extract current tab and sub-tab from URL
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const currentTab = pathParts[1] || 'theme'; // /settings/theme -> theme
+  const currentSubTab = pathParts[2] || null; // /settings/security/password -> password
 
   // Check screen size and auto-collapse sidebar on mobile
   useEffect(() => {
@@ -41,30 +48,37 @@ const Settings = ({ theme }) => {
       label: 'Theme & Design',
       icon: <Palette />,
       component: ThemeSettings,
+      path: '/settings/theme',
     },
     {
       id: 'newsletter',
       label: 'Newsletter',
       icon: <EnvelopeFill />,
       component: NewsletterSettings,
+      path: '/settings/newsletter',
+      defaultSubTab: 'settings',
     },
     {
       id: 'security',
       label: 'Security',
       icon: <ShieldLock />,
       component: SecuritySettings,
+      path: '/settings/security',
+      defaultSubTab: 'preferences',
     },
     {
       id: 'account',
       label: 'Account',
       icon: <Person />,
       component: AccountSettings,
+      path: '/settings/account',
     },
     {
       id: 'billing',
       label: 'Billing',
       icon: <CreditCard />,
       component: BillingSettings,
+      path: '/settings/billing',
     },
   ];
 
@@ -73,7 +87,16 @@ const Settings = ({ theme }) => {
 
   // Handle tab changes
   const handleTabChange = tabId => {
-    setCurrentTab(tabId);
+    const tab = tabs.find(t => t.id === tabId);
+    if (tab) {
+      if (tab.defaultSubTab) {
+        // Navigate to default sub-tab for tabs that have sub-tabs
+        navigate(`${tab.path}/${tab.defaultSubTab}`);
+      } else {
+        // Navigate to main tab for tabs without sub-tabs
+        navigate(tab.path);
+      }
+    }
   };
 
   return (
@@ -97,7 +120,7 @@ const Settings = ({ theme }) => {
           marginLeft: sidebarOpen ? '0' : '0',
         }}
       >
-        {CurrentComponent && <CurrentComponent />}
+        {CurrentComponent && <CurrentComponent currentSubTab={currentSubTab} />}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAlert } from '../../contexts/AlertContext';
 import * as securityService from '../../services/securityService';
 import * as SecurityPreferencesService from '../../services/securityPreferencesService';
@@ -16,9 +17,13 @@ import {
   getPasswordStrengthText,
 } from '../../utils/validation';
 
-const SecuritySettings = () => {
+const SecuritySettings = ({ currentSubTab }) => {
   const { showSuccess, showError } = useAlert();
-  const [activeTab, setActiveTab] = useState('preferences');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Use currentSubTab from props, fallback to 'preferences' if not provided
+  const activeTab = currentSubTab || 'preferences';
   const [sessions, setSessions] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -236,13 +241,18 @@ const SecuritySettings = () => {
     { id: 'sessions', label: 'Active Sessions', icon: <People /> },
   ];
 
+  // Handle sub-tab changes
+  const handleSubTabChange = subTabId => {
+    navigate(`/settings/security/${subTabId}`);
+  };
+
   return (
     <div>
       {/* Tab Navigation */}
       <TabNavigation
         tabs={tabs}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleSubTabChange}
       />
 
       {/* Security Preferences Tab */}

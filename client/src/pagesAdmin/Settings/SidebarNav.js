@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from '../../components/icons';
 import SideNavTab from './SideNavTab';
 
@@ -9,6 +10,22 @@ const SidebarNav = ({
   setSidebarOpen,
   onTabChange,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Handle navigation with proper routing
+  const handleTabClick = tabId => {
+    const tab = tabs.find(t => t.id === tabId);
+    if (tab) {
+      if (tab.defaultSubTab) {
+        // Navigate to default sub-tab for tabs that have sub-tabs
+        navigate(`${tab.path}/${tab.defaultSubTab}`);
+      } else {
+        // Navigate to main tab for tabs without sub-tabs
+        navigate(tab.path);
+      }
+    }
+  };
   return (
     <aside
       className={`sidebar-nav shadow-sm position-relative ${
@@ -61,7 +78,7 @@ const SidebarNav = ({
                   key={tab.id}
                   tab={tab}
                   isActive={currentTab?.id === tab.id}
-                  onClick={() => onTabChange(tab.id)}
+                  onClick={() => handleTabClick(tab.id)}
                 />
               ))}
             </nav>
@@ -100,7 +117,7 @@ const SidebarNav = ({
                   justifyContent: 'center',
                   cursor: 'pointer',
                 }}
-                onClick={() => onTabChange(tab.id)}
+                onClick={() => handleTabClick(tab.id)}
                 title={tab.label}
               >
                 <span

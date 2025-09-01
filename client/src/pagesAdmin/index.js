@@ -60,7 +60,7 @@ const AdminPages = () => {
               exact
               element={
                 <Navigate
-                  to='/settings'
+                  to='/settings/theme'
                   replace
                 />
               }
@@ -95,14 +95,80 @@ const AdminPages = () => {
               exact
               element={<ContactEdit />}
             />
+            {/* Settings Routes */}
             <Route
               path='/settings'
+              exact
+              element={
+                <Navigate
+                  to='/settings/theme'
+                  replace
+                />
+              }
+            />
+            <Route
+              path='/settings/theme'
+              exact
+              element={<Settings />}
+            />
+            <Route
+              path='/settings/newsletter'
+              exact
+              element={
+                <Navigate
+                  to='/settings/newsletter/settings'
+                  replace
+                />
+              }
+            />
+            <Route
+              path='/settings/newsletter/settings'
+              exact
+              element={<Settings />}
+            />
+            <Route
+              path='/settings/newsletter/subscribers'
+              exact
+              element={<Settings />}
+            />
+            <Route
+              path='/settings/security'
+              exact
+              element={
+                <Navigate
+                  to='/settings/security/preferences'
+                  replace
+                />
+              }
+            />
+            <Route
+              path='/settings/security/preferences'
+              exact
+              element={<Settings />}
+            />
+            <Route
+              path='/settings/security/password'
+              exact
+              element={<Settings />}
+            />
+            <Route
+              path='/settings/security/sessions'
+              exact
+              element={<Settings />}
+            />
+            <Route
+              path='/settings/account'
+              exact
+              element={<Settings />}
+            />
+            <Route
+              path='/settings/billing'
               exact
               element={<Settings />}
             />
           </Routes>
         </div>
-        {location.pathname !== '/settings' && <BottomNavEdit />}
+        {!location.pathname.startsWith('/settings') && <BottomNavEdit />}
         <AlertContainer />
       </ActiveContext.Provider>
     </div>

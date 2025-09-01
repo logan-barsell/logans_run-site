@@ -33,8 +33,7 @@ const FeaturedReleasesEdit = () => {
       id='featuredReleasesEdit'
       className='mb-4 container'
     >
-      <Divider color='white' />
-      <PageTitle>Featured Releases</PageTitle>
+      <PageTitle divider>Featured Releases</PageTitle>
       <AddFeaturedRelease fetchReleases={fetchReleases} />
       {loading ? (
         <div

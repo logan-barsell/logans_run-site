@@ -1,7 +1,6 @@
 #music-edit {
   display: flex;
   flex-direction: column;
-  margin: 33px auto;
   justify-content: center;
   align-items: center;
   margin-bottom: 150px;

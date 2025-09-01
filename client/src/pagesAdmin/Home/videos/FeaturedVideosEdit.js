@@ -39,8 +39,7 @@ const FeaturedVideosEdit = () => {
       id='featuredVideosEdit'
       className='mb-4 container'
     >
-      <Divider />
-      <PageTitle>Featured Videos</PageTitle>
+      <PageTitle divider>Featured Videos</PageTitle>
       <AddFeaturedVideo fetchVideos={fetchVideos} />
 
       {/* Show loading state while fetching videos */}
