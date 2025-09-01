@@ -1,7 +1,6 @@
 #videoEdit {
   display: flex;
   flex-direction: column;
-  margin: 33px auto;
   margin-bottom: 150px;
 }
 

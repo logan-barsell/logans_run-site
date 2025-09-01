@@ -125,7 +125,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           ></div>
         </p>
 
-        <Divider />
+        <Divider className='w-75 mx-auto' />
         <div className='buttons d-flex justify-content-center'>
           <EditPlayer player={player} />
           <DeletePlayer player={player} />
@@ -140,8 +140,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
         id='music-edit'
         className='row mb-5 pb-5'
       >
-        <PageTitle>Edit Music</PageTitle>
-        <Divider />
+        <PageTitle divider>Edit Music</PageTitle>
         <AddPlayer />
         <div
           id='currentPlayers'
