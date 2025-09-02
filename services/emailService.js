@@ -73,6 +73,7 @@ async function sendEmail(
         template = emailTemplates[templateType](
           templateData.bandName,
           templateData.email,
+          templateData.unsubscribeToken,
           emailColors
         );
       } else if (templateType === 'newsletterSignupNotification') {
