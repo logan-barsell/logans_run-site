@@ -47,7 +47,9 @@ async function fetchToken() {
     const data = await response.json();
     return data.data.csrfToken;
   } catch (error) {
-    const { message } = handleServiceError(error, 'Failed to get CSRF token');
+    const { message } = handleServiceError(error, {
+      operation: 'fetchToken',
+    });
     throw new Error(message);
   }
 }

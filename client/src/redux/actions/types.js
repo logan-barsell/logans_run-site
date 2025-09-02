@@ -58,3 +58,10 @@ export const FETCH_MEMBERS_ERROR = 'fetch_members_error';
 export const FETCH_CONTACT_INFO = 'fetch_contact_info';
 export const FETCH_CONTACT_INFO_LOADING = 'fetch_contact_info_loading';
 export const FETCH_CONTACT_INFO_ERROR = 'fetch_contact_info_error';
+
+// Authentication
+export const AUTH_LOADING = 'AUTH_LOADING';
+export const AUTH_SUCCESS = 'AUTH_SUCCESS';
+export const AUTH_ERROR = 'AUTH_ERROR';
+export const LOGOUT = 'LOGOUT';
+export const UPDATE_USER = 'UPDATE_USER';

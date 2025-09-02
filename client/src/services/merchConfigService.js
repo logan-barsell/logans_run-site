@@ -7,10 +7,9 @@ export async function getMerchConfig() {
     const res = await apiClient.get('/merchConfig');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to fetch merch config'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getMerchConfig',
+    });
     throw new Error(message);
   }
 }
@@ -21,10 +20,9 @@ export async function getMerchConfigAdmin() {
     const res = await apiClient.get('/merchConfig/admin');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to fetch admin merch config'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getMerchConfigAdmin',
+    });
     throw new Error(message);
   }
 }
@@ -35,10 +33,9 @@ export async function updateMerchConfig(data) {
     const res = await apiClient.post('/merchConfig', data);
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to update merch config'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'updateMerchConfig',
+    });
     throw new Error(message);
   }
 }
@@ -49,10 +46,9 @@ export async function deleteMerchConfig() {
     const res = await apiClient.delete('/merchConfig');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to delete merch config'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'deleteMerchConfig',
+    });
     throw new Error(message);
   }
 }

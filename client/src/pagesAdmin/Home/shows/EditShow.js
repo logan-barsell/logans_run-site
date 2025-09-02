@@ -6,7 +6,7 @@ import {
 } from '../../../utils/firebaseImage';
 import { useAlert } from '../../../contexts/AlertContext';
 import { editShowFields } from './constants';
-import { updateShow as updateShowService } from '../../../services/showsManagementService';
+import { updateShow as updateShowService } from '../../../services/showsService';
 
 const EditShow = ({ show, fetchShows }) => {
   const { showError, showSuccess } = useAlert();

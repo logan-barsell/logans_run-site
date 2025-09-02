@@ -16,10 +16,9 @@ export const checkAuth = async () => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Authentication check failed'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'checkAuth',
+    });
     throw new Error(message);
   }
 };
@@ -42,7 +41,9 @@ export const login = async credentials => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(error, 'Login failed');
+    const { message } = handleServiceError(error, {
+      operation: 'login',
+    });
     throw new Error(message);
   }
 };
@@ -65,7 +66,9 @@ export const signup = async userData => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(error, 'Signup failed');
+    const { message } = handleServiceError(error, {
+      operation: 'signup',
+    });
     throw new Error(message);
   }
 };
@@ -83,7 +86,9 @@ export const logout = async () => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(error, 'Logout failed');
+    const { message } = handleServiceError(error, {
+      operation: 'logout',
+    });
     throw new Error(message);
   }
 };
@@ -101,7 +106,9 @@ export const refreshToken = async () => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(error, 'Token refresh failed');
+    const { message } = handleServiceError(error, {
+      operation: 'refreshToken',
+    });
     throw new Error(message);
   }
 };
@@ -123,10 +130,9 @@ export const requestPasswordReset = async email => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Password reset request failed'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'requestPasswordReset',
+    });
     throw new Error(message);
   }
 };
@@ -148,7 +154,9 @@ export const resetPassword = async (token, newPassword) => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(error, 'Password reset failed');
+    const { message } = handleServiceError(error, {
+      operation: 'resetPassword',
+    });
     throw new Error(message);
   }
 };
@@ -167,7 +175,9 @@ export const verifyEmail = async token => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(error, 'Email verification failed');
+    const { message } = handleServiceError(error, {
+      operation: 'verifyEmail',
+    });
     throw new Error(message);
   }
 };
@@ -191,10 +201,9 @@ export const resendEmailVerification = async email => {
 
     return response.json();
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to resend verification email'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'resendEmailVerification',
+    });
     throw new Error(message);
   }
 };

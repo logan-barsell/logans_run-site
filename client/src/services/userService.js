@@ -7,10 +7,9 @@ export const getCurrentUser = async () => {
     const response = await api.get('/auth/me');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to load user information'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getCurrentUser',
+    });
     throw new Error(message);
   }
 };
@@ -21,10 +20,25 @@ export const updateUser = async userData => {
     const response = await api.put('/user/me', userData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to update user information'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'updateUser',
+    });
+    throw new Error(message);
+  }
+};
+
+// Change user password
+export const changePassword = async (currentPassword, newPassword) => {
+  try {
+    const response = await api.put('/user/change-password', {
+      currentPassword,
+      newPassword,
+    });
+    return response.data;
+  } catch (error) {
+    const { message } = handleServiceError(error, {
+      operation: 'changePassword',
+    });
     throw new Error(message);
   }
 };
@@ -35,10 +49,9 @@ export const initializeDefaultUser = async () => {
     const response = await api.post('/auth/initialize');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to initialize default user'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'initializeDefaultUser',
+    });
     throw new Error(message);
   }
 };

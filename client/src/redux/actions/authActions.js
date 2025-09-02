@@ -1,11 +1,11 @@
 import { checkAuth } from '../../services/authService';
-
-// Action Types
-export const AUTH_LOADING = 'AUTH_LOADING';
-export const AUTH_SUCCESS = 'AUTH_SUCCESS';
-export const AUTH_ERROR = 'AUTH_ERROR';
-export const LOGOUT = 'LOGOUT';
-export const UPDATE_USER = 'UPDATE_USER';
+import {
+  AUTH_LOADING,
+  AUTH_SUCCESS,
+  AUTH_ERROR,
+  LOGOUT,
+  UPDATE_USER,
+} from './types';
 
 // Action Creators
 export const authLoading = () => ({
@@ -47,6 +47,46 @@ export const checkAuthentication = () => async dispatch => {
   } catch (error) {
     dispatch(authError(error.message));
     return false;
+  }
+};
+
+export const loginUser = credentials => async dispatch => {
+  try {
+    const { login } = await import('../../services/authService');
+
+    dispatch(authLoading());
+    const response = await login(credentials);
+
+    if (response.success) {
+      if (response.requiresTwoFactor) {
+        // Return 2FA data instead of dispatching success
+        return {
+          success: true,
+          requiresTwoFactor: true,
+          data: response.data,
+          message: response.message,
+        };
+      } else {
+        dispatch(authSuccess(response.data.user));
+        return {
+          success: true,
+          requiresTwoFactor: false,
+          message: response.message,
+        };
+      }
+    } else {
+      dispatch(authError(response.error || 'Login failed'));
+      return {
+        success: false,
+        error: response.error || 'Login failed',
+      };
+    }
+  } catch (error) {
+    dispatch(authError(error.message || 'Login failed'));
+    return {
+      success: false,
+      error: error.message || 'Login failed',
+    };
   }
 };
 

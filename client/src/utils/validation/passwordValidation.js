@@ -147,3 +147,68 @@ export const getPasswordStrengthText = strength => {
       return 'Enter a password';
   }
 };
+
+/**
+ * Legacy password strength validation (simpler version)
+ * @param {string} password - Password to validate
+ * @returns {object} Validation result with score, feedback, and validity
+ */
+export const validatePasswordStrength = password => {
+  const minLength = 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumbers = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  const strength = {
+    score: 0,
+    feedback: [],
+    isValid: false,
+  };
+
+  if (password.length >= minLength) {
+    strength.score += 1;
+  } else {
+    strength.feedback.push(`At least ${minLength} characters`);
+  }
+
+  if (hasUpperCase) {
+    strength.score += 1;
+  } else {
+    strength.feedback.push('One uppercase letter');
+  }
+
+  if (hasLowerCase) {
+    strength.score += 1;
+  } else {
+    strength.feedback.push('One lowercase letter');
+  }
+
+  if (hasNumbers) {
+    strength.score += 1;
+  } else {
+    strength.feedback.push('One number');
+  }
+
+  if (hasSpecialChar) {
+    strength.score += 1;
+  } else {
+    strength.feedback.push('One special character');
+  }
+
+  strength.isValid = strength.score >= 4 && password.length >= minLength;
+
+  return strength;
+};
+
+/**
+ * Get password strength label and color (legacy version)
+ * @param {number} score - Password strength score (0-5)
+ * @returns {object} Label and color for the score
+ */
+export const getPasswordStrengthLabel = score => {
+  if (score < 2) return { label: 'Weak', color: '#dc3545' };
+  if (score < 4) return { label: 'Fair', color: '#ffc107' };
+  if (score < 5) return { label: 'Good', color: '#17a2b8' };
+  return { label: 'Strong', color: '#28a745' };
+};

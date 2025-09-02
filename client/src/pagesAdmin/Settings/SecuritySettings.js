@@ -2,7 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAlert } from '../../contexts/AlertContext';
-import * as securityService from '../../services/securityService';
+import { changePassword } from '../../services/userService';
+import {
+  getSessions,
+  endSession,
+  endAllOtherSessions,
+} from '../../services/sessionsService';
 import * as SecurityPreferencesService from '../../services/securityPreferencesService';
 import PasswordField from '../../components/Forms/FieldTypes/PasswordField';
 import { RadioField } from '../../components/Forms/FieldTypes';
@@ -15,6 +20,8 @@ import {
   calculatePasswordStrength,
   getPasswordStrengthColor,
   getPasswordStrengthText,
+  validatePasswordStrength,
+  getPasswordStrengthLabel,
 } from '../../utils/validation';
 
 const SecuritySettings = ({ currentSubTab }) => {
@@ -37,7 +44,7 @@ const SecuritySettings = ({ currentSubTab }) => {
   const loadSessions = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await securityService.getSessions();
+      const response = await getSessions();
       setSessions(response.sessions || response.data?.sessions || []);
       setCurrentSessionId(response.data?.currentSessionId || null);
     } catch (error) {
@@ -85,10 +92,7 @@ const SecuritySettings = ({ currentSubTab }) => {
 
     try {
       setLoading(true);
-      await securityService.changePassword(
-        formData.currentPassword,
-        formData.newPassword
-      );
+      await changePassword(formData.currentPassword, formData.newPassword);
       showSuccess('Password changed successfully!');
     } catch (error) {
       console.error('Error changing password:', error);
@@ -100,7 +104,7 @@ const SecuritySettings = ({ currentSubTab }) => {
 
   const handleEndSession = async sessionId => {
     try {
-      await securityService.endSession(sessionId);
+      await endSession(sessionId);
       showSuccess('Session ended successfully');
       loadSessions(); // Reload sessions
     } catch (error) {
@@ -111,7 +115,7 @@ const SecuritySettings = ({ currentSubTab }) => {
 
   const handleEndAllOtherSessions = async () => {
     try {
-      const response = await securityService.endAllOtherSessions();
+      const response = await endAllOtherSessions();
       showSuccess(`Ended ${response.data.endedCount} other sessions`);
       loadSessions(); // Reload sessions
     } catch (error) {

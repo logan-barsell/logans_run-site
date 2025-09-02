@@ -58,22 +58,66 @@ apiClient.interceptors.response.use(
       csrfService.clearToken();
     }
 
-    // Handle 401 errors - attempt token refresh
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Handle 401 errors - attempt token refresh (but not for auth endpoints)
+    const isAuthEndpoint = originalRequest.url?.includes('/auth/');
+    console.log(
+      '🚨 [API Interceptor] 401 error on:',
+      originalRequest.url,
+      'isAuthEndpoint:',
+      isAuthEndpoint,
+      '_retry:',
+      originalRequest._retry
+    );
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isAuthEndpoint
+    ) {
+      console.log(
+        '🔄 [API Interceptor] Attempting token refresh for:',
+        originalRequest.url
+      );
       originalRequest._retry = true;
 
       try {
         // Attempt to refresh the token
+        console.log('🔑 [API Interceptor] Calling refreshToken...');
         await refreshToken();
+        console.log(
+          '✅ [API Interceptor] Token refresh successful, retrying original request'
+        );
 
         // Retry the original request with new tokens
         return apiClient(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, logout the user
-        console.error('Token refresh failed, logging out:', refreshError);
-        store.dispatch(logout());
+        console.log(
+          '❌ [API Interceptor] Token refresh failed:',
+          refreshError.message
+        );
+        // Refresh failed - check if it's a permanent failure (not just expired tokens)
+        const isPermanentFailure =
+          refreshError.response?.status === 401 ||
+          refreshError.message?.includes('Refresh token required') ||
+          refreshError.message?.includes('Invalid refresh token');
+
+        if (isPermanentFailure) {
+          // Permanent failure - logout and don't retry
+          console.warn(
+            'Permanent token failure, logging out:',
+            refreshError.message
+          );
+          store.dispatch(logout());
+        }
+
+        // For temporary failures or network issues, reject without logout
         return Promise.reject(refreshError);
       }
+    } else if (error.response?.status === 401 && isAuthEndpoint) {
+      console.log(
+        '🚫 [API Interceptor] Skipping refresh for auth endpoint:',
+        originalRequest.url
+      );
     }
 
     return Promise.reject(error);

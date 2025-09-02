@@ -68,6 +68,16 @@ const AdminPages = () => {
               }
             />
             <Route
+              path='/signin'
+              exact
+              element={
+                <Navigate
+                  to='/settings/theme'
+                  replace
+                />
+              }
+            />
+            <Route
               path='/home'
               exact
               element={<HomeEdit />}

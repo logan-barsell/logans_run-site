@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { NavHeightProvider } from './contexts/NavHeightContext';
 import { AlertProvider } from './contexts/AlertContext';
 import { AuthProvider } from './contexts/AuthContext';
-import { init as initMonitoring } from './services/monitoringService';
+import { init as initMonitoring } from './utils/monitoring';
 
 import React, { createContext } from 'react';
 import Admin from './pagesAdmin';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import DeleteItem from '../../components/Modifiers/DeleteItem';
-import { deletePlayer } from '../../services/musicPlayersService';
+import { deletePlayer } from '../../services/musicService';
 import { fetchPlayers } from '../../redux/actions';
 import { useAlert } from '../../contexts/AlertContext';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { uploadImageToFirebase } from '../../../utils/firebaseImage';
-import { addShow } from '../../../services/showsManagementService';
+import { addShow } from '../../../services/showsService';
 import { useAlert } from '../../../contexts/AlertContext';
 import { ADD_SHOW_FIELDS } from './constants';
 import AddItem from '../../../components/Modifiers/AddItem';

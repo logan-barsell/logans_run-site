@@ -7,10 +7,9 @@ export const getFeaturedReleases = async () => {
     const response = await api.get('/featuredReleases');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to load featured releases'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getFeaturedReleases',
+    });
     throw new Error(message);
   }
 };
@@ -20,10 +19,9 @@ export const addFeaturedRelease = async releaseData => {
     const response = await api.post('/featuredReleases', releaseData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to add featured release'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'addFeaturedRelease',
+    });
     throw new Error(message);
   }
 };
@@ -33,10 +31,9 @@ export const updateFeaturedRelease = async (id, releaseData) => {
     const response = await api.put(`/featuredReleases/${id}`, releaseData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to update featured release'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'updateFeaturedRelease',
+    });
     throw new Error(message);
   }
 };
@@ -46,10 +43,9 @@ export const deleteFeaturedRelease = async id => {
     const response = await api.delete(`/featuredReleases/${id}`);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to delete featured release'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'deleteFeaturedRelease',
+    });
     throw new Error(message);
   }
 };
@@ -60,10 +56,9 @@ export const getFeaturedVideos = async () => {
     const response = await api.get('/featuredVideos');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to load featured videos'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getFeaturedVideos',
+    });
     throw new Error(message);
   }
 };
@@ -73,10 +68,9 @@ export const addFeaturedVideo = async videoData => {
     const response = await api.post('/featuredVideos', videoData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to add featured video'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'addFeaturedVideo',
+    });
     throw new Error(message);
   }
 };
@@ -86,10 +80,9 @@ export const updateFeaturedVideo = async (id, videoData) => {
     const response = await api.put(`/featuredVideos/${id}`, videoData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to update featured video'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'updateFeaturedVideo',
+    });
     throw new Error(message);
   }
 };
@@ -99,10 +92,9 @@ export const deleteFeaturedVideo = async id => {
     const response = await api.delete(`/featuredVideos/${id}`);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to delete featured video'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'deleteFeaturedVideo',
+    });
     throw new Error(message);
   }
 };
