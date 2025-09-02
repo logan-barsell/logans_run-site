@@ -10,6 +10,7 @@ export const editShowFields = show => {
     advprice,
     tixlink,
   } = show ? show : null;
+
   return [
     {
       label: 'Upload Image',
@@ -34,7 +35,7 @@ export const editShowFields = show => {
       label: 'Date',
       name: 'date',
       type: 'date',
-      initialValue: date,
+      initialValue: date || null,
     },
     {
       label: 'Time',
@@ -48,8 +49,8 @@ export const editShowFields = show => {
       },
       type: 'time',
       initialValues: {
-        doors,
-        showtime,
+        doors: doors || null,
+        showtime: showtime || null,
       },
     },
     {
@@ -64,15 +65,15 @@ export const editShowFields = show => {
       },
       type: 'prices',
       initialValues: {
-        doorprice,
-        advprice,
+        doorprice: doorprice || '',
+        advprice: advprice || '',
       },
     },
     {
       label: 'Ticket Link',
       name: 'tixlink',
       type: 'url',
-      initialValue: tixlink,
+      initialValue: tixlink || '',
       placeholder: 'Enter ticket purchase URL',
     },
   ];

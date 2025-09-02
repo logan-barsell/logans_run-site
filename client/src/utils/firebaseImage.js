@@ -97,7 +97,6 @@ export function deleteImageFromFirebase(imageUrlOrName) {
   try {
     // Return early if imageUrlOrName is not a valid string
     if (!imageUrlOrName || typeof imageUrlOrName !== 'string') {
-      console.log('Invalid image URL or name provided:', imageUrlOrName);
       return Promise.resolve();
     }
 
@@ -118,7 +117,6 @@ export function deleteImageFromFirebase(imageUrlOrName) {
 
     return deleteObject(imageRef);
   } catch (error) {
-    console.log('Error deleting image from Firebase:', error);
     return Promise.resolve(); // Return resolved promise to prevent unhandled rejections
   }
 }

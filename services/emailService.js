@@ -30,7 +30,6 @@ async function sendEmail(
   templateData = {}
 ) {
   try {
-    console.log('FROM: ', process.env.FROM_EMAIL, 'TO: ', to);
     // In development without AWS credentials, just log the email
     if (
       process.env.NODE_ENV !== 'production' &&
@@ -210,10 +209,16 @@ async function sendContactNotification(to, contactData, bandName = 'Bandsyte') {
 /**
  * Send newsletter confirmation
  */
-async function sendNewsletterConfirmation(to, email, bandName = 'Bandsyte') {
+async function sendNewsletterConfirmation(
+  to,
+  email,
+  bandName = 'Bandsyte',
+  unsubscribeToken = ''
+) {
   return sendEmail(to, null, null, 'newsletterConfirmation', {
     email,
     bandName,
+    unsubscribeToken,
   });
 }
 

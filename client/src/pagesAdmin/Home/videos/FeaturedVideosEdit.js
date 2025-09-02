@@ -1,38 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import VideoItem from '../../../components/Video/VideoItem';
 import './featuredVideosEdit.css';
-import { getFeaturedVideos } from '../../../services/featuredContentService';
+import { fetchFeaturedVideos } from '../../../redux/actions';
 import { useAlert } from '../../../contexts/AlertContext';
 import AddFeaturedVideo from './AddFeaturedVideo';
 import EditFeaturedVideo from './EditFeaturedVideo';
 import DeleteFeaturedVideo from './DeleteFeaturedVideo';
 import { PageTitle, Divider, NoContent } from '../../../components/Header';
 
-const FeaturedVideosEdit = () => {
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const FeaturedVideosEdit = ({ fetchFeaturedVideos, featuredVideos }) => {
   const { showError } = useAlert();
-
-  const fetchVideos = React.useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getFeaturedVideos();
-      setVideos(data);
-    } catch (err) {
-      const errorMessage = err.message || 'Failed to load featured videos';
-      setError(errorMessage);
-      showError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [showError]);
+  const { data: videos, loading, error } = featuredVideos;
 
   useEffect(() => {
-    fetchVideos();
-  }, [fetchVideos]);
+    fetchFeaturedVideos();
+  }, [fetchFeaturedVideos]);
+
+  // Handle errors from Redux state
+  useEffect(() => {
+    if (error) {
+      showError(error);
+    }
+  }, [error, showError]);
 
   return (
     <div
@@ -40,7 +31,7 @@ const FeaturedVideosEdit = () => {
       className='mb-4 container'
     >
       <PageTitle divider>Featured Videos</PageTitle>
-      <AddFeaturedVideo fetchVideos={fetchVideos} />
+      <AddFeaturedVideo fetchVideos={fetchFeaturedVideos} />
 
       {/* Show loading state while fetching videos */}
       {loading ? (
@@ -78,11 +69,11 @@ const FeaturedVideosEdit = () => {
             >
               <EditFeaturedVideo
                 video={video}
-                fetchVideos={fetchVideos}
+                fetchVideos={fetchFeaturedVideos}
               />
               <DeleteFeaturedVideo
                 video={video}
-                fetchVideos={fetchVideos}
+                fetchVideos={fetchFeaturedVideos}
               />
             </VideoItem>
           ))}
@@ -92,4 +83,12 @@ const FeaturedVideosEdit = () => {
   );
 };
 
-export default FeaturedVideosEdit;
+const mapStateToProps = state => ({
+  featuredVideos: state.featuredVideos,
+});
+
+const mapDispatchToProps = {
+  fetchFeaturedVideos,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeaturedVideosEdit);

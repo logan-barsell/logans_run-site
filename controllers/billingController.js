@@ -1,5 +1,6 @@
 const BillingService = require('../services/billingService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Get all products
@@ -12,10 +13,8 @@ async function getProducts(req, res, next) {
       data: products,
     });
   } catch (error) {
-    if (error.message === 'Stripe is not configured') {
-      return next(new AppError('Stripe is not configured', 503));
-    }
-    next(new AppError('Failed to fetch products', 500));
+    logger.error('❌ Failed to fetch products:', error);
+    next(error);
   }
 }
 
@@ -31,10 +30,8 @@ async function createCheckoutSession(req, res, next) {
       data: { url: session.url },
     });
   } catch (error) {
-    if (error.message === 'Stripe is not configured') {
-      return next(new AppError('Stripe is not configured', 503));
-    }
-    next(new AppError('Failed to create checkout session', 500));
+    logger.error('❌ Failed to create checkout session:', error);
+    next(error);
   }
 }
 
@@ -49,10 +46,8 @@ async function getShipping(req, res, next) {
       data: shippingRate,
     });
   } catch (error) {
-    if (error.message === 'Stripe is not configured') {
-      return next(new AppError('Stripe is not configured', 503));
-    }
-    next(new AppError('Failed to fetch shipping rate', 500));
+    logger.error('❌ Failed to fetch shipping rate:', error);
+    next(error);
   }
 }
 
@@ -67,13 +62,8 @@ async function createProduct(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Stripe is not configured') {
-      return next(new AppError('Stripe is not configured', 503));
-    }
-    if (error.message === 'Product name and price are required') {
-      return next(new AppError('Product name and price are required', 400));
-    }
-    next(new AppError('Failed to create product', 500));
+    logger.error('❌ Failed to create product:', error);
+    next(error);
   }
 }
 
@@ -88,38 +78,24 @@ async function updateProduct(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Stripe is not configured') {
-      return next(new AppError('Stripe is not configured', 503));
-    }
-    if (error.message === 'Product ID is required') {
-      return next(new AppError('Product ID is required', 400));
-    }
-    next(new AppError('Failed to update product', 500));
+    logger.error('❌ Failed to update product:', error);
+    next(error);
   }
 }
 
 /**
- * Deactivate a product
+ * Delete a product
  */
-async function deactivateProduct(req, res, next) {
+async function deleteProduct(req, res, next) {
   try {
-    const imageUrl = req.query.imageUrl;
-    const result = await BillingService.deactivateProduct(
-      req.params.id,
-      imageUrl
-    );
+    await BillingService.deleteProduct(req.params.id);
     res.json({
       success: true,
-      data: result,
+      message: 'Product deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Stripe is not configured') {
-      return next(new AppError('Stripe is not configured', 503));
-    }
-    if (error.message === 'Product ID is required') {
-      return next(new AppError('Product ID is required', 400));
-    }
-    next(new AppError('Failed to deactivate product', 500));
+    logger.error('❌ Failed to delete product:', error);
+    next(error);
   }
 }
 
@@ -129,5 +105,5 @@ module.exports = {
   getShipping,
   createProduct,
   updateProduct,
-  deactivateProduct,
+  deleteProduct,
 };

@@ -22,6 +22,10 @@ import storage from 'redux-persist/lib/storage';
 import { themeReducer } from './reducers/themeReducer';
 import { merchConfigReducer } from './reducers/merchConfigReducer';
 import { authReducer } from './reducers/authReducer';
+import {
+  featuredReleasesReducer,
+  featuredVideosReducer,
+} from './reducers/featuredContentReducer';
 
 const persistConfig = {
   key: 'root',
@@ -43,6 +47,8 @@ const rootReducer = combineReducers({
   theme: themeReducer,
   showsSettings: showsSettingsReducer,
   merchConfig: merchConfigReducer,
+  featuredReleases: featuredReleasesReducer,
+  featuredVideos: featuredVideosReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

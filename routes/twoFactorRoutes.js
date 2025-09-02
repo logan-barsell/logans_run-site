@@ -1,30 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const {
-  sendCode,
-  verifyCode,
-  enableTwoFactor,
-  disableTwoFactor,
-  getTwoFactorStatus,
-} = require('../controllers/twoFactorController');
+const twoFactorController = require('../controllers/twoFactorController');
 const { requireAuth } = require('../middleware/auth');
 
 // All 2FA routes require authentication
 router.use(requireAuth);
 
 // GET 2FA status
-router.get('/status', getTwoFactorStatus);
+router.get('/status', twoFactorController.getTwoFactorStatus);
 
 // POST enable 2FA
-router.post('/enable', enableTwoFactor);
+router.post('/enable', twoFactorController.enableTwoFactor);
 
 // POST disable 2FA
-router.post('/disable', disableTwoFactor);
+router.post('/disable', twoFactorController.disableTwoFactor);
 
 // POST send 2FA code
-router.post('/send-code', sendCode);
+router.post('/send-code', twoFactorController.sendCode);
 
 // POST verify 2FA code
-router.post('/verify-code', verifyCode);
+router.post('/verify-code', twoFactorController.verifyCode);
 
 module.exports = router;

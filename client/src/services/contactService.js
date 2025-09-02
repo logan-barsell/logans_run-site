@@ -18,7 +18,7 @@ export const getContactInfo = async () => {
 // Update Public Contact Info
 export const updateContact = async contactData => {
   try {
-    const response = await api.post('/updateContact', contactData);
+    const response = await api.put('/updateContact', contactData);
     return response.data.data; // Extract data from { success: true, data: {...} }
   } catch (error) {
     const { message } = handleServiceError(
@@ -36,20 +36,6 @@ export const sendContactMessage = async contactData => {
     return response.data; // Return full response for success/error handling
   } catch (error) {
     const { message } = handleServiceError(error, 'Failed to send message');
-    throw new Error(message);
-  }
-};
-
-// Newsletter Signup
-export const signupNewsletter = async email => {
-  try {
-    const response = await api.post('/newsletter-signup', { email });
-    return response.data; // Return full response for success/error handling
-  } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to subscribe to newsletter'
-    );
     throw new Error(message);
   }
 };

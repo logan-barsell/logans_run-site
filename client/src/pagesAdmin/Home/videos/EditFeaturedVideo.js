@@ -16,7 +16,7 @@ const EditFeaturedVideo = ({ video, fetchVideos }) => {
       const id = video._id || video.id;
       await updateFeaturedVideo(id, payload);
       showSuccess('Featured video updated successfully!');
-      fetchVideos();
+      fetchVideos(); // This now calls the Redux action
     } catch (err) {
       showError(err.message || 'Failed to update featured video');
     }

@@ -145,11 +145,24 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
         >
           <div className='row justify-content-center'>
             <div className='col-7 col-sm-auto'>
-              <img
-                className='aboutuspic'
-                src={theme?.bandLogoUrl}
-                alt='Band Logo'
-              />
+              {bio &&
+              bio[0]?.imageType === 'custom-image' &&
+              bio[0]?.customImageUrl ? (
+                <img
+                  className='aboutuspic'
+                  src={bio[0].customImageUrl}
+                  alt='Bio Image'
+                  style={{
+                    borderRadius: '5px',
+                  }}
+                />
+              ) : (
+                <img
+                  className='aboutuspic'
+                  src={theme?.bandLogoUrl}
+                  alt='Band Logo'
+                />
+              )}
             </div>
           </div>
 

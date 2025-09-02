@@ -1,5 +1,8 @@
 const ContactService = require('../services/contactService');
 const { AppError } = require('../middleware/errorHandler');
+const { sendContactNotification } = require('../services/emailService');
+const themeService = require('../services/themeService');
+const logger = require('../utils/logger');
 
 /**
  * Get contact information
@@ -12,10 +15,8 @@ async function getContactInfo(req, res, next) {
       data: info,
     });
   } catch (error) {
-    if (error.message === 'Contact information not found') {
-      return next(new AppError('Contact information not found', 404));
-    }
-    next(new AppError('Failed to fetch contact information', 500));
+    logger.error('❌ Failed to fetch contact information:', error);
+    next(error);
   }
 }
 
@@ -31,14 +32,53 @@ async function updateContact(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Contact information is required') {
-      return next(new AppError('Contact information is required', 400));
+    logger.error('❌ Failed to update contact information:', error);
+    next(error);
+  }
+}
+
+/**
+ * Send contact form message
+ */
+async function sendMessage(req, res, next) {
+  try {
+    const { name, email, title, message } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !message) {
+      return next(new AppError('Name, email, and message are required', 400));
     }
-    next(new AppError('Failed to update contact information', 500));
+
+    // Get the actual band name from theme
+    const theme = await themeService.getTheme();
+    const bandName = theme.siteTitle || 'Bandsyte';
+
+    // Send notification email to admin
+    const contactData = { name, email, title, message };
+    await sendContactNotification(
+      process.env.ADMIN_EMAIL || 'admin@bandsyte.com',
+      contactData,
+      bandName
+    );
+
+    logger.info(
+      `📧 Contact form submitted by ${name} (${email}) - Subject: ${
+        title || 'No subject'
+      }`
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Message sent successfully',
+    });
+  } catch (error) {
+    logger.error('❌ Contact form submission failed:', error);
+    next(error);
   }
 }
 
 module.exports = {
   getContactInfo,
   updateContact,
+  sendMessage,
 };

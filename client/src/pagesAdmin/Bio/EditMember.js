@@ -63,7 +63,6 @@ const EditMember = ({ member, fetchMembers }) => {
       showSuccess('Member updated successfully');
       fetchMembers();
     } catch (_error) {
-      console.log('Error updating member:', _error);
       showError('Failed to update member');
     }
   };

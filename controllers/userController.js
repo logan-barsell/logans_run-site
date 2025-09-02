@@ -23,6 +23,7 @@ async function updateUser(req, res, next) {
       data: user,
     });
   } catch (error) {
+    logger.error('❌ Failed to update user:', error);
     next(error);
   }
 }
@@ -39,7 +40,8 @@ async function initializeDefaultUser(req, res, next) {
       message: 'Default user initialized successfully',
     });
   } catch (error) {
-    next(new AppError('Failed to initialize default user', 500));
+    logger.error('❌ Failed to initialize default user:', error);
+    next(error);
   }
 }
 
@@ -52,19 +54,15 @@ async function changePassword(req, res, next) {
     const userId = req.user.id;
 
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({
-        success: false,
-        message: 'Current password and new password are required',
-      });
+      return next(
+        new AppError('Current password and new password are required', 400)
+      );
     }
 
     // Get user with password
     const user = await UserService.findUserById(userId);
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      });
+      return next(new AppError('User not found', 404));
     }
 
     // Verify current password
@@ -73,10 +71,7 @@ async function changePassword(req, res, next) {
       user.password
     );
     if (!isCurrentPasswordValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Current password is incorrect',
-      });
+      return next(new AppError('Current password is incorrect', 400));
     }
 
     // Update password using the secure method
@@ -98,8 +93,8 @@ async function changePassword(req, res, next) {
       message: 'Password changed successfully',
     });
   } catch (error) {
-    logger.error('Password change error details:', error);
-    next(new AppError('Failed to change password', 500));
+    logger.error('❌ Password change error:', error);
+    next(error);
   }
 }
 
@@ -146,7 +141,8 @@ async function getSessions(req, res, next) {
       },
     });
   } catch (error) {
-    next(new AppError('Failed to fetch sessions', 500));
+    logger.error('❌ Failed to fetch sessions:', error);
+    next(error);
   }
 }
 
@@ -162,10 +158,7 @@ async function endSession(req, res, next) {
     // Find and end the specific session
     const session = await SessionService.endSession(sessionId, userId);
     if (!session) {
-      return res.status(404).json({
-        success: false,
-        message: 'Session not found',
-      });
+      return next(new AppError('Session not found', 404));
     }
 
     // If ending current session, also revoke tokens and clear cookies
@@ -179,7 +172,8 @@ async function endSession(req, res, next) {
       message: 'Session ended successfully',
     });
   } catch (error) {
-    next(new AppError('Failed to end session', 500));
+    logger.error('❌ Failed to end session:', error);
+    next(error);
   }
 }
 
@@ -210,8 +204,8 @@ async function endAllOtherSessions(req, res, next) {
       data: { endedCount },
     });
   } catch (error) {
-    logger.error('Error ending other sessions:', error);
-    next(new AppError('Failed to end other sessions', 500));
+    logger.error('❌ Error ending other sessions:', error);
+    next(error);
   }
 }
 

@@ -22,7 +22,6 @@ export const featuredReleaseFields = (release = {}, required = true) => [
   {
     label: 'Type',
     name: 'type',
-    type: 'options',
     options: releaseTypes,
     initialValue: release.type || 'album',
   },
@@ -30,7 +29,7 @@ export const featuredReleaseFields = (release = {}, required = true) => [
     label: 'Release Date',
     name: 'releaseDate',
     type: 'date',
-    initialValue: release.releaseDate ? new Date(release.releaseDate) : '',
+    initialValue: release.releaseDate ? new Date(release.releaseDate) : null,
   },
   {
     label: 'Music Link',

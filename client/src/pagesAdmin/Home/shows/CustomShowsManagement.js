@@ -24,15 +24,21 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
         tixlink,
       } = show;
 
-      const dateString = new Date(date).toLocaleString().split(',')[0];
-      const doorstimeString = new Date(doors).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-      });
-      const showtimeString = new Date(showtime).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-      });
+      const dateString = date
+        ? new Date(date).toLocaleString().split(',')[0]
+        : 'TBD';
+      const doorstimeString = doors
+        ? new Date(doors).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+          })
+        : 'TBD';
+      const showtimeString = showtime
+        ? new Date(showtime).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+          })
+        : 'TBD';
 
       accordionItems.push({
         data: show,

@@ -1,5 +1,6 @@
 const FeaturedReleaseService = require('../services/featuredReleaseService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 async function getFeaturedReleases(req, res, next) {
   try {
@@ -9,7 +10,8 @@ async function getFeaturedReleases(req, res, next) {
       data: releases,
     });
   } catch (error) {
-    next(new AppError(error.message, 500));
+    logger.error('❌ Failed to fetch featured releases:', error);
+    next(error);
   }
 }
 
@@ -21,7 +23,8 @@ async function addFeaturedRelease(req, res, next) {
       data: release,
     });
   } catch (error) {
-    next(new AppError(error.message, 500));
+    logger.error('❌ Failed to add featured release:', error);
+    next(error);
   }
 }
 
@@ -36,11 +39,8 @@ async function updateFeaturedRelease(req, res, next) {
       data: release,
     });
   } catch (error) {
-    if (error.message === 'Featured release not found') {
-      next(new AppError(error.message, 404));
-    } else {
-      next(new AppError(error.message, 500));
-    }
+    logger.error('❌ Failed to update featured release:', error);
+    next(error);
   }
 }
 
@@ -52,11 +52,8 @@ async function deleteFeaturedRelease(req, res, next) {
       message: 'Featured release deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Featured release not found') {
-      next(new AppError(error.message, 404));
-    } else {
-      next(new AppError(error.message, 500));
-    }
+    logger.error('❌ Failed to delete featured release:', error);
+    next(error);
   }
 }
 

@@ -12,10 +12,6 @@ router.post(
 router.get('/shipping', requireAuth, billingController.getShipping);
 router.post('/products', requireAuth, billingController.createProduct);
 router.put('/products/:id', requireAuth, billingController.updateProduct);
-router.delete(
-  '/products/:id',
-  requireAuth,
-  billingController.deactivateProduct
-);
+router.delete('/products/:id', requireAuth, billingController.deleteProduct);
 
 module.exports = router;

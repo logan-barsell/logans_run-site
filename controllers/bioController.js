@@ -1,5 +1,6 @@
 const BioService = require('../services/bioService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Get bio information
@@ -12,7 +13,8 @@ async function getBio(req, res, next) {
       data: bio,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch bio information', 500));
+    logger.error('❌ Failed to fetch bio information:', error);
+    next(error);
   }
 }
 
@@ -21,17 +23,15 @@ async function getBio(req, res, next) {
  */
 async function updateBio(req, res, next) {
   try {
-    const content = req.body.data;
+    const content = req.body;
     const result = await BioService.updateBio(content);
     res.status(200).json({
       success: true,
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Bio content is required') {
-      return next(new AppError('Bio content is required', 400));
-    }
-    next(new AppError('Failed to update bio', 500));
+    logger.error('❌ Failed to update bio:', error);
+    next(error);
   }
 }
 
@@ -46,10 +46,8 @@ async function addMember(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Member data is required') {
-      return next(new AppError('Member data is required', 400));
-    }
-    next(new AppError('Failed to add member', 500));
+    logger.error('❌ Failed to add member:', error);
+    next(error);
   }
 }
 
@@ -64,13 +62,8 @@ async function deleteMember(req, res, next) {
       message: 'Member deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Member ID is required') {
-      return next(new AppError('Member ID is required', 400));
-    }
-    if (error.message === 'Member not found') {
-      return next(new AppError('Member not found', 404));
-    }
-    next(new AppError('Failed to delete member', 500));
+    logger.error('❌ Failed to delete member:', error);
+    next(error);
   }
 }
 
@@ -85,7 +78,8 @@ async function getMembers(req, res, next) {
       data: members,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch members', 500));
+    logger.error('❌ Failed to fetch members:', error);
+    next(error);
   }
 }
 
@@ -100,16 +94,8 @@ async function updateMember(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Member ID is required') {
-      return next(new AppError('Member ID is required', 400));
-    }
-    if (error.message === 'Member update data is required') {
-      return next(new AppError('Member update data is required', 400));
-    }
-    if (error.message === 'Member not found') {
-      return next(new AppError('Member not found', 404));
-    }
-    next(new AppError('Failed to update member', 500));
+    logger.error('❌ Failed to update member:', error);
+    next(error);
   }
 }
 

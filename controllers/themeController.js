@@ -1,5 +1,6 @@
 const ThemeService = require('../services/themeService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Get theme
@@ -12,7 +13,8 @@ async function getTheme(req, res, next) {
       data: theme,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch theme', 500));
+    logger.error('❌ Failed to fetch theme:', error);
+    next(error);
   }
 }
 
@@ -28,10 +30,8 @@ async function updateTheme(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Theme data is required') {
-      return next(new AppError('Theme data is required', 400));
-    }
-    next(new AppError('Failed to update theme', 500));
+    logger.error('❌ Failed to update theme:', error);
+    next(error);
   }
 }
 

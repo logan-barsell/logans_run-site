@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ModalForm from '../Forms/ModalForm';
 import CustomModal from '../Modals/CustomModal';
 import { PencilSquare } from '../icons';
@@ -13,7 +13,12 @@ const EditItem = ({
   title,
 }) => {
   const id = item._id || item.id;
-  const fields = editFields ? editFields(item.data || item, false) : null;
+
+  // Memoize the fields to prevent re-creation on every render
+  const fields = useMemo(() => {
+    if (!editFields || !item) return null;
+    return editFields(item.data || item, false);
+  }, [editFields, item]);
 
   const modalProps = {
     id: `edit_item_${id}`,

@@ -34,6 +34,6 @@ export const featuredVideoFields = (video = {}) => [
     label: 'Release Date',
     name: 'releaseDate',
     type: 'date',
-    initialValue: video.releaseDate ? new Date(video.releaseDate) : '',
+    initialValue: video.releaseDate ? new Date(video.releaseDate) : null,
   },
 ];
