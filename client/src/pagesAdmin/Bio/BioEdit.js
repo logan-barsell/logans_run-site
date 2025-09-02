@@ -16,8 +16,6 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
   const { showError, showSuccess } = useAlert();
   const [customImageFile, setCustomImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-
   const imageUploadRef = useRef();
 
   useEffect(() => {
@@ -53,7 +51,7 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
 
         try {
           customImageUrl = await uploadImageToFirebase(customImageFile, {
-            onProgress: setUploadProgress,
+            onProgress: () => {}, // Pass empty function instead of setUploadProgress
           });
         } catch (err) {
           setUploading(false);

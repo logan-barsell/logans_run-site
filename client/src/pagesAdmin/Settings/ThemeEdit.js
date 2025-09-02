@@ -234,7 +234,6 @@ const VisualColorSelector = ({
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   const [logoFile, setLogoFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const { showError, showSuccess } = useAlert();
   const imageUploadRef = useRef();
 
@@ -260,7 +259,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
 
         try {
           bandLogoUrl = await uploadImageToFirebase(logoFile, {
-            onProgress: setUploadProgress,
+            onProgress: () => {}, // Pass empty function instead of setUploadProgress
           });
         } catch (err) {
           setUploading(false);

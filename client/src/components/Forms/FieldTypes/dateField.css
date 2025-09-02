@@ -4,6 +4,12 @@
   border-radius: 0.5rem;
   letter-spacing: normal;
   font-family: var(--secondary-font);
+  z-index: 9999 !important;
+}
+
+/* Ensure date picker popup appears above other elements */
+.react-datepicker-popper {
+  z-index: 9999 !important;
 }
 
 .react-datepicker__input-container input {

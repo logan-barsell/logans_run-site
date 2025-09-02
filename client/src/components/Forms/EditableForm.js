@@ -14,6 +14,7 @@ import { useFormChanges } from '../../hooks/useFormChanges';
  * @param {Function} props.onError - Optional error callback
  * @param {Function} props.compareFunction - Optional custom comparison function
  * @param {Function} props.transformData - Optional function to transform data before save
+ * @param {Object} props.validationErrors - Optional validation errors object
  * @param {React.ReactNode} props.children - Form fields (render prop pattern)
  * @param {Object} props.formProps - Additional props to pass to the form
  */
@@ -26,6 +27,7 @@ const EditableForm = ({
   onError,
   compareFunction = null,
   transformData = null,
+  validationErrors = {},
   children,
   formProps = {},
   ...props
@@ -45,6 +47,11 @@ const EditableForm = ({
   // Use change detection hook
   const { hasChanges, isDirty, markAsSaved, saveButtonDisabled } =
     useFormChanges(initialData, formData, compareFunction);
+
+  // Check if there are any validation errors
+  const hasValidationErrors = Object.keys(validationErrors).some(
+    key => validationErrors[key] !== null && validationErrors[key] !== undefined
+  );
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -66,6 +73,11 @@ const EditableForm = ({
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    // Prevent submission if there are validation errors
+    if (hasValidationErrors) {
+      return;
+    }
 
     if (saveButtonDisabled) return;
 
@@ -120,7 +132,7 @@ const EditableForm = ({
             isDirty={isDirty}
             isSaving={isSaving}
             isSaved={isSaved}
-            disabled={saveButtonDisabled}
+            disabled={saveButtonDisabled || hasValidationErrors}
           />
         </div>
       </form>

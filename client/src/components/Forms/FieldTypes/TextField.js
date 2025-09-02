@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Field } from 'react-final-form';
 
 const TextField = ({
@@ -27,6 +27,19 @@ const TextField = ({
   // Only require if explicitly set to true
   const isRequired = required === true;
 
+  // Run validation immediately for required fields
+  useEffect(() => {
+    if (isRequired) {
+      const validation = handleValidation(initialValue || '');
+      const newValidationState = {
+        isValid: !validation,
+        error: validation,
+        isDirty: false,
+      };
+      setLocalValidationState(newValidationState);
+    }
+  }, [isRequired, initialValue]);
+
   const handleValidation = value => {
     // Handle required validation
     if (isRequired && !value) {
@@ -47,9 +60,9 @@ const TextField = ({
   const handleChange = (input, value) => {
     input.onChange(value);
 
-    // Update validation state if custom validation is provided
-    if (validate) {
-      const validation = validate(value);
+    // Always run validation for required fields, even when empty
+    if (isRequired || validate) {
+      const validation = handleValidation(value);
       const newValidationState = {
         isValid: !validation,
         error: validation,

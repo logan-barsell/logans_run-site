@@ -22,6 +22,7 @@ export const featuredReleaseFields = (release = {}, required = true) => [
   {
     label: 'Type',
     name: 'type',
+    type: 'options',
     options: releaseTypes,
     initialValue: release.type || 'album',
   },

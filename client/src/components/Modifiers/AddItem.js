@@ -14,15 +14,14 @@ const AddItem = ({
   ...rest
 }) => {
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleSubmit = async formFields => {
     setLoading(true);
     try {
-      // If any field is an image, pass setUploadProgress to onAdd
+      // If any field is an image, pass a no-op function to onAdd (for backward compatibility)
       const hasImage = fields.some(f => f.type === 'image');
       if (hasImage) {
-        await onAdd(formFields, setUploadProgress);
+        await onAdd(formFields, () => {}); // Pass empty function instead of setUploadProgress
       } else {
         await onAdd(formFields);
       }
@@ -42,9 +41,7 @@ const AddItem = ({
     id: modalProps.id || 'add_item_modal',
     label: modalProps.label || 'add_item_modal',
     title,
-    buttonText: loading
-      ? `Uploading... ${String(uploadProgress).replace('0', 'O')}%`
-      : buttonText,
+    buttonText: loading ? 'Uploading...' : buttonText,
     ...modalProps,
   };
 

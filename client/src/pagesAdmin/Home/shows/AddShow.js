@@ -13,7 +13,7 @@ const AddShow = ({ fetchShows }) => {
       let posterUrl = '';
       if (fields?.poster && fields?.poster?.[0]) {
         posterUrl = await uploadImageToFirebase(fields.poster[0], {
-          onProgress: setUploadProgress,
+          onProgress: () => {}, // Pass empty function instead of progress tracking
         });
       } else {
         showError('Image required.');

@@ -17,6 +17,7 @@ export const ADD_PLAYER_FIELDS = [
     name: 'spotifyLink',
     type: 'spotifyUrl',
     placeholder: 'Enter Spotify URL',
+    required: true,
   },
   {
     label: 'Apple Music Link',
@@ -88,6 +89,7 @@ export const editPlayerFields = player => {
       type: 'spotifyUrl',
       initialValue: spotifyLink,
       placeholder: 'Enter Spotify URL',
+      required: true,
     },
     {
       label: 'Apple Music Link',

@@ -39,7 +39,6 @@ export const validateUrlWithPatterns = (
 
   // Pre-validation: Check for obvious malformed patterns
   if (
-    trimmedUrl.includes('@') ||
     trimmedUrl.includes('://.') ||
     trimmedUrl.includes('://@') ||
     trimmedUrl.startsWith('@')
@@ -111,30 +110,49 @@ export const validateUrlWithPatterns = (
   }
 
   // Check against provided patterns
-  if (patterns && patterns.length > 0) {
-    for (const [type, pattern] of Object.entries(patterns)) {
-      const match = trimmedUrl.match(pattern);
-      if (match) {
-        const id = match[1] || null;
+  if (patterns && Object.keys(patterns).length > 0) {
+    // Handle both array and object patterns
+    const isArray = Array.isArray(patterns);
 
-        // Check if content type is supported (if supportedTypes provided)
-        if (supportedTypes && !supportedTypes.includes(type)) {
+    if (isArray) {
+      // For array patterns, check if any pattern matches
+      for (const pattern of patterns) {
+        const match = trimmedUrl.match(pattern);
+        if (match) {
           return {
-            isValid: false,
-            type,
-            id,
-            error: `${
-              type.charAt(0).toUpperCase() + type.slice(1)
-            } URLs are not supported for ${platformName}`,
+            isValid: true,
+            type: null,
+            id: match[1] || null,
+            error: null,
           };
         }
+      }
+    } else {
+      // For object patterns, check each type
+      for (const [type, pattern] of Object.entries(patterns)) {
+        const match = trimmedUrl.match(pattern);
+        if (match) {
+          const id = match[1] || null;
 
-        return {
-          isValid: true,
-          type,
-          id,
-          error: null,
-        };
+          // Check if content type is supported (if supportedTypes provided)
+          if (supportedTypes && !supportedTypes.includes(type)) {
+            return {
+              isValid: false,
+              type,
+              id,
+              error: `${
+                type.charAt(0).toUpperCase() + type.slice(1)
+              } URLs are not supported for ${platformName}`,
+            };
+          }
+
+          return {
+            isValid: true,
+            type,
+            id,
+            error: null,
+          };
+        }
       }
     }
 

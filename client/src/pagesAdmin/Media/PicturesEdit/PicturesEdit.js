@@ -39,9 +39,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
       try {
         const downloadURL = await uploadImageToFirebase(file, {
           fileName,
-          onProgress: progress => {
-            setUploadProgress(prev => ({ ...prev, [index]: progress }));
-          },
+          onProgress: () => {}, // Pass empty function instead of progress tracking
         });
         return { name: fileName, imgLink: downloadURL, success: true };
       } catch (error) {
