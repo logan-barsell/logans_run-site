@@ -18,9 +18,19 @@ const csrfProtection = (req, res, next) => {
     return next();
   }
 
-  // Skip CSRF in development for API testing
-  if (process.env.NODE_ENV === 'development' && req.path.startsWith('/api/')) {
-    logger.warn(
+  // Skip CSRF only for specific development endpoints that don't need it
+  const skipCSRFRoutes = [
+    '/api/auth/login',
+    '/api/auth/signup',
+    '/api/auth/refresh',
+    '/api/auth/logout',
+  ];
+
+  if (
+    process.env.NODE_ENV === 'development' &&
+    skipCSRFRoutes.includes(req.path)
+  ) {
+    logger.debug(
       `CSRF protection skipped for ${req.method} ${req.path} in development`
     );
     return next();

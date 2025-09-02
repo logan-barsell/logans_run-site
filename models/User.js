@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
+const { validatePasswordDetailed } = require('../utils/validation');
 
 const userSchema = new mongoose.Schema({
   // Band Information
@@ -93,6 +93,18 @@ const userSchema = new mongoose.Schema({
     default: true,
   },
 
+  // Account Lockout Protection
+  failedLoginAttempts: {
+    type: Number,
+    default: 0,
+  },
+  lockedUntil: {
+    type: Date,
+  },
+  lastFailedLogin: {
+    type: Date,
+  },
+
   // Timestamps
   createdAt: {
     type: Date,
@@ -116,6 +128,14 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   try {
+    // Validate password strength before hashing
+    const passwordValidation = validatePasswordDetailed(this.password);
+    if (!passwordValidation.isValid) {
+      const error = new Error(passwordValidation.errors.join('. '));
+      error.statusCode = 400;
+      return next(error);
+    }
+
     const saltRounds = 12;
     this.password = await bcrypt.hash(this.password, saltRounds);
     next();
@@ -145,6 +165,43 @@ userSchema.methods.isTwoFactorCodeValid = function () {
     this.twoFactorCodeExpiry &&
     this.twoFactorCodeExpiry > Date.now()
   );
+};
+
+// Method to check if account is currently locked
+userSchema.methods.isAccountLocked = function () {
+  return !!(this.lockedUntil && this.lockedUntil > Date.now());
+};
+
+// Method to get remaining lockout time in minutes
+userSchema.methods.getLockoutTimeRemaining = function () {
+  if (!this.isAccountLocked()) return 0;
+  return Math.ceil((this.lockedUntil - Date.now()) / (1000 * 60));
+};
+
+// Method to handle failed login attempt
+userSchema.methods.handleFailedLogin = function () {
+  const MAX_FAILED_ATTEMPTS = 5;
+  const LOCKOUT_DURATION_MINUTES = 15;
+
+  this.failedLoginAttempts += 1;
+  this.lastFailedLogin = new Date();
+
+  if (this.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
+    this.lockedUntil = new Date(
+      Date.now() + LOCKOUT_DURATION_MINUTES * 60 * 1000
+    );
+    this.failedLoginAttempts = 0; // Reset attempts after lockout
+  }
+
+  return this.save();
+};
+
+// Method to handle successful login (reset failed attempts)
+userSchema.methods.handleSuccessfulLogin = function () {
+  this.failedLoginAttempts = 0;
+  this.lockedUntil = undefined;
+  this.lastFailedLogin = undefined;
+  return this.save();
 };
 
 // Virtual for UUID (using _id as UUID equivalent)

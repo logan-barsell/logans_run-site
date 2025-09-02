@@ -9,19 +9,30 @@ const isProduction = process.env.NODE_ENV === 'production';
  * @param {string} refreshToken - The refresh token to set as a cookie
  */
 function setAuthCookies(res, accessToken, refreshToken) {
-  const cookieOptions = {
+  const baseCookieOptions = {
     httpOnly: true,
     sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 1000, // 1 hour
   };
 
   if (isProduction) {
-    cookieOptions.domain = config.domain;
+    baseCookieOptions.domain = config.domain;
   }
 
-  res.cookie('access_token', accessToken, cookieOptions);
-  res.cookie('refresh_token', refreshToken, cookieOptions);
+  // Access token: 1 hour expiry
+  const accessTokenOptions = {
+    ...baseCookieOptions,
+    maxAge: 60 * 60 * 1000, // 1 hour
+  };
+
+  // Refresh token: 7 days expiry (matches JWT expiry)
+  const refreshTokenOptions = {
+    ...baseCookieOptions,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  };
+
+  res.cookie('access_token', accessToken, accessTokenOptions);
+  res.cookie('refresh_token', refreshToken, refreshTokenOptions);
 }
 
 /**

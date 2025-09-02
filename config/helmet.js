@@ -10,7 +10,7 @@ const helmetConfig = {
         'https://cdn.jsdelivr.net',
         'https://fonts.googleapis.com',
       ],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // unsafe-eval needed for React dev
+      scriptSrc: ["'self'", "'unsafe-inline'"], // Removed unsafe-eval for security
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:', 'https:', 'http:'], // Allow images from any HTTPS source
       connectSrc: ["'self'", 'https:', 'http:'], // Allow API calls

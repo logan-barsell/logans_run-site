@@ -2,6 +2,10 @@
  * Validation utilities for user input
  */
 
+const {
+  validatePassword: detailedValidate,
+} = require('./validation/passwordValidation');
+
 /**
  * Validates email format
  * @param {string} email - The email to validate
@@ -24,6 +28,15 @@ function validatePassword(password) {
 }
 
 /**
+ * Validates password strength with detailed error messages
+ * @param {string} password - The password to validate
+ * @returns {Object} - Validation result with isValid and errors array
+ */
+function validatePasswordDetailed(password) {
+  return detailedValidate(password);
+}
+
+/**
  * Validates US phone number format (digits only)
  * @param {string} phone - The phone number to validate
  * @returns {boolean} - True if valid, false otherwise
@@ -37,5 +50,6 @@ function validatePhoneNumber(phone) {
 module.exports = {
   validateEmail,
   validatePassword,
+  validatePasswordDetailed,
   validatePhoneNumber,
 };
