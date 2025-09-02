@@ -1,3 +1,5 @@
+const config = require('../config');
+
 /**
  * Newsletter Confirmation Template
  *
@@ -80,9 +82,7 @@ const newsletterConfirmation = (bandName, email, unsubscribeToken = '') => ({
               ? `
           <div class="unsubscribe">
             <p>
-              <a href="${
-                process.env.SITE_URL || 'https://yourbandsite.com'
-              }/unsubscribe?token=${unsubscribeToken}">
+              <a href="${config.clientURL}/unsubscribe?token=${unsubscribeToken}">
                 Unsubscribe from these notifications
               </a>
             </p>

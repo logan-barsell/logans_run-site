@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PageTitle } from '../components/Header';
+import { StaticAlert } from '../components/Alert';
+import './Unsubscribe.css';
 
 const Unsubscribe = () => {
   const [searchParams] = useSearchParams();
@@ -85,12 +87,14 @@ const Unsubscribe = () => {
         return (
           <div className='text-center'>
             <div
-              className='spinner-border'
+              className='spinner-border text-light'
               role='status'
             >
               <span className='visually-hidden'>Loading...</span>
             </div>
-            <p className='mt-3'>{message || 'Processing your request...'}</p>
+            <p className='mt-3 secondary-font'>
+              {message || 'Processing your request...'}
+            </p>
           </div>
         );
 
@@ -98,12 +102,14 @@ const Unsubscribe = () => {
         return (
           <div className='text-center'>
             <div
-              className='spinner-border'
+              className='spinner-border text-light'
               role='status'
             >
               <span className='visually-hidden'>Loading...</span>
             </div>
-            <p className='mt-3'>Verifying your unsubscribe request...</p>
+            <p className='mt-3 secondary-font'>
+              Verifying your unsubscribe request...
+            </p>
           </div>
         );
 
@@ -113,26 +119,26 @@ const Unsubscribe = () => {
             <div className='text-warning mb-3'>
               <i className='fas fa-question-circle fa-3x'></i>
             </div>
-            <h3>Confirm Unsubscribe</h3>
-            <p className='lead'>
+            <h5 className='secondary-font text-white'>Confirm Unsubscribe</h5>
+            <hr className='text-white' />
+            <p className='secondary-font'>
               Are you sure you want to unsubscribe from the newsletter?
             </p>
-            <p>
+            {/* <p className='secondary-font'>
               Email: <strong>{subscriber?.email}</strong>
-            </p>
-            <p className='text-muted mb-4'>
+            </p> */}
+            <StaticAlert
+              type='info'
+              title='Email:'
+              description={`${subscriber?.email}`}
+            />
+            <p className='my-4 secondary-font'>
               You will no longer receive updates about new music, shows, and
               other content.
             </p>
             <div className='d-flex justify-content-center gap-3'>
               <button
-                className='btn btn-secondary'
-                onClick={() => window.history.back()}
-              >
-                Cancel
-              </button>
-              <button
-                className='btn btn-danger'
+                className='btn btn-outline-light'
                 onClick={handleUnsubscribe}
               >
                 Unsubscribe
@@ -147,13 +153,19 @@ const Unsubscribe = () => {
             <div className='text-success mb-3'>
               <i className='fas fa-check-circle fa-3x'></i>
             </div>
-            <h3>Successfully Unsubscribed</h3>
-            <p className='lead'>{message}</p>
-            <p>
+            <h5 className='secondary-font text-white'>
+              Successfully Unsubscribed
+            </h5>
+            <hr className='text-white' />
+            <StaticAlert
+              type='success'
+              description={message}
+            />
+            <p className='secondary-font mt-3'>
               You will no longer receive newsletter notifications from this
               band.
             </p>
-            <p className='text-muted'>
+            <p className='secondary-font'>
               If you change your mind, you can always sign up again through
               their website.
             </p>
@@ -166,9 +178,14 @@ const Unsubscribe = () => {
             <div className='text-danger mb-3'>
               <i className='fas fa-exclamation-triangle fa-3x'></i>
             </div>
-            <h3>Unsubscribe Failed</h3>
-            <p className='lead text-danger'>{message}</p>
-            <p>
+            <h5 className='secondary-font text-white'>Unsubscribe Failed</h5>
+            <hr className='text-white' />
+            <StaticAlert
+              type='danger'
+              title='Error Details'
+              description={message}
+            />
+            <p className='secondary-font mt-3'>
               Please try again or contact the band directly if you continue to
               have issues.
             </p>
@@ -181,13 +198,14 @@ const Unsubscribe = () => {
   };
 
   return (
-    <div className='container mt-5'>
-      <PageTitle>Newsletter Unsubscribe</PageTitle>
+    <div
+      className='container'
+      id='unsubscribe'
+    >
+      <PageTitle>Newsletter</PageTitle>
       <div className='row justify-content-center'>
         <div className='col-md-8 col-lg-6'>
-          <div className='card shadow'>
-            <div className='card-body p-5'>{renderContent()}</div>
-          </div>
+          <div className='jumbotron'>{renderContent()}</div>
         </div>
       </div>
     </div>

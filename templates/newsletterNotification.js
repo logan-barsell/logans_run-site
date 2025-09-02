@@ -1,3 +1,5 @@
+const config = require('../config');
+
 /**
  * Newsletter Notification Templates
  *
@@ -95,7 +97,7 @@ const newsletterNotification = (
         </div>
       `;
       ctaText = 'View Show Details';
-      ctaLink = `${process.env.SITE_URL || 'https://yourbandsite.com'}/shows`;
+      ctaLink = `${config.clientURL}/shows`;
       break;
 
     case 'music':
@@ -116,7 +118,7 @@ const newsletterNotification = (
         </div>
       `;
       ctaText = 'Listen Now';
-      ctaLink = `${process.env.SITE_URL || 'https://yourbandsite.com'}/music`;
+      ctaLink = `${config.clientURL}/music`;
       break;
 
     case 'video':
@@ -132,7 +134,7 @@ const newsletterNotification = (
         </div>
       `;
       ctaText = 'Watch Video';
-      ctaLink = `${process.env.SITE_URL || 'https://yourbandsite.com'}/videos`;
+      ctaLink = `${config.clientURL}/videos`;
       break;
   }
 
@@ -256,9 +258,7 @@ const newsletterNotification = (
             <p>This email was sent to you because you're subscribed to ${bandName}'s newsletter.</p>
             <div class="unsubscribe">
               <p>
-                <a href="${
-                  process.env.SITE_URL || 'https://yourbandsite.com'
-                }/unsubscribe?token=${unsubscribeToken}">
+                <a href="${config.clientURL}/unsubscribe?token=${unsubscribeToken}">
                   Unsubscribe from these notifications
                 </a>
               </p>
