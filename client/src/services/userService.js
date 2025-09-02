@@ -1,19 +1,6 @@
 import api from './api';
 import { handleServiceError } from '../utils/errorHandler';
 
-// Get current user information (now uses /auth/me)
-export const getCurrentUser = async () => {
-  try {
-    const response = await api.get('/auth/me');
-    return response.data.data; // Extract data from { success: true, data: [...] }
-  } catch (error) {
-    const { message } = handleServiceError(error, {
-      operation: 'getCurrentUser',
-    });
-    throw new Error(message);
-  }
-};
-
 // Update user information
 export const updateUser = async userData => {
   try {

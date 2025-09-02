@@ -1,10 +1,10 @@
-import apiClient from './api';
+import api from './api';
 import { handleServiceError } from '../utils/errorHandler';
 
 // Fetch the current merch config (public endpoint - only returns valid configs)
 export async function getMerchConfig() {
   try {
-    const res = await apiClient.get('/merchConfig');
+    const res = await api.get('/merchConfig');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, {
@@ -17,7 +17,7 @@ export async function getMerchConfig() {
 // Fetch the current merch config for admin (returns all configs)
 export async function getMerchConfigAdmin() {
   try {
-    const res = await apiClient.get('/merchConfig/admin');
+    const res = await api.get('/merchConfig/admin');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, {
@@ -30,7 +30,7 @@ export async function getMerchConfigAdmin() {
 // Create or update the merch config
 export async function updateMerchConfig(data) {
   try {
-    const res = await apiClient.post('/merchConfig', data);
+    const res = await api.post('/merchConfig', data);
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, {
@@ -43,7 +43,7 @@ export async function updateMerchConfig(data) {
 // Delete the merch config
 export async function deleteMerchConfig() {
   try {
-    const res = await apiClient.delete('/merchConfig');
+    const res = await api.delete('/merchConfig');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
     const { message } = handleServiceError(error, {
