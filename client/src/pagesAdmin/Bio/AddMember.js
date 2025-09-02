@@ -59,7 +59,6 @@ const AddMember = ({ fetchMembers }) => {
   ];
 
   const [uploading, setUploading] = React.useState(false);
-  const [uploadProgress, setUploadProgress] = React.useState(0);
 
   const onSubmit = async values => {
     try {
@@ -71,7 +70,7 @@ const AddMember = ({ fetchMembers }) => {
           fileName = Date.now() + values.bioPic[0].name;
           imageUrl = await uploadImageToFirebase(values.bioPic[0], {
             fileName,
-            onProgress: setUploadProgress,
+            onProgress: () => {}, // Pass empty function instead of setUploadProgress
           });
         } catch (err) {
           setUploading(false);
@@ -109,9 +108,7 @@ const AddMember = ({ fetchMembers }) => {
     id: 'add_modal',
     label: 'add_label',
     title: 'NEW MEMBER',
-    buttonText: uploading
-      ? `Uploading... ${String(uploadProgress).replaceAll('0', 'O')}%`
-      : 'Add Member',
+    buttonText: uploading ? 'Uploading...' : 'Add Member',
   };
 
   const AddButton = () => {
@@ -123,6 +120,7 @@ const AddMember = ({ fetchMembers }) => {
         variant='danger'
         type='button'
         disabled={uploading}
+        loading={uploading}
         icon={<PlusSquareFill />}
         iconPosition='left'
       >

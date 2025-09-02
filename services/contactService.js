@@ -3,6 +3,83 @@ const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
 
 /**
+ * URL validation patterns matching frontend validation exactly
+ */
+const VALIDATION_PATTERNS = {
+  facebook: [
+    /^(?:https?:\/\/)?(?:www\.)?facebook\.com\/[^\/]+/,
+    /^(?:https?:\/\/)?(?:www\.)?fb\.com\/[^\/]+/,
+  ],
+  instagram: [
+    /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/[^\/]+/,
+    /^(?:https?:\/\/)?(?:www\.)?ig\.com\/[^\/]+/,
+  ],
+  tiktok: [
+    /^(?:https?:\/\/)?(?:www\.)?tiktok\.com\/@[^\/]+/,
+    /^(?:https?:\/\/)?(?:www\.)?vm\.tiktok\.com\/[^\/]+/,
+  ],
+  youtube: [
+    /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/channel\/[a-zA-Z0-9_-]+/,
+    /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/user\/[a-zA-Z0-9_-]+/,
+    /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/c\/[a-zA-Z0-9_-]+/,
+  ],
+  soundcloud: [/^(?:https?:\/\/)?(?:www\.)?soundcloud\.com\/[^\/]+/],
+  spotify: [
+    /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/(track|album|playlist|artist|episode|show)\/[a-zA-Z0-9]{22}/,
+    /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/user\/[^\/]+/,
+  ],
+  appleMusic: [
+    /^https?:\/\/(?:music\.)?apple\.com\/[a-z]{2}\/(?:album|playlist)\/[^\/]+\/\d+/,
+    /^https?:\/\/(?:music\.)?apple\.com\/[a-z]{2}\/album\/[^\/]+\/\d+\?i=\d+/,
+    /^https?:\/\/(?:music\.)?apple\.com\/[a-z]{2}\/artist\/[^\/]+\/\d+/,
+  ],
+  x: [
+    /^(?:https?:\/\/)?(?:www\.)?twitter\.com\/[^\/]+/,
+    /^(?:https?:\/\/)?(?:www\.)?x\.com\/[^\/]+/,
+  ],
+};
+
+/**
+ * Validate social media URLs using regex patterns matching frontend validation
+ */
+function validateSocialUrls(contactData) {
+  const socialFields = [
+    'facebook',
+    'instagram',
+    'youtube',
+    'soundcloud',
+    'spotify',
+    'appleMusic',
+    'x',
+    'tiktok',
+  ];
+
+  for (const field of socialFields) {
+    if (contactData[field] && contactData[field].trim()) {
+      const url = contactData[field].trim();
+
+      // Basic URL format validation
+      try {
+        new URL(url.startsWith('http') ? url : `https://${url}`);
+      } catch (error) {
+        throw new AppError(`Invalid ${field} URL format`, 400);
+      }
+
+      // Platform-specific validation using regex patterns
+      const patterns = VALIDATION_PATTERNS[field];
+      const isValid = patterns.some(pattern => pattern.test(url));
+
+      if (!isValid) {
+        throw new AppError(
+          `Invalid ${field} URL - must be a valid ${field} URL format`,
+          400
+        );
+      }
+    }
+  }
+}
+
+/**
  * Get public contact information
  */
 async function getContactInfo() {
@@ -45,6 +122,9 @@ async function updateContact(updatedInfo) {
     if (!updatedInfo) {
       throw new AppError('Contact information is required', 400);
     }
+
+    // Validate all social media URLs before saving
+    validateSocialUrls(updatedInfo);
 
     let contactInfo = await ContactInfo.findOne();
 

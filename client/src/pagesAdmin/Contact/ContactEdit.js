@@ -134,6 +134,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
         onError={handleError}
         compareFunction={compareFunction}
         transformData={transformData}
+        validationErrors={validationErrors}
       >
         {({ formData, handleInputChange }) => {
           const handleChange =

@@ -58,7 +58,7 @@ const ShopifyValidation = ({ merchConfig, forceValidation = false }) => {
   }
 
   return (
-    <div className='shopify-validation mt-3'>
+    <div className='shopify-validation mt-1 mb-5'>
       <ShopifyAlert
         error={validationResult.error}
         response={validationResult.response}

@@ -257,7 +257,11 @@ const ModalForm = ({ onSubmit, fields }) => {
                       Object.keys(errors || {}).length !== 0 ||
                       imageRequired ||
                       !hasChanges ||
-                      isSubmitting
+                      isSubmitting ||
+                      // Check if any required fields are empty
+                      fields.some(
+                        field => field.required && !values[field.name]
+                      )
                     }
                   >
                     {isSubmitting ? 'Submitting...' : 'Submit'}

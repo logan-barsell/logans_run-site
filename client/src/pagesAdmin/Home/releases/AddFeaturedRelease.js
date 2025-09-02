@@ -13,7 +13,7 @@ const AddFeaturedRelease = ({ fetchReleases }) => {
       let coverImageUrl = '';
       if (fields.coverImage && fields.coverImage[0]) {
         coverImageUrl = await uploadImageToFirebase(fields.coverImage[0], {
-          onProgress: setUploadProgress,
+          onProgress: () => {}, // Pass empty function instead of progress tracking
         });
       }
       const payload = {

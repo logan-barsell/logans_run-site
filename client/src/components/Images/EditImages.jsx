@@ -18,7 +18,6 @@ const EditImages = ({
   imagesPosition = 'top', // 'top' or 'bottom'
 }) => {
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState({});
   const [selectedFiles, setSelectedFiles] = useState(null);
   const imageUploadRef = useRef();
 
@@ -26,11 +25,9 @@ const EditImages = ({
     const files = data.pic;
     if (!files || files.length === 0) return;
     setUploading(true);
-    setUploadProgress({});
     try {
-      await onUpload(files, setUploadProgress);
+      await onUpload(files, () => {}); // Pass empty function instead of setUploadProgress
       setUploading(false);
-      setUploadProgress({});
       if (
         imageUploadRef.current &&
         typeof imageUploadRef.current.clear === 'function'
@@ -40,23 +37,12 @@ const EditImages = ({
       setSelectedFiles(null);
     } catch (err) {
       setUploading(false);
-      setUploadProgress({});
     }
   };
 
   const getUploadButtonText = () => {
     if (!uploading) return uploadButtonText;
-    const totalFiles = selectedFiles ? selectedFiles.length : 0;
-    if (totalFiles === 0) return 'Uploading...';
-    const totalProgress = Object.values(uploadProgress).reduce(
-      (sum, progress) => sum + progress,
-      0
-    );
-    const averageProgress = totalProgress / totalFiles;
-    return `Uploading... ${String(Math.round(averageProgress)).replace(
-      '0',
-      'O'
-    )}%`;
+    return 'Uploading...';
   };
 
   const imagesGrid = (
@@ -123,6 +109,7 @@ const EditImages = ({
                 disabled={
                   uploading || !selectedFiles || selectedFiles.length === 0
                 }
+                loading={uploading}
                 variant='danger'
                 type='submit'
                 fullWidth
