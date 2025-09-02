@@ -6,6 +6,7 @@ const logger = require('../utils/logger');
 const {
   validateEmail,
   validatePassword,
+  validatePasswordDetailed,
   validatePhoneNumber,
 } = require('../utils/validation');
 const { generatePasswordHash } = require('../utils/hash');
@@ -227,11 +228,10 @@ async function authenticateUser(email, password) {
  */
 async function saveNewPassword(userId, newPassword) {
   try {
-    if (!validatePassword(newPassword)) {
-      throw new AppError(
-        'Password must have at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character.',
-        400
-      );
+    // Use detailed password validation for better error messages
+    const passwordValidation = validatePasswordDetailed(newPassword);
+    if (!passwordValidation.isValid) {
+      throw new AppError(passwordValidation.errors.join('. '), 400);
     }
     const passwordHash = await generatePasswordHash(newPassword);
 

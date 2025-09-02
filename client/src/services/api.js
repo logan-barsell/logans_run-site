@@ -1,5 +1,8 @@
 import axios from 'axios';
 import * as csrfService from './csrfService';
+import { refreshToken } from './authService';
+import { logout } from '../redux/actions/authActions';
+import { store } from '../redux/store';
 
 // You can set REACT_APP_API_BASE_URL in your .env file, or fallback to relative path
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
@@ -41,19 +44,36 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle CSRF errors
+// Response interceptor to handle CSRF errors and token refresh
 apiClient.interceptors.response.use(
   response => response,
-  error => {
+  async error => {
+    const originalRequest = error.config;
+
     // If CSRF token is invalid, clear it and retry once
     if (
       error.response?.status === 403 &&
       error.response?.data?.message?.includes('CSRF')
     ) {
       csrfService.clearToken();
+    }
 
-      // Optionally retry the request once with a new token
-      // For now, just clear the token and let the user retry
+    // Handle 401 errors - attempt token refresh
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // Attempt to refresh the token
+        await refreshToken();
+
+        // Retry the original request with new tokens
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        // Refresh failed, logout the user
+        console.error('Token refresh failed, logging out:', refreshError);
+        store.dispatch(logout());
+        return Promise.reject(refreshError);
+      }
     }
 
     return Promise.reject(error);

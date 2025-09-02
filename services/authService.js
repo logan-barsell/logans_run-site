@@ -27,14 +27,28 @@ const login = async options => {
     throw new AppError('Invalid email or password', 401);
   }
 
+  // Check if account is locked due to too many failed attempts
+  if (user.isAccountLocked()) {
+    const remainingTime = user.getLockoutTimeRemaining();
+    throw new AppError(
+      `Account is temporarily locked due to too many failed login attempts. Try again in ${remainingTime} minutes.`,
+      423 // Locked status code
+    );
+  }
+
   if (user.status === 'INACTIVE')
     throw new AppError('Account is inactive, please contact support', 403);
 
   const isAuthenticated = await bcrypt.compare(password, user.password);
 
   if (!isAuthenticated) {
+    // Handle failed login attempt
+    await user.handleFailedLogin();
     throw new AppError('Invalid email or password', 401);
   }
+
+  // Handle successful login (reset failed attempts)
+  await user.handleSuccessfulLogin();
 
   // Check if 2FA is enabled
   if (user.twoFactorEnabled) {
