@@ -3,7 +3,7 @@ import CustomModal from '../Modals/CustomModal';
 import Button from '../Button/Button';
 import { Envelope } from '../../components/icons';
 import { useAlert } from '../../contexts/AlertContext';
-import { signupNewsletter } from '../../services/contactService';
+import { signupNewsletter } from '../../services/newsletterService';
 
 const NewsletterModal = () => {
   const [email, setEmail] = useState('');

@@ -7,3 +7,4 @@ export * from './bioActions';
 export * from './contactActions';
 export * from './homeActions';
 export * from './musicActions';
+export * from './featuredContentActions';

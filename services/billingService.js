@@ -1,4 +1,5 @@
 const logger = require('../utils/logger');
+const { AppError } = require('../middleware/errorHandler');
 const admin = require('firebase-admin');
 const path = require('path');
 const serviceAccount = require(path.join(
@@ -36,7 +37,7 @@ try {
  */
 function checkStripeAvailable() {
   if (!stripe) {
-    throw new Error('Stripe is not configured');
+    throw new AppError('Stripe is not configured', 503);
   }
   return true;
 }
@@ -82,8 +83,11 @@ async function getProducts() {
 
     return productList;
   } catch (error) {
-    logger.error('Error fetching products:', error);
-    throw error;
+    logger.error('❌ Error fetching products:', error);
+    throw new AppError(
+      error.message || 'Error fetching products',
+      error.statusCode || 500
+    );
   }
 }
 
@@ -98,45 +102,31 @@ async function createCheckoutSession(products) {
     await Promise.all(
       products.map(async product => {
         const price = await stripe.prices.retrieve(product.price);
-        const findProduct = await stripe.products.retrieve(price.product);
         productlist.push({
+          price: product.price,
           quantity: product.quantity,
-          price_data: {
-            unit_amount: price.unit_amount,
-            currency: 'usd',
-            product_data: {
-              name: `${findProduct.name} | ${product.size} `,
-              description: findProduct.description,
-              images: findProduct.images,
-              metadata: {
-                size: product.size,
-              },
-            },
-          },
         });
       })
     );
 
     const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
       line_items: productlist,
-      shipping_address_collection: {
-        allowed_countries: ['US'],
-      },
-      shipping_options: [
-        {
-          shipping_rate: process.env.SHIPPING_RATE_ID,
-        },
-      ],
       mode: 'payment',
-      success_url: `${process.env.STRIPE_REDIRECT_DOMAIN}/merch?success=true`,
-      cancel_url: `${process.env.STRIPE_REDIRECT_DOMAIN}/merch?canceled=true`,
+      success_url: `${process.env.CLIENT_URL}/success`,
+      cancel_url: `${process.env.CLIENT_URL}/cancel`,
     });
 
-    logger.info('Checkout session created successfully');
     return session;
   } catch (error) {
-    logger.error('Error creating checkout session:', error);
-    throw error;
+    logger.error('❌ Error creating checkout session:', error);
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError(
+      error.message || 'Error creating checkout session',
+      error.statusCode || 500
+    );
   }
 }
 
@@ -147,13 +137,20 @@ async function getShippingRate() {
   try {
     checkStripeAvailable();
 
-    const shippingRate = await stripe.shippingRates.retrieve(
-      process.env.SHIPPING_RATE_ID
-    );
-    return shippingRate;
+    const shippingRate = await stripe.shippingRates.list({
+      limit: 1,
+    });
+
+    return shippingRate.data[0] || null;
   } catch (error) {
-    logger.error('Error fetching shipping rate:', error);
-    throw error;
+    logger.error('❌ Error fetching shipping rate:', error);
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError(
+      error.message || 'Error fetching shipping rate',
+      error.statusCode || 500
+    );
   }
 }
 
@@ -164,135 +161,84 @@ async function createProduct(productData) {
   try {
     checkStripeAvailable();
 
-    const { name, description, sizes, price, images = [] } = productData;
-
-    if (!name || !price) {
-      throw new Error('Product name and price are required');
+    if (!productData.name || !productData.price) {
+      throw new AppError('Product name and price are required', 400);
     }
 
     const product = await stripe.products.create({
-      name,
-      description,
-      images,
-      metadata: { sizes },
-      default_price_data: {
-        unit_amount: price,
-        currency: 'usd',
-      },
+      name: productData.name,
+      description: productData.description || '',
+      images: productData.images || [],
     });
 
-    logger.info('New product created successfully');
-    return { product, price: product.default_price };
+    const price = await stripe.prices.create({
+      product: product.id,
+      unit_amount: Math.round(productData.price * 100), // Convert to cents
+      currency: 'usd',
+    });
+
+    return { product, price };
   } catch (error) {
-    logger.error('Error creating product:', error);
-    throw error;
+    logger.error('❌ Error creating product:', error);
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError(
+      error.message || 'Error creating product',
+      error.statusCode || 500
+    );
   }
 }
 
 /**
  * Update an existing product
  */
-async function updateProduct(id, productData) {
+async function updateProduct(productId, updateData) {
   try {
     checkStripeAvailable();
 
-    if (!id) {
-      throw new Error('Product ID is required');
+    if (!productId) {
+      throw new AppError('Product ID is required', 400);
     }
 
-    const { name, description, images, sizes, oldImageUrl } = productData;
-    const updateData = {};
-    if (name) updateData.name = name;
-    if (description) updateData.description = description;
-    if (images) updateData.images = images;
-    if (sizes) updateData.metadata = { sizes };
-
-    const updatedProduct = await stripe.products.update(id, updateData);
-
-    // If oldImageUrl is provided and different from new image, delete old image from Firebase
-    if (oldImageUrl && images && images[0] && oldImageUrl !== images[0]) {
-      const match = oldImageUrl.match(/\/o\/([^?]+)/);
-      if (match && match[1]) {
-        const filePath = decodeURIComponent(match[1]);
-        await bucket
-          .file(filePath)
-          .delete()
-          .catch(err => {
-            logger.error('Firebase delete error:', err);
-          });
-      } else {
-        logger.warn(
-          'Could not extract Firebase file path from URL:',
-          oldImageUrl
-        );
-      }
-    }
-
-    logger.info(`Product updated successfully: ${id}`);
-    return updatedProduct;
+    const product = await stripe.products.update(productId, updateData);
+    return product;
   } catch (error) {
-    logger.error('Error updating product:', error);
-    throw error;
+    logger.error('❌ Error updating product:', error);
+    throw new AppError(
+      error.message || 'Error updating product',
+      error.statusCode || 500
+    );
   }
 }
 
 /**
- * Deactivate a product and its prices
+ * Delete a product
  */
-async function deactivateProduct(id, imageUrl = null) {
+async function deleteProduct(productId) {
   try {
     checkStripeAvailable();
 
-    if (!id) {
-      throw new Error('Product ID is required');
+    if (!productId) {
+      throw new AppError('Product ID is required', 400);
     }
 
-    // Set product as inactive
-    const product = await stripe.products.update(id, {
-      active: false,
-    });
-
-    // Get all prices for this product
-    const prices = await stripe.prices.list({ product: id });
-
-    // Set all prices as inactive
-    await Promise.all(
-      prices.data.map(price =>
-        stripe.prices.update(price.id, { active: false })
-      )
-    );
-
-    // Optionally delete image from Firebase if image URL is provided
-    if (imageUrl) {
-      const match = imageUrl.match(/\/o\/([^?]+)/);
-      if (match && match[1]) {
-        const filePath = decodeURIComponent(match[1]);
-        logger.info('Attempting to delete Firebase file:', filePath);
-        await bucket
-          .file(filePath)
-          .delete()
-          .catch(err => {
-            logger.error('Firebase delete error:', err);
-          });
-      } else {
-        logger.warn('Could not extract Firebase file path from URL:', imageUrl);
-      }
-    }
-
-    logger.info(`Product deactivated successfully: ${id}`);
-    return { product, prices: prices.data };
+    const product = await stripe.products.del(productId);
+    return product;
   } catch (error) {
-    logger.error('Error deactivating product:', error);
-    throw error;
+    logger.error('❌ Error deleting product:', error);
+    throw new AppError(
+      error.message || 'Error deleting product',
+      error.statusCode || 500
+    );
   }
 }
 
 module.exports = {
-  checkStripeAvailable,
   getProducts,
   createCheckoutSession,
   getShippingRate,
   createProduct,
   updateProduct,
-  deactivateProduct,
+  deleteProduct,
 };

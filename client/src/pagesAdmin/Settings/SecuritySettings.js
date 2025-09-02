@@ -149,7 +149,7 @@ const SecuritySettings = ({ currentSubTab }) => {
   };
 
   const formatDate = dateString => {
-    return new Date(dateString).toLocaleString();
+    return dateString ? new Date(dateString).toLocaleString() : 'N/A';
   };
 
   const getDeviceIcon = device => {

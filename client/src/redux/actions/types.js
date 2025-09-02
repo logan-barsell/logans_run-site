@@ -37,6 +37,15 @@ export const FETCH_VIDEOS = 'fetch_videos';
 export const FETCH_VIDEOS_LOADING = 'fetch_videos_loading';
 export const FETCH_VIDEOS_ERROR = 'fetch_videos_error';
 
+// Featured Content - Releases & Videos
+export const FETCH_FEATURED_RELEASES = 'fetch_featured_releases';
+export const FETCH_FEATURED_RELEASES_LOADING =
+  'fetch_featured_releases_loading';
+export const FETCH_FEATURED_RELEASES_ERROR = 'fetch_featured_releases_error';
+export const FETCH_FEATURED_VIDEOS = 'fetch_featured_videos';
+export const FETCH_FEATURED_VIDEOS_LOADING = 'fetch_featured_videos_loading';
+export const FETCH_FEATURED_VIDEOS_ERROR = 'fetch_featured_videos_error';
+
 // Bio / Members
 export const FETCH_BIO = 'fetch_bio';
 export const FETCH_BIO_LOADING = 'fetch_bio_loading';

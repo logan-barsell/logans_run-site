@@ -47,7 +47,7 @@ const EditFeaturedRelease = ({ release, fetchReleases }) => {
       const id = release._id || release.id;
       await updateFeaturedRelease(id, payload);
       showSuccess('Featured release updated successfully');
-      fetchReleases();
+      fetchReleases(); // This now calls the Redux action
     } catch (error) {
       showError('Failed to update featured release');
     }

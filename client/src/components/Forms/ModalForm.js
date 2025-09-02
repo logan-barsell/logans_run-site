@@ -1,6 +1,6 @@
 import './modalForm.css';
 
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Form } from 'react-final-form';
 
 import RenderField from './RenderField';
@@ -23,6 +23,23 @@ const ModalForm = ({ onSubmit, fields }) => {
 
   // State to track if form has meaningful changes
   const [hasChanges, setHasChanges] = useState(false);
+
+  // Ref to track if component is mounted
+  const isMountedRef = useRef(true);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Safe state setter that only updates if component is mounted
+  const safeSetState = useCallback((setter, value) => {
+    if (isMountedRef.current) {
+      setter(value);
+    }
+  }, []);
 
   // Extract initial values from fields
   const initialValues = fields.reduce((acc, field) => {
@@ -48,14 +65,47 @@ const ModalForm = ({ onSubmit, fields }) => {
 
   // Deep comparison function for form values
   const compareValues = useCallback((initial, current) => {
+    // Handle Date objects - compare by timestamp
+    if (initial instanceof Date && current instanceof Date) {
+      return initial.getTime() === current.getTime();
+    }
+
+    // Handle case where one is Date and other isn't
+    if (initial instanceof Date || current instanceof Date) {
+      return false;
+    }
+
+    // Handle null/undefined cases
+    if (initial === null && current === null) return true;
+    if (initial === undefined && current === undefined) return true;
+    if (initial === null || current === null) return false;
+    if (initial === undefined || current === undefined) return false;
+
+    // Handle different types
     if (typeof initial !== typeof current) {
       return false;
     }
 
-    if (typeof initial !== 'object' || initial === null || current === null) {
+    // Handle primitive types
+    if (typeof initial !== 'object') {
+      // Handle numeric string conversion for number inputs
+      if (typeof initial === 'number' && typeof current === 'string') {
+        const currentAsNumber = Number(current);
+        if (!isNaN(currentAsNumber)) {
+          return initial === currentAsNumber;
+        }
+      }
+      if (typeof current === 'number' && typeof initial === 'string') {
+        const initialAsNumber = Number(initial);
+        if (!isNaN(initialAsNumber)) {
+          return initialAsNumber === current;
+        }
+      }
+
       return initial === current;
     }
 
+    // Handle arrays
     if (Array.isArray(initial) !== Array.isArray(current)) {
       return false;
     }
@@ -69,6 +119,7 @@ const ModalForm = ({ onSubmit, fields }) => {
       );
     }
 
+    // Handle objects
     const initialKeys = Object.keys(initial);
     const currentKeys = Object.keys(current);
 
@@ -102,9 +153,9 @@ const ModalForm = ({ onSubmit, fields }) => {
         ref.current.clear();
       }
     });
-    setImageValues({});
-    setIsSubmitting(false);
-    setHasChanges(false);
+    safeSetState(setImageValues, {});
+    safeSetState(setIsSubmitting, false);
+    safeSetState(setHasChanges, false);
   };
 
   const closeModal = () => {
@@ -122,10 +173,28 @@ const ModalForm = ({ onSubmit, fields }) => {
         modalElement.classList.remove('show');
         modalElement.style.display = 'none';
         document.body.classList.remove('modal-open');
-        const backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-          backdrop.remove();
-        }
+        // Try to find and remove backdrop by class
+        const allBackdrops = document.querySelectorAll('.modal-backdrop');
+        allBackdrops.forEach(backdrop => backdrop.remove());
+      }
+    } else {
+      // Modal element is gone but backdrop remains - aggressive cleanup needed
+
+      // Try to find and remove backdrop by class
+      const allBackdrops = document.querySelectorAll('.modal-backdrop');
+      allBackdrops.forEach(backdrop => backdrop.remove());
+
+      // Clean up body classes and styles that prevent scrolling
+      document.body.classList.remove('modal-open');
+      document.body.classList.remove('modal-backdrop');
+
+      // Remove inline styles that Bootstrap adds to prevent scrolling
+      const bodyStyle = document.body.style;
+      if (bodyStyle.overflow === 'hidden') {
+        bodyStyle.overflow = '';
+      }
+      if (bodyStyle.paddingRight) {
+        bodyStyle.paddingRight = '';
       }
     }
   };
@@ -142,7 +211,7 @@ const ModalForm = ({ onSubmit, fields }) => {
           // Update hasChanges state if it changed
           if (changed !== hasChanges) {
             // Use requestAnimationFrame to defer the state update
-            requestAnimationFrame(() => setHasChanges(changed));
+            requestAnimationFrame(() => safeSetState(setHasChanges, changed));
           }
 
           const handleFormSubmit = async event => {
@@ -152,10 +221,13 @@ const ModalForm = ({ onSubmit, fields }) => {
               if (error) {
                 return error;
               }
+              // Success - clean up form first
               onFormRestart(form);
-              closeModal(); // Close modal on successful submission
+
+              // Close modal
+              closeModal();
             } finally {
-              setIsSubmitting(false);
+              safeSetState(setIsSubmitting, false);
             }
           };
 

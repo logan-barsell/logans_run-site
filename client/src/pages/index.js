@@ -20,6 +20,7 @@ import Signin from './Auth/Signin';
 import ForgotPassword from './Auth/ForgotPassword';
 import ResetPassword from './Auth/ResetPassword';
 import TwoFactorVerification from './Auth/TwoFactorVerification';
+import Unsubscribe from './Unsubscribe';
 import NotFound from './NotFound';
 import history from '../history';
 import { ActiveContext } from '../contexts/ActiveContext';
@@ -126,6 +127,11 @@ const UserPages = () => {
               path='/2fa-verification'
               exact
               element={<TwoFactorVerification />}
+            />
+            <Route
+              path='/unsubscribe'
+              exact
+              element={<Unsubscribe />}
             />
             <Route
               path='*'

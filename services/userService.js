@@ -10,7 +10,6 @@ const {
 } = require('../utils/validation');
 const { generatePasswordHash } = require('../utils/hash');
 const { AppError } = require('../middleware/errorHandler');
-const SessionService = require('./sessionService');
 const TokenService = require('./tokenService');
 
 const baseFields = {

@@ -1,5 +1,6 @@
 const FeaturedVideoService = require('../services/featuredVideoService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 async function getFeaturedVideos(req, res, next) {
   try {
@@ -9,7 +10,8 @@ async function getFeaturedVideos(req, res, next) {
       data: videos,
     });
   } catch (error) {
-    next(new AppError(error.message, 500));
+    logger.error('❌ Failed to fetch featured videos:', error);
+    next(error);
   }
 }
 
@@ -21,11 +23,8 @@ async function addFeaturedVideo(req, res, next) {
       data: video,
     });
   } catch (error) {
-    if (error.message === 'releaseDate is required') {
-      next(new AppError(error.message, 400));
-    } else {
-      next(new AppError(error.message, 500));
-    }
+    logger.error('❌ Failed to add featured video:', error);
+    next(error);
   }
 }
 
@@ -40,13 +39,8 @@ async function updateFeaturedVideo(req, res, next) {
       data: video,
     });
   } catch (error) {
-    if (error.message === 'releaseDate is required') {
-      next(new AppError(error.message, 400));
-    } else if (error.message === 'Featured video not found') {
-      next(new AppError(error.message, 404));
-    } else {
-      next(new AppError(error.message, 500));
-    }
+    logger.error('❌ Failed to update featured video:', error);
+    next(error);
   }
 }
 
@@ -58,11 +52,8 @@ async function deleteFeaturedVideo(req, res, next) {
       message: 'Featured video deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Featured video not found') {
-      next(new AppError(error.message, 404));
-    } else {
-      next(new AppError(error.message, 500));
-    }
+    logger.error('❌ Failed to delete featured video:', error);
+    next(error);
   }
 }
 

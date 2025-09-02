@@ -6,7 +6,7 @@ import CurrentShows from './shows/CurrentShows';
 import CarouselEdit from './carousel/CarouselEdit';
 import FeaturedVideosEdit from './videos/FeaturedVideosEdit';
 import FeaturedReleasesEdit from './releases/FeaturedReleases';
-import { PageTitle, Divider } from '../../components/Header';
+import { PageTitle } from '../../components/Header';
 
 const HomeEdit = () => {
   return (

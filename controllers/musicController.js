@@ -1,5 +1,6 @@
 const MusicService = require('../services/musicService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Add a new Spotify player
@@ -12,19 +13,8 @@ async function addPlayer(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Player data is required') {
-      return next(new AppError('Player data is required', 400));
-    }
-    if (
-      error.message.includes('URL is required') ||
-      error.message.includes('URL cannot be empty') ||
-      error.message.includes('Invalid URL format') ||
-      error.message.includes('Not a valid Spotify URL') ||
-      error.message.includes('URLs are not supported')
-    ) {
-      return next(new AppError(error.message, 400));
-    }
-    next(new AppError('Failed to add Spotify player', 500));
+    logger.error('❌ Failed to add Spotify player:', error);
+    next(error);
   }
 }
 
@@ -39,22 +29,8 @@ async function updatePlayer(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Player data and ID are required') {
-      return next(new AppError('Player data and ID are required', 400));
-    }
-    if (error.message === 'Player not found') {
-      return next(new AppError('Player not found', 404));
-    }
-    if (
-      error.message.includes('URL is required') ||
-      error.message.includes('URL cannot be empty') ||
-      error.message.includes('Invalid URL format') ||
-      error.message.includes('Not a valid Spotify URL') ||
-      error.message.includes('URLs are not supported')
-    ) {
-      return next(new AppError(error.message, 400));
-    }
-    next(new AppError('Failed to update Spotify player', 500));
+    logger.error('❌ Failed to update Spotify player:', error);
+    next(error);
   }
 }
 
@@ -69,13 +45,8 @@ async function deletePlayer(req, res, next) {
       message: 'Player deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Player ID is required') {
-      return next(new AppError('Player ID is required', 400));
-    }
-    if (error.message === 'Player not found') {
-      return next(new AppError('Player not found', 404));
-    }
-    next(new AppError('Failed to delete Spotify player', 500));
+    logger.error('❌ Failed to delete Spotify player:', error);
+    next(error);
   }
 }
 
@@ -90,13 +61,8 @@ async function getPlayer(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Player ID is required') {
-      return next(new AppError('Player ID is required', 400));
-    }
-    if (error.message === 'Player not found') {
-      return next(new AppError('Player not found', 404));
-    }
-    next(new AppError('Failed to fetch Spotify player', 500));
+    logger.error('❌ Failed to fetch Spotify player:', error);
+    next(error);
   }
 }
 
@@ -111,7 +77,8 @@ async function getPlayers(req, res, next) {
       data: players,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch Spotify players', 500));
+    logger.error('❌ Failed to fetch Spotify players:', error);
+    next(error);
   }
 }
 

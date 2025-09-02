@@ -1,5 +1,6 @@
 const ShowsSettingsService = require('../services/showsSettingsService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Get shows settings
@@ -12,7 +13,8 @@ async function getShowsSettings(req, res, next) {
       data: settings,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch shows settings', 500));
+    logger.error('❌ Failed to fetch shows settings:', error);
+    next(error);
   }
 }
 
@@ -28,10 +30,8 @@ async function updateShowsSettings(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Shows settings data is required') {
-      return next(new AppError('Shows settings data is required', 400));
-    }
-    next(new AppError('Failed to update shows settings', 500));
+    logger.error('❌ Failed to update shows settings:', error);
+    next(error);
   }
 }
 

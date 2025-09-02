@@ -1,6 +1,7 @@
 const memberModel = require('../models/Member');
 const Bio = require('../models/BioText');
 const logger = require('../utils/logger');
+const { AppError } = require('../middleware/errorHandler');
 
 /**
  * Get bio information
@@ -10,26 +11,45 @@ async function getBio() {
     const bio = await Bio.find();
     return bio;
   } catch (error) {
-    logger.error('Error fetching bio:', error);
-    throw error;
+    logger.error('❌ Error fetching bio:', error);
+    throw new AppError(
+      error.message || 'Error fetching bio information',
+      error.statusCode || 500
+    );
   }
 }
 
 /**
- * Update bio content
+ * Update bio content and image settings
  */
-async function updateBio(content) {
+async function updateBio(bioData) {
   try {
-    if (!content) {
-      throw new Error('Bio content is required');
+    if (!bioData) {
+      throw new AppError('Bio data is required', 400);
     }
 
-    await Bio.updateOne({ name: 'bio' }, { text: content }, { upsert: true });
-    logger.info('Bio updated successfully');
-    return content;
+    const updateData = {
+      text: bioData.text || bioData.data,
+    };
+
+    // Add image type and custom image URL if provided
+    if (bioData.imageType) {
+      updateData.imageType = bioData.imageType;
+    }
+
+    if (bioData.customImageUrl) {
+      updateData.customImageUrl = bioData.customImageUrl;
+    }
+
+    await Bio.updateOne({ name: 'bio' }, updateData, { upsert: true });
+    logger.info('✅ Bio updated successfully');
+    return updateData;
   } catch (error) {
-    logger.error('Error updating bio:', error);
-    throw error;
+    logger.error('❌ Error updating bio:', error);
+    throw new AppError(
+      error.message || 'Error updating bio information',
+      error.statusCode || 500
+    );
   }
 }
 
@@ -39,7 +59,7 @@ async function updateBio(content) {
 async function addMember(memberData) {
   try {
     if (!memberData || Object.keys(memberData).length === 0) {
-      throw new Error('Member data is required');
+      throw new AppError('Member data is required', 400);
     }
 
     const newMember = {};
@@ -50,11 +70,14 @@ async function addMember(memberData) {
     const member = new memberModel(newMember);
     await member.save();
 
-    logger.info('New member added successfully');
+    logger.info('✅ New member added successfully');
     return member;
   } catch (error) {
-    logger.error('Error adding member:', error);
-    throw error;
+    logger.error('❌ Error adding member:', error);
+    throw new AppError(
+      error.message || 'Error adding member',
+      error.statusCode || 500
+    );
   }
 }
 
@@ -64,20 +87,23 @@ async function addMember(memberData) {
 async function deleteMember(id) {
   try {
     if (!id) {
-      throw new Error('Member ID is required');
+      throw new AppError('Member ID is required', 400);
     }
 
     const deletedMember = await memberModel.findOneAndDelete({ _id: id });
 
     if (!deletedMember) {
-      throw new Error('Member not found');
+      throw new AppError('Member not found', 404);
     }
 
-    logger.info(`Member deleted successfully: ${id}`);
+    logger.info(`✅ Member deleted successfully: ${id}`);
     return deletedMember;
   } catch (error) {
-    logger.error('Error deleting member:', error);
-    throw error;
+    logger.error('❌ Error deleting member:', error);
+    throw new AppError(
+      error.message || 'Error deleting member',
+      error.statusCode || 500
+    );
   }
 }
 
@@ -86,47 +112,47 @@ async function deleteMember(id) {
  */
 async function getMembers() {
   try {
-    const members = await memberModel.find({});
+    const members = await memberModel.find().sort({ order: 1 });
     return members;
   } catch (error) {
-    logger.error('Error fetching members:', error);
-    throw error;
+    logger.error('❌ Error fetching members:', error);
+    throw new AppError(
+      error.message || 'Error fetching members',
+      error.statusCode || 500
+    );
   }
 }
 
 /**
  * Update a member by ID
  */
-async function updateMember(id, memberData) {
+async function updateMember(id, updateData) {
   try {
     if (!id) {
-      throw new Error('Member ID is required');
+      throw new AppError('Member ID is required', 400);
     }
 
-    if (!memberData || Object.keys(memberData).length === 0) {
-      throw new Error('Member update data is required');
+    if (!updateData || Object.keys(updateData).length === 0) {
+      throw new AppError('Member update data is required', 400);
     }
 
-    const updatedMember = {};
-    for (let key in memberData) {
-      updatedMember[key] = memberData[key];
+    const updatedMember = await memberModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedMember) {
+      throw new AppError('Member not found', 404);
     }
 
-    const member = await memberModel.findOneAndUpdate(
-      { _id: updatedMember.id },
-      updatedMember,
-      { new: true }
-    );
-
-    if (!member) {
-      throw new Error('Member not found');
-    }
-
-    logger.info(`Member updated successfully: ${id}`);
-    return member;
+    logger.info(`✅ Member updated successfully: ${id}`);
+    return updatedMember;
   } catch (error) {
-    logger.error('Error updating member:', error);
-    throw error;
+    logger.error('❌ Error updating member:', error);
+    throw new AppError(
+      error.message || 'Error updating member',
+      error.statusCode || 500
+    );
   }
 }
 

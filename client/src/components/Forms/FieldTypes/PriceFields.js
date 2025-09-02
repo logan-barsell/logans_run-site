@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Field } from 'react-final-form';
 
 // const required = value => (value ? undefined : 'Required');
 
 const PriceFields = ({ label, name, placeholder, initialValues }) => {
-  const doorval = initialValues ? initialValues.doorprice : '';
-  const advval = initialValues ? initialValues.advprice : '';
+  const memoizedInitialValues = useMemo(() => {
+    return {
+      doorprice: initialValues ? initialValues.doorprice : '',
+      advprice: initialValues ? initialValues.advprice : '',
+    };
+  }, [initialValues]);
 
   return (
     <div className='form-group'>
@@ -15,9 +19,9 @@ const PriceFields = ({ label, name, placeholder, initialValues }) => {
           name={name.doorprice}
           placeholder={placeholder.doorprice}
           // validate={required}
-          initialValue={doorval}
+          initialValue={memoizedInitialValues.doorprice}
         >
-          {({ input, meta, name, placeholder }) => (
+          {({ input, meta, name: fieldName, placeholder }) => (
             <>
               <span
                 className='input-group-text'
@@ -29,9 +33,9 @@ const PriceFields = ({ label, name, placeholder, initialValues }) => {
                 className={`form-control${
                   meta.error && meta.touched ? ' error' : ''
                 }`}
-                id={name}
+                id={fieldName}
                 type='text'
-                name={name}
+                name={fieldName}
                 placeholder={placeholder}
                 {...input}
                 // required
@@ -44,9 +48,9 @@ const PriceFields = ({ label, name, placeholder, initialValues }) => {
           name={name.advprice}
           placeholder={placeholder.advprice}
           // validate={required}
-          initialValue={advval}
+          initialValue={memoizedInitialValues.advprice}
         >
-          {({ input, meta, name, placeholder }) => (
+          {({ input, meta, name: fieldName, placeholder }) => (
             <>
               <span
                 className='input-group-text'
@@ -58,9 +62,9 @@ const PriceFields = ({ label, name, placeholder, initialValues }) => {
                 className={`form-control${
                   meta.error && meta.touched ? ' error' : ''
                 }`}
-                id={name}
+                id={fieldName}
                 type='text'
-                name={name}
+                name={fieldName}
                 placeholder={placeholder}
                 {...input}
                 // required

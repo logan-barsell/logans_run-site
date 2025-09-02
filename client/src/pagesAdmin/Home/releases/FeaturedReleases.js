@@ -1,32 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import './featuredReleases.css';
-import { getFeaturedReleases } from '../../../services/featuredContentService';
+import { fetchFeaturedReleases } from '../../../redux/actions';
 import { useAlert } from '../../../contexts/AlertContext';
 import AddFeaturedRelease from './AddFeaturedRelease';
 import EditFeaturedRelease from './EditFeaturedRelease';
 import DeleteFeaturedRelease from './DeleteFeaturedRelease';
-import { PageTitle, Divider, NoContent } from '../../../components/Header';
+import { PageTitle, NoContent } from '../../../components/Header';
 
-const FeaturedReleasesEdit = () => {
+const FeaturedReleasesEdit = ({ fetchFeaturedReleases, featuredReleases }) => {
   const { showError } = useAlert();
-  const [releases, setReleases] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchReleases = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await getFeaturedReleases();
-      setReleases(data);
-    } catch (err) {
-      showError('Failed to load featured releases');
-    }
-    setLoading(false);
-  }, [showError]);
+  const { data: releases, loading, error } = featuredReleases;
 
   useEffect(() => {
-    fetchReleases();
-  }, [fetchReleases]);
+    fetchFeaturedReleases();
+  }, [fetchFeaturedReleases]);
+
+  // Handle errors from Redux state
+  useEffect(() => {
+    if (error) {
+      showError('Failed to load featured releases');
+    }
+  }, [error, showError]);
 
   return (
     <div
@@ -34,7 +30,7 @@ const FeaturedReleasesEdit = () => {
       className='mb-4 container'
     >
       <PageTitle divider>Featured Releases</PageTitle>
-      <AddFeaturedRelease fetchReleases={fetchReleases} />
+      <AddFeaturedRelease fetchReleases={fetchFeaturedReleases} />
       {loading ? (
         <div
           className='d-flex justify-content-center align-items-center'
@@ -75,11 +71,11 @@ const FeaturedReleasesEdit = () => {
               <div className='buttons d-grid gap-1'>
                 <EditFeaturedRelease
                   release={release}
-                  fetchReleases={fetchReleases}
+                  fetchReleases={fetchFeaturedReleases}
                 />
                 <DeleteFeaturedRelease
                   release={release}
-                  fetchReleases={fetchReleases}
+                  fetchReleases={fetchFeaturedReleases}
                 />
               </div>
             </div>
@@ -90,4 +86,15 @@ const FeaturedReleasesEdit = () => {
   );
 };
 
-export default FeaturedReleasesEdit;
+const mapStateToProps = state => ({
+  featuredReleases: state.featuredReleases,
+});
+
+const mapDispatchToProps = {
+  fetchFeaturedReleases,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FeaturedReleasesEdit);

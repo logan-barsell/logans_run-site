@@ -1,5 +1,6 @@
 const MerchConfigService = require('../services/merchConfigService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Get merch config (public endpoint)
@@ -12,7 +13,8 @@ async function getMerchConfig(req, res, next) {
       data: merchConfig,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch merch config', 500));
+    logger.error('❌ Failed to fetch merch config:', error);
+    next(error);
   }
 }
 
@@ -27,7 +29,8 @@ async function getMerchConfigAdmin(req, res, next) {
       data: merchConfig,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch merch config', 500));
+    logger.error('❌ Failed to fetch merch config admin:', error);
+    next(error);
   }
 }
 
@@ -43,10 +46,8 @@ async function updateMerchConfig(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Merch config data is required') {
-      return next(new AppError('Merch config data is required', 400));
-    }
-    next(new AppError('Failed to update merch config', 500));
+    logger.error('❌ Failed to update merch config:', error);
+    next(error);
   }
 }
 
@@ -62,7 +63,8 @@ async function deleteMerchConfig(req, res, next) {
       deletedCount: result.deletedCount,
     });
   } catch (error) {
-    next(new AppError('Failed to delete merch config', 500));
+    logger.error('❌ Failed to delete merch config:', error);
+    next(error);
   }
 }
 

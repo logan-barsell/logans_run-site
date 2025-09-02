@@ -35,10 +35,12 @@ const AdminPages = () => {
 
   const currentUrl = location.pathname;
 
-  let initialState;
-  for (let i = 0; i < routes.length - 1; i++) {
+  let initialState = 0; // Default to Home (index 0)
+  for (let i = 0; i < routes.length; i++) {
+    // Check all routes
     if (routes[i].value === currentUrl) {
       initialState = i;
+      break; // Found the route, no need to continue
     }
   }
 

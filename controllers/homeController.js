@@ -1,5 +1,6 @@
 const HomeService = require('../services/homeService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Get all home images
@@ -12,7 +13,8 @@ async function getHomeImages(req, res, next) {
       data: images,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch home images', 500));
+    logger.error('❌ Failed to fetch home images:', error);
+    next(error);
   }
 }
 
@@ -27,13 +29,8 @@ async function removeImage(req, res, next) {
       message: 'Image deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Image ID is required') {
-      return next(new AppError('Image ID is required', 400));
-    }
-    if (error.message === 'Image not found') {
-      return next(new AppError('Image not found', 404));
-    }
-    next(new AppError('Failed to delete image', 500));
+    logger.error('❌ Failed to delete home image:', error);
+    next(error);
   }
 }
 
@@ -48,13 +45,8 @@ async function addHomeImage(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Image data is required') {
-      return next(new AppError('Image data is required', 400));
-    }
-    if (error.message === 'At least one image is required') {
-      return next(new AppError('At least one image is required', 400));
-    }
-    next(new AppError('Failed to add home image', 500));
+    logger.error('❌ Failed to add home image:', error);
+    next(error);
   }
 }
 
@@ -69,10 +61,8 @@ async function addShow(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Show data is required') {
-      return next(new AppError('Show data is required', 400));
-    }
-    next(new AppError('Failed to add show', 500));
+    logger.error('❌ Failed to add show:', error);
+    next(error);
   }
 }
 
@@ -87,7 +77,8 @@ async function getShows(req, res, next) {
       data: shows,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch shows', 500));
+    logger.error('❌ Failed to fetch shows:', error);
+    next(error);
   }
 }
 
@@ -102,16 +93,8 @@ async function updateShow(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Show ID is required') {
-      return next(new AppError('Show ID is required', 400));
-    }
-    if (error.message === 'Show update data is required') {
-      return next(new AppError('Show update data is required', 400));
-    }
-    if (error.message === 'Show not found') {
-      return next(new AppError('Show not found', 404));
-    }
-    next(new AppError('Failed to update show', 500));
+    logger.error('❌ Failed to update show:', error);
+    next(error);
   }
 }
 
@@ -126,13 +109,8 @@ async function deleteShow(req, res, next) {
       message: 'Show deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Show ID is required') {
-      return next(new AppError('Show ID is required', 400));
-    }
-    if (error.message === 'Show not found') {
-      return next(new AppError('Show not found', 404));
-    }
-    next(new AppError('Failed to delete show', 500));
+    logger.error('❌ Failed to delete show:', error);
+    next(error);
   }
 }
 

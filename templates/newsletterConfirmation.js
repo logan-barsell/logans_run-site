@@ -7,9 +7,10 @@
  *
  * @param {string} bandName - The band's name
  * @param {string} email - The subscriber's email
+ * @param {string} unsubscribeToken - Token for unsubscribing
  * @returns {Object} Template with subject and HTML
  */
-const newsletterConfirmation = (bandName, email) => ({
+const newsletterConfirmation = (bandName, email, unsubscribeToken = '') => ({
   subject: `You're In The Loop - ${bandName} Newsletter`,
   html: `
     <!DOCTYPE html>
@@ -30,6 +31,17 @@ const newsletterConfirmation = (bandName, email) => ({
         .highlight { background: #e8f5e8; border-left: 4px solid #27ae60; padding: 15px; margin: 20px 0; color: #155724 !important; }
         .highlight p { color: #155724 !important; }
         .highlight strong { color: #155724 !important; }
+        .unsubscribe {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid #dee2e6;
+          font-size: 12px;
+          color: #999;
+        }
+        .unsubscribe a {
+          color: #999;
+          text-decoration: underline;
+        }
       </style>
     </head>
     <body>
@@ -63,6 +75,21 @@ const newsletterConfirmation = (bandName, email) => ({
         <div class="footer">
           <p>&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
           <p>This newsletter is powered by <strong>Bandsyte</strong> - Professional band websites.</p>
+          ${
+            unsubscribeToken
+              ? `
+          <div class="unsubscribe">
+            <p>
+              <a href="${
+                process.env.SITE_URL || 'https://yourbandsite.com'
+              }/unsubscribe?token=${unsubscribeToken}">
+                Unsubscribe from these notifications
+              </a>
+            </p>
+          </div>
+          `
+              : ''
+          }
         </div>
       </div>
     </body>

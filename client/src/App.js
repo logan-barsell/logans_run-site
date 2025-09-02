@@ -82,7 +82,12 @@ function App() {
               />
             </Helmet>
             <AuthWrapper>
-              {({ authenticated }) => (authenticated ? <Admin /> : <User />)}
+              {({ authenticated, authLoading }) => {
+                if (authLoading) {
+                  return null;
+                }
+                return authenticated ? <Admin /> : <User />;
+              }}
             </AuthWrapper>
           </>
         </NavHeightProvider>

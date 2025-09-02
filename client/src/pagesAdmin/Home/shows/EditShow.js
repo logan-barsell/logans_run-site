@@ -43,9 +43,9 @@ const EditShow = ({ show, fetchShows }) => {
         poster: posterUrl,
         venue: fields.venue,
         location: fields.location,
-        date: fields.date,
-        doors: fields.doors,
-        showtime: fields.showtime,
+        date: fields.date.getTime(),
+        doors: fields.doors.getTime(),
+        showtime: fields.showtime.getTime(),
         doorprice: fields.doorprice,
         advprice: fields.advprice,
         tixlink: fields.tixlink,
@@ -53,6 +53,8 @@ const EditShow = ({ show, fetchShows }) => {
 
       await updateShowService(id, updatedShow);
       showSuccess('Show updated successfully!');
+
+      // Fetch updated shows data
       fetchShows();
     } catch (err) {
       console.error(err);
@@ -62,6 +64,7 @@ const EditShow = ({ show, fetchShows }) => {
 
   return (
     <EditItem
+      key={`edit-show-${show._id}-${show.venue}-${show.location}-${show.doorprice}-${show.advprice}`} // Force re-render when show data changes
       item={show}
       editFields={editShowFields}
       onEdit={onEdit}

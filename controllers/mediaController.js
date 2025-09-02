@@ -1,5 +1,6 @@
 const MediaService = require('../services/mediaService');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 
 /**
  * Update a video
@@ -12,13 +13,8 @@ async function updateVideo(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Video data and ID are required') {
-      return next(new AppError('Video data and ID are required', 400));
-    }
-    if (error.message === 'Video not found') {
-      return next(new AppError('Video not found', 404));
-    }
-    next(new AppError('Failed to update video', 500));
+    logger.error('❌ Failed to update video:', error);
+    next(error);
   }
 }
 
@@ -33,13 +29,8 @@ async function deleteVideo(req, res, next) {
       message: 'Video deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Video ID is required') {
-      return next(new AppError('Video ID is required', 400));
-    }
-    if (error.message === 'Video not found') {
-      return next(new AppError('Video not found', 404));
-    }
-    next(new AppError('Failed to delete video', 500));
+    logger.error('❌ Failed to delete video:', error);
+    next(error);
   }
 }
 
@@ -55,7 +46,8 @@ async function getVideos(req, res, next) {
       data: videos,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch videos', 500));
+    logger.error('❌ Failed to fetch videos:', error);
+    next(error);
   }
 }
 
@@ -70,10 +62,8 @@ async function addVideo(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Video data is required') {
-      return next(new AppError('Video data is required', 400));
-    }
-    next(new AppError('Failed to add video', 500));
+    logger.error('❌ Failed to add video:', error);
+    next(error);
   }
 }
 
@@ -88,7 +78,8 @@ async function getMediaImages(req, res, next) {
       data: images,
     });
   } catch (error) {
-    next(new AppError('Failed to fetch media images', 500));
+    logger.error('❌ Failed to fetch media images:', error);
+    next(error);
   }
 }
 
@@ -103,13 +94,8 @@ async function removeMediaImage(req, res, next) {
       message: 'Image deleted successfully',
     });
   } catch (error) {
-    if (error.message === 'Image ID is required') {
-      return next(new AppError('Image ID is required', 400));
-    }
-    if (error.message === 'Image not found') {
-      return next(new AppError('Image not found', 404));
-    }
-    next(new AppError('Failed to delete image', 500));
+    logger.error('❌ Failed to delete media image:', error);
+    next(error);
   }
 }
 
@@ -124,13 +110,8 @@ async function addMediaImage(req, res, next) {
       data: result,
     });
   } catch (error) {
-    if (error.message === 'Image data is required') {
-      return next(new AppError('Image data is required', 400));
-    }
-    if (error.message === 'At least one image is required') {
-      return next(new AppError('At least one image is required', 400));
-    }
-    next(new AppError('Failed to add media image', 500));
+    logger.error('❌ Failed to add media image:', error);
+    next(error);
   }
 }
 
