@@ -31,7 +31,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['theme', 'merchConfig', 'shows'], // Only persist specific reducers
+  whitelist: ['theme', 'merchConfig', 'shows'], // Don't persist auth state for security
 };
 
 const rootReducer = combineReducers({

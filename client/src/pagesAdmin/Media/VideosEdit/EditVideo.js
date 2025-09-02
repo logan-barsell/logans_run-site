@@ -2,7 +2,7 @@ import React from 'react';
 import EditItem from '../../../components/Modifiers/EditItem';
 import { useAlert } from '../../../contexts/AlertContext';
 import { editVideoFields } from './constants';
-import { updateVideo } from '../../../services/mediaManagementService';
+import { updateVideo } from '../../../services/mediaService';
 
 const EditVideo = ({ video, fetchVideos }) => {
   const { showError, showSuccess } = useAlert();

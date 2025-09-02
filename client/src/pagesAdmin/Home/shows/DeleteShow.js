@@ -2,7 +2,7 @@ import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
 import { deleteImageFromFirebase } from '../../../utils/firebaseImage';
 import { useAlert } from '../../../contexts/AlertContext';
-import { deleteShow as deleteShowService } from '../../../services/showsManagementService';
+import { deleteShow as deleteShowService } from '../../../services/showsService';
 
 const DeleteShow = ({ show, fetchShows }) => {
   const { showError, showSuccess } = useAlert();

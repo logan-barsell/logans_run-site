@@ -10,31 +10,38 @@ import { handleServiceError } from '../utils/errorHandler';
  * @returns {Promise<Object>} Response data and metadata
  */
 async function makeShopifyRequest(shopDomain, accessToken, query, variables) {
-  const response = await fetch(
-    `https://${shopDomain}/api/2023-10/graphql.json`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': accessToken,
+  try {
+    const response = await fetch(
+      `https://${shopDomain}/api/2023-10/graphql.json`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': accessToken,
+        },
+        body: JSON.stringify({
+          query,
+          variables,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    return {
+      data,
+      response: {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
       },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    }
-  );
-
-  const data = await response.json();
-
-  return {
-    data,
-    response: {
-      status: response.status,
-      statusText: response.statusText,
-      ok: response.ok,
-    },
-  };
+    };
+  } catch (error) {
+    const { message } = handleServiceError(error, {
+      operation: 'makeShopifyRequest',
+    });
+    throw new Error(message);
+  }
 }
 
 /**
@@ -167,10 +174,9 @@ export async function fetchShopifyProducts(
       };
     });
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to fetch Shopify products'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'fetchShopifyProducts',
+    });
     throw new Error(message);
   }
 }
@@ -213,7 +219,7 @@ export async function createShopifyCheckout(
       ],
     };
 
-    const { data, response } = await makeShopifyRequest(
+    const { data } = await makeShopifyRequest(
       shopDomain,
       accessToken,
       mutation,
@@ -250,10 +256,9 @@ export async function createShopifyCheckout(
     ) {
       throw error;
     }
-    const { message } = handleServiceError(
-      error,
-      'Failed to create Shopify checkout'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'createShopifyCheckout',
+    });
     throw new Error(message);
   }
 }

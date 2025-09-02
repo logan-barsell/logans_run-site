@@ -10,14 +10,12 @@ import { Link, useNavigate } from 'react-router-dom';
 const Signin = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const { showError, showSuccess } = useAlert();
   const navigate = useNavigate();
 
   const onSubmit = async values => {
     setError(null);
     setIsLoading(true);
-    setIsSuccess(false);
     try {
       const data = await login(values);
       if (data.success) {
@@ -38,7 +36,6 @@ const Signin = () => {
         }
 
         // Normal login success
-        setIsSuccess(true);
         showSuccess('Login successful! Redirecting...');
         setTimeout(() => {
           window.location.href = '/settings';
@@ -58,7 +55,6 @@ const Signin = () => {
   };
 
   const getButtonText = () => {
-    if (isSuccess) return 'Success!';
     if (isLoading) return 'Logging in...';
     return 'Login';
   };
@@ -125,7 +121,7 @@ const Signin = () => {
               <Button
                 type='submit'
                 variant='danger'
-                disabled={submitting || isLoading || isSuccess}
+                disabled={submitting || isLoading}
                 loading={isLoading}
               >
                 {getButtonText()}

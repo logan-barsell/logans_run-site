@@ -1,7 +1,7 @@
 import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
 import { useAlert } from '../../../contexts/AlertContext';
-import { deleteVideo as deleteVideoService } from '../../../services/mediaManagementService';
+import { deleteVideo as deleteVideoService } from '../../../services/mediaService';
 
 const DeleteVideo = ({ video, fetchVideos }) => {
   const { showError, showSuccess } = useAlert();

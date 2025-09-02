@@ -4,7 +4,7 @@ import { fetchPlayers } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
 import { validateSpotifyUrl } from '../../utils/validation';
 import { generateSpotifyEmbedUrl } from '../../utils/validation/spotifyValidation';
-import { addPlayer } from '../../services/musicPlayersService';
+import { addPlayer } from '../../services/musicService';
 import { useAlert } from '../../contexts/AlertContext';
 import AddItem from '../../components/Modifiers/AddItem';
 import { ADD_PLAYER_FIELDS } from './constants';

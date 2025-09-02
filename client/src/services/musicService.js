@@ -7,10 +7,46 @@ export const getPlayers = async () => {
     const response = await api.get('/getPlayers');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to load music players'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getPlayers',
+    });
+    throw new Error(message);
+  }
+};
+
+// Music Players Management
+export const addPlayer = async playerData => {
+  try {
+    const response = await api.post('/addPlayer', playerData);
+    return response.data.data; // Extract data from { success: true, data: [...] }
+  } catch (error) {
+    const { message } = handleServiceError(error, {
+      operation: 'addPlayer',
+    });
+    throw new Error(message);
+  }
+};
+
+export const updatePlayer = async playerData => {
+  try {
+    const response = await api.post('/updatePlayer', playerData);
+    return response.data.data; // Extract data from { success: true, data: [...] }
+  } catch (error) {
+    const { message } = handleServiceError(error, {
+      operation: 'updatePlayer',
+    });
+    throw new Error(message);
+  }
+};
+
+export const deletePlayer = async playerId => {
+  try {
+    const response = await api.get(`/deletePlayer/${playerId}`);
+    return response.data.data; // Extract data from { success: true, data: [...] }
+  } catch (error) {
+    const { message } = handleServiceError(error, {
+      operation: 'deletePlayer',
+    });
     throw new Error(message);
   }
 };

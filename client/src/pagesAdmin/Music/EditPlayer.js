@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import EditItem from '../../components/Modifiers/EditItem';
 import { editPlayerFields } from './constants';
-import { updatePlayer } from '../../services/musicPlayersService';
+import { updatePlayer } from '../../services/musicService';
 import { fetchPlayers } from '../../redux/actions';
 import { useAlert } from '../../contexts/AlertContext';
 import { validateSpotifyUrl } from '../../utils/validation';

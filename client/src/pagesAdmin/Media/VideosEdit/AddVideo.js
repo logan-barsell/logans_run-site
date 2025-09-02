@@ -1,5 +1,5 @@
 import React from 'react';
-import { addVideo } from '../../../services/mediaManagementService';
+import { addVideo } from '../../../services/mediaService';
 import { useAlert } from '../../../contexts/AlertContext';
 import { addVideoFields } from './constants';
 import AddItem from '../../../components/Modifiers/AddItem';

@@ -7,10 +7,9 @@ export const getHomeImages = async () => {
     const response = await api.get('/getHomeImages');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to fetch home images'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getHomeImages',
+    });
     throw new Error(message);
   }
 };

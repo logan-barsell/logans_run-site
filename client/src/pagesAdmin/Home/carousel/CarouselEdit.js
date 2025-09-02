@@ -8,7 +8,7 @@ import {
 import {
   uploadHomeImage,
   removeHomeImage,
-} from '../../../services/mediaManagementService';
+} from '../../../services/mediaService';
 import { useAlert } from '../../../contexts/AlertContext';
 import EditImages from '../../../components/Images/EditImages';
 

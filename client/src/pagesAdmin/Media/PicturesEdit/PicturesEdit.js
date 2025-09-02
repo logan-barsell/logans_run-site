@@ -10,7 +10,7 @@ import {
 import {
   uploadMediaImage,
   removeMediaImage,
-} from '../../../services/mediaManagementService';
+} from '../../../services/mediaService';
 import { useAlert } from '../../../contexts/AlertContext';
 import EditImages from '../../../components/Images/EditImages';
 import Button from '../../../components/Button/Button';

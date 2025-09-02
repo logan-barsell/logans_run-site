@@ -7,10 +7,9 @@ export const getContactInfo = async () => {
     const response = await api.get('/getContactInfo');
     return response.data.data; // Extract data from { success: true, data: {...} }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to load contact information'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'getContactInfo',
+    });
     throw new Error(message);
   }
 };
@@ -21,10 +20,9 @@ export const updateContact = async contactData => {
     const response = await api.put('/updateContact', contactData);
     return response.data.data; // Extract data from { success: true, data: {...} }
   } catch (error) {
-    const { message } = handleServiceError(
-      error,
-      'Failed to update contact information'
-    );
+    const { message } = handleServiceError(error, {
+      operation: 'updateContact',
+    });
     throw new Error(message);
   }
 };
@@ -35,7 +33,9 @@ export const sendContactMessage = async contactData => {
     const response = await api.post('/send-message', contactData);
     return response.data; // Return full response for success/error handling
   } catch (error) {
-    const { message } = handleServiceError(error, 'Failed to send message');
+    const { message } = handleServiceError(error, {
+      operation: 'sendContactMessage',
+    });
     throw new Error(message);
   }
 };

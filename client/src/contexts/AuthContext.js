@@ -30,10 +30,12 @@ export const AuthProvider = ({ children }) => {
   } = useSelector(state => state.auth);
 
   const checkAuth = useCallback(async () => {
+    console.log('🔍 [AuthContext] checkAuth called');
     return await dispatch(checkAuthentication());
   }, [dispatch]);
 
   const logout = useCallback(() => {
+    console.log('🚪 [AuthContext] logout called');
     dispatch(logoutAction());
   }, [dispatch]);
 

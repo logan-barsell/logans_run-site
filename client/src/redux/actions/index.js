@@ -1,4 +1,5 @@
 // Central export for all Redux actions
+export * from './authActions';
 export * from './merchConfigActions';
 export * from './themeActions';
 export * from './showsActions';
