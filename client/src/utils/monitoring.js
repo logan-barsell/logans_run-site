@@ -14,7 +14,6 @@ function init() {
   setupNetworkMonitoring();
 
   isInitialized = true;
-  console.log('🔍 Monitoring service initialized');
 }
 
 /**

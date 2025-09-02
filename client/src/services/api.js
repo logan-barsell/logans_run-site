@@ -60,41 +60,22 @@ apiClient.interceptors.response.use(
 
     // Handle 401 errors - attempt token refresh (but not for auth endpoints)
     const isAuthEndpoint = originalRequest.url?.includes('/auth/');
-    console.log(
-      '🚨 [API Interceptor] 401 error on:',
-      originalRequest.url,
-      'isAuthEndpoint:',
-      isAuthEndpoint,
-      '_retry:',
-      originalRequest._retry
-    );
 
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
       !isAuthEndpoint
     ) {
-      console.log(
-        '🔄 [API Interceptor] Attempting token refresh for:',
-        originalRequest.url
-      );
       originalRequest._retry = true;
 
       try {
         // Attempt to refresh the token
-        console.log('🔑 [API Interceptor] Calling refreshToken...');
+
         await refreshToken();
-        console.log(
-          '✅ [API Interceptor] Token refresh successful, retrying original request'
-        );
 
         // Retry the original request with new tokens
         return apiClient(originalRequest);
       } catch (refreshError) {
-        console.log(
-          '❌ [API Interceptor] Token refresh failed:',
-          refreshError.message
-        );
         // Refresh failed - check if it's a permanent failure (not just expired tokens)
         const isPermanentFailure =
           refreshError.response?.status === 401 ||
@@ -103,10 +84,7 @@ apiClient.interceptors.response.use(
 
         if (isPermanentFailure) {
           // Permanent failure - logout and don't retry
-          console.warn(
-            'Permanent token failure, logging out:',
-            refreshError.message
-          );
+          console.warn('Permanent token failure, logging out');
           store.dispatch(logout());
         }
 
@@ -114,10 +92,6 @@ apiClient.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     } else if (error.response?.status === 401 && isAuthEndpoint) {
-      console.log(
-        '🚫 [API Interceptor] Skipping refresh for auth endpoint:',
-        originalRequest.url
-      );
     }
 
     return Promise.reject(error);

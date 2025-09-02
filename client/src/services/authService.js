@@ -1,20 +1,12 @@
+import api from './api';
+import authApiClient from './authApiClient';
 import { handleServiceError } from '../utils/errorHandler';
 
 // Authentication
 export const checkAuth = async () => {
   try {
-    const response = await fetch('/api/auth/me', {
-      credentials: 'include',
-      headers: {
-        'Cache-Control': 'no-cache',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    return response.json();
+    const response = await authApiClient.get('/auth/me');
+    return response.data; // Extract user data from response
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'checkAuth',
@@ -25,21 +17,8 @@ export const checkAuth = async () => {
 
 export const login = async credentials => {
   try {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(credentials),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Login failed');
-    }
-
-    return response.json();
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'login',
@@ -50,21 +29,8 @@ export const login = async credentials => {
 
 export const signup = async userData => {
   try {
-    const response = await fetch('/api/auth/signup', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Signup failed');
-    }
-
-    return response.json();
+    const response = await api.post('/auth/signup', userData);
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'signup',
@@ -75,16 +41,8 @@ export const signup = async userData => {
 
 export const logout = async () => {
   try {
-    const response = await fetch('/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Logout failed');
-    }
-
-    return response.json();
+    const response = await api.post('/auth/logout');
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'logout',
@@ -95,16 +53,8 @@ export const logout = async () => {
 
 export const refreshToken = async () => {
   try {
-    const response = await fetch('/api/auth/refresh', {
-      method: 'POST',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Token refresh failed');
-    }
-
-    return response.json();
+    const response = await authApiClient.post('/auth/refresh');
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'refreshToken',
@@ -115,20 +65,8 @@ export const refreshToken = async () => {
 
 export const requestPasswordReset = async email => {
   try {
-    const response = await fetch('/api/auth/forgot-password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Password reset request failed');
-    }
-
-    return response.json();
+    const response = await api.post('/auth/forgot-password', { email });
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'requestPasswordReset',
@@ -139,20 +77,11 @@ export const requestPasswordReset = async email => {
 
 export const resetPassword = async (token, newPassword) => {
   try {
-    const response = await fetch('/api/auth/reset-password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token, newPassword }),
+    const response = await api.post('/auth/reset-password', {
+      token,
+      newPassword,
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Password reset failed');
-    }
-
-    return response.json();
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'resetPassword',
@@ -163,17 +92,8 @@ export const resetPassword = async (token, newPassword) => {
 
 export const verifyEmail = async token => {
   try {
-    const response = await fetch(`/api/auth/verify-email?token=${token}`, {
-      method: 'GET',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Email verification failed');
-    }
-
-    return response.json();
+    const response = await api.get(`/auth/verify-email?token=${token}`);
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'verifyEmail',
@@ -184,22 +104,8 @@ export const verifyEmail = async token => {
 
 export const resendEmailVerification = async email => {
   try {
-    const response = await fetch('/api/auth/resend-verification', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message || 'Failed to resend verification email'
-      );
-    }
-
-    return response.json();
+    const response = await api.post('/auth/resend-verification', { email });
+    return response.data;
   } catch (error) {
     const { message } = handleServiceError(error, {
       operation: 'resendEmailVerification',

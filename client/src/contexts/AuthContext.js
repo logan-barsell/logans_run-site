@@ -30,12 +30,10 @@ export const AuthProvider = ({ children }) => {
   } = useSelector(state => state.auth);
 
   const checkAuth = useCallback(async () => {
-    console.log('🔍 [AuthContext] checkAuth called');
     return await dispatch(checkAuthentication());
   }, [dispatch]);
 
   const logout = useCallback(() => {
-    console.log('🚪 [AuthContext] logout called');
     dispatch(logoutAction());
   }, [dispatch]);
 
@@ -44,7 +42,6 @@ export const AuthProvider = ({ children }) => {
     if (authenticated) {
       const refreshInterval = setInterval(async () => {
         try {
-          console.log('🔄 Auto-refreshing tokens...');
           await refreshToken();
         } catch (error) {
           console.error('❌ Auto token refresh failed:', error);
