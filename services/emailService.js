@@ -1,18 +1,12 @@
-const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 const logger = require('../utils/logger');
 const config = require('../config');
 const emailTemplates = require('../templates');
 const Theme = require('../models/Theme');
 const { getEmailColors } = require('../utils/colorPalettes');
+const { AppError } = require('../middleware/errorHandler');
+const sesThrottler = require('../utils/sesThrottler');
 
-// Initialize AWS SES client
-const sesClient = new SESClient({
-  region: process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+// AWS SES throttling is handled by sesThrottler utility
 
 /**
  * Sends an email using AWS SES or logs in development
@@ -27,7 +21,8 @@ async function sendEmail(
   subject,
   html,
   templateType = null,
-  templateData = {}
+  templateData = {},
+  customFromAddress = null
 ) {
   try {
     // In development without AWS credentials, just log the email
@@ -125,32 +120,17 @@ async function sendEmail(
       html = template.html;
     }
 
-    // Send via AWS SES
+    // Use SES throttler for production, log for development
     if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-      const params = {
-        Source: process.env.FROM_EMAIL || 'noreply@bandsyte.com',
-        Destination: {
-          ToAddresses: [to],
-        },
-        Message: {
-          Subject: {
-            Data: subject,
-            Charset: 'UTF-8',
-          },
-          Body: {
-            Html: {
-              Data: html,
-              Charset: 'UTF-8',
-            },
-          },
-        },
-      };
+      // Queue email with throttler for proper rate limiting
+      await sesThrottler.queueEmail({
+        to,
+        subject,
+        html,
+        from: customFromAddress,
+      });
 
-      const command = new SendEmailCommand(params);
-      await sesClient.send(command);
-
-      logger.info(`📧 Email sent successfully to ${to}: ${subject}`);
-      return { success: true, message: 'Email sent successfully' };
+      return { success: true, message: 'Email queued for sending' };
     }
 
     // Fallback for development
@@ -158,7 +138,10 @@ async function sendEmail(
     return { success: true, message: 'Email logged (no AWS credentials)' };
   } catch (error) {
     logger.error('❌ Email sending failed:', error);
-    throw new Error(`Failed to send email: ${error.message}`);
+    throw new AppError(
+      error.message || 'Failed to send email',
+      error.statusCode || 500
+    );
   }
 }
 
@@ -191,10 +174,29 @@ async function sendPasswordReset(to, resetLink, bandName = 'Bandsyte') {
 /**
  * Send welcome email with professional template
  */
-async function sendWelcomeEmail(to, bandName = 'Bandsyte') {
-  return sendEmail(to, null, null, 'welcomeEmail', {
-    bandName,
-  });
+async function sendWelcomeEmail(
+  to,
+  bandName = 'Bandsyte',
+  customFromName = null
+) {
+  const subject = `Welcome to Bandsyte - ${bandName} Website is Live!`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from name provided, format as "Band Name <noreply@bandsyte.com>"
+  if (customFromName) {
+    fromAddress = customFromName;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'welcomeEmail',
+    {
+      bandName,
+    },
+    fromAddress
+  );
 }
 
 /**
@@ -211,16 +213,31 @@ async function sendContactNotification(to, contactData, bandName = 'Bandsyte') {
  * Send newsletter confirmation
  */
 async function sendNewsletterConfirmation(
-  to,
   email,
   bandName = 'Bandsyte',
-  unsubscribeToken = ''
+  unsubscribeToken = '',
+  customFromName = null
 ) {
-  return sendEmail(to, null, null, 'newsletterConfirmation', {
+  const subject = `You're In The Loop - ${bandName} Newsletter`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from name provided, format as "Band Name <noreply@bandsyte.com>"
+  if (customFromName) {
+    fromAddress = `"${customFromName}" <${fromAddress}>`;
+  }
+
+  return sendEmail(
     email,
-    bandName,
-    unsubscribeToken,
-  });
+    subject,
+    null,
+    'newsletterConfirmation',
+    {
+      email,
+      bandName,
+      unsubscribeToken,
+    },
+    fromAddress
+  );
 }
 
 /**
@@ -235,6 +252,56 @@ async function sendNewsletterSignupNotification(
     fanEmail,
     bandName,
   });
+}
+
+/**
+ * Send content notification with professional template
+ */
+async function sendContentNotification(
+  to,
+  bandName = 'Bandsyte',
+  contentType = 'content',
+  content = {},
+  unsubscribeToken = '',
+  customFromName = null
+) {
+  const subject = getContentNotificationSubject(contentType, bandName);
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from name provided, use it
+  if (customFromName) {
+    fromAddress = customFromName;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'newsletterNotification',
+    {
+      bandName,
+      content,
+      contentType,
+      unsubscribeToken,
+    },
+    fromAddress
+  );
+}
+
+/**
+ * Get content notification subject
+ */
+function getContentNotificationSubject(contentType, bandName) {
+  switch (contentType) {
+    case 'music':
+      return `🎵 New Music Released - ${bandName}`;
+    case 'video':
+      return `🎬 New Video Uploaded - ${bandName}`;
+    case 'show':
+      return `🎤 New Show Added - ${bandName}`;
+    default:
+      return `📢 New Content Added - ${bandName}`;
+  }
 }
 
 /**
@@ -306,6 +373,7 @@ module.exports = {
   sendContactNotification,
   sendNewsletterConfirmation,
   sendNewsletterSignupNotification,
+  sendContentNotification,
   sendSecurityAlert,
   sendLoginAlert,
   sendTwoFactorCode,

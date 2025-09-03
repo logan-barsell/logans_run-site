@@ -2,6 +2,7 @@ const NewsletterSubscriber = require('../models/NewsletterSubscriber');
 const Theme = require('../models/Theme');
 const EmailService = require('./emailService');
 const newsletterNotification = require('../templates/newsletterNotification');
+const { generateFromAddress } = require('./bandEmailService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
 
@@ -159,11 +160,33 @@ async function sendContentNotification(contentType, content) {
     }
 
     // Check if this specific notification type is enabled
-    const notificationField = `notifyOnNew${
-      contentType.charAt(0).toUpperCase() + contentType.slice(1)
-    }s`;
+    let notificationField;
+    switch (contentType) {
+      case 'music':
+        notificationField = 'notifyOnNewMusic';
+        break;
+      case 'video':
+        notificationField = 'notifyOnNewVideos';
+        break;
+      case 'show':
+        notificationField = 'notifyOnNewShows';
+        break;
+      default:
+        notificationField = `notifyOnNew${
+          contentType.charAt(0).toUpperCase() + contentType.slice(1)
+        }`;
+    }
+
     if (!theme[notificationField]) {
-      logger.info(`📧 ${contentType} notifications disabled, skipping email`);
+      logger.info(`📧 ${contentType} notifications disabled, skipping email`, {
+        notificationField,
+        themeValue: theme[notificationField],
+        allThemeFields: {
+          notifyOnNewMusic: theme.notifyOnNewMusic,
+          notifyOnNewVideos: theme.notifyOnNewVideos,
+          notifyOnNewShows: theme.notifyOnNewShows,
+        },
+      });
       return {
         success: false,
         message: `${contentType} notifications are disabled`,
@@ -188,39 +211,105 @@ async function sendContentNotification(contentType, content) {
     let emailsSent = 0;
     let errors = 0;
 
-    // Send emails to each subscriber
-    for (const subscriber of subscribers) {
+    let emailPromises;
+    let results;
+
+    if (process.env.NODE_ENV !== 'production') {
+      // Development mode: Send only ONE test email
+      logger.info(
+        `🧪 DEV MODE: Sending single test email for ${contentType} notification to loganjbars@gmail.com (instead of ${subscribers.length} subscriber emails)`
+      );
+
       try {
         const emailTemplate = newsletterNotification(
           bandName,
           content,
           contentType,
           colors,
-          subscriber.unsubscribeToken
+          'test-token-123' // Use a test token for development
         );
 
-        await EmailService.sendEmail({
-          to: subscriber.email,
-          subject: emailTemplate.subject,
-          html: emailTemplate.html,
-        });
+        // Generate white-label FROM address for development
+        const devFromAddress = generateFromAddress(bandName);
 
-        // Update last email sent timestamp
-        subscriber.lastEmailSent = new Date();
-        await subscriber.save();
-
-        emailsSent++;
-        logger.info(
-          `📧 Notification sent to ${subscriber.email} for ${contentType}`
+        // Send single test email using the proper content notification flow
+        await EmailService.sendContentNotification(
+          'loganjbars@gmail.com',
+          bandName,
+          contentType,
+          content,
+          'test-token-123',
+          devFromAddress
         );
+
+        results = [
+          {
+            status: 'fulfilled',
+            value: { success: true, email: 'loganjbars@gmail.com' },
+          },
+        ];
       } catch (error) {
-        errors++;
-        logger.error(
-          `❌ Failed to send notification to ${subscriber.email}:`,
-          error
-        );
+        logger.error('❌ Failed to send development test email:', error);
+        results = [
+          {
+            status: 'rejected',
+            reason: {
+              success: false,
+              email: 'loganjbars@gmail.com',
+              error: error.message,
+            },
+          },
+        ];
       }
+    } else {
+      // Production mode: Send to all subscribers
+      emailPromises = subscribers.map(async subscriber => {
+        try {
+          const emailTemplate = newsletterNotification(
+            bandName,
+            content,
+            contentType,
+            colors,
+            subscriber.unsubscribeToken
+          );
+
+          // Queue email with throttler (non-blocking)
+          await EmailService.sendEmail({
+            to: subscriber.email,
+            subject: emailTemplate.subject,
+            html: emailTemplate.html,
+          });
+
+          // Update last email sent timestamp
+          subscriber.lastEmailSent = new Date();
+          await subscriber.save();
+
+          return { success: true, email: subscriber.email };
+        } catch (error) {
+          logger.error(
+            `❌ Failed to queue notification to ${subscriber.email}:`,
+            error
+          );
+          return {
+            success: false,
+            email: subscriber.email,
+            error: error.message,
+          };
+        }
+      });
+
+      // Wait for all emails to be queued (not sent yet - throttler handles sending)
+      results = await Promise.allSettled(emailPromises);
     }
+
+    // Count successes and failures
+    results.forEach(result => {
+      if (result.status === 'fulfilled' && result.value.success) {
+        emailsSent++;
+      } else {
+        errors++;
+      }
+    });
 
     logger.info(
       `📧 Content notification completed: ${emailsSent} sent, ${errors} failed`

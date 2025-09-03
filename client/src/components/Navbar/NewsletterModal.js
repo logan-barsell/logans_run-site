@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import CustomModal from '../Modals/CustomModal';
 import Button from '../Button/Button';
 import { Envelope } from '../../components/icons';
@@ -13,6 +13,23 @@ const NewsletterModal = () => {
   const sendNewsletter = async e => {
     e.preventDefault();
     setIsSubmitting(true);
+    const closeModal = () => {
+      const allBackdrops = document.querySelectorAll('.modal-backdrop');
+      allBackdrops.forEach(backdrop => backdrop.remove());
+
+      // Clean up body classes and styles that prevent scrolling
+      document.body.classList.remove('modal-open');
+      document.body.classList.remove('modal-backdrop');
+
+      // Remove inline styles that Bootstrap adds to prevent scrolling
+      const bodyStyle = document.body.style;
+      if (bodyStyle.overflow === 'hidden') {
+        bodyStyle.overflow = '';
+      }
+      if (bodyStyle.paddingRight) {
+        bodyStyle.paddingRight = '';
+      }
+    };
 
     try {
       const result = await signupNewsletter(email);
@@ -27,18 +44,14 @@ const NewsletterModal = () => {
           if (window.bootstrap && window.bootstrap.Modal) {
             const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
             if (bootstrapModal) {
+              closeModal();
               bootstrapModal.hide();
             }
           } else {
-            // Fallback: manually hide the modal
-            modal.style.display = 'none';
-            modal.classList.remove('show');
-            document.body.classList.remove('modal-open');
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-              backdrop.remove();
-            }
+            closeModal();
           }
+        } else {
+          closeModal();
         }
       } else {
         showError(result.message || 'Failed to subscribe. Please try again.');
