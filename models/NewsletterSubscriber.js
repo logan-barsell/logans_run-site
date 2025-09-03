@@ -53,6 +53,26 @@ const NewsletterSubscriberSchema = new Schema({
     default: 'website',
   },
 
+  // Bounce and Complaint Tracking
+  bouncedAt: {
+    type: Date,
+  },
+  bounceType: {
+    type: String,
+    enum: ['General', 'NoEmail', 'Suppressed', 'OnAccountSuppressionList'],
+  },
+  bounceReason: {
+    type: String,
+  },
+  complaintType: {
+    type: String,
+    enum: ['abuse', 'auth-failure', 'fraud', 'not-spam', 'other', 'virus'],
+  },
+  unsubscribeReason: {
+    type: String,
+    enum: ['user', 'complaint', 'admin', 'bounce'],
+  },
+
   // Timestamps
   subscribedAt: {
     type: Date,

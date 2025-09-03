@@ -1,6 +1,8 @@
 const NewsletterService = require('../services/newsletterService');
 const EmailService = require('../services/emailService');
+const BandEmailService = require('../services/bandEmailService');
 const ThemeService = require('../services/themeService');
+const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
 /**
@@ -12,10 +14,7 @@ async function newsletterSignup(req, res, next) {
 
     // Validate email
     if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email is required',
-      });
+      throw new AppError('Email is required', 400);
     }
 
     // Add subscriber to database
@@ -25,12 +24,11 @@ async function newsletterSignup(req, res, next) {
     const theme = await ThemeService.getTheme();
     const bandName = theme.siteTitle || 'Bandsyte';
 
-    // Send newsletter confirmation email to fan
-    await EmailService.sendNewsletterConfirmation(
-      email,
-      email,
-      bandName,
-      subscriber.unsubscribeToken
+    // Send newsletter confirmation email to fan using band email service
+    await BandEmailService.sendNewsletterConfirmationWithBranding(
+      email, // subscriber email (used for both sending and display)
+      bandName, // band name
+      subscriber.unsubscribeToken // unsubscribe token
     );
 
     // Send notification email to band admin
@@ -60,16 +58,13 @@ async function verifyUnsubscribeToken(req, res, next) {
     const { token } = req.query;
 
     if (!token) {
-      return res.status(400).json({
-        success: false,
-        message: 'Unsubscribe token is required',
-      });
+      throw new AppError('Unsubscribe token is required', 400);
     }
 
     // Verify the token exists
     const subscriber = await NewsletterService.getSubscriberByToken(token);
 
-    // Return success with subscriber info for frontend processing
+    // Success - return subscriber info for frontend processing
     res.status(200).json({
       success: true,
       message: 'Token verified',
@@ -92,10 +87,7 @@ async function unsubscribe(req, res, next) {
     const { token } = req.body;
 
     if (!token) {
-      return res.status(400).json({
-        success: false,
-        message: 'Unsubscribe token is required',
-      });
+      throw new AppError('Unsubscribe token is required', 400);
     }
 
     await NewsletterService.unsubscribe(token);

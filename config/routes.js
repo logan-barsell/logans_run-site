@@ -12,6 +12,7 @@ const setupRoutes = app => {
   app.use('/api', require('../routes/bioRoutes'));
   app.use('/api', require('../routes/contactRoutes'));
   app.use('/api/newsletter', require('../routes/newsletterRoutes'));
+  app.use('/api/ses', require('../routes/sesRoutes'));
   app.use('/api', require('../routes/mediaRoutes'));
   app.use('/api', require('../routes/musicRoutes'));
   app.use('/', require('../routes/themeRoutes'));

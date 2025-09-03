@@ -13,8 +13,6 @@ import {
   SoundCloud,
   X,
   TikTok,
-  Close,
-  Envelope,
 } from '../../components/icons';
 import Button from '../Button/Button';
 import NewsletterModal from './NewsletterModal';
