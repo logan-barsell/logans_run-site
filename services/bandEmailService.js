@@ -76,7 +76,7 @@ async function sendNewsletterConfirmationWithBranding(
       email,
       bandName,
       unsubscribeToken,
-      fromAddress // This will be passed as customFromName to the email service
+      fromAddress
     );
   } catch (error) {
     logger.error(
@@ -102,11 +102,7 @@ async function sendWelcomeEmailWithBranding(email, bandName) {
 
     logger.info(`📧 Sending welcome email for ${bandName} to ${email}`);
 
-    return await sendWelcomeEmail(
-      email,
-      bandName,
-      fromAddress // This will be passed as customFromName to the email service
-    );
+    return await sendWelcomeEmail(email, bandName, fromAddress);
   } catch (error) {
     logger.error(`❌ Failed to send welcome email for ${bandName}:`, error);
     throw new AppError(
@@ -145,7 +141,7 @@ async function sendContentNotificationWithBranding(
       contentType,
       content,
       unsubscribeToken,
-      fromAddress // This will be passed as customFromName to the email service
+      fromAddress
     );
   } catch (error) {
     logger.error(

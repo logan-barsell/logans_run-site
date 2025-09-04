@@ -195,3 +195,72 @@
     height: 8px;
   }
 }
+
+/* Mobile responsive adjustments */
+@media only screen and (max-width: 576px) {
+  .form-check-label {
+    font-size: 14px !important;
+  }
+
+  .radio-description {
+    font-size: 12px !important;
+  }
+
+  .form-text {
+    font-size: 12px !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .form-check-label {
+    font-size: 13px !important;
+    margin-left: 0.25rem !important;
+  }
+
+  .radio-description {
+    font-size: 11px !important;
+  }
+
+  .form-text {
+    font-size: 11px !important;
+  }
+
+  .form-check-input[type='radio'],
+  .form-check-input[type='checkbox'] {
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 0.25rem !important;
+  }
+
+  .form-check-input[type='radio']:checked::after,
+  .form-check-input[type='checkbox']:checked::after {
+    width: 5px !important;
+    height: 5px !important;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .form-check-label {
+    font-size: 12px !important;
+  }
+
+  .radio-description {
+    font-size: 10px !important;
+  }
+
+  .form-text {
+    font-size: 10px !important;
+  }
+
+  .form-check-input[type='radio'],
+  .form-check-input[type='checkbox'] {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .form-check-input[type='radio']:checked::after,
+  .form-check-input[type='checkbox']:checked::after {
+    width: 4px !important;
+    height: 4px !important;
+  }
+}

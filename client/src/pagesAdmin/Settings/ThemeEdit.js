@@ -498,8 +498,8 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                             })
                           }
                           style={{
-                            width: '40px',
-                            height: '40px',
+                            width: 'clamp(32px, 4vw, 40px)',
+                            height: 'clamp(32px, 4vw, 40px)',
                             borderRadius: '8px',
                             backgroundColor: colors.primary,
                             border:
@@ -509,6 +509,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
                             cursor: 'pointer',
                             transition: 'all 0.2s ease',
                             position: 'relative',
+                            flexShrink: 0,
                           }}
                           title={displayName}
                         >

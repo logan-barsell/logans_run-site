@@ -78,10 +78,71 @@ a.btn-danger:disabled {
   font-size: 1.1em;
 }
 
+/* Mobile responsive button icons */
+@media only screen and (max-width: 576px) {
+  .btn-icon {
+    font-size: 1em !important;
+  }
+
+  .btn-icon svg {
+    width: 1em !important;
+    height: 1em !important;
+  }
+
+  .btn-sm .btn-icon {
+    font-size: 1em !important;
+  }
+
+  .btn-sm .btn-icon svg {
+    width: 1em !important;
+    height: 1em !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .btn-icon {
+    font-size: 0.95em !important;
+  }
+
+  .btn-icon svg {
+    width: 0.95em !important;
+    height: 0.95em !important;
+  }
+
+  .btn-sm .btn-icon {
+    font-size: 0.95em !important;
+  }
+
+  .btn-sm .btn-icon svg {
+    width: 0.95em !important;
+    height: 0.95em !important;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .btn-icon {
+    font-size: 0.9em !important;
+  }
+
+  .btn-icon svg {
+    width: 0.9em !important;
+    height: 0.9em !important;
+  }
+
+  .btn-sm .btn-icon {
+    font-size: 0.9em !important;
+  }
+
+  .btn-sm .btn-icon svg {
+    width: 0.9em !important;
+    height: 0.9em !important;
+  }
+}
+
 /* Responsive font size - match App.css */
 @media (max-width: 777px) {
   .btn {
-    font-size: 3.5vw;
+    font-size: 3vw;
   }
 }
 @media (max-width: 550px) {
@@ -100,7 +161,4 @@ a.btn-danger:disabled {
 .addButton.btn {
   margin: 27px auto;
   max-width: 420px;
-}
-.submitForm {
-  /* If there were any specific styles for submitForm, add here */
 }

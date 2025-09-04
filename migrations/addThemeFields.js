@@ -33,9 +33,6 @@ async function migrateThemeFields() {
       if (theme.socialMediaIconStyle === undefined) {
         updates.socialMediaIconStyle = 'default';
       }
-      if (theme.newsletterEnabled === undefined) {
-        updates.newsletterEnabled = true;
-      }
 
       // Update theme if there are changes
       if (Object.keys(updates).length > 0) {

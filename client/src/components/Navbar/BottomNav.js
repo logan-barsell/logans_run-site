@@ -36,16 +36,22 @@ const BottomNav = ({
         className='navbar navbar-light justify-content-center'
       >
         {/* Button trigger modal */}
-        <div className='col-md-7 my-2'>
-          <div className='row justify-content-center'>
-            <div className='col-auto'>
-              {theme?.newsletterEnabled !== false && <NewsletterModal />}
+        {theme?.enableNewsletter !== false && (
+          <div className='col-md-7 col-12 my-2'>
+            <div className='row justify-content-center'>
+              <div className='col-auto'>
+                <NewsletterModal />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {contactInfo && (
-          <div className='iconsNav col-auto justify-content-center mx-auto'>
+          <div
+            className={`iconsNav ${
+              theme?.enableNewsletter !== false ? 'col-md-5' : 'col-md-12'
+            } col-12 justify-content-center mx-auto`}
+          >
             {contactInfo.facebook && (
               <a
                 className='hvr-grow'

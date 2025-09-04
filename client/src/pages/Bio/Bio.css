@@ -97,3 +97,38 @@ span.a2a_svg {
   margin-bottom: 0 !important;
   margin-top: 25px !important;
 }
+
+@media only screen and (max-width: 576px) {
+  .member-social-icons {
+    gap: 15px;
+  }
+
+  .member-social-icons a {
+    margin: 0 7px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .member-social-icons {
+    gap: 12px;
+  }
+
+  .member-social-icons a {
+    margin: 0 5px;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .member-social-icons a {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .member-social-icons a svg {
+    width: 20px;
+    height: 20px;
+  }
+}

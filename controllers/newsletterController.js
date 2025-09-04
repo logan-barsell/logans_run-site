@@ -140,10 +140,34 @@ async function getNewsletterSubscribers(req, res, next) {
   }
 }
 
+/**
+ * Admin unsubscribe a subscriber (admin only)
+ */
+async function adminUnsubscribeSubscriber(req, res, next) {
+  try {
+    const { subscriberId } = req.params;
+
+    if (!subscriberId) {
+      throw new AppError('Subscriber ID is required', 400);
+    }
+
+    await NewsletterService.adminUnsubscribe(subscriberId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Subscriber unsubscribed successfully',
+    });
+  } catch (error) {
+    logger.error('❌ Failed to unsubscribe subscriber:', error);
+    next(error);
+  }
+}
+
 module.exports = {
   newsletterSignup,
   verifyUnsubscribeToken,
   unsubscribe,
   getNewsletterStats,
   getNewsletterSubscribers,
+  adminUnsubscribeSubscriber,
 };

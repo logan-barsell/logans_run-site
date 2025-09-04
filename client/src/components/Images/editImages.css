@@ -73,4 +73,22 @@
     margin-bottom: 0px;
     padding: 25px;
   }
+
+  .currentImages .closeBtn {
+    height: 32px;
+    width: 32px;
+    bottom: -15px;
+    right: -15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .currentImages .closeBtn {
+    height: 28px;
+    width: 28px;
+    bottom: -12px;
+    right: -12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
 }

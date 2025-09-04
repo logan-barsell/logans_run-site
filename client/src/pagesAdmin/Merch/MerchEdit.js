@@ -125,7 +125,10 @@ const MerchEdit = ({ fetchMerchConfig, updateMerchConfig, merchConfig }) => {
           </select>
         </div>
 
-        <Divider className='w-75 mx-auto' />
+        <Divider
+          variant='white'
+          className='w-75 mx-auto'
+        />
 
         <EditableForm
           title='Store Configuration'

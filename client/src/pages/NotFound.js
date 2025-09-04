@@ -29,19 +29,26 @@ const NotFound = () => {
 
               <PageTitle
                 as='h5'
+                variant='white'
                 style={{ marginTop: '20px' }}
               >
                 Page Not Found
               </PageTitle>
             </div>
 
-            <Divider className='my-4' />
+            <Divider
+              className='my-4'
+              variant='white'
+            />
 
             <p className='secondary-font'>
               Oops! Looks like you've wandered off the beaten path. The page
               you're looking for doesn't exist or has moved.
             </p>
-            <Divider className='my-4' />
+            <Divider
+              className='my-4'
+              variant='white'
+            />
 
             <div className='not-found-actions'>
               <Button

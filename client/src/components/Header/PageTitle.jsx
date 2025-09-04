@@ -19,7 +19,7 @@ const PageTitle = ({
   as = 'h3',
   className = '',
   style = {},
-  marginClass = 'mt-5',
+  marginClass = 'mt-5 mb-0',
   color = 'var(--main)',
   ...rest
 }) => {
@@ -36,7 +36,7 @@ const PageTitle = ({
       {divider && (
         <Divider
           className='w-75 mx-auto'
-          variant={color === 'white' ? 'white' : undefined}
+          variant='white'
         />
       )}
     </>

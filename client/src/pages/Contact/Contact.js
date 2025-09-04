@@ -76,6 +76,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo, theme }) => {
             <PageTitle
               as='h5'
               marginClass='mb-3'
+              variant='white'
             >
               Contact Information
             </PageTitle>
@@ -88,9 +89,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo, theme }) => {
                 <p className='secondary-font text-white'>
                   <TelephoneFill />
                   <a href={`tel:+${contactInfo.publicPhone}`}>
-                    {contactInfo.publicPhone.slice(0, 3)}.
-                    {contactInfo.publicPhone.slice(3, 6)}.
-                    {contactInfo.publicPhone.slice(6)}
+                    {contactInfo.publicPhone}
                   </a>
                 </p>
                 <Divider
@@ -105,9 +104,7 @@ const ContactPage = ({ fetchContactInfo, contactInfo, theme }) => {
                 <p className='secondary-font text-white'>
                   <Envelope />
                   <a href={`mailto:${contactInfo.publicEmail}`}>
-                    {contactInfo.publicEmail.split('@')[0]}
-                    <span>@</span>
-                    {contactInfo.publicEmail.split('@')[1]}
+                    {contactInfo.publicEmail}
                   </a>
                 </p>
                 <Divider

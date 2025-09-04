@@ -143,6 +143,58 @@
   }
 }
 
+@media only screen and (max-width: 576px) {
+  .socmed.contact {
+    gap: 0px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .socmed.contact {
+    gap: 5px;
+
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .socmed.contact a {
+    margin: 0px 3px !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  #contact .secondary-font svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  #contact .secondary-font svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .socmed.contact a {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .socmed.contact a svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #contact .secondary-font svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
 @media (max-width: 291px) {
   #contact p {
     font-size: 4.5vw;

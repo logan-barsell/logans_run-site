@@ -40,7 +40,6 @@ const ThemeSchema = new mongoose.Schema({
     enum: ['default', 'minimal', 'colorful', 'outlined', 'filled'],
     default: 'default',
   },
-  newsletterEnabled: { type: Boolean, default: true },
 });
 
 const Theme = mongoose.model('Theme', ThemeSchema);

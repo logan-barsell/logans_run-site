@@ -375,6 +375,37 @@ async function unsubscribe(token) {
 }
 
 /**
+ * Admin unsubscribe a subscriber by ID (for admin management)
+ */
+async function adminUnsubscribe(subscriberId) {
+  try {
+    const subscriber = await NewsletterSubscriber.findById(subscriberId);
+
+    if (!subscriber) {
+      throw new AppError('Subscriber not found', 404);
+    }
+
+    if (!subscriber.isActive) {
+      throw new AppError('Subscriber is already unsubscribed', 400);
+    }
+
+    subscriber.isActive = false;
+    subscriber.unsubscribedAt = new Date();
+    subscriber.unsubscribeReason = 'admin';
+    await subscriber.save();
+
+    logger.info(`📧 Admin unsubscribed: ${subscriber.email}`);
+    return { success: true, message: 'Subscriber unsubscribed successfully' };
+  } catch (error) {
+    logger.error('❌ Error admin unsubscribing:', error);
+    throw new AppError(
+      error.message || 'Error unsubscribing subscriber',
+      error.statusCode || 500
+    );
+  }
+}
+
+/**
  * Update subscriber preferences
  */
 async function updatePreferences(email, preferences) {
@@ -435,6 +466,7 @@ module.exports = {
   sendContentNotification,
   getSubscriberByToken,
   unsubscribe,
+  adminUnsubscribe,
   updatePreferences,
   getStats,
 };
