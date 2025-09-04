@@ -232,6 +232,30 @@ nav,
   box-shadow: 0 0 0 2px var(--secondary), 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Mobile responsive color swatches */
+@media only screen and (max-width: 576px) {
+  .color-swatch {
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .color-swatch {
+    min-width: 32px !important;
+    min-height: 32px !important;
+    margin: 2px;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .color-swatch {
+    min-width: 28px !important;
+    min-height: 28px !important;
+    margin: 1px;
+  }
+}
+
 /* Focus color for inputs */
 .form-control:focus,
 .form-select:focus,

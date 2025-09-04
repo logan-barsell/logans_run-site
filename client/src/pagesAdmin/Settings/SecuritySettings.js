@@ -419,7 +419,7 @@ const SecuritySettings = ({ currentSubTab }) => {
                 End All Sessions
               </Button>
               <small
-                className='mt-1'
+                className='mt-1 session-active-text'
                 style={{
                   color: 'white',
                   fontFamily: 'var(--secondary-font)',

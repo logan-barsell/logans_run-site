@@ -11,7 +11,7 @@ const logger = require('../utils/logger');
 /**
  * Verify SNS message signature (security)
  */
-function verifySNSMessage(req, body) {
+function verifySNSMessage(_req, body) {
   try {
     // For now, we'll trust the message format
     // In production, you should verify SNS signatures
@@ -153,7 +153,7 @@ function emergencyStopSESThrottler() {
  */
 async function processSESNotification(
   notificationType,
-  mail,
+  _mail,
   bounce,
   complaint,
   delivery,

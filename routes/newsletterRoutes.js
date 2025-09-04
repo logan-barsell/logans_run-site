@@ -40,5 +40,11 @@ router.get(
   newsletterLimiter,
   newsletterController.getNewsletterSubscribers
 );
+router.post(
+  '/subscribers/:subscriberId/unsubscribe',
+  requireAuth,
+  newsletterLimiter,
+  newsletterController.adminUnsubscribeSubscriber
+);
 
 module.exports = router;

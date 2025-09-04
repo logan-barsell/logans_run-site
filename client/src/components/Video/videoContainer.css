@@ -9,6 +9,6 @@
 
 @media screen and (max-width: 360px) {
   .currentVideos {
-    grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(237px, 1fr));
   }
 }

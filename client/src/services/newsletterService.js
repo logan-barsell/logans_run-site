@@ -41,3 +41,18 @@ export const getNewsletterSubscribers = async (page = 1, limit = 20) => {
     throw new Error(message);
   }
 };
+
+// Admin unsubscribe a subscriber
+export const unsubscribeSubscriber = async subscriberId => {
+  try {
+    const response = await api.post(
+      `/newsletter/subscribers/${subscriberId}/unsubscribe`
+    );
+    return response.data;
+  } catch (error) {
+    const { message } = handleServiceError(error, {
+      operation: 'unsubscribeSubscriber',
+    });
+    throw new Error(message);
+  }
+};

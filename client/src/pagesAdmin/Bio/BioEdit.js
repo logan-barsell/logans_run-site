@@ -217,7 +217,7 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
                   name='imageType'
                   value={currentImageType}
                   onChange={handleInputChange}
-                  className='form-select'
+                  className='form-select bio-image-select'
                   id='imageType'
                   style={{
                     backgroundColor: 'var(--form-bg)',
@@ -228,7 +228,7 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
                   <option value='band-logo'>Band Logo</option>
                   <option value='custom-image'>Custom Image</option>
                 </select>
-                <div className='form-text'>
+                <div className='form-text bio-image-helper'>
                   Choose whether to display the band logo or a custom image
                   above the bio text.
                 </div>

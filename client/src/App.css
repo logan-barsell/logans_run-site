@@ -335,6 +335,7 @@ body {
   font-size: 22px;
   background-color: var(--background);
   letter-spacing: normal;
+  min-width: 270px;
 }
 
 /* FADE IN EFFECT */
@@ -346,6 +347,12 @@ body {
 .pace-done .fadeIn > *:not(.pace) {
   opacity: 1;
   animation: FadeAnim 1.5s ease;
+}
+
+/* Remove hr margin entirely */
+hr {
+  margin: 5px auto !important;
+  background-color: white;
 }
 
 @keyframes FadeAnim {
@@ -629,4 +636,36 @@ input:-webkit-autofill:active {
 input:-internal-autofill-selected {
   background-color: var(--form-bg) !important;
   color: white !important;
+}
+
+/* Newsletter Settings Mobile Responsiveness */
+@media only screen and (max-width: 576px) {
+  .newsletter-info-list {
+    font-size: 12px !important;
+    padding-left: 1rem !important;
+  }
+
+  .newsletter-info-list li {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .newsletter-info-list {
+    font-size: 11px !important;
+    padding-left: 0.75rem !important;
+    line-height: 1.5 !important;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .newsletter-info-list {
+    font-size: 10px !important;
+    padding-left: 0.5rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .session-active-text {
+    font-size: 0.65rem !important;
+  }
 }

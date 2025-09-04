@@ -75,6 +75,7 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
               {/* Information Section - After newsletter signup */}
               <div className='mb-4'>
                 <ul
+                  className='newsletter-info-list'
                   style={{
                     color: 'white',
                     fontFamily: 'var(--secondary-font)',

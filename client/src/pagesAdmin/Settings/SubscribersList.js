@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {
   getNewsletterSubscribers,
   getNewsletterStats,
+  unsubscribeSubscriber,
 } from '../../services/newsletterService';
 import { useAlert } from '../../contexts/AlertContext';
 import { format } from 'date-fns';
 import { DataTable } from '../../components/DataTable';
+import Button from '../../components/Button/Button';
 import './SubscribersList.css';
 
 const SubscribersList = () => {
@@ -21,7 +23,7 @@ const SubscribersList = () => {
     hasPrevPage: false,
   });
 
-  const { showError } = useAlert();
+  const { showError, showSuccess } = useAlert();
 
   useEffect(() => {
     fetchSubscribers();
@@ -52,6 +54,18 @@ const SubscribersList = () => {
       showError('Failed to load newsletter subscribers');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUnsubscribe = async subscriberId => {
+    try {
+      await unsubscribeSubscriber(subscriberId);
+      showSuccess('Subscriber unsubscribed successfully');
+      // Refresh the subscribers list
+      fetchSubscribers(pagination.currentPage);
+    } catch (error) {
+      console.error('Error unsubscribing subscriber:', error);
+      showError(error.message || 'Failed to unsubscribe subscriber');
     }
   };
 
@@ -124,6 +138,31 @@ const SubscribersList = () => {
       ),
     },
   ];
+
+  // Define row actions for the subscribers table
+  const subscriberRowActions = subscriber => {
+    if (!subscriber.isActive) {
+      return (
+        <Button
+          variant='outline-secondary'
+          size='sm'
+          disabled={true}
+        >
+          Unsubscribed
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        variant='outline-danger'
+        size='sm'
+        onClick={() => handleUnsubscribe(subscriber._id)}
+      >
+        Unsubscribe
+      </Button>
+    );
+  };
 
   if (loading) {
     return (
@@ -286,6 +325,7 @@ const SubscribersList = () => {
         emptyIcon='fas fa-inbox'
         pagination={pagination}
         onPageChange={fetchSubscribers}
+        rowActions={subscriberRowActions}
         getRowKey={subscriber => subscriber._id}
       />
     </div>

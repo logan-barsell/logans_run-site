@@ -94,14 +94,38 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .tab-navigation .nav-link {
     padding: 0.5rem 0.75rem;
+    font-size: 14px;
+  }
+
+  .tab-navigation .tab-icon {
+    font-size: 15px;
+    margin-right: 0.25rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .tab-navigation .nav-link {
+    padding: 0.5rem 0.5rem;
     font-size: 13px;
   }
 
   .tab-navigation .tab-icon {
     font-size: 14px;
     margin-right: 0.25rem;
+  }
+}
+
+@media (max-width: 330px) {
+  .tab-navigation .nav-link {
+    padding: 0.4rem 0.4rem;
+    font-size: 12px;
+  }
+
+  .tab-navigation .tab-icon {
+    font-size: 13px;
+    margin-right: 0.2rem;
   }
 }

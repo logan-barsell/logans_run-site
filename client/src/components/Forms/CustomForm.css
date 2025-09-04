@@ -70,21 +70,157 @@
 /* Form elements responsive */
 @media (max-width: 768px) {
   .custom-form-container .form-text {
-    font-size: 0.8rem;
-    line-height: 1.3;
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
   }
 
   .custom-form-container textarea.form-control {
-    font-size: 0.85rem;
-    line-height: 1.4;
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
   }
 
-  .custom-form-container .form-control {
-    font-size: 0.9rem;
+  .custom-form-container .form-control:not(textarea) {
+    font-size: 0.9rem !important;
   }
 
   .custom-form-container .form-label {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .custom-form-container .form-text {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .custom-form-container .form-control:not(textarea) {
+    font-size: 0.85rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .custom-form-container .form-label {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .custom-form-container .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .custom-form-container .form-text {
+    font-size: 0.7rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .custom-form-container .form-control:not(textarea) {
+    font-size: 0.8rem !important;
+    padding: 0.45rem 0.7rem !important;
+    height: calc(1.5em + 0.8rem + 2px) !important;
+  }
+
+  .custom-form-container .form-label {
+    font-size: 0.8rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .custom-form-container .mb-3 {
+    margin-bottom: 0.8rem !important;
+  }
+}
+
+/* Bio image select and helper text responsive */
+@media only screen and (max-width: 576px) {
+  .bio-image-select {
+    font-size: 0.9rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .bio-image-helper {
+    font-size: 0.75rem !important;
+    line-height: 1.3 !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .bio-image-select {
+    font-size: 0.85rem !important;
+    padding: 0.45rem 0.7rem !important;
+  }
+
+  .bio-image-helper {
+    font-size: 0.7rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .bio-image-select {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.6rem !important;
+  }
+
+  .bio-image-helper {
+    font-size: 0.65rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .custom-form-container.auth-form .form-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .custom-form-container.auth-form .form-control:not(textarea) {
     font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .custom-form-container.auth-form .form-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .custom-form-container.auth-form .form-control:not(textarea) {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.7rem;
+    height: calc(1.5em + 0.9rem + 2px);
+  }
+
+  .custom-form-container.auth-form .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .custom-form-container.auth-form .form-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .custom-form-container.auth-form .form-control:not(textarea) {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+    height: calc(1.5em + 0.8rem + 2px);
+  }
+
+  .custom-form-container.auth-form .mb-3 {
+    margin-bottom: 0.8rem !important;
   }
 }
 
@@ -142,12 +278,12 @@
   font-size: 27px;
 }
 
-.custom-form-container.bio-form .form-control {
+.custom-form-container.bio-form textarea.form-control {
   height: 215px;
 }
 
 @media screen and (max-width: 750px) {
-  .custom-form-container.bio-form .form-control {
+  .custom-form-container.bio-form textarea.form-control {
     height: 357px;
   }
 }
@@ -156,7 +292,7 @@
   .custom-form-container.bio-form label {
     font-size: 20px;
   }
-  .custom-form-container.bio-form .form-control {
+  .custom-form-container.bio-form textarea.form-control {
     font-size: 21px;
   }
 }
@@ -165,7 +301,7 @@
   .custom-form-container.bio-form label {
     font-size: 14px;
   }
-  .custom-form-container.bio-form .form-control {
+  .custom-form-container.bio-form textarea.form-control {
     font-size: 16px;
   }
 }
@@ -174,7 +310,7 @@
   .custom-form-container.bio-form label {
     font-size: 12px;
   }
-  .custom-form-container.bio-form .form-control {
+  .custom-form-container.bio-form textarea.form-control {
     font-size: 14px;
   }
 }

@@ -1,5 +1,4 @@
 const logger = require('../utils/logger');
-const config = require('../config');
 const emailTemplates = require('../templates');
 const Theme = require('../models/Theme');
 const { getEmailColors } = require('../utils/colorPalettes');

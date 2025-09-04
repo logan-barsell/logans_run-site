@@ -16,7 +16,7 @@
 
 @media screen and (max-width: 360px) {
   #featuredVideosEdit .currentVideos {
-    grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(237px, 1fr));
   }
 }
 
@@ -36,6 +36,12 @@
 .currentVideos .video {
   height: 327px;
   width: 100%;
+}
+
+@media only screen and (max-width: 350px) {
+  .currentVideos .video {
+    height: 250px !important;
+  }
 }
 
 .video iframe {
