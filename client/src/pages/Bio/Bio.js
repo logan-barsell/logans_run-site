@@ -62,7 +62,18 @@ const BioPage = ({
   }
 
   const renderBio = () => {
-    return bio && bio[0]?.text;
+    // If there's custom bio text, use it
+    if (bio && bio[0]?.text) {
+      return bio[0].text;
+    }
+
+    // Otherwise, show a generic fallback message using the band name
+    const bandName = theme?.siteTitle || theme?.greeting;
+    if (bandName) {
+      return `Thanks for visiting the official ${bandName} site. We're excited to share our music and connect with fans like you. Stay tuned for updates on our latest releases, upcoming shows, and behind-the-scenes content.`;
+    } else {
+      return `Thanks for visiting our band site. We're excited to share our music and connect with fans like you. Stay tuned for updates on our latest releases, upcoming shows, and behind-the-scenes content.`;
+    }
   };
 
   const renderSocialIcons = member => {

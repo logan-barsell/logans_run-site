@@ -149,7 +149,9 @@ const MusicEdit = ({ fetchPlayers, players }) => {
           {players && players.length > 0 ? (
             renderPlayers
           ) : (
-            <NoContent>No Music</NoContent>
+            <div className='my-4'>
+              <NoContent>No Music</NoContent>
+            </div>
           )}
         </div>
       </div>

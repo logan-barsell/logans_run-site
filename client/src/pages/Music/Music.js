@@ -208,7 +208,9 @@ const MusicPage = ({
           </div>
         ))
       ) : (
-        <NoContent>No music yet... Check back soon!</NoContent>
+        <div className='my-5 px-3'>
+          <NoContent>No music yet... Check back soon!</NoContent>
+        </div>
       )}
     </div>
   );

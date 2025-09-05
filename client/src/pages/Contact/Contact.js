@@ -96,6 +96,20 @@ const ContactPage = ({
     }
   };
 
+  // Check if there's any contact information to display
+  const hasContactInfo =
+    contactInfo &&
+    (contactInfo.publicPhone ||
+      contactInfo.publicEmail ||
+      contactInfo.facebook ||
+      contactInfo.instagram ||
+      contactInfo.youtube ||
+      contactInfo.spotify ||
+      contactInfo.appleMusic ||
+      contactInfo.soundCloud ||
+      contactInfo.x ||
+      contactInfo.tiktok);
+
   return contactInfo ? (
     <div
       className='container fadeIn'
@@ -105,137 +119,147 @@ const ContactPage = ({
         className='row'
         style={{ margin: '20px 0px', gap: '60px' }}
       >
-        <div className='col-lg align-content-center'>
-          <div className='jumbotron p-sm-5'>
-            <PageTitle
-              as='h5'
-              marginClass='mb-3'
-              variant='white'
-            >
-              Contact Information
-            </PageTitle>
-            <Divider
-              className='my-4'
-              variant='white'
-            />
-            {contactInfo.publicPhone && (
-              <>
-                <p className='secondary-font text-white'>
-                  <TelephoneFill />
-                  <a href={`tel:+${contactInfo.publicPhone}`}>
-                    {contactInfo.publicPhone}
-                  </a>
-                </p>
-                <Divider
-                  className='my-4'
-                  variant='white'
-                />
-              </>
-            )}
+        {hasContactInfo && (
+          <div className='col-lg align-content-center'>
+            <div className='jumbotron p-sm-5'>
+              <PageTitle
+                as='h5'
+                marginClass='mb-3'
+                variant='white'
+              >
+                Contact Information
+              </PageTitle>
+              <Divider
+                className='my-4'
+                variant='white'
+              />
+              {contactInfo.publicPhone && (
+                <>
+                  <p className='secondary-font text-white'>
+                    <TelephoneFill />
+                    <a href={`tel:+${contactInfo.publicPhone}`}>
+                      {contactInfo.publicPhone}
+                    </a>
+                  </p>
+                  <Divider
+                    className='my-4'
+                    variant='white'
+                  />
+                </>
+              )}
 
-            {contactInfo.publicEmail && (
-              <>
-                <p className='secondary-font text-white'>
-                  <Envelope />
-                  <a href={`mailto:${contactInfo.publicEmail}`}>
-                    {contactInfo.publicEmail}
+              {contactInfo.publicEmail && (
+                <>
+                  <p className='secondary-font text-white'>
+                    <Envelope />
+                    <a href={`mailto:${contactInfo.publicEmail}`}>
+                      {contactInfo.publicEmail}
+                    </a>
+                  </p>
+                  <Divider
+                    className='my-4'
+                    variant='white'
+                  />
+                </>
+              )}
+              <div className='socmed contact'>
+                {contactInfo.facebook && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.facebook}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <Facebook
+                      style={theme?.socialMediaIconStyle || 'default'}
+                    />
                   </a>
-                </p>
-                <Divider
-                  className='my-4'
-                  variant='white'
-                />
-              </>
-            )}
-            <div className='socmed contact'>
-              {contactInfo.facebook && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.facebook}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <Facebook style={theme?.socialMediaIconStyle || 'default'} />
-                </a>
-              )}
-              {contactInfo.instagram && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.instagram}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <Instagram style={theme?.socialMediaIconStyle || 'default'} />
-                </a>
-              )}
-              {contactInfo.youtube && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.youtube}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <YouTube style={theme?.socialMediaIconStyle || 'default'} />
-                </a>
-              )}
-              {contactInfo.spotify && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.spotify}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <Spotify style={theme?.socialMediaIconStyle || 'default'} />
-                </a>
-              )}
-              {contactInfo.appleMusic && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.appleMusic}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <AppleMusic
-                    style={theme?.socialMediaIconStyle || 'default'}
-                  />
-                </a>
-              )}
-              {contactInfo.soundCloud && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.soundCloud}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <SoundCloud
-                    style={theme?.socialMediaIconStyle || 'default'}
-                  />
-                </a>
-              )}
-              {contactInfo.x && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.x}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <X style={theme?.socialMediaIconStyle || 'default'} />
-                </a>
-              )}
-              {contactInfo.tiktok && (
-                <a
-                  className='hvr-grow'
-                  href={contactInfo.tiktok}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <TikTok style={theme?.socialMediaIconStyle || 'default'} />
-                </a>
-              )}
+                )}
+                {contactInfo.instagram && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.instagram}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <Instagram
+                      style={theme?.socialMediaIconStyle || 'default'}
+                    />
+                  </a>
+                )}
+                {contactInfo.youtube && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.youtube}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <YouTube style={theme?.socialMediaIconStyle || 'default'} />
+                  </a>
+                )}
+                {contactInfo.spotify && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.spotify}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <Spotify style={theme?.socialMediaIconStyle || 'default'} />
+                  </a>
+                )}
+                {contactInfo.appleMusic && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.appleMusic}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <AppleMusic
+                      style={theme?.socialMediaIconStyle || 'default'}
+                    />
+                  </a>
+                )}
+                {contactInfo.soundCloud && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.soundCloud}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <SoundCloud
+                      style={theme?.socialMediaIconStyle || 'default'}
+                    />
+                  </a>
+                )}
+                {contactInfo.x && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.x}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <X style={theme?.socialMediaIconStyle || 'default'} />
+                  </a>
+                )}
+                {contactInfo.tiktok && (
+                  <a
+                    className='hvr-grow'
+                    href={contactInfo.tiktok}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    <TikTok style={theme?.socialMediaIconStyle || 'default'} />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className='col-lg sendmsg align-content-center my-4'>
+        )}
+        <div
+          className={`${
+            hasContactInfo ? 'col-lg' : 'col-12'
+          } sendmsg align-content-center my-4`}
+        >
           <form
             ref={form}
             onSubmit={sendEmail}

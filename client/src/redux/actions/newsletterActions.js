@@ -39,8 +39,8 @@ export const fetchNewsletterSubscribers =
 export const fetchNewsletterStats = () => async dispatch => {
   dispatch({ type: FETCH_NEWSLETTER_STATS_LOADING });
   try {
-    const data = await getNewsletterStats();
-    dispatch({ type: FETCH_NEWSLETTER_STATS, payload: data });
+    const response = await getNewsletterStats();
+    dispatch({ type: FETCH_NEWSLETTER_STATS, payload: response.data });
   } catch (errorData) {
     dispatch({ type: FETCH_NEWSLETTER_STATS_ERROR, payload: errorData });
   }

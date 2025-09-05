@@ -177,6 +177,11 @@ nav {
   position: relative;
 }
 
+.navbar-toggler:focus {
+  box-shadow: none;
+  outline: none;
+}
+
 .navbar-toggler:hover {
   opacity: 0.8;
 }
