@@ -2,6 +2,9 @@ const NewsletterSubscriber = require('../models/NewsletterSubscriber');
 const Theme = require('../models/Theme');
 const EmailService = require('./emailService');
 const newsletterNotification = require('../templates/newsletterNotification');
+const musicNotification = require('../templates/musicNotification');
+const videoNotification = require('../templates/videoNotification');
+const showNotification = require('../templates/showNotification');
 const { generateFromAddress } = require('./bandEmailService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
@@ -221,13 +224,42 @@ async function sendContentNotification(contentType, content) {
       );
 
       try {
-        const emailTemplate = newsletterNotification(
-          bandName,
-          content,
-          contentType,
-          colors,
-          'test-token-123' // Use a test token for development
-        );
+        // Use the appropriate template based on content type
+        let emailTemplate;
+        switch (contentType) {
+          case 'music':
+            emailTemplate = musicNotification(
+              bandName,
+              content,
+              theme,
+              'test-token-123'
+            );
+            break;
+          case 'video':
+            emailTemplate = videoNotification(
+              bandName,
+              content,
+              theme,
+              'test-token-123'
+            );
+            break;
+          case 'show':
+            emailTemplate = showNotification(
+              bandName,
+              content,
+              theme,
+              'test-token-123'
+            );
+            break;
+          default:
+            emailTemplate = newsletterNotification(
+              bandName,
+              content,
+              contentType,
+              colors,
+              'test-token-123'
+            );
+        }
 
         // Generate white-label FROM address for development
         const devFromAddress = generateFromAddress(bandName);
@@ -265,13 +297,42 @@ async function sendContentNotification(contentType, content) {
       // Production mode: Send to all subscribers
       emailPromises = subscribers.map(async subscriber => {
         try {
-          const emailTemplate = newsletterNotification(
-            bandName,
-            content,
-            contentType,
-            colors,
-            subscriber.unsubscribeToken
-          );
+          // Use the appropriate template based on content type
+          let emailTemplate;
+          switch (contentType) {
+            case 'music':
+              emailTemplate = musicNotification(
+                bandName,
+                content,
+                theme,
+                subscriber.unsubscribeToken
+              );
+              break;
+            case 'video':
+              emailTemplate = videoNotification(
+                bandName,
+                content,
+                theme,
+                subscriber.unsubscribeToken
+              );
+              break;
+            case 'show':
+              emailTemplate = showNotification(
+                bandName,
+                content,
+                theme,
+                subscriber.unsubscribeToken
+              );
+              break;
+            default:
+              emailTemplate = newsletterNotification(
+                bandName,
+                content,
+                contentType,
+                colors,
+                subscriber.unsubscribeToken
+              );
+          }
 
           // Queue email with throttler (non-blocking)
           await EmailService.sendEmail({

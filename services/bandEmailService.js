@@ -1,5 +1,5 @@
 const Theme = require('../models/Theme');
-const { sendNewsletterConfirmation } = require('./emailService');
+const emailService = require('./emailService');
 const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
@@ -8,33 +8,27 @@ const logger = require('../utils/logger');
  * @param {string} bandId - Band identifier
  * @returns {Object} Email configuration
  */
-async function getBandEmailConfig(bandId = null) {
+async function getBandEmailConfig(bandId) {
   try {
-    // For MVP, use default bandsyte.com configuration
-    // In the future, this could be band-specific
-    const config = {
-      fromDomain: 'bandsyte.com',
-      fromEmail: 'noreply@bandsyte.com',
-      webhookUrl: `${
-        process.env.CLIENT_URL || 'http://localhost:3000'
-      }/api/ses/notifications`,
-      verifiedDomain: 'bandsyte.com',
-    };
-
-    // If bandId provided, get band-specific settings from theme
-    if (bandId) {
-      const theme = await Theme.findOne({ bandId });
-      if (theme) {
-        config.bandName = theme.siteTitle || 'Bandsyte';
-        config.customDomain = theme.customDomain; // For future use
-      }
+    const theme = await Theme.findOne();
+    if (!theme) {
+      throw new AppError('Theme configuration not found', 404);
     }
 
-    return config;
+    return {
+      bandName: theme.bandName || 'Band',
+      bandLogoUrl: theme.bandLogoUrl,
+      primaryColor: theme.primaryColor || '#000000',
+      secondaryColor: theme.secondaryColor || '#ffffff',
+      enableNewsletter: theme.enableNewsletter || false,
+      notifyOnNewShows: theme.notifyOnNewShows || false,
+      notifyOnNewMusic: theme.notifyOnNewMusic || false,
+      notifyOnNewVideos: theme.notifyOnNewVideos || false,
+    };
   } catch (error) {
-    logger.error('❌ Failed to get band email config:', error);
+    logger.error('Failed to get band email config:', error);
     throw new AppError(
-      error.message || 'Failed to get band email config',
+      error.message || 'Failed to get band email configuration',
       error.statusCode || 500
     );
   }
@@ -72,7 +66,7 @@ async function sendNewsletterConfirmationWithBranding(
       `📧 Sending newsletter confirmation for ${bandName} to ${email}`
     );
 
-    return await sendNewsletterConfirmation(
+    return await emailService.sendNewsletterConfirmation(
       email,
       bandName,
       unsubscribeToken,
@@ -102,7 +96,7 @@ async function sendWelcomeEmailWithBranding(email, bandName) {
 
     logger.info(`📧 Sending welcome email for ${bandName} to ${email}`);
 
-    return await sendWelcomeEmail(email, bandName, fromAddress);
+    return await emailService.sendWelcomeEmail(email, bandName, fromAddress);
   } catch (error) {
     logger.error(`❌ Failed to send welcome email for ${bandName}:`, error);
     throw new AppError(
@@ -135,7 +129,7 @@ async function sendContentNotificationWithBranding(
       `📧 Sending ${contentType} notification for ${bandName} to ${subscriberEmail}`
     );
 
-    return await sendContentNotification(
+    return await emailService.sendContentNotification(
       subscriberEmail,
       bandName,
       contentType,
@@ -169,36 +163,36 @@ function validateDomainForSES(domain) {
     return false;
   }
 
-  // For MVP, only allow bandsyte.com and its subdomains
-  // In the future, this could validate against a whitelist of verified domains
-  const allowedDomains = ['bandsyte.com'];
-  const allowedPatterns = allowedDomains.map(d => new RegExp(`^(.+\\.)?${d}$`));
+  // Check for common invalid patterns
+  const invalidPatterns = [
+    /^localhost$/,
+    /^127\.0\.0\.1$/,
+    /^0\.0\.0\.0$/,
+    /^[0-9]+$/,
+  ];
 
-  return allowedPatterns.some(pattern => pattern.test(domain));
+  return !invalidPatterns.some(pattern => pattern.test(domain));
 }
 
 /**
- * Get SES configuration status for a band
- * @param {string} bandId - Band identifier
- * @returns {Object} SES configuration status
+ * Get SES status for a domain
+ * @param {string} domain - Domain to check
+ * @returns {Object} SES status information
  */
-async function getSESStatus(bandId = null) {
+async function getSESStatus(domain) {
   try {
-    const config = await getBandEmailConfig(bandId);
-
+    // This would typically check AWS SES for domain verification status
+    // For now, return a mock response
     return {
-      bandId,
-      verifiedDomain: config.verifiedDomain,
-      fromEmail: config.fromEmail,
-      webhookConfigured: !!config.webhookUrl,
-      domainValid: validateDomainForSES(config.verifiedDomain),
-      whiteLabelReady: true, // Hybrid approach is always ready
-      configurationType: 'hybrid', // bandsyte.com envelope, custom display name
+      domain,
+      verified: true,
+      configured: false,
     };
   } catch (error) {
-    logger.error('❌ Failed to get SES status:', error);
+    logger.error('Failed to get SES status:', error);
     return {
-      error: error.message,
+      domain,
+      verified: false,
       configured: false,
     };
   }

@@ -73,11 +73,31 @@ async function addPlayer(playerData) {
 
     // Send newsletter notification for new music
     try {
+      // Extract music type from Spotify URL for better description
+      let musicType = 'music';
+      if (newPlayer.spotifyLink) {
+        const spotifyPatterns = {
+          track:
+            /^https?:\/\/(?:open\.)?spotify\.com\/track\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+          album:
+            /^https?:\/\/(?:open\.)?spotify\.com\/album\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+          playlist:
+            /^https?:\/\/(?:open\.)?spotify\.com\/playlist\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
+        };
+
+        for (const [type, pattern] of Object.entries(spotifyPatterns)) {
+          if (pattern.test(newPlayer.spotifyLink)) {
+            musicType = type;
+            break;
+          }
+        }
+      }
+
       await NewsletterService.sendContentNotification('music', {
         title: newPlayer.title || 'New Music',
-        artist: newPlayer.artist,
-        album: newPlayer.album,
-        description: `New music: ${newPlayer.title || 'New track'}`,
+        type: musicType, // Pass the extracted type
+        releaseDate: newPlayer.date, // Use the correct field name
+        spotifyLink: newPlayer.spotifyLink,
       });
     } catch (notificationError) {
       logger.error(

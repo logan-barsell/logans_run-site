@@ -9,7 +9,6 @@ export const signupNewsletter = async email => {
   } catch (error) {
     const errorData = handleServiceError(error, {
       operation: 'signupNewsletter',
-      customMessage: 'Failed to subscribe to newsletter. Please try again.',
     });
     throw errorData;
   }

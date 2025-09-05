@@ -12,7 +12,8 @@
  */
 const passwordResetSuccess = (
   bandName = 'Bandsyte',
-  timestamp = new Date().toLocaleString()
+  timestamp = new Date().toLocaleString(),
+  theme = {}
 ) => ({
   subject: `Password Reset Successful - ${bandName} Admin`,
   html: `
@@ -23,7 +24,7 @@ const passwordResetSuccess = (
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Password Reset Successful - ${bandName} Admin</title>
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
+        body { font-family: "Courier New", monospace; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .header { background: #000000; color: white !important; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; color: #333 !important; }
@@ -42,6 +43,11 @@ const passwordResetSuccess = (
     <body>
       <div class="container">
         <div class="header">
+          ${
+            theme.bandLogoUrl
+              ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
+              : ''
+          }
           <h1>${bandName}</h1>
           <p>Password Reset Successful</p>
         </div>

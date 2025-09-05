@@ -27,9 +27,9 @@ async function getTheme() {
       // Provide default theme if none exists
       theme = await Theme.create({
         siteTitle: 'Band Site',
-        primaryColor: '#e3ff05',
-        secondaryColor: '#f08080',
-        primaryFont: 'SprayPaint',
+        primaryColor: '#000000',
+        secondaryColor: '#ffffff',
+        primaryFont: 'Anton',
         secondaryFont: 'Courier New',
         greeting: 'HELLO.',
         introduction: 'Welcome to our site',
@@ -47,12 +47,6 @@ async function getTheme() {
         needsUpdate = true;
       }
 
-      // Check and fix other required fields
-      if (!theme.secondaryFont) {
-        updates.secondaryFont = 'RobotoCondensed';
-        needsUpdate = true;
-      }
-
       if (!theme.greeting) {
         updates.greeting = 'HELLO.';
         needsUpdate = true;
@@ -63,25 +57,29 @@ async function getTheme() {
       }
 
       if (!theme.siteTitle) {
-        updates.siteTitle = 'Band Site';
+        updates.siteTitle = 'Bandsyte';
         needsUpdate = true;
       }
 
       if (!theme.primaryColor) {
-        updates.primaryColor = '#e3ff05';
+        updates.primaryColor = '#000000';
         needsUpdate = true;
       }
 
       if (!theme.secondaryColor) {
-        updates.secondaryColor = '#f08080';
+        updates.secondaryColor = '#ffffff';
         needsUpdate = true;
       }
 
       if (!theme.primaryFont) {
-        updates.primaryFont = 'SprayPaint';
+        updates.primaryFont = '';
         needsUpdate = true;
       }
 
+      if (!theme.secondaryFont) {
+        updates.secondaryFont = 'RobotoCondensed';
+        needsUpdate = true;
+      }
       // Apply updates if needed
       if (needsUpdate) {
         Object.assign(theme, updates);

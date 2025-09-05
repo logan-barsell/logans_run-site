@@ -21,7 +21,8 @@ const securityAlert = (
   timestamp = new Date().toLocaleString(),
   ipAddress = 'Unknown',
   userAgent = 'Unknown',
-  location = 'Unknown'
+  location = 'Unknown',
+  theme = {}
 ) => {
   const getAlertTitle = type => {
     switch (type) {
@@ -71,8 +72,18 @@ const securityAlert = (
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Security Alert - ${bandName} Admin</title>
+      ${
+        theme.bandLogoUrl
+          ? `
+      <meta property="og:image" content="${theme.bandLogoUrl}" />
+      <meta name="twitter:image" content="${theme.bandLogoUrl}" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <link rel="icon" type="image/png" href="${theme.bandLogoUrl}" />
+      `
+          : ''
+      }
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
+        body { font-family: "Courier New", monospace; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .header { background: #000000; color: white !important; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; color: #333 !important; }
@@ -92,6 +103,11 @@ const securityAlert = (
     <body>
       <div class="container">
         <div class="header">
+          ${
+            theme.bandLogoUrl
+              ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
+              : ''
+          }
           <h1>${bandName}</h1>
           <p>🚨 Security Alert</p>
         </div>

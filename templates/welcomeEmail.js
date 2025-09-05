@@ -19,7 +19,7 @@ const welcomeEmail = (bandName = 'Bandsyte', dashboardUrl = '') => ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Welcome to Bandsyte</title>
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
+        body { font-family: "Courier New", monospace; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .header { background: #000000; color: white !important; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; color: #333 !important; }

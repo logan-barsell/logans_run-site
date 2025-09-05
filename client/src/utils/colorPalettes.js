@@ -184,7 +184,7 @@ const colorPalettes = {
 // Preselected color options for primary and secondary colors
 const preselectedColors = {
   primary: [
-    { name: 'Black', value: '#000000' },
+    // { name: 'Black', value: '#000000' }, // Commented out due to UI visibility issues with dark forms
     { name: 'White', value: '#ffffff' },
     { name: 'Red', value: '#ff0000' },
     { name: 'Blue', value: '#0000ff' },
