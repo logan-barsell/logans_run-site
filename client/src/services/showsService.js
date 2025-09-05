@@ -7,10 +7,11 @@ export const getShows = async () => {
     const response = await api.get('/shows');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getShows',
+      customMessage: 'Unable to load shows. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -20,10 +21,11 @@ export const addShow = async showData => {
     const response = await api.post('/addShow', showData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'addShow',
+      customMessage: 'Failed to add show. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -32,10 +34,11 @@ export const updateShow = async (showId, showData) => {
     const response = await api.post(`/updateShow/${showId}`, showData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'updateShow',
+      customMessage: 'Failed to update show. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -44,10 +47,11 @@ export const deleteShow = async showId => {
     const response = await api.get(`/deleteShow/${showId}`);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'deleteShow',
+      customMessage: 'Failed to delete show. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -57,10 +61,11 @@ export const getShowsSettings = async () => {
     const response = await api.get('/showsSettings');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getShowsSettings',
+      customMessage: 'Unable to load shows settings. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -70,9 +75,10 @@ export const updateShowsSettings = async settings => {
     const response = await api.post('/updateShowsSettings', settings);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'updateShowsSettings',
+      customMessage: 'Failed to update shows settings. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };

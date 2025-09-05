@@ -47,10 +47,11 @@ async function fetchToken() {
     const data = await response.json();
     return data.data.csrfToken;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'fetchToken',
+      customMessage: 'Unable to load security token. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 }
 

@@ -7,10 +7,11 @@ export const getMediaImages = async () => {
     const response = await api.get('/getMediaImages');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getMediaImages',
+      customMessage: 'Unable to load media images. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -45,10 +46,11 @@ export const getVideos = async () => {
     const response = await api.get('/getVideos');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getVideos',
+      customMessage: 'Unable to load videos. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 

@@ -14,8 +14,9 @@ export const fetchBio = () => async dispatch => {
   try {
     const data = await getBio();
     dispatch({ type: FETCH_BIO, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_BIO_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_BIO_ERROR, payload: errorData });
   }
 };
 
@@ -25,7 +26,8 @@ export const fetchMembers = () => async dispatch => {
   try {
     const data = await getMembers();
     dispatch({ type: FETCH_MEMBERS, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_MEMBERS_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_MEMBERS_ERROR, payload: errorData });
   }
 };

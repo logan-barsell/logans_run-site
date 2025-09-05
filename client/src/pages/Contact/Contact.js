@@ -20,16 +20,50 @@ import Button from '../../components/Button/Button';
 import { PageTitle, Divider } from '../../components/Header';
 import { useAlert } from '../../contexts/AlertContext';
 import { sendContactMessage } from '../../services/contactService';
+import StaticAlert from '../../components/Alert/StaticAlert';
 
-const ContactPage = ({ fetchContactInfo, contactInfo, theme }) => {
+const ContactPage = ({
+  fetchContactInfo,
+  contactInfo,
+  theme,
+  loading,
+  error,
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showSuccess, showError } = useAlert();
+  const form = useRef();
 
   useEffect(() => {
     fetchContactInfo();
   }, [fetchContactInfo]);
 
-  const form = useRef();
+  // Show loading state while fetching data
+  if (loading) {
+    return (
+      <div
+        className='d-flex justify-content-center align-items-center'
+        style={{ minHeight: '200px' }}
+      >
+        <div
+          className='spinner-border text-light'
+          role='status'
+        >
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if fetch failed
+  if (error) {
+    return (
+      <StaticAlert
+        type={error.severity}
+        title={error.title}
+        description={error.message}
+      />
+    );
+  }
 
   const sendEmail = async e => {
     e.preventDefault();
@@ -280,6 +314,8 @@ function mapStateToProps({ contactInfo, theme }) {
   return {
     contactInfo: contactInfo?.data, // Access the data property from the contactInfo reducer
     theme: theme?.data || null,
+    loading: contactInfo?.loading || false,
+    error: contactInfo?.error || null,
   };
 }
 

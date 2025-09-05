@@ -7,10 +7,12 @@ export async function getMerchConfig() {
     const res = await api.get('/merchConfig');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getMerchConfig',
+      customMessage:
+        'Unable to load store configuration. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 }
 
@@ -20,10 +22,12 @@ export async function getMerchConfigAdmin() {
     const res = await api.get('/merchConfig/admin');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getMerchConfigAdmin',
+      customMessage:
+        'Unable to load store configuration. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 }
 
@@ -33,10 +37,11 @@ export async function updateMerchConfig(data) {
     const res = await api.post('/merchConfig', data);
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'updateMerchConfig',
+      customMessage: 'Failed to update store configuration. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 }
 
@@ -46,9 +51,10 @@ export async function deleteMerchConfig() {
     const res = await api.delete('/merchConfig');
     return res.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'deleteMerchConfig',
+      customMessage: 'Failed to delete store configuration. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 }

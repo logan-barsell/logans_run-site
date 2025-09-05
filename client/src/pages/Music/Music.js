@@ -12,6 +12,7 @@ import {
   Spotify,
 } from '../../components/icons';
 import { Divider, NoContent } from '../../components/Header';
+import StaticAlert from '../../components/Alert/StaticAlert';
 
 const MusicPage = ({
   fetchPlayers,
@@ -131,13 +132,11 @@ const MusicPage = ({
           </div>
         </div>
       ) : error ? (
-        <div
-          className='alert alert-danger'
-          role='alert'
-        >
-          <i className='fas fa-exclamation-triangle me-2'></i>
-          {error}
-        </div>
+        <StaticAlert
+          type={error.severity}
+          title={error.title}
+          description={error.message}
+        />
       ) : players && players.length > 0 ? (
         players.map(player => (
           <div key={player._id}>

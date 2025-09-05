@@ -7,10 +7,11 @@ export const getPlayers = async () => {
     const response = await api.get('/getPlayers');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getPlayers',
+      customMessage: 'Unable to load music content. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 

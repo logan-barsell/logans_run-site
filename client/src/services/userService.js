@@ -7,10 +7,11 @@ export const updateUser = async userData => {
     const response = await api.put('/user/me', userData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'updateUser',
+      customMessage: 'Failed to update user information. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -23,10 +24,12 @@ export const changePassword = async (currentPassword, newPassword) => {
     });
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'changePassword',
+      customMessage:
+        'Failed to change password. Please check your current password and try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -36,9 +39,10 @@ export const initializeDefaultUser = async () => {
     const response = await api.post('/auth/initialize');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'initializeDefaultUser',
+      customMessage: 'Failed to initialize user account. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };

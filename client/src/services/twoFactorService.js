@@ -9,10 +9,12 @@ export const getTwoFactorStatus = async () => {
     const response = await api.get('/2fa/status');
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getTwoFactorStatus',
+      customMessage:
+        'Unable to load two-factor authentication status. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -24,10 +26,12 @@ export const enableTwoFactor = async () => {
     const response = await api.post('/2fa/enable');
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'enableTwoFactor',
+      customMessage:
+        'Failed to enable two-factor authentication. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -39,10 +43,12 @@ export const disableTwoFactor = async () => {
     const response = await api.post('/2fa/disable');
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'disableTwoFactor',
+      customMessage:
+        'Failed to disable two-factor authentication. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -56,10 +62,12 @@ export const sendTwoFactorCode = async (bandName = 'Bandsyte') => {
     });
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'sendTwoFactorCode',
+      customMessage:
+        'Failed to send two-factor authentication code. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -73,9 +81,11 @@ export const verifyTwoFactorCode = async code => {
     });
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'verifyTwoFactorCode',
+      customMessage:
+        'Failed to verify two-factor authentication code. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };

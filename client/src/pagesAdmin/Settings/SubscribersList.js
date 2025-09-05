@@ -1,71 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import {
-  getNewsletterSubscribers,
-  getNewsletterStats,
-  unsubscribeSubscriber,
-} from '../../services/newsletterService';
+  fetchNewsletterSubscribers,
+  fetchNewsletterStats,
+  removeNewsletterSubscriberAction,
+} from '../../redux/actions';
 import { useAlert } from '../../contexts/AlertContext';
 import { format } from 'date-fns';
 import { DataTable } from '../../components/DataTable';
 import Button from '../../components/Button/Button';
+import StaticAlert from '../../components/Alert/StaticAlert';
 import './SubscribersList.css';
 
-const SubscribersList = () => {
-  const [subscribers, setSubscribers] = useState([]);
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalSubscribers: 0,
-    hasNextPage: false,
-    hasPrevPage: false,
-  });
-
+const SubscribersList = ({
+  fetchNewsletterSubscribers,
+  fetchNewsletterStats,
+  removeNewsletterSubscriberAction,
+  newsletter,
+}) => {
   const { showError, showSuccess } = useAlert();
 
   useEffect(() => {
-    fetchSubscribers();
-  }, []);
+    fetchNewsletterSubscribers(1, 20);
+    fetchNewsletterStats();
+  }, [fetchNewsletterSubscribers, fetchNewsletterStats]);
 
-  const fetchSubscribers = async (page = 1) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Fetch both subscribers and stats in parallel
-      const [subscribersResponse, statsResponse] = await Promise.all([
-        getNewsletterSubscribers(page, 20),
-        getNewsletterStats(),
-      ]);
-
-      if (subscribersResponse.success) {
-        setSubscribers(subscribersResponse.data);
-        setPagination(subscribersResponse.pagination);
-      }
-
-      if (statsResponse.success) {
-        setStats(statsResponse.data);
-      }
-    } catch (err) {
-      console.error('Error fetching subscribers:', err);
-      setError('Failed to load subscribers');
-      showError('Failed to load newsletter subscribers');
-    } finally {
-      setLoading(false);
-    }
+  const fetchSubscribers = (page = 1) => {
+    fetchNewsletterSubscribers(page, 20);
   };
 
   const handleUnsubscribe = async subscriberId => {
-    try {
-      await unsubscribeSubscriber(subscriberId);
+    const result = await removeNewsletterSubscriberAction(subscriberId);
+    if (result.success) {
       showSuccess('Subscriber unsubscribed successfully');
       // Refresh the subscribers list
-      fetchSubscribers(pagination.currentPage);
-    } catch (error) {
-      console.error('Error unsubscribing subscriber:', error);
-      showError(error.message || 'Failed to unsubscribe subscriber');
+      fetchSubscribers(newsletter.pagination.currentPage);
+    } else {
+      showError(result.error?.message || 'Failed to unsubscribe subscriber');
     }
   };
 
@@ -164,7 +135,7 @@ const SubscribersList = () => {
     );
   };
 
-  if (loading) {
+  if (newsletter.loading) {
     return (
       <div
         className='d-flex justify-content-center align-items-center'
@@ -180,22 +151,20 @@ const SubscribersList = () => {
     );
   }
 
-  if (error) {
+  if (newsletter.error) {
     return (
-      <div
-        className='alert alert-danger'
-        role='alert'
-      >
-        <i className='fas fa-exclamation-triangle me-2'></i>
-        {error}
-      </div>
+      <StaticAlert
+        type={newsletter.error.severity}
+        title={newsletter.error.title}
+        description={newsletter.error.message}
+      />
     );
   }
 
   return (
     <div className='mt-4 subscribers-list-wrapper'>
       {/* Statistics Cards */}
-      {stats && (
+      {newsletter.stats && (
         <div className='row mb-4'>
           <div
             className='col-lg-4 mb-3'
@@ -230,7 +199,7 @@ const SubscribersList = () => {
                     fontFamily: 'var(--secondary-font)',
                   }}
                 >
-                  {stats.total}
+                  {newsletter.stats.total}
                 </h3>
               </div>
             </div>
@@ -268,7 +237,7 @@ const SubscribersList = () => {
                     fontFamily: 'var(--secondary-font)',
                   }}
                 >
-                  {stats.active}
+                  {newsletter.stats.active}
                 </h3>
               </div>
             </div>
@@ -306,7 +275,7 @@ const SubscribersList = () => {
                     fontFamily: 'var(--secondary-font)',
                   }}
                 >
-                  {stats.recent}
+                  {newsletter.stats.recent}
                 </h3>
               </div>
             </div>
@@ -316,14 +285,14 @@ const SubscribersList = () => {
 
       {/* DataTable */}
       <DataTable
-        title={`Newsletter Subscribers (${pagination.totalSubscribers})`}
-        data={subscribers}
+        title={`Newsletter Subscribers (${newsletter.pagination.totalSubscribers})`}
+        data={newsletter.data}
         columns={subscriberColumns}
-        loading={loading}
-        error={error}
+        loading={newsletter.loading}
+        error={newsletter.error}
         emptyMessage='No subscribers found'
         emptyIcon='fas fa-inbox'
-        pagination={pagination}
+        pagination={newsletter.pagination}
         onPageChange={fetchSubscribers}
         rowActions={subscriberRowActions}
         getRowKey={subscriber => subscriber._id}
@@ -332,4 +301,26 @@ const SubscribersList = () => {
   );
 };
 
-export default SubscribersList;
+function mapStateToProps({ newsletter }) {
+  return {
+    newsletter: newsletter || {
+      data: [],
+      loading: false,
+      error: null,
+      stats: null,
+      pagination: {
+        currentPage: 1,
+        totalPages: 1,
+        totalSubscribers: 0,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+    },
+  };
+}
+
+export default connect(mapStateToProps, {
+  fetchNewsletterSubscribers,
+  fetchNewsletterStats,
+  removeNewsletterSubscriberAction,
+})(SubscribersList);

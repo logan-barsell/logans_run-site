@@ -17,8 +17,9 @@ export const fetchFeaturedReleases = () => async dispatch => {
   try {
     const data = await getFeaturedReleases();
     dispatch({ type: FETCH_FEATURED_RELEASES, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_FEATURED_RELEASES_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_FEATURED_RELEASES_ERROR, payload: errorData });
   }
 };
 
@@ -28,7 +29,8 @@ export const fetchFeaturedVideos = () => async dispatch => {
   try {
     const data = await getFeaturedVideos();
     dispatch({ type: FETCH_FEATURED_VIDEOS, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_FEATURED_VIDEOS_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_FEATURED_VIDEOS_ERROR, payload: errorData });
   }
 };

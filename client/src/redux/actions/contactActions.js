@@ -11,7 +11,8 @@ export const fetchContactInfo = () => async dispatch => {
   try {
     const data = await getContactInfo();
     dispatch({ type: FETCH_CONTACT_INFO, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_CONTACT_INFO_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_CONTACT_INFO_ERROR, payload: errorData });
   }
 };

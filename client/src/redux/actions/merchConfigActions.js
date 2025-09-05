@@ -16,8 +16,9 @@ export const fetchMerchConfig = () => async dispatch => {
   try {
     const data = await getMerchConfigAdmin();
     dispatch({ type: FETCH_MERCH_CONFIG, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_MERCH_CONFIG_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_MERCH_CONFIG_ERROR, payload: errorData });
   }
 };
 
@@ -27,8 +28,9 @@ export const fetchPublicMerchConfig = () => async dispatch => {
   try {
     const data = await getMerchConfig();
     dispatch({ type: FETCH_MERCH_CONFIG, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_MERCH_CONFIG_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_MERCH_CONFIG_ERROR, payload: errorData });
   }
 };
 
@@ -38,7 +40,8 @@ export const updateMerchConfig = configData => async dispatch => {
   try {
     const data = await updateMerchConfigService(configData);
     dispatch({ type: UPDATE_MERCH_CONFIG, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_MERCH_CONFIG_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_MERCH_CONFIG_ERROR, payload: errorData });
   }
 };

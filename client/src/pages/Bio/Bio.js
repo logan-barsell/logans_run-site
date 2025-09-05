@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { fetchBio, fetchMembers } from '../../redux/actions';
 import { useTheme } from '../../contexts/ThemeContext';
 import { PageTitle, Divider, NoContent } from '../../components/Header';
+import StaticAlert from '../../components/Alert/StaticAlert';
 
 import {
   Facebook,
@@ -14,13 +15,51 @@ import {
   X as XIcon,
 } from '../../components/icons';
 
-const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
+const BioPage = ({
+  fetchMembers,
+  members,
+  fetchBio,
+  bio,
+  membersLoading,
+  membersError,
+  bioLoading,
+  bioError,
+}) => {
   const { theme } = useTheme();
 
   useEffect(() => {
     fetchMembers();
     fetchBio();
   }, [fetchMembers, fetchBio]);
+
+  // Show loading state while fetching data
+  if (membersLoading || bioLoading) {
+    return (
+      <div
+        className='d-flex justify-content-center align-items-center'
+        style={{ minHeight: '200px' }}
+      >
+        <div
+          className='spinner-border text-light'
+          role='status'
+        >
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if fetch failed
+  if (membersError || bioError) {
+    const error = membersError || bioError;
+    return (
+      <StaticAlert
+        type={error.severity}
+        title={error.title}
+        description={error.message}
+      />
+    );
+  }
 
   const renderBio = () => {
     return bio && bio[0]?.text;
@@ -151,7 +190,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
                 <img
                   className='aboutuspic'
                   src={bio[0].customImageUrl}
-                  alt='Bio Image'
+                  alt='Bio'
                   style={{
                     borderRadius: '5px',
                   }}
@@ -177,9 +216,7 @@ const BioPage = ({ fetchMembers, members, fetchBio, bio }) => {
             <br />
             <div className='container pb-5'>{renderMembers}</div>
           </div>
-        ) : (
-          <NoContent>No Members</NoContent>
-        )}
+        ) : null}
       </div>
     </div>
   );
@@ -190,6 +227,10 @@ function mapStateToProps({ currentBio, members, theme }) {
     bio: currentBio?.data || [],
     members: members?.data || [],
     theme: theme?.data || null,
+    membersLoading: members?.loading || false,
+    membersError: members?.error || null,
+    bioLoading: currentBio?.loading || false,
+    bioError: currentBio?.error || null,
   };
 }
 

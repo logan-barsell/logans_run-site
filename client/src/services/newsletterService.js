@@ -7,10 +7,11 @@ export const signupNewsletter = async email => {
     const response = await api.post('/newsletter/signup', { email });
     return response.data; // Return full response for success/error handling
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'signupNewsletter',
+      customMessage: 'Failed to subscribe to newsletter. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -20,10 +21,12 @@ export const getNewsletterStats = async () => {
     const response = await api.get('/newsletter/stats');
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getNewsletterStats',
+      customMessage:
+        'Unable to load newsletter statistics. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -35,10 +38,12 @@ export const getNewsletterSubscribers = async (page = 1, limit = 20) => {
     );
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getNewsletterSubscribers',
+      customMessage:
+        'Unable to load newsletter subscribers. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -50,9 +55,10 @@ export const unsubscribeSubscriber = async subscriberId => {
     );
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'unsubscribeSubscriber',
+      customMessage: 'Failed to unsubscribe subscriber. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };

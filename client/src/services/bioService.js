@@ -7,10 +7,11 @@ export const getBio = async () => {
     const response = await api.get('/bio');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getBio',
+      customMessage: 'Unable to load bio information. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -33,9 +34,11 @@ export const getMembers = async () => {
     const response = await api.get('/members');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getMembers',
+      customMessage:
+        'Unable to load member information. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
