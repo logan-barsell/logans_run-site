@@ -11,7 +11,8 @@ export const fetchPlayers = () => async dispatch => {
   try {
     const data = await getPlayers();
     dispatch({ type: FETCH_PLAYERS, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_PLAYERS_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_PLAYERS_ERROR, payload: errorData });
   }
 };

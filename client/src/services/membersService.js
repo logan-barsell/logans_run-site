@@ -7,10 +7,11 @@ export const addMember = async memberData => {
     const response = await api.post('/addMember', memberData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'addMember',
+      customMessage: 'Failed to add member. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -19,10 +20,11 @@ export const updateMember = async (memberId, memberData) => {
     const response = await api.post(`/updateMember/${memberId}`, memberData);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'updateMember',
+      customMessage: 'Failed to update member. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -31,9 +33,10 @@ export const deleteMember = async memberId => {
     const response = await api.get(`/deleteMember/${memberId}`);
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'deleteMember',
+      customMessage: 'Failed to delete member. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };

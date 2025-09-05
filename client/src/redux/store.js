@@ -26,6 +26,12 @@ import {
   featuredReleasesReducer,
   featuredVideosReducer,
 } from './reducers/featuredContentReducer';
+import { newsletterReducer } from './reducers/newsletterReducer';
+import { userReducer } from './reducers/userReducer';
+import { sessionsReducer } from './reducers/sessionsReducer';
+import { securityPreferencesReducer } from './reducers/securityPreferencesReducer';
+import { twoFactorReducer } from './reducers/twoFactorReducer';
+import { csrfReducer } from './reducers/csrfReducer';
 
 const persistConfig = {
   key: 'root',
@@ -49,6 +55,12 @@ const rootReducer = combineReducers({
   merchConfig: merchConfigReducer,
   featuredReleases: featuredReleasesReducer,
   featuredVideos: featuredVideosReducer,
+  newsletter: newsletterReducer,
+  users: userReducer,
+  sessions: sessionsReducer,
+  securityPreferences: securityPreferencesReducer,
+  twoFactor: twoFactorReducer,
+  csrf: csrfReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

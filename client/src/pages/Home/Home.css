@@ -47,7 +47,7 @@
   text-shadow: 2px 1px black;
 }
 
-#home p {
+#home p.carousel-title {
   text-shadow: 2px 1.5px black;
 }
 
@@ -90,20 +90,6 @@
 .alert {
   width: fit-content;
   margin: auto;
-}
-
-#home .alert {
-  background-color: rgba(0, 0, 0, 0.7);
-  border-color: var(--main);
-  color: white;
-}
-
-#home .alert-success {
-  border-color: var(--main);
-}
-
-#home .alert-danger {
-  border-color: var(--secondary);
 }
 
 #home .progress {

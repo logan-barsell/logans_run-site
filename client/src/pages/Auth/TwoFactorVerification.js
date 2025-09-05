@@ -148,7 +148,7 @@ const TwoFactorVerification = () => {
 
             <div className='mb-3'>
               <Field name='code'>
-                {({ input, meta }) => (
+                {({ input }) => (
                   <>
                     <label
                       htmlFor='code'

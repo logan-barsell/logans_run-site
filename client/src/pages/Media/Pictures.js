@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchMediaImages } from '../../redux/actions';
 import Button from '../../components/Button/Button';
 import { NoContent } from '../../components/Header';
+import StaticAlert from '../../components/Alert/StaticAlert';
 
 const imgCount = 12;
 const Pictures = ({ fetchMediaImages, images, loading, error }) => {
@@ -51,13 +52,11 @@ const Pictures = ({ fetchMediaImages, images, loading, error }) => {
   // Show error state if fetch failed
   if (error) {
     return (
-      <div
-        className='alert alert-danger'
-        role='alert'
-      >
-        <i className='fas fa-exclamation-triangle me-2'></i>
-        {error}
-      </div>
+      <StaticAlert
+        type={error.severity}
+        title={error.title}
+        description={error.message}
+      />
     );
   }
 

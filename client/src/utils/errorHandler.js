@@ -9,6 +9,45 @@ export const ERROR_TYPES = {
   UNKNOWN: 'unknown',
 };
 
+// Helper functions for error display
+const getErrorSeverity = (errorType, isCritical = false) => {
+  if (isCritical) {
+    return 'danger';
+  }
+  switch (errorType) {
+    case ERROR_TYPES.VALIDATION:
+    case ERROR_TYPES.CLIENT:
+      return 'warning';
+    case ERROR_TYPES.AUTHENTICATION:
+    case ERROR_TYPES.AUTHORIZATION:
+    case ERROR_TYPES.NETWORK:
+    case ERROR_TYPES.SERVER:
+    case ERROR_TYPES.UNKNOWN:
+    default:
+      return 'danger';
+  }
+};
+
+const getErrorTitle = errorType => {
+  switch (errorType) {
+    case ERROR_TYPES.NETWORK:
+      return 'Network Error:';
+    case ERROR_TYPES.SERVER:
+      return 'Server Error:';
+    case ERROR_TYPES.AUTHENTICATION:
+      return 'Authentication Error:';
+    case ERROR_TYPES.AUTHORIZATION:
+      return 'Authorization Error:';
+    case ERROR_TYPES.VALIDATION:
+      return 'Validation Error:';
+    case ERROR_TYPES.CLIENT:
+      return 'Client Error:';
+    case ERROR_TYPES.UNKNOWN:
+    default:
+      return 'Error:';
+  }
+};
+
 // Enhanced error handling utility for services
 export const handleServiceError = (error, options = {}) => {
   const {
@@ -23,16 +62,49 @@ export const handleServiceError = (error, options = {}) => {
   let errorType = ERROR_TYPES.UNKNOWN;
   let statusCode = null;
 
-  // If no custom message provided, try to extract from error
-  if (!message) {
-    if (error.response) {
-      // Server responded with error status
-      const status = error.response.status;
-      statusCode = status;
-      const data = error.response.data;
+  // Always classify error type based on response status if available
+  if (error.response) {
+    const status = error.response.status;
+    statusCode = status;
 
-      // Try to extract backend message first - this is the most important part
+    // Classify error type based on status code
+    switch (status) {
+      case 400:
+        errorType = ERROR_TYPES.VALIDATION;
+        break;
+      case 401:
+        errorType = ERROR_TYPES.AUTHENTICATION;
+        break;
+      case 403:
+        errorType = ERROR_TYPES.AUTHORIZATION;
+        break;
+      case 404:
+        errorType = ERROR_TYPES.CLIENT;
+        break;
+      case 409:
+        errorType = ERROR_TYPES.VALIDATION;
+        break;
+      case 422:
+        errorType = ERROR_TYPES.VALIDATION;
+        break;
+      case 429:
+        errorType = ERROR_TYPES.SERVER;
+        break;
+      case 500:
+      case 502:
+      case 503:
+      case 504:
+        errorType = ERROR_TYPES.SERVER;
+        break;
+      default:
+        errorType = ERROR_TYPES.UNKNOWN;
+    }
+
+    // If no custom message provided, try to extract from error response
+    if (!message) {
+      const data = error.response.data;
       let backendMessage = null;
+
       if (data && data.message) {
         backendMessage = data.message;
       } else if (data && data.error) {
@@ -41,80 +113,38 @@ export const handleServiceError = (error, options = {}) => {
         backendMessage = data;
       }
 
-      // If we have a backend message, use it and classify the error type
       if (backendMessage) {
         message = backendMessage;
-
-        // Classify error type based on status code
-        switch (status) {
-          case 400:
-            errorType = ERROR_TYPES.VALIDATION;
-            break;
-          case 401:
-            errorType = ERROR_TYPES.AUTHENTICATION;
-            break;
-          case 403:
-            errorType = ERROR_TYPES.AUTHORIZATION;
-            break;
-          case 404:
-            errorType = ERROR_TYPES.CLIENT;
-            break;
-          case 409:
-            errorType = ERROR_TYPES.VALIDATION;
-            break;
-          case 422:
-            errorType = ERROR_TYPES.VALIDATION;
-            break;
-          case 429:
-            errorType = ERROR_TYPES.SERVER;
-            break;
-          case 500:
-          case 502:
-          case 503:
-          case 504:
-            errorType = ERROR_TYPES.SERVER;
-            break;
-          default:
-            errorType = ERROR_TYPES.UNKNOWN;
-        }
       } else {
-        // No backend message - use generic fallback messages
+        // Use generic fallback messages based on status
         switch (status) {
           case 400:
-            errorType = ERROR_TYPES.VALIDATION;
             message = 'Invalid request. Please check your input and try again.';
             break;
           case 401:
-            errorType = ERROR_TYPES.AUTHENTICATION;
             message = 'You are not authorized to perform this action.';
             break;
           case 403:
-            errorType = ERROR_TYPES.AUTHORIZATION;
             message =
               'Access forbidden. You do not have permission for this action.';
             break;
           case 404:
-            errorType = ERROR_TYPES.CLIENT;
             message = 'The requested resource was not found.';
             break;
           case 409:
-            errorType = ERROR_TYPES.VALIDATION;
             message =
               'This resource already exists or conflicts with existing data.';
             break;
           case 422:
-            errorType = ERROR_TYPES.VALIDATION;
             message = 'Validation error. Please check your input.';
             break;
           case 429:
-            errorType = ERROR_TYPES.SERVER;
             message = 'Too many requests. Please wait a moment and try again.';
             break;
           case 500:
           case 502:
           case 503:
           case 504:
-            errorType = ERROR_TYPES.SERVER;
             message =
               status === 500
                 ? 'Server error. Please try again later.'
@@ -125,32 +155,36 @@ export const handleServiceError = (error, options = {}) => {
                 : 'Gateway timeout. The server took too long to respond.';
             break;
           default:
-            errorType = ERROR_TYPES.UNKNOWN;
             message = 'An unexpected error occurred. Please try again.';
         }
       }
-    } else if (error.request) {
-      // Network error - no response received
-      errorType = ERROR_TYPES.NETWORK;
-
-      if (error.code === 'ECONNABORTED') {
-        message =
-          'Request timed out. Please check your connection and try again.';
-      } else if (error.message && error.message.includes('Network Error')) {
-        message = 'Network error. Please check your internet connection.';
-      } else {
-        message =
-          'Unable to connect to the server. Please check your connection.';
-      }
-    } else if (error.message) {
-      // Other error with message (client-side error)
-      errorType = ERROR_TYPES.CLIENT;
-      message = error.message;
-    } else {
-      // Fallback for unknown errors
-      errorType = ERROR_TYPES.UNKNOWN;
-      message = 'An unexpected error occurred. Please try again.';
     }
+  } else if (error.request) {
+    // Network error - no response received
+    // Check if this is a timeout error (which should be treated as server error)
+    if (
+      error.code === 'ECONNABORTED' ||
+      (error.message && error.message.includes('timeout')) ||
+      (error.message && error.message.includes('504'))
+    ) {
+      errorType = ERROR_TYPES.SERVER;
+      message = 'Request timed out. The server took too long to respond.';
+    } else if (error.message && error.message.includes('Network Error')) {
+      errorType = ERROR_TYPES.NETWORK;
+      message = 'Network error. Please check your internet connection.';
+    } else {
+      errorType = ERROR_TYPES.NETWORK;
+      message =
+        'Unable to connect to the server. Please check your connection.';
+    }
+  } else if (error.message) {
+    // Other error with message (client-side error)
+    errorType = ERROR_TYPES.CLIENT;
+    message = error.message;
+  } else {
+    // Fallback for unknown errors
+    errorType = ERROR_TYPES.UNKNOWN;
+    message = 'An unexpected error occurred. Please try again.';
   }
 
   // Enhanced logging with more context
@@ -176,8 +210,6 @@ export const handleServiceError = (error, options = {}) => {
   // Log error for debugging (in development)
   if (process.env.NODE_ENV === 'development') {
     console.error('Service Error:', errorContext);
-
-    // Log original error separately for detailed inspection
     console.error('Original Error Object:', error);
   }
 
@@ -186,6 +218,8 @@ export const handleServiceError = (error, options = {}) => {
     error,
     errorType,
     statusCode,
+    severity: getErrorSeverity(errorType),
+    title: getErrorTitle(errorType),
     context: errorContext,
   };
 };

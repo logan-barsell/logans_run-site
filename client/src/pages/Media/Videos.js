@@ -4,6 +4,7 @@ import { fetchVideos } from '../../redux/actions';
 import Video from './Video';
 import Button from '../../components/Button/Button';
 import { Divider, NoContent } from '../../components/Header';
+import StaticAlert from '../../components/Alert/StaticAlert';
 
 const videoCount = 6;
 const Videos = ({ fetchVideos, videos, loading, error }) => {
@@ -46,13 +47,11 @@ const Videos = ({ fetchVideos, videos, loading, error }) => {
   // Show error state if fetch failed
   if (error) {
     return (
-      <div
-        className='alert alert-danger'
-        role='alert'
-      >
-        <i className='fas fa-exclamation-triangle me-2'></i>
-        {error}
-      </div>
+      <StaticAlert
+        type={error.severity}
+        title={error.title}
+        description={error.message}
+      />
     );
   }
 

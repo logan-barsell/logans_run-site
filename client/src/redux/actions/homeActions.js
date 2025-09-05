@@ -11,7 +11,8 @@ export const fetchHomeImages = () => async dispatch => {
   try {
     const data = await getHomeImages();
     dispatch({ type: FETCH_HOME_IMAGES, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_HOME_IMAGES_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_HOME_IMAGES_ERROR, payload: errorData });
   }
 };

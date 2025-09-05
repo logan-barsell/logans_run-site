@@ -65,7 +65,7 @@ const ForgotPassword = () => {
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <div className='mb-3'>
               <Field name='email'>
-                {({ input, meta }) => (
+                {({ input }) => (
                   <>
                     <label
                       htmlFor='email'

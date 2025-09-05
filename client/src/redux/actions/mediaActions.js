@@ -14,8 +14,9 @@ export const fetchMediaImages = () => async dispatch => {
   try {
     const data = await getMediaImages();
     dispatch({ type: FETCH_MEDIA_IMAGES, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_MEDIA_IMAGES_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_MEDIA_IMAGES_ERROR, payload: errorData });
   }
 };
 
@@ -25,7 +26,8 @@ export const fetchVideos = () => async dispatch => {
   try {
     const data = await getVideos();
     dispatch({ type: FETCH_VIDEOS, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_VIDEOS_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_VIDEOS_ERROR, payload: errorData });
   }
 };

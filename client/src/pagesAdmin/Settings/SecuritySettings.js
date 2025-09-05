@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../../contexts/AlertContext';
 import { changePassword } from '../../services/userService';
 import {
-  getSessions,
-  endSession,
-  endAllOtherSessions,
-} from '../../services/sessionsService';
-import * as SecurityPreferencesService from '../../services/securityPreferencesService';
+  fetchSessions,
+  endSessionAction,
+  endAllOtherSessionsAction,
+  fetchSecurityPreferences,
+  updateSecurityPreferencesAction,
+} from '../../redux/actions';
 import PasswordField from '../../components/Forms/FieldTypes/PasswordField';
 import { RadioField } from '../../components/Forms/FieldTypes';
 import Button from '../../components/Button/Button';
@@ -20,63 +21,29 @@ import {
   calculatePasswordStrength,
   getPasswordStrengthColor,
   getPasswordStrengthText,
-  validatePasswordStrength,
-  getPasswordStrengthLabel,
 } from '../../utils/validation';
 
-const SecuritySettings = ({ currentSubTab }) => {
+const SecuritySettings = ({
+  currentSubTab,
+  fetchSessions,
+  endSessionAction,
+  endAllOtherSessionsAction,
+  fetchSecurityPreferences,
+  updateSecurityPreferencesAction,
+  sessions,
+  securityPreferences,
+}) => {
   const { showSuccess, showError } = useAlert();
   const navigate = useNavigate();
-  const location = useLocation();
 
   // Use currentSubTab from props, fallback to 'preferences' if not provided
   const activeTab = currentSubTab || 'preferences';
-  const [sessions, setSessions] = useState([]);
-  const [currentSessionId, setCurrentSessionId] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const [securityPreferences, setSecurityPreferences] = useState({
-    loginAlerts: false, // Default to false - login alerts can be annoying
-    sessionTimeout: 7, // days
-    twoFactorEnabled: false,
-  });
-
-  const loadSessions = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await getSessions();
-      setSessions(response.sessions || response.data?.sessions || []);
-      setCurrentSessionId(response.data?.currentSessionId || null);
-    } catch (error) {
-      console.error('Error loading sessions:', error);
-      showError('Failed to load sessions');
-    } finally {
-      setLoading(false);
-    }
-  }, [showError]);
-
-  // Load security preferences
-  const loadSecurityPreferences = useCallback(async () => {
-    try {
-      const response =
-        await SecurityPreferencesService.getSecurityPreferences();
-      if (response.success) {
-        setSecurityPreferences(prev => ({
-          ...prev,
-          loginAlerts: response.data.loginAlerts,
-          twoFactorEnabled: response.data.twoFactorEnabled,
-        }));
-      }
-    } catch (error) {
-      console.error('Error loading security preferences:', error);
-    }
-  }, []);
 
   // Load sessions and security preferences on component mount
   useEffect(() => {
-    loadSessions();
-    loadSecurityPreferences();
-  }, [loadSessions, loadSecurityPreferences]);
+    fetchSessions();
+    fetchSecurityPreferences();
+  }, [fetchSessions, fetchSecurityPreferences]);
 
   const handlePasswordChange = async formData => {
     if (formData.newPassword !== formData.confirmPassword) {
@@ -91,64 +58,46 @@ const SecuritySettings = ({ currentSubTab }) => {
     }
 
     try {
-      setLoading(true);
       await changePassword(formData.currentPassword, formData.newPassword);
       showSuccess('Password changed successfully!');
     } catch (error) {
       console.error('Error changing password:', error);
       showError(error.response?.data?.message || 'Failed to change password');
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleEndSession = async sessionId => {
-    try {
-      await endSession(sessionId);
+    const result = await endSessionAction(sessionId);
+    if (result.success) {
       showSuccess('Session ended successfully');
-      loadSessions(); // Reload sessions
-    } catch (error) {
-      console.error('Error ending session:', error);
-      showError('Failed to end session');
+      fetchSessions(); // Reload sessions
+    } else {
+      showError(result.error?.message || 'Failed to end session');
     }
   };
 
   const handleEndAllOtherSessions = async () => {
-    try {
-      const response = await endAllOtherSessions();
-      showSuccess(`Ended ${response.data.endedCount} other sessions`);
-      loadSessions(); // Reload sessions
-    } catch (error) {
-      console.error('Error ending other sessions:', error);
-      showError('Failed to end other sessions');
+    const result = await endAllOtherSessionsAction();
+    if (result.success) {
+      showSuccess(`Ended ${result.data?.endedCount || 'all other'} sessions`);
+      fetchSessions(); // Reload sessions
+    } else {
+      showError(result.error?.message || 'Failed to end other sessions');
     }
   };
 
   const handleSavePreferences = async formData => {
-    try {
-      setLoading(true);
+    const result = await updateSecurityPreferencesAction({
+      loginAlerts: formData.loginAlerts,
+      twoFactorEnabled: formData.twoFactorEnabled,
+    });
 
-      // Update security preferences via API
-      const result = await SecurityPreferencesService.updateSecurityPreferences(
-        {
-          loginAlerts: formData.loginAlerts,
-          twoFactorEnabled: formData.twoFactorEnabled,
-        }
-      );
-
-      if (!result.success) {
-        showError(result.message || 'Failed to update security preferences');
-        return;
-      }
-
-      // Update local state
-      setSecurityPreferences(formData);
+    if (result.success) {
       showSuccess('Security preferences updated successfully');
-    } catch (error) {
-      console.error('Error saving security preferences:', error);
-      showError('Failed to save security preferences');
-    } finally {
-      setLoading(false);
+    } else {
+      showError(
+        result.error?.message || 'Failed to update security preferences'
+      );
     }
   };
 
@@ -173,7 +122,7 @@ const SecuritySettings = ({ currentSubTab }) => {
       render: session => (
         <div className='d-flex align-items-center'>
           <div>
-            {session.sessionId === currentSessionId && (
+            {session.isCurrent && (
               <div className='mb-1'>
                 <span
                   className='badge bg-primary'
@@ -220,7 +169,7 @@ const SecuritySettings = ({ currentSubTab }) => {
   const sessionRowActions = session => {
     if (!session.isActive) return null;
 
-    const isCurrentSession = session.sessionId === currentSessionId;
+    const isCurrentSession = session.isCurrent;
 
     return (
       <Button
@@ -262,7 +211,13 @@ const SecuritySettings = ({ currentSubTab }) => {
       {/* Security Preferences Tab */}
       {activeTab === 'preferences' && (
         <EditableForm
-          initialData={securityPreferences}
+          initialData={
+            securityPreferences?.data || {
+              loginAlerts: false,
+              sessionTimeout: 7,
+              twoFactorEnabled: false,
+            }
+          }
           onSave={handleSavePreferences}
           title=''
           description='Configure your security notification and session preferences.'
@@ -414,7 +369,10 @@ const SecuritySettings = ({ currentSubTab }) => {
               <Button
                 variant='outline-danger'
                 onClick={handleEndAllOtherSessions}
-                disabled={sessions.filter(s => s.isActive).length <= 1}
+                disabled={
+                  !Array.isArray(sessions?.data) ||
+                  sessions.data.filter(s => s.isActive).length <= 1
+                }
               >
                 End All Sessions
               </Button>
@@ -432,10 +390,10 @@ const SecuritySettings = ({ currentSubTab }) => {
           </div>
 
           <DataTable
-            title={`Active Sessions (${sessions.length})`}
-            data={sessions}
+            title={`Active Sessions (${sessions?.data?.length || 0})`}
+            data={sessions?.data || []}
             columns={sessionColumns}
-            loading={loading}
+            loading={sessions?.loading || false}
             emptyMessage='No active sessions found'
             emptyIcon='fas fa-laptop'
             rowActions={sessionRowActions}
@@ -447,4 +405,21 @@ const SecuritySettings = ({ currentSubTab }) => {
   );
 };
 
-export default SecuritySettings;
+function mapStateToProps({ sessions, securityPreferences }) {
+  return {
+    sessions: sessions || { data: [], loading: false, error: null },
+    securityPreferences: securityPreferences || {
+      data: null,
+      loading: false,
+      error: null,
+    },
+  };
+}
+
+export default connect(mapStateToProps, {
+  fetchSessions,
+  endSessionAction,
+  endAllOtherSessionsAction,
+  fetchSecurityPreferences,
+  updateSecurityPreferencesAction,
+})(SecuritySettings);

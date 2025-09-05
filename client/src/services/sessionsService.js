@@ -11,10 +11,11 @@ export const getSessions = async (page = 1, limit = 10) => {
     );
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getSessions',
+      customMessage: 'Unable to load user sessions. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -26,10 +27,11 @@ export const endSession = async sessionId => {
     const response = await api.delete(`/user/sessions/${sessionId}`);
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'endSession',
+      customMessage: 'Failed to end session. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -41,9 +43,10 @@ export const endAllOtherSessions = async () => {
     const response = await api.delete('/user/sessions');
     return response.data;
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'endAllOtherSessions',
+      customMessage: 'Failed to end other sessions. Please try again.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };

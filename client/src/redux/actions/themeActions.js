@@ -15,8 +15,9 @@ export const fetchTheme = () => async dispatch => {
   try {
     const data = await getTheme();
     dispatch({ type: FETCH_THEME, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_THEME_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_THEME_ERROR, payload: errorData });
   }
 };
 
@@ -26,7 +27,8 @@ export const updateTheme = updatedTheme => async dispatch => {
   try {
     const data = await updateThemeService(updatedTheme);
     dispatch({ type: UPDATE_THEME, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_THEME_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_THEME_ERROR, payload: errorData });
   }
 };

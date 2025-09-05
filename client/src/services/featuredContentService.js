@@ -7,10 +7,12 @@ export const getFeaturedReleases = async () => {
     const response = await api.get('/featuredReleases');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getFeaturedReleases',
+      customMessage:
+        'Unable to load featured releases. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 
@@ -56,10 +58,11 @@ export const getFeaturedVideos = async () => {
     const response = await api.get('/featuredVideos');
     return response.data.data; // Extract data from { success: true, data: [...] }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getFeaturedVideos',
+      customMessage: 'Unable to load featured videos. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 

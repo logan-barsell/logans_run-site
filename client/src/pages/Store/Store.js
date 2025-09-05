@@ -7,6 +7,7 @@ import ShopifyStorefront from '../../components/Storefront/ShopifyStorefront';
 import StripeStorefront from '../../components/Storefront/StripeStorefront';
 import NotFound from '../NotFound';
 import { shouldAllowStoreAccess } from '../../utils/merchConfigValidator';
+import StaticAlert from '../../components/Alert/StaticAlert';
 
 const StorePage = ({ fetchPublicMerchConfig, merchConfig, loading, error }) => {
   useEffect(() => {
@@ -33,13 +34,11 @@ const StorePage = ({ fetchPublicMerchConfig, merchConfig, loading, error }) => {
   // Show error state if fetch failed
   if (error) {
     return (
-      <div
-        className='alert alert-danger'
-        role='alert'
-      >
-        <i className='fas fa-exclamation-triangle me-2'></i>
-        {error}
-      </div>
+      <StaticAlert
+        type={error.severity}
+        title={error.title}
+        description={error.message}
+      />
     );
   }
 

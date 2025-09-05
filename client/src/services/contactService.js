@@ -7,10 +7,12 @@ export const getContactInfo = async () => {
     const response = await api.get('/getContactInfo');
     return response.data.data; // Extract data from { success: true, data: {...} }
   } catch (error) {
-    const { message } = handleServiceError(error, {
+    const errorData = handleServiceError(error, {
       operation: 'getContactInfo',
+      customMessage:
+        'Unable to load contact information. Please try again later.',
     });
-    throw new Error(message);
+    throw errorData;
   }
 };
 

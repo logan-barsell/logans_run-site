@@ -19,8 +19,9 @@ export const fetchShows = () => async dispatch => {
   try {
     const data = await getShows();
     dispatch({ type: FETCH_SHOWS, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_SHOWS_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_SHOWS_ERROR, payload: errorData });
   }
 };
 
@@ -30,8 +31,9 @@ export const fetchShowsSettings = () => async dispatch => {
   try {
     const data = await getShowsSettings();
     dispatch({ type: FETCH_SHOWS_SETTINGS, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_SHOWS_SETTINGS_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_SHOWS_SETTINGS_ERROR, payload: errorData });
   }
 };
 
@@ -41,7 +43,8 @@ export const updateShowsSettings = settings => async dispatch => {
   try {
     const data = await updateShowsSettingsService(settings);
     dispatch({ type: UPDATE_SHOWS_SETTINGS, payload: data });
-  } catch (err) {
-    dispatch({ type: FETCH_SHOWS_SETTINGS_ERROR, payload: err.message });
+  } catch (errorData) {
+    // errorData is already processed by handleServiceError in the service
+    dispatch({ type: FETCH_SHOWS_SETTINGS_ERROR, payload: errorData });
   }
 };
