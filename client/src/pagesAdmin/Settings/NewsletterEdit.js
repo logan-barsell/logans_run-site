@@ -31,7 +31,7 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
         {({ formData, handleInputChange }) => {
           const isNewsletterEnabled = formData.enableNewsletter === true;
 
-          // Handle newsletter disable - unselect all notification options
+          // Handle newsletter enable/disable - manage notification options
           const handleNewsletterChange = e => {
             const newValue = e.target.value === 'true';
             handleInputChange(e);
@@ -42,6 +42,24 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
                 notifyOnNewShows: false,
                 notifyOnNewMusic: false,
                 notifyOnNewVideos: false,
+              };
+
+              // Update each field
+              Object.entries(updates).forEach(([fieldName, value]) => {
+                const syntheticEvent = {
+                  target: {
+                    name: fieldName,
+                    value: String(value),
+                  },
+                };
+                handleInputChange(syntheticEvent);
+              });
+            } else {
+              // If enabling newsletter, enable all notification options by default
+              const updates = {
+                notifyOnNewShows: true,
+                notifyOnNewMusic: true,
+                notifyOnNewVideos: true,
               };
 
               // Update each field

@@ -1,7 +1,6 @@
 const logger = require('../utils/logger');
 const emailTemplates = require('../templates');
 const Theme = require('../models/Theme');
-const { getEmailColors } = require('../utils/colorPalettes');
 const { AppError } = require('../middleware/errorHandler');
 const sesThrottler = require('../utils/sesThrottler');
 
@@ -47,63 +46,105 @@ async function sendEmail(
         logger.warn('Could not fetch theme for email template:', error.message);
       }
 
-      // Get email colors based on theme
-      const emailColors = theme ? getEmailColors(theme) : getEmailColors({});
-
       // Handle different template parameter patterns
       if (templateType === 'contactNotification') {
         template = emailTemplates[templateType](
           templateData.contactData,
           templateData.bandName,
-          emailColors
+          theme
         );
       } else if (templateType === 'welcomeEmail') {
         template = emailTemplates[templateType](
           templateData.bandName,
-          templateData.dashboardUrl,
-          emailColors
+          templateData.dashboardUrl
         );
       } else if (templateType === 'newsletterConfirmation') {
         template = emailTemplates[templateType](
           templateData.bandName,
           templateData.email,
           templateData.unsubscribeToken,
-          emailColors
+          theme
         );
       } else if (templateType === 'newsletterSignupNotification') {
         template = emailTemplates[templateType](
           templateData.fanEmail,
           templateData.bandName,
-          emailColors
+          theme
         );
       } else if (templateType === 'passwordReset') {
-        // Password reset template only needs link and bandName
+        // Password reset template needs link, bandName, and theme
         template = emailTemplates[templateType](
           templateData.link,
           templateData.bandName,
-          emailColors
+          theme
         );
       } else if (templateType === 'passwordResetSuccess') {
-        // Password reset success template needs bandName and timestamp
+        // Password reset success template needs bandName, timestamp, and theme
         template = emailTemplates[templateType](
           templateData.bandName,
           templateData.timestamp,
-          emailColors
+          theme
         );
       } else if (templateType === 'loginAlert') {
-        // Login alert template needs bandName, timestamp, ipAddress, userAgent, location
+        // Login alert template needs bandName, timestamp, ipAddress, userAgent, location, theme
         template = emailTemplates[templateType](
           templateData.bandName,
           templateData.timestamp,
           templateData.ipAddress,
           templateData.userAgent,
-          templateData.location
+          templateData.location,
+          theme
+        );
+      } else if (templateType === 'securityAlert') {
+        // Security alert template needs bandName, alertType, timestamp, ipAddress, userAgent, location, theme
+        template = emailTemplates[templateType](
+          templateData.bandName,
+          templateData.alertType,
+          templateData.timestamp,
+          templateData.ipAddress,
+          templateData.userAgent,
+          templateData.location,
+          theme
         );
       } else if (templateType === 'twoFactorCode') {
-        // Two-factor code template needs code and bandName
+        // Two-factor code template needs code, bandName, and theme
         template = emailTemplates[templateType](
           templateData.code,
-          templateData.bandName
+          templateData.bandName,
+          theme
+        );
+      } else if (templateType === 'newsletterNotification') {
+        // Newsletter notification template needs bandName, content, contentType, unsubscribeToken, theme
+        template = emailTemplates[templateType](
+          templateData.bandName,
+          templateData.content,
+          templateData.contentType,
+          templateData.unsubscribeToken,
+          theme
+        );
+      } else if (templateType === 'musicNotification') {
+        // Music notification template needs bandName, content, theme, unsubscribeToken
+        template = emailTemplates[templateType](
+          templateData.bandName,
+          templateData.content,
+          theme,
+          templateData.unsubscribeToken
+        );
+      } else if (templateType === 'videoNotification') {
+        // Video notification template needs bandName, content, theme, unsubscribeToken
+        template = emailTemplates[templateType](
+          templateData.bandName,
+          templateData.content,
+          theme,
+          templateData.unsubscribeToken
+        );
+      } else if (templateType === 'showNotification') {
+        // Show notification template needs bandName, content, theme, unsubscribeToken
+        template = emailTemplates[templateType](
+          templateData.bandName,
+          templateData.content,
+          theme,
+          templateData.unsubscribeToken
         );
       } else {
         // Default pattern for emailVerification
@@ -111,7 +152,7 @@ async function sendEmail(
           templateData.link,
           templateData.role,
           templateData.bandName,
-          emailColors
+          theme
         );
       }
 
@@ -151,23 +192,62 @@ async function sendEmailVerification(
   to,
   verificationLink,
   role = 'USER',
-  bandName = 'Bandsyte'
+  bandName = 'Bandsyte',
+  customFromAddress = null
 ) {
-  return sendEmail(to, null, null, 'emailVerification', {
-    link: verificationLink,
-    role,
-    bandName,
-  });
+  const subject =
+    role === 'ADMIN' || role === 'SUPERADMIN'
+      ? `Join the ${bandName} Crew - Admin Invitation`
+      : `Verify Your Email - ${bandName} Admin`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'emailVerification',
+    {
+      link: verificationLink,
+      role,
+      bandName,
+    },
+    fromAddress
+  );
 }
 
 /**
  * Send password reset with professional template
  */
-async function sendPasswordReset(to, resetLink, bandName = 'Bandsyte') {
-  return sendEmail(to, null, null, 'passwordReset', {
-    link: resetLink,
-    bandName,
-  });
+async function sendPasswordReset(
+  to,
+  resetLink,
+  bandName = 'Bandsyte',
+  customFromAddress = null
+) {
+  const subject = `Reset Your Password - ${bandName} Admin`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'passwordReset',
+    {
+      link: resetLink,
+      bandName,
+    },
+    fromAddress
+  );
 }
 
 /**
@@ -176,14 +256,14 @@ async function sendPasswordReset(to, resetLink, bandName = 'Bandsyte') {
 async function sendWelcomeEmail(
   to,
   bandName = 'Bandsyte',
-  customFromName = null
+  customFromAddress = null
 ) {
   const subject = `Welcome to Bandsyte - ${bandName} Website is Live!`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
 
-  // If custom from name provided, format as "Band Name <noreply@bandsyte.com>"
-  if (customFromName) {
-    fromAddress = customFromName;
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
   }
 
   return sendEmail(
@@ -201,11 +281,31 @@ async function sendWelcomeEmail(
 /**
  * Send contact form notification
  */
-async function sendContactNotification(to, contactData, bandName = 'Bandsyte') {
-  return sendEmail(to, null, null, 'contactNotification', {
-    contactData,
-    bandName,
-  });
+async function sendContactNotification(
+  to,
+  contactData,
+  bandName = 'Bandsyte',
+  customFromAddress = null
+) {
+  const subject = `New Fan Message - ${bandName}`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'contactNotification',
+    {
+      contactData,
+      bandName,
+    },
+    fromAddress
+  );
 }
 
 /**
@@ -215,14 +315,14 @@ async function sendNewsletterConfirmation(
   email,
   bandName = 'Bandsyte',
   unsubscribeToken = '',
-  customFromName = null
+  customFromAddress = null
 ) {
   const subject = `You're In The Loop - ${bandName} Newsletter`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
 
-  // If custom from name provided, format as "Band Name <noreply@bandsyte.com>"
-  if (customFromName) {
-    fromAddress = `"${customFromName}" <${fromAddress}>`;
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
   }
 
   return sendEmail(
@@ -245,12 +345,28 @@ async function sendNewsletterConfirmation(
 async function sendNewsletterSignupNotification(
   to,
   fanEmail,
-  bandName = 'Bandsyte'
+  bandName = 'Bandsyte',
+  customFromAddress = null
 ) {
-  return sendEmail(to, null, null, 'newsletterSignupNotification', {
-    fanEmail,
-    bandName,
-  });
+  const subject = `New Newsletter Signup - ${bandName}`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'newsletterSignupNotification',
+    {
+      fanEmail,
+      bandName,
+    },
+    fromAddress
+  );
 }
 
 /**
@@ -262,21 +378,37 @@ async function sendContentNotification(
   contentType = 'content',
   content = {},
   unsubscribeToken = '',
-  customFromName = null
+  customFromAddress = null
 ) {
-  const subject = getContentNotificationSubject(contentType, bandName);
+  // Determine the appropriate template based on content type
+  let templateType = 'newsletterNotification'; // Default fallback
+
+  switch (contentType) {
+    case 'music':
+      templateType = 'musicNotification';
+      break;
+    case 'video':
+      templateType = 'videoNotification';
+      break;
+    case 'show':
+      templateType = 'showNotification';
+      break;
+    default:
+      templateType = 'newsletterNotification';
+  }
+
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
 
-  // If custom from name provided, use it
-  if (customFromName) {
-    fromAddress = customFromName;
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
   }
 
   return sendEmail(
     to,
-    subject,
-    null,
-    'newsletterNotification',
+    null, // Subject will be generated by the template
+    null, // HTML will be generated by the template
+    templateType,
     {
       bandName,
       content,
@@ -306,11 +438,31 @@ function getContentNotificationSubject(contentType, bandName) {
 /**
  * Send password reset success notification
  */
-async function sendPasswordResetSuccess(to, bandName = 'Bandsyte') {
-  return sendEmail(to, null, null, 'passwordResetSuccess', {
-    bandName,
-    timestamp: new Date().toLocaleString(),
-  });
+async function sendPasswordResetSuccess(
+  to,
+  bandName = 'Bandsyte',
+  timestamp = new Date().toLocaleString(),
+  customFromAddress = null
+) {
+  const subject = `Password Reset Successful - ${bandName} Admin`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'passwordResetSuccess',
+    {
+      bandName,
+      timestamp,
+    },
+    fromAddress
+  );
 }
 
 /**
@@ -320,18 +472,35 @@ async function sendSecurityAlert(
   to,
   bandName = 'Bandsyte',
   alertType = 'suspicious_activity',
+  timestamp = new Date().toLocaleString(),
   ipAddress = 'Unknown',
   userAgent = 'Unknown',
-  location = 'Unknown'
+  location = 'Unknown',
+  customFromAddress = null
 ) {
-  return sendEmail(to, null, null, 'securityAlert', {
-    bandName,
-    alertType,
-    timestamp: new Date().toLocaleString(),
-    ipAddress,
-    userAgent,
-    location,
-  });
+  const subject = `Security Alert - ${bandName} Admin`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'securityAlert',
+    {
+      bandName,
+      alertType,
+      timestamp,
+      ipAddress,
+      userAgent,
+      location,
+    },
+    fromAddress
+  );
 }
 
 /**
@@ -342,25 +511,61 @@ async function sendLoginAlert(
   bandName = 'Bandsyte',
   ipAddress = 'Unknown',
   userAgent = 'Unknown',
-  location = 'Unknown'
+  location = 'Unknown',
+  customFromAddress = null
 ) {
-  return sendEmail(to, null, null, 'loginAlert', {
-    bandName,
-    timestamp: new Date().toLocaleString(),
-    ipAddress,
-    userAgent,
-    location,
-  });
+  const subject = `Login Alert - ${bandName} Admin`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'loginAlert',
+    {
+      bandName,
+      timestamp: new Date().toLocaleString(),
+      ipAddress,
+      userAgent,
+      location,
+    },
+    fromAddress
+  );
 }
 
 /**
  * Send two-factor authentication code
  */
-async function sendTwoFactorCode(to, code, bandName = 'Bandsyte') {
-  return sendEmail(to, null, null, 'twoFactorCode', {
-    code,
-    bandName,
-  });
+async function sendTwoFactorCode(
+  to,
+  code,
+  bandName = 'Bandsyte',
+  customFromAddress = null
+) {
+  const subject = `Two-Factor Authentication Code - ${bandName} Admin`;
+  let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
+
+  // If custom from address provided, use it directly (already formatted)
+  if (customFromAddress) {
+    fromAddress = customFromAddress;
+  }
+
+  return sendEmail(
+    to,
+    subject,
+    null,
+    'twoFactorCode',
+    {
+      code,
+      bandName,
+    },
+    fromAddress
+  );
 }
 
 module.exports = {

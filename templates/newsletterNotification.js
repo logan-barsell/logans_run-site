@@ -59,8 +59,8 @@ const newsletterNotification = (
   bandName,
   content,
   contentType,
-  colors = {},
-  unsubscribeToken = ''
+  unsubscribeToken = '',
+  theme = {}
 ) => {
   const icon = getContentIcon(contentType);
   const title = getContentTitle(contentType);
@@ -147,9 +147,19 @@ const newsletterNotification = (
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${title} - ${bandName}</title>
+        ${
+          theme.bandLogoUrl
+            ? `
+        <meta property="og:image" content="${theme.bandLogoUrl}" />
+        <meta name="twitter:image" content="${theme.bandLogoUrl}" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <link rel="icon" type="image/png" href="${theme.bandLogoUrl}" />
+        `
+            : ''
+        }
         <style>
           body { 
-            font-family: Arial, sans-serif; 
+            font-family: "Courier New", monospace; 
             line-height: 1.6; 
             color: #333; 
             margin: 0; 
@@ -239,7 +249,11 @@ const newsletterNotification = (
       <body>
         <div class="container">
           <div class="header">
-            <span class="icon">${icon}</span>
+            ${
+              theme.bandLogoUrl
+                ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
+                : ''
+            }
             <h1>${bandName}</h1>
             <p>${title}</p>
           </div>
@@ -258,7 +272,9 @@ const newsletterNotification = (
             <p>This email was sent to you because you're subscribed to ${bandName}'s newsletter.</p>
             <div class="unsubscribe">
               <p>
-                <a href="${config.clientURL}/unsubscribe?token=${unsubscribeToken}">
+                <a href="${
+                  config.clientURL
+                }/unsubscribe?token=${unsubscribeToken}">
                   Unsubscribe from these notifications
                 </a>
               </p>
