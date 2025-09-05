@@ -79,7 +79,9 @@ class Accordion extends Component {
           {this.props.items.length ? (
             this.renderContent()
           ) : (
-            <NoContent>No {this.props.title}</NoContent>
+            <div className='my-4'>
+              <NoContent>No {this.props.title}</NoContent>
+            </div>
           )}
         </div>
       </>

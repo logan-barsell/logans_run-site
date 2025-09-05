@@ -92,7 +92,7 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
   };
 
   return (
-    <div className=''>
+    <div className='mt-5'>
       <Accordion
         id='showsList'
         title='Shows'

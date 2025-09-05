@@ -57,6 +57,7 @@
 #contact .sendmsg {
   margin: auto;
   padding-bottom: 33px;
+  max-width: 666px;
 }
 
 #contact .form-group {

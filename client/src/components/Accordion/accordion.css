@@ -84,7 +84,7 @@
 }
 
 .accordion .content {
-  color: var(--main);
+  color: var(--secondary);
   background: var(--accordion-content-light);
   border-radius: 14px;
   padding: 27px;

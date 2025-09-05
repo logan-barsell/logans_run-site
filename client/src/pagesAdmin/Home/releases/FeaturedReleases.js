@@ -45,7 +45,11 @@ const FeaturedReleasesEdit = ({ fetchFeaturedReleases, featuredReleases }) => {
         </div>
       ) : (
         <VideoContainer>
-          {releases.length === 0 && <NoContent>No Featured Releases</NoContent>}
+          {releases.length === 0 && (
+            <div className='my-4'>
+              <NoContent>No Featured Releases</NoContent>
+            </div>
+          )}
           {releases.map(release => (
             <div
               key={release._id}

@@ -69,7 +69,9 @@ const EditImages = ({
           </div>
         ))
       ) : (
-        <NoContent>{emptyText}</NoContent>
+        <div className='my-5'>
+          <NoContent>{emptyText}</NoContent>
+        </div>
       )}
     </div>
   );

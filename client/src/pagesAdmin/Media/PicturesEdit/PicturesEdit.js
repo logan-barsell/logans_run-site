@@ -14,7 +14,7 @@ import {
 import { useAlert } from '../../../contexts/AlertContext';
 import EditImages from '../../../components/Images/EditImages';
 import Button from '../../../components/Button/Button';
-import { PageTitle, Divider } from '../../../components/Header';
+import { PageTitle } from '../../../components/Header';
 
 function extractStoragePathFromUrl(url) {
   const match = url && url.match(/\/o\/([^?]+)/);
@@ -33,7 +33,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
     fetchMediaImages();
   }, [fetchMediaImages]);
 
-  const handleUpload = async (files, setUploadProgress) => {
+  const handleUpload = async files => {
     const uploadPromises = Array.from(files).map(async (file, index) => {
       const fileName = new Date().getTime() + '_' + index + '_' + file.name;
       try {

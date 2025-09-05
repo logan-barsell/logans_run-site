@@ -85,7 +85,11 @@ const Pictures = ({ fetchMediaImages, images, loading, error }) => {
   }
 
   // Show no content only after loading is complete and no data
-  return <NoContent>No pictures yet... check back soon!</NoContent>;
+  return (
+    <div className='my-5 px-3'>
+      <NoContent>No pictures yet... check back soon!</NoContent>
+    </div>
+  );
 };
 
 function mapStateToProps({ media }) {

@@ -5,6 +5,8 @@ import SecondaryNav from '../../../../components/Navbar/SecondaryNav';
 import ShowsAccordion from '../../ShowsAccordion';
 import { BandsintownWidget } from '../../../../components/Bandsintown';
 import StaticAlert from '../../../../components/Alert/StaticAlert';
+import Button from '../../../../components/Button/Button';
+import NoContent from '../../../../components/Header/NoContent';
 
 const ShowsSection = ({
   fetchShows,
@@ -108,45 +110,83 @@ const ShowsSection = ({
 
   createAccordionItems();
 
-  // Render Bandsintown widget if configured
-  if (
-    showsSettings.showSystem === 'bandsintown' &&
-    showsSettings.bandsintownArtist
-  ) {
-    return (
-      <>
-        <SecondaryNav label='Upcoming Shows' />
-        <div id='upcomingshows'>
-          <div className='row justify-content-around'>
-            <div className='bandsintown-widget-container'>
-              <BandsintownWidget artistName={showsSettings.bandsintownArtist} />
-            </div>
+  // Render the main content based on show system and availability
+  const renderMainContent = () => {
+    // Render Bandsintown widget if configured
+    if (
+      showsSettings.showSystem === 'bandsintown' &&
+      showsSettings.bandsintownArtist
+    ) {
+      return (
+        <div className='row justify-content-around'>
+          <div className='bandsintown-widget-container'>
+            <BandsintownWidget artistName={showsSettings.bandsintownArtist} />
           </div>
         </div>
-      </>
-    );
-  }
+      );
+    }
 
-  // Render custom shows if available
-  if (shows[0]) {
+    // Render custom shows if available
+    if (shows[0]) {
+      return (
+        <div className='row justify-content-around'>
+          <ShowsAccordion
+            id='currentShows'
+            title='Shows'
+            items={accordionItems}
+          />
+        </div>
+      );
+    }
+
+    // No shows available - show empty state
     return (
-      <>
-        <SecondaryNav label='Upcoming Shows' />
-        <div id='upcomingshows'>
-          <div className='row justify-content-around'>
-            <ShowsAccordion
-              id='currentShows'
-              title='Shows'
-              items={accordionItems}
-            />
+      <div className='row justify-content-center'>
+        <div className='col-12 col-md-8 col-lg-6 text-center'>
+          <div className='mt-5'>
+            <NoContent>No Upcoming Shows</NoContent>
           </div>
         </div>
-      </>
+      </div>
     );
-  }
+  };
 
-  // No shows available
-  return null;
+  // Render the request a show section
+  const renderRequestShowSection = () => (
+    <div className='row justify-content-center'>
+      <div className='col-12 col-md-8 col-lg-6 text-center'>
+        <div className='py-4'>
+          <h5
+            className='mb-4'
+            style={{ color: 'white', fontFamily: 'var(--secondary-font)' }}
+          >
+            Want to see us live?
+          </h5>
+          <Button
+            variant='danger'
+            size='sm'
+            as='a'
+            href='/contact'
+            className='mb-3 w-50 mx-auto'
+          >
+            Request a Show
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      <SecondaryNav label='Upcoming Shows' />
+      <div id='upcomingshows'>
+        {renderMainContent()}
+        {/* Only show request a show section for custom shows management */}
+        {showsSettings.showSystem !== 'bandsintown' &&
+          renderRequestShowSection()}
+      </div>
+    </>
+  );
 };
 
 function mapStateToProps({ shows, showsSettings }) {

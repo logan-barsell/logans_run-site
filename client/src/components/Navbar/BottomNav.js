@@ -29,6 +29,18 @@ const BottomNav = ({
     fetchTheme();
   }, [fetchContactInfo, fetchTheme]);
 
+  // Check if there are any social media links to display
+  const hasSocialLinks =
+    contactInfo &&
+    (contactInfo.facebook ||
+      contactInfo.instagram ||
+      contactInfo.youtube ||
+      contactInfo.spotify ||
+      contactInfo.appleMusic ||
+      contactInfo.soundCloud ||
+      contactInfo.x ||
+      contactInfo.tiktok);
+
   return (
     <>
       <nav
@@ -37,7 +49,9 @@ const BottomNav = ({
       >
         {/* Button trigger modal */}
         {theme?.enableNewsletter !== false && (
-          <div className='col-md-7 col-12 my-2'>
+          <div
+            className={`${hasSocialLinks ? 'col-md-7' : 'col-12'} col-12 my-2`}
+          >
             <div className='row justify-content-center'>
               <div className='col-auto'>
                 <NewsletterModal />
@@ -46,7 +60,7 @@ const BottomNav = ({
           </div>
         )}
 
-        {contactInfo && (
+        {hasSocialLinks && (
           <div
             className={`iconsNav ${
               theme?.enableNewsletter !== false ? 'col-md-5' : 'col-md-12'

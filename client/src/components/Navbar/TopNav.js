@@ -32,6 +32,21 @@ const TopNav = ({ routes }) => {
   }, [setTopNavHeight]);
 
   useEffect(() => {
+    // Reset toggle state when transitioning to desktop mode
+    const handleResize = () => {
+      const isDesktop = window.innerWidth >= 992; // Bootstrap's lg breakpoint
+      if (isDesktop && toggle) {
+        setToggle(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [toggle, setToggle]);
+
+  useEffect(() => {
     const menuCollapse = document.getElementById('menu');
     const bsCollapse = new Collapse(menuCollapse, {
       toggle: false,
