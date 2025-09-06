@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomModal from '../Modals/CustomModal';
+import BaseModal from '../Modals/BaseModal';
 import { Close, TrashFill } from '../icons';
 import Button from '../Button/Button';
 
@@ -12,83 +12,75 @@ const DeleteItem = ({
   content,
   isImage = false,
 }) => {
+  const [modalCloseFn, setModalCloseFn] = React.useState(null);
   const itemId = item.id || item._id;
 
-  const modalProps = {
-    id: `del_item_${itemId}`,
-    label: `del_item_label_${itemId}`,
-    title,
-  };
+  // Callback to receive closeModal function from BaseModal
+  const handleCloseModalCallback = React.useCallback(closeFn => {
+    setModalCloseFn(() => closeFn);
+  }, []);
 
   const iconPosition = variant === 'square' ? 'center' : 'left';
 
-  const ModalContent = () => {
-    return (
-      <>
-        <p className='modal-body deleteItem'>
-          {content || 'Remove this item?'}
-        </p>
-        <div className='modal-footer'>
-          <Button
-            type='button'
-            variant='dark'
-            data-bs-dismiss='modal'
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => onDelete(item)}
-            type='button'
-            variant='danger'
-            data-bs-dismiss='modal'
-          >
-            Delete
-          </Button>
-        </div>
-      </>
-    );
-  };
-
-  // Custom close button for images that preserves original styling
-  const ImageCloseButton = () => (
-    <button
-      className='closeBtn'
-      data-bs-toggle='modal'
-      data-bs-target={`#${modalProps.id}`}
-      type='button'
-    >
-      <Close />
-    </button>
-  );
-
-  const DeleteButton = () => {
-    // Use custom close button for images, Button component for everything else
-    if (isImage) {
-      return <ImageCloseButton />;
-    }
-
-    return (
-      <Button
-        variant='danger'
-        size='sm'
-        icon={<TrashFill />}
-        data-bs-toggle='modal'
-        data-bs-target={`#${modalProps.id}`}
-        type='button'
-        iconPosition={iconPosition}
-      >
-        {variant === 'wide' && buttonText}
-      </Button>
-    );
+  // Handle successful deletion
+  const handleDeleteSuccess = () => {
+    // Modal will be closed automatically by BaseModal
   };
 
   return (
-    <CustomModal
-      modalProps={modalProps}
-      modalButton={<DeleteButton />}
+    <BaseModal
+      id={`del_item_${itemId}`}
+      title={title}
+      trigger={
+        isImage ? (
+          <button
+            className='closeBtn'
+            type='button'
+          >
+            <Close />
+          </button>
+        ) : (
+          <Button
+            variant='danger'
+            size='sm'
+            icon={<TrashFill />}
+            type='button'
+            iconPosition={iconPosition}
+          >
+            {variant === 'wide' && buttonText}
+          </Button>
+        )
+      }
+      onSuccess={handleDeleteSuccess}
+      onCloseModal={handleCloseModalCallback}
     >
-      <ModalContent />
-    </CustomModal>
+      <p className='modal-body deleteItem'>{content || 'Remove this item?'}</p>
+      <div className='modal-footer'>
+        <Button
+          type='button'
+          variant='dark'
+          onClick={() => {
+            if (modalCloseFn) {
+              modalCloseFn();
+            }
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={async () => {
+            await onDelete(item);
+            if (modalCloseFn) {
+              modalCloseFn();
+            }
+          }}
+          type='button'
+          variant='danger'
+        >
+          Delete
+        </Button>
+      </div>
+    </BaseModal>
   );
 };
 

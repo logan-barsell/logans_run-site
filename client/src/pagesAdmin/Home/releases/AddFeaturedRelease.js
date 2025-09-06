@@ -4,6 +4,8 @@ import { useAlert } from '../../../contexts/AlertContext';
 import { featuredReleaseFields } from './constants';
 import { addFeaturedRelease as addFeaturedReleaseService } from '../../../services/featuredContentService';
 import AddItem from '../../../components/Modifiers/AddItem';
+import Button from '../../../components/Button/Button';
+import { PlusSquareFill } from '../../../components/icons';
 
 const AddFeaturedRelease = ({ fetchReleases }) => {
   const { showError, showSuccess } = useAlert();
@@ -36,12 +38,21 @@ const AddFeaturedRelease = ({ fetchReleases }) => {
     <AddItem
       fields={featuredReleaseFields()}
       onAdd={handleAdd}
-      buttonText='Add Featured Release'
       title='NEW FEATURED RELEASE'
       modalProps={{
         id: 'add_featured_release_modal',
         label: 'add_featured_release_modal',
       }}
+      modalButton={
+        <Button
+          variant='danger'
+          icon={<PlusSquareFill />}
+          type='button'
+          className='addButton'
+        >
+          Add Featured Release
+        </Button>
+      }
     />
   );
 };

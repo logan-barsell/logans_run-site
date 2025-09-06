@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CustomModal from '../Modals/CustomModal';
+import BaseModal from '../Modals/BaseModal';
 import ModalForm from '../Forms/ModalForm';
 import { PlusSquareFill } from '../icons';
 import Button from '../Button/Button';
@@ -26,51 +26,48 @@ const AddItem = ({
         await onAdd(formFields);
       }
       setLoading(false);
-      // Close modal on success
-      document
-        .getElementById(modalProps.id || 'add_item_modal')
-        ?.closest('.modal')
-        ?.querySelector('[data-bs-dismiss="modal"]')
-        ?.click();
     } catch (err) {
       setLoading(false);
+      throw err; // Re-throw to prevent modal from closing
     }
   };
 
-  const defaultModalProps = {
-    id: modalProps.id || 'add_item_modal',
-    label: modalProps.label || 'add_item_modal',
-    title,
-    buttonText: loading ? 'Uploading...' : buttonText,
-    ...modalProps,
+  const defaultModalId = modalProps?.id || 'add_item_modal';
+
+  const DefaultAddButton = () => {
+    return (
+      <Button
+        variant='danger'
+        icon={<PlusSquareFill />}
+        loading={loading}
+        type='button'
+        className='addButton'
+      >
+        {loading ? 'Uploading...' : buttonText}
+      </Button>
+    );
   };
 
-  const DefaultAddButton = () => (
-    <Button
-      variant='danger'
-      icon={<PlusSquareFill />}
-      loading={loading}
-      data-bs-toggle='modal'
-      data-bs-target={`#${defaultModalProps.id}`}
-      type='button'
-      className='addButton'
-    >
-      {defaultModalProps.buttonText}
-    </Button>
-  );
+  // Handle successful form submission
+  const handleFormSuccess = () => {
+    // Modal will be closed automatically by BaseModal
+  };
 
   return (
-    <CustomModal
-      modalProps={defaultModalProps}
-      modalButton={modalButton || <DefaultAddButton />}
+    <BaseModal
+      id={defaultModalId}
+      title={title}
+      trigger={modalButton || <DefaultAddButton />}
+      onSuccess={handleFormSuccess}
     >
       <ModalForm
         fields={fields}
         onSubmit={handleSubmit}
+        onSuccess={handleFormSuccess}
         loading={loading}
         {...rest}
       />
-    </CustomModal>
+    </BaseModal>
   );
 };
 

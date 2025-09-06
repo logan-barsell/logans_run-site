@@ -4,6 +4,8 @@ import { addShow } from '../../../services/showsService';
 import { useAlert } from '../../../contexts/AlertContext';
 import { ADD_SHOW_FIELDS } from './constants';
 import AddItem from '../../../components/Modifiers/AddItem';
+import Button from '../../../components/Button/Button';
+import { PlusSquareFill } from '../../../components/icons';
 
 const AddShow = ({ fetchShows }) => {
   const { showError, showSuccess } = useAlert();
@@ -38,9 +40,18 @@ const AddShow = ({ fetchShows }) => {
     <AddItem
       fields={ADD_SHOW_FIELDS}
       onAdd={onAdd}
-      buttonText='Add Show'
       title='NEW SHOW'
       modalProps={{ id: 'add_show_modal', label: 'add_show_modal' }}
+      modalButton={
+        <Button
+          variant='danger'
+          icon={<PlusSquareFill />}
+          type='button'
+          className='addButton'
+        >
+          Add Show
+        </Button>
+      }
     />
   );
 };

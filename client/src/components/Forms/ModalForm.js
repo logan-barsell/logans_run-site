@@ -6,7 +6,18 @@ import { Form } from 'react-final-form';
 import RenderField from './RenderField';
 import Button from '../Button/Button';
 
-const ModalForm = ({ onSubmit, fields }) => {
+const ModalForm = ({
+  onSubmit,
+  fields,
+  onSuccess,
+  onCancel,
+  closeModal, // From BaseModal
+  submitButtonText = 'Submit',
+  cancelButtonText = 'Cancel',
+  submitButtonVariant = 'danger',
+  cancelButtonVariant = 'dark',
+  isModal = true, // For backward compatibility
+}) => {
   // Create refs for all image fields
   const imageRefs = useRef({});
   fields.forEach(field => {
@@ -158,46 +169,15 @@ const ModalForm = ({ onSubmit, fields }) => {
     safeSetState(setHasChanges, false);
   };
 
-  const closeModal = () => {
-    // Find the modal element and close it using Bootstrap's modal API
-    const modalElement = document.querySelector('.modal.show');
-    if (modalElement) {
-      // Use the data-bs-dismiss attribute to trigger modal close
-      const closeButton = modalElement.querySelector(
-        '[data-bs-dismiss="modal"]'
-      );
-      if (closeButton) {
-        closeButton.click();
-      } else {
-        // Fallback: manually hide the modal
-        modalElement.classList.remove('show');
-        modalElement.style.display = 'none';
-        document.body.classList.remove('modal-open');
-        // Try to find and remove backdrop by class
-        const allBackdrops = document.querySelectorAll('.modal-backdrop');
-        allBackdrops.forEach(backdrop => backdrop.remove());
-      }
-    } else {
-      // Modal element is gone but backdrop remains - aggressive cleanup needed
-
-      // Try to find and remove backdrop by class
-      const allBackdrops = document.querySelectorAll('.modal-backdrop');
-      allBackdrops.forEach(backdrop => backdrop.remove());
-
-      // Clean up body classes and styles that prevent scrolling
-      document.body.classList.remove('modal-open');
-      document.body.classList.remove('modal-backdrop');
-
-      // Remove inline styles that Bootstrap adds to prevent scrolling
-      const bodyStyle = document.body.style;
-      if (bodyStyle.overflow === 'hidden') {
-        bodyStyle.overflow = '';
-      }
-      if (bodyStyle.paddingRight) {
-        bodyStyle.paddingRight = '';
-      }
+  // Handle form cancellation
+  const handleCancel = useCallback(() => {
+    // Use onCancel if provided, otherwise use closeModal from BaseModal
+    if (onCancel) {
+      onCancel();
+    } else if (closeModal) {
+      closeModal();
     }
-  };
+  }, [onCancel, closeModal]);
 
   return (
     <div className='col-lg final-form'>
@@ -217,15 +197,14 @@ const ModalForm = ({ onSubmit, fields }) => {
           const handleFormSubmit = async event => {
             setIsSubmitting(true);
             try {
-              const error = await handleSubmit(event);
-              if (error) {
-                return error;
+              const result = await handleSubmit(event);
+              if (result) {
+                return result; // Return validation errors
               }
               // Success - clean up form first
               onFormRestart(form);
-
-              // Close modal
-              closeModal();
+              // Call success callback (which can handle modal closing)
+              onSuccess?.();
             } finally {
               safeSetState(setIsSubmitting, false);
             }
@@ -236,22 +215,22 @@ const ModalForm = ({ onSubmit, fields }) => {
               <div className='modal-body mx-auto mx-sm-4 my-3'>
                 {renderFields()}
               </div>
-              <div className='modal-footer'>
+              <div className={isModal ? 'modal-footer' : 'form-footer'}>
                 <div className='d-grid col-auto'>
                   <Button
-                    variant='dark'
+                    variant={cancelButtonVariant}
                     type='button'
-                    data-bs-dismiss='modal'
                     onClick={() => {
                       onFormRestart(form);
+                      handleCancel();
                     }}
                   >
-                    Cancel
+                    {cancelButtonText}
                   </Button>
                 </div>
                 <div className='d-grid col-6'>
                   <Button
-                    variant='danger'
+                    variant={submitButtonVariant}
                     type='submit'
                     disabled={
                       Object.keys(errors || {}).length !== 0 ||
@@ -264,7 +243,7 @@ const ModalForm = ({ onSubmit, fields }) => {
                       )
                     }
                   >
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                    {isSubmitting ? 'Submitting...' : submitButtonText}
                   </Button>
                 </div>
               </div>

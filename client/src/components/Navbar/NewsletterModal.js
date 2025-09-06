@@ -1,9 +1,62 @@
 import React, { useState } from 'react';
-import CustomModal from '../Modals/CustomModal';
+import BaseModal from '../Modals/BaseModal';
 import Button from '../Button/Button';
 import { Envelope } from '../../components/icons';
 import { useAlert } from '../../contexts/AlertContext';
 import { signupNewsletter } from '../../services/newsletterService';
+
+// Separate component for the form content
+const NewsletterForm = ({
+  email,
+  setEmail,
+  isSubmitting,
+  onSubmit,
+  closeModal,
+}) => (
+  <form
+    className='form-inline newsletter justify-content-center'
+    onSubmit={onSubmit}
+  >
+    <div className='modal-body'>
+      <div className='mx-xs-1 mx-sm-3 me-sm-5 pe-sm-5 final-form input-group'>
+        <input
+          className='form-control text-truncate'
+          name='email'
+          type='email'
+          placeholder='Enter your email here'
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+          disabled={isSubmitting}
+        />
+      </div>
+      <ul id='newsDetails'>
+        <li>Stay informed on all upcoming events</li>
+        <li>Recieve updates on new music releases, music videos, and vlogs</li>
+        <li>Be notified of special deals, new merch, and giveaways</li>
+      </ul>
+    </div>
+    <div className='modal-footer'>
+      <Button
+        type='button'
+        variant='dark'
+        disabled={isSubmitting}
+        onClick={closeModal}
+      >
+        Close
+      </Button>
+      <Button
+        id='newsSub'
+        className='my-2 my-sm-0'
+        variant='outline-light'
+        type='submit'
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Subscribing...' : 'Join'}
+      </Button>
+    </div>
+  </form>
+);
 
 const NewsletterModal = () => {
   const [email, setEmail] = useState('');
@@ -13,23 +66,6 @@ const NewsletterModal = () => {
   const sendNewsletter = async e => {
     e.preventDefault();
     setIsSubmitting(true);
-    const closeModal = () => {
-      const allBackdrops = document.querySelectorAll('.modal-backdrop');
-      allBackdrops.forEach(backdrop => backdrop.remove());
-
-      // Clean up body classes and styles that prevent scrolling
-      document.body.classList.remove('modal-open');
-      document.body.classList.remove('modal-backdrop');
-
-      // Remove inline styles that Bootstrap adds to prevent scrolling
-      const bodyStyle = document.body.style;
-      if (bodyStyle.overflow === 'hidden') {
-        bodyStyle.overflow = '';
-      }
-      if (bodyStyle.paddingRight) {
-        bodyStyle.paddingRight = '';
-      }
-    };
 
     try {
       const result = await signupNewsletter(email);
@@ -37,22 +73,7 @@ const NewsletterModal = () => {
       if (result.success) {
         showSuccess('Thank you for subscribing to our newsletter!');
         setEmail('');
-        // Close the modal on successful subscription
-        const modal = document.getElementById('newsletterModal');
-        if (modal) {
-          // Use Bootstrap's modal API if available
-          if (window.bootstrap && window.bootstrap.Modal) {
-            const bootstrapModal = window.bootstrap.Modal.getInstance(modal);
-            if (bootstrapModal) {
-              closeModal();
-              bootstrapModal.hide();
-            }
-          } else {
-            closeModal();
-          }
-        } else {
-          closeModal();
-        }
+        // Modal will be closed automatically by BaseModal via onSuccess callback
       } else {
         showError(result.message || 'Failed to subscribe. Please try again.');
       }
@@ -64,12 +85,6 @@ const NewsletterModal = () => {
     }
   };
 
-  const modalProps = {
-    id: 'newsletterModal',
-    label: 'newsletterModalLabel',
-    title: 'NewsLetter',
-  };
-
   const modalButton = (
     <Button
       id='subscribe'
@@ -77,8 +92,6 @@ const NewsletterModal = () => {
       size='sm'
       className='mx-sm-3'
       variant='danger'
-      data-bs-toggle='modal'
-      data-bs-target='#newsletterModal'
       icon={<Envelope />}
       iconPosition='left'
     >
@@ -86,57 +99,25 @@ const NewsletterModal = () => {
     </Button>
   );
 
+  // Handle successful form submission
+  const handleSuccess = () => {
+    // Modal will be closed automatically by BaseModal
+  };
+
   return (
-    <CustomModal
-      modalProps={modalProps}
-      modalButton={modalButton}
+    <BaseModal
+      id='newsletterModal'
+      title='Newsletter'
+      trigger={modalButton}
+      onSuccess={handleSuccess}
     >
-      <form
-        className='form-inline newsletter justify-content-center'
+      <NewsletterForm
+        email={email}
+        setEmail={setEmail}
+        isSubmitting={isSubmitting}
         onSubmit={sendNewsletter}
-      >
-        <div className='modal-body'>
-          <div className='mx-xs-1 mx-sm-3 me-sm-5 pe-sm-5 final-form input-group'>
-            <input
-              className='form-control text-truncate'
-              name='email'
-              type='email'
-              placeholder='Enter your email here'
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              disabled={isSubmitting}
-            />
-          </div>
-          <ul id='newsDetails'>
-            <li>Stay informed on all upcoming events</li>
-            <li>
-              Recieve updates on new music releases, music videos, and vlogs
-            </li>
-            <li>Be notified of special deals, new merch, and giveaways</li>
-          </ul>
-        </div>
-        <div className='modal-footer'>
-          <Button
-            type='button'
-            variant='dark'
-            data-bs-dismiss='modal'
-            disabled={isSubmitting}
-          >
-            Close
-          </Button>
-          <Button
-            id='newsSub'
-            className='my-2 my-sm-0'
-            variant='outline-light'
-            type='submit'
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Subscribing...' : 'Join'}
-          </Button>
-        </div>
-      </form>
-    </CustomModal>
+      />
+    </BaseModal>
   );
 };
 

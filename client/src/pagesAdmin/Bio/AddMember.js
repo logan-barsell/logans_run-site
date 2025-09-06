@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchMembers } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
-import CustomModal from '../../components/Modals/CustomModal';
+import BaseModal from '../../components/Modals/BaseModal';
 import { uploadImageToFirebase } from '../../utils/firebaseImage';
 import { addMember } from '../../services/membersService';
 import normalizeUrl from '../../utils/normalizeUrl';
@@ -104,43 +104,36 @@ const AddMember = ({ fetchMembers }) => {
     }
   };
 
-  const modalProps = {
-    id: 'add_modal',
-    label: 'add_label',
-    title: 'NEW MEMBER',
-    buttonText: uploading ? 'Uploading...' : 'Add Member',
-  };
-
-  const AddButton = () => {
-    return (
-      <Button
-        data-bs-toggle='modal'
-        data-bs-target={`#${modalProps.id}`}
-        className='addButton'
-        variant='danger'
-        type='button'
-        disabled={uploading}
-        loading={uploading}
-        icon={<PlusSquareFill />}
-        iconPosition='left'
-      >
-        {modalProps.buttonText}
-      </Button>
-    );
+  // Handle successful form submission
+  const handleFormSuccess = () => {
+    // Modal will be closed automatically by BaseModal
   };
 
   return (
-    <>
-      <CustomModal
-        modalProps={modalProps}
-        modalButton={<AddButton />}
-      >
-        <ModalForm
-          fields={txtFields}
-          onSubmit={onSubmit}
-        />
-      </CustomModal>
-    </>
+    <BaseModal
+      id='add_member_modal'
+      title='NEW MEMBER'
+      trigger={
+        <Button
+          className='addButton'
+          variant='danger'
+          type='button'
+          disabled={uploading}
+          loading={uploading}
+          icon={<PlusSquareFill />}
+          iconPosition='left'
+        >
+          {uploading ? 'Uploading...' : 'Add Member'}
+        </Button>
+      }
+      onSuccess={handleFormSuccess}
+    >
+      <ModalForm
+        fields={txtFields}
+        onSubmit={onSubmit}
+        onSuccess={handleFormSuccess}
+      />
+    </BaseModal>
   );
 };
 
