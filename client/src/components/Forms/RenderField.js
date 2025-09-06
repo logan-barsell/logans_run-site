@@ -7,6 +7,11 @@ import {
   PriceFields,
 } from './FieldTypes';
 import { ImageUploadField } from './FieldTypes/ImageUpload';
+import { VideoUploadField } from './FieldTypes/VideoUpload';
+import ConditionalVideoUploadField from './FieldTypes/ConditionalVideoUpload';
+import ConditionalNumberField from './FieldTypes/ConditionalNumber';
+import ConditionalTextField from './FieldTypes/ConditionalText';
+import ConditionalYoutubeUrlField from './FieldTypes/ConditionalYoutubeUrl';
 import OptionsField from './FieldTypes/OptionsField';
 import NumberField from './FieldTypes/NumberField';
 import {
@@ -103,6 +108,66 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         initialValue={initialValue}
         required={required}
         onFileChange={onFileChange}
+      />
+    );
+  } else if (type === 'video') {
+    return (
+      <VideoUploadField
+        ref={imageRef}
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        required={required}
+        onFileChange={onFileChange}
+      />
+    );
+  } else if (type === 'conditionalVideo') {
+    return (
+      <ConditionalVideoUploadField
+        ref={imageRef}
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        required={required}
+        onFileChange={onFileChange}
+      />
+    );
+  } else if (type === 'conditionalNumber') {
+    return (
+      <ConditionalNumberField
+        ref={imageRef}
+        label={label}
+        name={name}
+        conditionField={field.conditionField}
+        conditionValue={field.conditionValue}
+        initialValue={initialValue}
+        placeholder={placeholder}
+      />
+    );
+  } else if (type === 'conditionalText') {
+    return (
+      <ConditionalTextField
+        ref={imageRef}
+        label={label}
+        name={name}
+        conditionField={field.conditionField}
+        conditionValue={field.conditionValue}
+        initialValue={initialValue}
+        placeholder={placeholder}
+        required={required}
+      />
+    );
+  } else if (type === 'conditionalYoutubeUrl') {
+    return (
+      <ConditionalYoutubeUrlField
+        ref={imageRef}
+        label={label}
+        name={name}
+        conditionField={field.conditionField}
+        conditionValue={field.conditionValue}
+        initialValue={initialValue}
+        placeholder={placeholder}
+        required={required}
       />
     );
   } else if (type === 'price') {
@@ -304,6 +369,16 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
           return validation.isValid ? undefined : validation.error;
         }}
         helperText='Enter a valid URL (e.g., example.com or https://example.com)'
+      />
+    );
+  } else if (type === 'select') {
+    return (
+      <OptionsField
+        label={label}
+        name={name}
+        options={options}
+        initialValue={initialValue}
+        required={required}
       />
     );
   }
