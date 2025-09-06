@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import ModalForm from '../Forms/ModalForm';
-import CustomModal from '../Modals/CustomModal';
+import BaseModal from '../Modals/BaseModal';
 import { PencilSquare } from '../icons';
 import Button from '../Button/Button';
 
@@ -12,52 +12,54 @@ const EditItem = ({
   buttonText = 'Edit',
   title,
 }) => {
-  const id = item._id || item.id;
+  // Handle different data structures - some items have data nested under .data
+  const itemData = item.data || item;
+  const id = itemData._id || itemData.id || item._id || item.id;
 
   // Memoize the fields to prevent re-creation on every render
   const fields = useMemo(() => {
     if (!editFields || !item) return null;
-    return editFields(item.data || item, false);
-  }, [editFields, item]);
-
-  const modalProps = {
-    id: `edit_item_${id}`,
-    label: `edit_item_label_${id}`,
-    title,
-  };
+    return editFields(itemData, false);
+  }, [editFields, itemData, item]);
 
   const iconPosition = variant === 'square' ? 'center' : 'left';
 
-  const EditButton = () => {
-    return (
-      <Button
-        variant='dark'
-        size='sm'
-        icon={<PencilSquare />}
-        data-bs-toggle='modal'
-        data-bs-target={`#${modalProps.id}`}
-        iconPosition={iconPosition}
-        type='button'
-      >
-        {variant === 'wide' && buttonText}
-      </Button>
-    );
+  // Handle successful form submission
+  const handleFormSuccess = () => {
+    // Modal will be closed automatically by BaseModal
   };
 
   return (
-    <CustomModal
-      modalProps={modalProps}
-      modalButton={<EditButton />}
+    <BaseModal
+      id={
+        id
+          ? `edit_item_${id}`
+          : `edit_item_${Math.random().toString(36).substr(2, 9)}`
+      }
+      title={title}
+      trigger={
+        <Button
+          variant='dark'
+          size='sm'
+          icon={<PencilSquare />}
+          iconPosition={iconPosition}
+          type='button'
+        >
+          {variant === 'wide' && buttonText}
+        </Button>
+      }
+      onSuccess={handleFormSuccess}
     >
       {fields ? (
         <ModalForm
           fields={fields}
-          onSubmit={data => onEdit(data)}
+          onSubmit={data => onEdit(data, itemData)}
+          onSuccess={handleFormSuccess}
         />
       ) : (
         <div>No edit fields provided</div>
       )}
-    </CustomModal>
+    </BaseModal>
   );
 };
 

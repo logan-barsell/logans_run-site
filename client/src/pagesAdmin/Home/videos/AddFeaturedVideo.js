@@ -54,8 +54,6 @@ const AddFeaturedVideo = ({ fetchVideos }) => {
         <Button
           variant='danger'
           icon={<PlusSquareFill />}
-          data-bs-toggle='modal'
-          data-bs-target='#add_featured_video_modal'
           type='button'
           className='addButton'
         >

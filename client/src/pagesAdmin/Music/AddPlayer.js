@@ -8,6 +8,8 @@ import { addPlayer } from '../../services/musicService';
 import { useAlert } from '../../contexts/AlertContext';
 import AddItem from '../../components/Modifiers/AddItem';
 import { ADD_PLAYER_FIELDS } from './constants';
+import Button from '../../components/Button/Button';
+import { PlusSquareFill } from '../../components/icons';
 
 const AddPlayer = ({ fetchPlayers }) => {
   const { showError, showSuccess } = useAlert();
@@ -49,9 +51,18 @@ const AddPlayer = ({ fetchPlayers }) => {
     <AddItem
       fields={ADD_PLAYER_FIELDS}
       onAdd={onAdd}
-      buttonText='Add Music'
       title='NEW MUSIC'
       modalProps={{ id: 'add_player', label: 'add_player' }}
+      modalButton={
+        <Button
+          variant='danger'
+          icon={<PlusSquareFill />}
+          type='button'
+          className='addButton'
+        >
+          Add Music
+        </Button>
+      }
     />
   );
 };
