@@ -1,5 +1,6 @@
 import React from 'react';
 import YouTubeSnippet from '../YouTubeSnippet';
+import VideoPlayer from '../Video/VideoPlayer';
 import { YouTube } from '../icons';
 import Button from '../Button/Button';
 
@@ -14,40 +15,50 @@ function VideoCarousel({ videos }) {
       <div className='carousel-inner'>
         {videos.map((video, idx) => (
           <div
-            key={video.videoId}
+            key={video.videoId || video._id}
             className={`carousel-item${idx === 0 ? ' active' : ''}`}
           >
             {/* make this container relative so overlay & caption can sit on top */}
             <div className='position-relative ratio ratio-16x9 w-100'>
-              {/* your silent, UI-free snippet */}
-              <YouTubeSnippet
-                videoId={video.videoId}
-                startTime={video.startTime}
-                endTime={video.endTime}
-              />
+              {/* Render video based on type */}
+              {video.videoType === 'upload' && video.videoFile ? (
+                <VideoPlayer
+                  videoUrl={video.videoFile}
+                  startTime={video.startTime}
+                  endTime={video.endTime}
+                />
+              ) : (
+                <YouTubeSnippet
+                  videoId={video.videoId}
+                  startTime={video.startTime}
+                  endTime={video.endTime}
+                />
+              )}
 
-              {/* now layer your caption on top */}
-              <div className='carousel-caption d-block carousel-caption-content'>
-                <p className='carousel-title'>{video.title}</p>
-                {video.description && (
-                  <span className='carousel-desc secondary-font'>
-                    {video.description}
-                  </span>
-                )}
-                <Button
-                  as='a'
-                  href={`https://youtu.be/${video.videoId}`}
-                  target='_blank'
-                  rel='noreferrer'
-                  variant='outline-light'
-                  size='sm'
-                  className='addButton'
-                  iconPosition='right'
-                  icon={<YouTube />}
-                >
-                  Watch Now
-                </Button>
-              </div>
+              {/* now layer your caption on top - only show if displayMode is 'full' */}
+              {video.displayMode !== 'videoOnly' && (
+                <div className='carousel-caption d-block carousel-caption-content'>
+                  <p className='carousel-title'>{video.title}</p>
+                  {video.description && (
+                    <span className='carousel-desc secondary-font'>
+                      {video.description}
+                    </span>
+                  )}
+                  <Button
+                    as='a'
+                    href={video.youtubeLink}
+                    target='_blank'
+                    rel='noreferrer'
+                    variant='outline-light'
+                    size='sm'
+                    className='addButton'
+                    iconPosition='right'
+                    icon={<YouTube />}
+                  >
+                    Watch Now
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         ))}

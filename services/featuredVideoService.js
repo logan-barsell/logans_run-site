@@ -25,6 +25,10 @@ async function addFeaturedVideo(videoData) {
       throw new AppError('Release date is required', 400);
     }
 
+    if (!videoData.youtubeLink) {
+      throw new AppError('YouTube link is required', 400);
+    }
+
     const video = new FeaturedVideo(videoData);
     await video.save();
 
@@ -49,20 +53,16 @@ async function updateFeaturedVideo(id, videoData) {
       throw new AppError('Video update data is required', 400);
     }
 
-    if (!videoData.releaseDate) {
-      throw new AppError('Release date is required', 400);
-    }
-
     const updated = await FeaturedVideo.findByIdAndUpdate(id, videoData, {
       new: true,
       runValidators: true,
     });
 
     if (!updated) {
-      throw new AppError('Featured video not found', 404);
+      throw new AppError('Video not found', 404);
     }
 
-    logger.info(`✅ Featured video updated successfully: ${id}`);
+    logger.info('✅ Featured video updated successfully');
     return updated;
   } catch (error) {
     logger.error('❌ Error updating featured video:', error);
@@ -82,10 +82,10 @@ async function deleteFeaturedVideo(id) {
     const deleted = await FeaturedVideo.findByIdAndDelete(id);
 
     if (!deleted) {
-      throw new AppError('Featured video not found', 404);
+      throw new AppError('Video not found', 404);
     }
 
-    logger.info(`✅ Featured video deleted successfully: ${id}`);
+    logger.info('✅ Featured video deleted successfully');
     return deleted;
   } catch (error) {
     logger.error('❌ Error deleting featured video:', error);
