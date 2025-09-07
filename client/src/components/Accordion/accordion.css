@@ -40,7 +40,7 @@
 }
 
 .accordion-button:focus {
-  box-shadow: 0 0 0 0.25rem var(--secondary);
+  box-shadow: 0 0 0 0.1rem var(--secondary);
 }
 
 .accordion .img-thumbnail {
