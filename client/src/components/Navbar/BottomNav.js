@@ -4,16 +4,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchContactInfo, fetchTheme } from '../../redux/actions';
 import NavLink from '../Routing/NavLink';
-import {
-  Facebook,
-  Instagram,
-  YouTube,
-  Spotify,
-  AppleMusic,
-  SoundCloud,
-  X,
-  TikTok,
-} from '../../components/icons';
+import SocialIcons from '../SocialIcons';
 import Button from '../Button/Button';
 import NewsletterModal from './NewsletterModal';
 
@@ -62,90 +53,24 @@ const BottomNav = ({
 
         {hasSocialLinks && (
           <div
-            className={`iconsNav ${
+            className={`${
               theme?.enableNewsletter !== false ? 'col-md-5' : 'col-md-12'
             } col-12 justify-content-center mx-auto`}
           >
-            {contactInfo.facebook && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.facebook}
-              >
-                <Facebook style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo.instagram && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.instagram}
-              >
-                <Instagram style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo.youtube && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.youtube}
-              >
-                <YouTube style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo.spotify && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.spotify}
-              >
-                <Spotify style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo.appleMusic && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.appleMusic}
-              >
-                <AppleMusic style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo.soundCloud && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.soundCloud}
-              >
-                <SoundCloud style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo.x && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.x}
-              >
-                <X style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo.tiktok && (
-              <a
-                className='hvr-grow'
-                target='_blank'
-                rel='noreferrer'
-                href={contactInfo.tiktok}
-              >
-                <TikTok style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
+            <SocialIcons
+              links={{
+                facebook: contactInfo.facebook,
+                instagram: contactInfo.instagram,
+                youtube: contactInfo.youtube,
+                spotify: contactInfo.spotify,
+                appleMusic: contactInfo.appleMusic,
+                soundCloud: contactInfo.soundCloud,
+                x: contactInfo.x,
+                tiktok: contactInfo.tiktok,
+              }}
+              variant='footer'
+              theme={theme}
+            />
           </div>
         )}
       </nav>

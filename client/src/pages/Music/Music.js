@@ -5,12 +5,7 @@ import React, { useEffect } from 'react';
 import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { fetchPlayers, fetchContactInfo } from '../../redux/actions';
 import { connect } from 'react-redux';
-import {
-  AppleMusic,
-  SoundCloud,
-  YouTube,
-  Spotify,
-} from '../../components/icons';
+import SocialIcons from '../../components/SocialIcons';
 import { Divider, NoContent } from '../../components/Header';
 import StaticAlert from '../../components/Alert/StaticAlert';
 
@@ -70,51 +65,19 @@ const MusicPage = ({
             loading='lazy'
           ></iframe>
 
-          <Divider />
+          <Divider className='mt-3' />
 
           {/* Music platform icons */}
-          <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
-            {contactInfo?.spotify && (
-              <a
-                href={contactInfo.spotify}
-                target='_blank'
-                rel='noreferrer'
-                className='hvr-grow'
-              >
-                <Spotify style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo?.appleMusic && (
-              <a
-                href={contactInfo.appleMusic}
-                target='_blank'
-                rel='noreferrer'
-                className='hvr-grow'
-              >
-                <AppleMusic style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo?.soundCloud && (
-              <a
-                href={contactInfo.soundCloud}
-                target='_blank'
-                rel='noreferrer'
-                className='hvr-grow'
-              >
-                <SoundCloud style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-            {contactInfo?.youtube && (
-              <a
-                href={contactInfo.youtube}
-                target='_blank'
-                rel='noreferrer'
-                className='hvr-grow'
-              >
-                <YouTube style={theme?.socialMediaIconStyle || 'default'} />
-              </a>
-            )}
-          </div>
+          <SocialIcons
+            links={{
+              spotify: contactInfo?.spotify,
+              appleMusic: contactInfo?.appleMusic,
+              soundCloud: contactInfo?.soundCloud,
+              youtube: contactInfo?.youtube,
+            }}
+            variant='music'
+            theme={theme}
+          />
         </div>
       )}
 
@@ -158,52 +121,16 @@ const MusicPage = ({
                 player.appleMusicLink ||
                 player.soundcloudLink ||
                 player.youtubeLink) && <Divider className='w-100 mt-3' />}
-              <div className='music-platform-icons mt-3 d-flex justify-content-center gap-3'>
-                {player.spotifyLink && (
-                  <a
-                    href={player.spotifyLink}
-                    target='_blank'
-                    rel='noreferrer'
-                    className='hvr-grow'
-                  >
-                    <Spotify style={theme?.socialMediaIconStyle || 'default'} />
-                  </a>
-                )}
-                {player.appleMusicLink && (
-                  <a
-                    href={player.appleMusicLink}
-                    target='_blank'
-                    rel='noreferrer'
-                    className='hvr-grow'
-                  >
-                    <AppleMusic
-                      style={theme?.socialMediaIconStyle || 'default'}
-                    />
-                  </a>
-                )}
-                {player.soundcloudLink && (
-                  <a
-                    href={player.soundcloudLink}
-                    target='_blank'
-                    rel='noreferrer'
-                    className='hvr-grow'
-                  >
-                    <SoundCloud
-                      style={theme?.socialMediaIconStyle || 'default'}
-                    />
-                  </a>
-                )}
-                {player.youtubeLink && (
-                  <a
-                    href={player.youtubeLink}
-                    target='_blank'
-                    rel='noreferrer'
-                    className='hvr-grow'
-                  >
-                    <YouTube style={theme?.socialMediaIconStyle || 'default'} />
-                  </a>
-                )}
-              </div>
+              <SocialIcons
+                links={{
+                  spotify: player.spotifyLink,
+                  appleMusic: player.appleMusicLink,
+                  soundCloud: player.soundcloudLink,
+                  youtube: player.youtubeLink,
+                }}
+                variant='music'
+                theme={theme}
+              />
             </div>
           </div>
         ))

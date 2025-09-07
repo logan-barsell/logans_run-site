@@ -4,18 +4,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchContactInfo } from '../../redux/actions';
 import {
-  Facebook,
-  Instagram,
-  YouTube,
-  Spotify,
-  AppleMusic,
-  SoundCloud,
-  X,
-  TikTok,
   Envelope,
   TelephoneFill,
   PaperAirplaneSend,
 } from '../../components/icons';
+import SocialIcons from '../../components/SocialIcons';
 import Button from '../../components/Button/Button';
 import { PageTitle, Divider } from '../../components/Header';
 import { useAlert } from '../../contexts/AlertContext';
@@ -162,96 +155,20 @@ const ContactPage = ({
                   />
                 </>
               )}
-              <div className='socmed contact'>
-                {contactInfo.facebook && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.facebook}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <Facebook
-                      style={theme?.socialMediaIconStyle || 'default'}
-                    />
-                  </a>
-                )}
-                {contactInfo.instagram && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.instagram}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <Instagram
-                      style={theme?.socialMediaIconStyle || 'default'}
-                    />
-                  </a>
-                )}
-                {contactInfo.youtube && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.youtube}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <YouTube style={theme?.socialMediaIconStyle || 'default'} />
-                  </a>
-                )}
-                {contactInfo.spotify && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.spotify}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <Spotify style={theme?.socialMediaIconStyle || 'default'} />
-                  </a>
-                )}
-                {contactInfo.appleMusic && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.appleMusic}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <AppleMusic
-                      style={theme?.socialMediaIconStyle || 'default'}
-                    />
-                  </a>
-                )}
-                {contactInfo.soundCloud && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.soundCloud}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <SoundCloud
-                      style={theme?.socialMediaIconStyle || 'default'}
-                    />
-                  </a>
-                )}
-                {contactInfo.x && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.x}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <X style={theme?.socialMediaIconStyle || 'default'} />
-                  </a>
-                )}
-                {contactInfo.tiktok && (
-                  <a
-                    className='hvr-grow'
-                    href={contactInfo.tiktok}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <TikTok style={theme?.socialMediaIconStyle || 'default'} />
-                  </a>
-                )}
-              </div>
+              <SocialIcons
+                links={{
+                  facebook: contactInfo.facebook,
+                  instagram: contactInfo.instagram,
+                  youtube: contactInfo.youtube,
+                  spotify: contactInfo.spotify,
+                  appleMusic: contactInfo.appleMusic,
+                  soundCloud: contactInfo.soundCloud,
+                  x: contactInfo.x,
+                  tiktok: contactInfo.tiktok,
+                }}
+                variant='contact'
+                theme={theme}
+              />
             </div>
           </div>
         )}
