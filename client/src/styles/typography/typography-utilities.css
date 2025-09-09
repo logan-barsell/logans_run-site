@@ -149,6 +149,118 @@
   color: black !important;
 }
 
+/* Background Color Utilities */
+.bg-main {
+  background-color: var(--main) !important;
+}
+.bg-secondary {
+  background-color: var(--secondary) !important;
+}
+.bg-background {
+  background-color: var(--background) !important;
+}
+.bg-navbar {
+  background-color: var(--navbar-bg) !important;
+}
+.bg-modal {
+  background-color: var(--modal-bg) !important;
+}
+.bg-form {
+  background-color: var(--form-bg) !important;
+}
+.bg-accordion {
+  background-color: var(--accordion-bg) !important;
+}
+
+/* Border Color Utilities */
+.border-main {
+  border-color: var(--main) !important;
+}
+.border-secondary {
+  border-color: var(--secondary) !important;
+}
+
+/* Common Layout Utilities */
+.flex-center {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.flex-between {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.flex-column {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+.flex-nowrap {
+  flex-wrap: nowrap !important;
+}
+
+/* Spacing Utilities */
+.m-0 {
+  margin: 0 !important;
+}
+.m-1 {
+  margin: 0.25rem !important;
+}
+.m-2 {
+  margin: 0.5rem !important;
+}
+.m-3 {
+  margin: 1rem !important;
+}
+.m-4 {
+  margin: 1.5rem !important;
+}
+.m-5 {
+  margin: 3rem !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+.p-1 {
+  padding: 0.25rem !important;
+}
+.p-2 {
+  padding: 0.5rem !important;
+}
+.p-3 {
+  padding: 1rem !important;
+}
+.p-4 {
+  padding: 1.5rem !important;
+}
+.p-5 {
+  padding: 3rem !important;
+}
+
+/* Display Utilities */
+.d-none {
+  display: none !important;
+}
+.d-block {
+  display: block !important;
+}
+.d-inline {
+  display: inline !important;
+}
+.d-inline-block {
+  display: inline-block !important;
+}
+.d-flex {
+  display: flex !important;
+}
+.d-grid {
+  display: grid !important;
+}
+
 /* Responsive Typography Utilities */
 /* These can be used to override the fluid typography when needed */
 
