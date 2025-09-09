@@ -61,7 +61,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
 
         <div className='d-flex w-100 justify-content-center mb-md-2'>
           <PageTitle
-            as='h3'
+            as='h4'
             className='mb-3'
           >
             {player.title}

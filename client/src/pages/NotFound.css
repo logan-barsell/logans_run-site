@@ -109,19 +109,23 @@
   }
 }
 
+/* ===== NOT FOUND PAGE TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
+#not-found h5 {
+  font-size: var(--h5-size);
+}
+
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries */
+
 @media (max-width: 777px) {
-  #not-found h5 {
-    font-size: 3.5vw;
-  }
   .not-found-404 h1 {
     font-size: 4.5rem;
   }
 }
 
 @media (max-width: 550px) {
-  #not-found h5 {
-    font-size: 4.5vw;
-  }
   .not-found-404 h1 {
     font-size: 4rem;
   }

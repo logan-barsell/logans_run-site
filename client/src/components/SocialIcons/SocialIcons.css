@@ -27,7 +27,7 @@
 
 .social-icon-label {
   margin-left: 8px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   white-space: nowrap;
 }
 

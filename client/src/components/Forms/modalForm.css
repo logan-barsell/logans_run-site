@@ -58,7 +58,8 @@
   .final-form .form-group {
     margin-bottom: 5px;
   }
+
   .modal-footer {
-    padding: 0px;
+    padding: 0.5rem; /* Maintain some padding even on very small screens */
   }
 }

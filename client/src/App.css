@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
 
+/* ===== TYPOGRAPHY SYSTEM ===== */
+@import './styles/typography/index.css';
+
 /* FONTS */
 @font-face {
   font-family: sprayPaint;
@@ -332,10 +335,10 @@
 html,
 body {
   font-family: var(--primary-font), Arial, sans-serif;
-  font-size: 22px;
+  font-size: var(--text-base);
   background-color: var(--background);
   letter-spacing: normal;
-  min-width: 270px;
+  min-width: var(--bp-xs);
 }
 
 /* FADE IN EFFECT */
@@ -381,12 +384,6 @@ hr:not(.border-secondary) {
   color: var(--secondary);
 }
 
-@media (max-width: 350px) {
-  h5 {
-    font-size: 7vw;
-  }
-}
-
 .nav-item h5 {
   margin: 16px;
 }
@@ -407,24 +404,6 @@ textarea {
 
 .nav-link {
   color: white;
-}
-
-@media (max-width: 2000px) {
-  .cart-button {
-    font-size: 1.5vw;
-  }
-}
-
-@media (max-width: 991px) {
-  .cart-button {
-    font-size: 3vw;
-  }
-}
-
-@media (max-width: 500px) {
-  .cart-button {
-    font-size: 7vw;
-  }
 }
 
 a {
@@ -512,116 +491,6 @@ p a:hover {
   font-family: var(--secondary-font);
 }
 
-@media (max-width: 991px) {
-  p,
-  a {
-    font-size: 2vw;
-  }
-}
-
-@media (max-width: 800px) {
-  p,
-  a {
-    font-size: 2.5vw;
-  }
-  h3 {
-    font-size: 4vw;
-  }
-}
-
-@media (max-width: 800px) {
-  p,
-  a {
-    font-size: 3vw;
-  }
-}
-
-@media (max-width: 777px) {
-  p,
-  a {
-    font-size: 2.5vw;
-  }
-  h5 {
-    font-size: 3.5vw;
-  }
-  label {
-    font-size: 3vw;
-  }
-  input.form-control,
-  select.form-control,
-  .react-datepicker__input-container input,
-  .final-form .input-group-text#basic-addon1 {
-    font-size: 3vw;
-  }
-  svg {
-    height: auto;
-  }
-}
-
-@media (max-width: 650px) {
-  h5 {
-    font-size: 4vw;
-  }
-  p,
-  a {
-    font-size: 3vw;
-  }
-}
-
-@media (max-width: 500px) {
-  h3 {
-    font-size: 4vw;
-  }
-}
-
-@media (max-width: 550px) {
-  p,
-  a {
-    font-size: 3.5vw;
-  }
-  h5 {
-    font-size: 4.5vw;
-  }
-  label {
-    font-size: 4vw;
-  }
-  input.form-control,
-  select.form-control,
-  .react-datepicker__input-container input,
-  .final-form .input-group-text#basic-addon1 {
-    font-size: 4vw;
-  }
-  svg {
-    height: auto;
-  }
-}
-
-@media (max-width: 450px) {
-  p,
-  a {
-    font-size: 4vw;
-  }
-  h5 {
-    font-size: 5vw;
-  }
-  h3 {
-    font-size: 7vw;
-  }
-}
-
-@media (max-width: 400px) {
-  button.navbar-toggler {
-    font-size: 7vw;
-  }
-}
-
-@media (max-width: 291px) {
-  p,
-  a {
-    font-size: 4.5vw;
-  }
-}
-
 input:-webkit-autofill,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:hover,
@@ -635,36 +504,4 @@ input:-webkit-autofill:active {
 input:-internal-autofill-selected {
   background-color: var(--form-bg) !important;
   color: white !important;
-}
-
-/* Newsletter Settings Mobile Responsiveness */
-@media only screen and (max-width: 576px) {
-  .newsletter-info-list {
-    font-size: 12px !important;
-    padding-left: 1rem !important;
-  }
-
-  .newsletter-info-list li {
-    margin-bottom: 0.5rem;
-  }
-}
-
-@media only screen and (max-width: 400px) {
-  .newsletter-info-list {
-    font-size: 11px !important;
-    padding-left: 0.75rem !important;
-    line-height: 1.5 !important;
-  }
-}
-
-@media only screen and (max-width: 330px) {
-  .newsletter-info-list {
-    font-size: 10px !important;
-    padding-left: 0.5rem !important;
-    line-height: 1.4 !important;
-  }
-
-  .session-active-text {
-    font-size: 0.65rem !important;
-  }
 }

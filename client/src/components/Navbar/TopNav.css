@@ -1,18 +1,21 @@
+/* ===== TOP NAV TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
 .navbar-light .navbar-brand.yesdevil {
   color: var(--main);
   text-shadow: 2px 1px black;
-  font-size: 25px;
+  font-size: var(--nav-brand-size);
 }
 
 .navbar-light .navbar-brand.yesdevil {
-  font-size: 35px;
+  font-size: var(--nav-brand-size);
   color: var(--main);
   text-shadow: 2px 1px var(--secondary);
 }
 
 /* Header display mode styles */
 .navbar-brand.yesdevil.header-band-name-only {
-  font-size: 35px;
+  font-size: var(--nav-brand-size);
 }
 
 .navbar-brand.yesdevil.header-logo-only img {
@@ -22,7 +25,7 @@
 }
 
 .navbar-brand.yesdevil.header-band-name-and-logo {
-  font-size: 35px;
+  font-size: var(--nav-brand-size);
 }
 
 .navbar-brand.yesdevil.header-band-name-and-logo img {
@@ -32,127 +35,66 @@
   margin-right: 15px;
 }
 
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries, remove font-size ones */
+
 @media (max-width: 2000px) {
-  .navbar-light .navbar-brand.yesdevil {
-    font-size: 2.5vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-only {
-    font-size: 2.5vw;
-  }
-
   .navbar-brand.yesdevil.header-logo-only img {
-    height: 4vw;
-    max-width: 20vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-and-logo {
-    font-size: 1.8vw;
+    height: clamp(32px, 4vw, 80px);
+    max-width: clamp(64px, 20vw, 400px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
-    height: 4vw;
-    max-width: 15vw;
+    height: clamp(32px, 4vw, 80px);
+    max-width: clamp(48px, 15vw, 300px);
   }
 }
 
 @media (max-width: 991px) {
-  .navbar-light .navbar-brand.yesdevil {
-    font-size: 4vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-only {
-    font-size: 4vw;
-  }
-
   .navbar-brand.yesdevil.header-logo-only img {
-    height: 6vw;
-    max-width: 25vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-and-logo {
-    font-size: 3vw;
+    height: clamp(32px, 6vw, 60px);
+    max-width: clamp(80px, 25vw, 250px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
-    height: 6vw;
-    max-width: 20vw;
+    height: clamp(32px, 6vw, 60px);
+    max-width: clamp(64px, 20vw, 200px);
   }
 }
 
 @media (max-width: 650px) {
-  .navbar-light .navbar-brand.yesdevil {
-    font-size: 6vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-only {
-    font-size: 6vw;
-  }
-
   .navbar-brand.yesdevil.header-logo-only img {
-    height: 8vw;
-    max-width: 30vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-and-logo {
-    font-size: 4.5vw;
+    height: clamp(32px, 8vw, 52px);
+    max-width: clamp(96px, 30vw, 195px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
-    height: 8vw;
-    max-width: 25vw;
+    height: clamp(32px, 8vw, 52px);
+    max-width: clamp(80px, 25vw, 162px);
   }
 }
 
 @media (max-width: 500px) {
-  .navbar-light .navbar-brand.yesdevil {
-    font-size: 8vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-only {
-    font-size: 8vw;
-  }
-
   .navbar-brand.yesdevil.header-logo-only img {
-    height: 10vw;
-    max-width: 35vw;
-  }
-
-  .navbar-brand.yesdevil.header-band-name-and-logo {
-    font-size: 6vw;
+    height: clamp(32px, 10vw, 50px);
+    max-width: clamp(112px, 35vw, 175px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
-    height: 10vw;
-    max-width: 30vw;
+    height: clamp(32px, 10vw, 50px);
+    max-width: clamp(96px, 30vw, 150px);
   }
 }
 
 nav {
-  font-size: 21px;
+  font-size: var(--text-xl);
   background-color: var(--navbar-bg);
   overflow: hidden;
   height: 100%;
   min-height: 90px;
 }
 
-@media (max-width: 2000px) {
-  nav {
-    font-size: 1.5vw;
-  }
-}
-
-@media (max-width: 991px) {
-  nav {
-    font-size: 3vw;
-  }
-}
-
-@media (max-width: 500px) {
-  nav {
-    font-size: 7vw;
-  }
-}
+/* Navigation font sizes now handled by typography system */
 
 .navbar-nav a.nav-link.nav-item:hover {
   color: var(--main);

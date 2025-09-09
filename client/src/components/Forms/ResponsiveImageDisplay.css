@@ -1,0 +1,44 @@
+/* Responsive Image Display Component */
+.responsive-image-container {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.responsive-image:hover {
+  transform: scale(1.02);
+}
+
+/* Responsive sizing - start with original size, then scale down */
+@media (max-width: 768px) {
+  .responsive-image {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  .responsive-image {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 400px) {
+  .responsive-image {
+    max-width: 70%;
+  }
+}
+
+@media (max-width: 320px) {
+  .responsive-image {
+    max-width: 60%;
+  }
+}

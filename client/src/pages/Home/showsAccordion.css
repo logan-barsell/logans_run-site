@@ -4,13 +4,13 @@
 
 .accordion-header .coHeader {
   color: white;
-  font-size: 16px;
+  font-size: var(--text-base);
   font-family: var(--secondary-font);
   letter-spacing: normal;
 }
 
 .accordion-body .coSubhead {
-  font-size: 22px;
+  font-size: var(--text-xl);
   color: white;
 }
 

@@ -1,7 +1,7 @@
 /* Storefront Components Styles */
 .shopify-storefront,
 .stripe-storefront {
-  font-size: 18px;
+  font-size: var(--text-lg);
   color: white;
 }
 
@@ -61,7 +61,7 @@
 
 .shopify-storefront .product-description {
   color: #ccc;
-  font-size: 14px;
+  font-size: var(--text-sm);
   margin-bottom: 15px;
   line-height: 1.4;
   font-family: var(--secondary-font);
@@ -70,7 +70,7 @@
 .shopify-storefront .price,
 .stripe-storefront .price {
   color: white;
-  font-size: 22px;
+  font-size: var(--text-xl);
   margin-bottom: 15px;
 }
 
@@ -102,7 +102,7 @@
 
   .shopify-storefront .price,
   .stripe-storefront .price {
-    font-size: 4.5vw;
+    font-size: var(--text-lg);
   }
 }
 
@@ -114,7 +114,7 @@
 }
 
 .stripe-storefront .store-subtitle {
-  font-size: 16px;
+  font-size: var(--text-base);
   margin-bottom: 30px;
 }
 

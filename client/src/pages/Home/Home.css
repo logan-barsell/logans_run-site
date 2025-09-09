@@ -22,7 +22,7 @@
 }
 
 #upcomingshows .card {
-  font-size: 20px;
+  font-size: var(--text-lg);
   min-width: 288px;
 }
 
@@ -344,6 +344,7 @@
 
 .parallax-carousel {
   width: 100vw;
+  min-width: 320px; /* Prevent issues on screens smaller than our minimum */
   max-height: 100vh;
   overflow: hidden;
   background: #000;
@@ -354,12 +355,14 @@
 .parallax-carousel .carousel-inner,
 .parallax-carousel .carousel-item {
   width: 100vw;
+  min-width: 320px; /* Prevent issues on screens smaller than our minimum */
   max-height: 100vh;
   overflow: hidden;
 }
 
 .parallax-carousel img {
   width: 100vw;
+  min-width: 320px; /* Prevent issues on screens smaller than our minimum */
   height: auto;
   display: block;
   max-height: 100vh;
@@ -426,7 +429,7 @@
 }
 
 .carousel-title {
-  font-size: clamp(1.5rem, 4vw, 3.2rem); /* larger on wide screens */
+  font-size: var(--text-3xl); /* using typography system */
   margin-bottom: 0.15em; /* less space below title */
   text-align: center;
 }

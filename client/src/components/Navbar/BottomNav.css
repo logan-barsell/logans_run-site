@@ -1,6 +1,7 @@
 #bottomNav {
   overflow: hidden;
   z-index: 1002;
+  min-width: 320px; /* Prevent width from shrinking below minimum supported width */
 }
 
 #newsSub {
@@ -17,7 +18,7 @@
 }
 
 #newsDetails {
-  font-size: 17px;
+  font-size: var(--text-base);
   font-family: var(--secondary-font);
   letter-spacing: normal;
   margin-top: 27px;
@@ -125,20 +126,23 @@ a.nav-item.active {
   }
 }
 
+/* ===== BOTTOM NAV TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
+#newsDetails {
+  font-size: var(--text-sm);
+}
+
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries */
+
 @media only screen and (max-width: 400px) {
-  #newsDetails {
-    font-size: 4vw;
-  }
   ul#newsDetails {
     padding-left: 20px;
   }
 }
 
-@media only screen and (max-width: 300px) {
-  ul#newsDetails {
-    padding-left: 10px !important;
-  }
-}
+/* Removed 300px breakpoint - using 320px minimum */
 
 @media only screen and (max-width: 576px) {
   .iconsNav {
@@ -171,23 +175,7 @@ a.nav-item.active {
   }
 }
 
-@media only screen and (max-width: 320px) {
-  .iconsNav {
-    padding-top: 10px;
-    gap: 10px;
-    padding: 10px 10px;
-  }
-
-  .iconsNav a {
-    min-width: 20px;
-    min-height: 20px;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
+/* Removed 320px breakpoint - using 320px minimum */
 
 .footer-link {
   font-family: var(--secondary-font);
