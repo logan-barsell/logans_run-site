@@ -9,6 +9,7 @@ import normalizeUrl from '../../utils/normalizeUrl';
 import { CartPlus, Ticket } from '../icons';
 import Button from '../Button/Button';
 import { NoContent } from '../Header';
+import LoadingSpinner from '../LoadingSpinner';
 
 const ShopifyStorefront = ({
   shopDomain,
@@ -61,17 +62,12 @@ const ShopifyStorefront = ({
   // Show loading state while fetching products
   if (loading) {
     return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-      </div>
+      <LoadingSpinner
+        size='lg'
+        color='white'
+        text='Loading products...'
+        centered={true}
+      />
     );
   }
 

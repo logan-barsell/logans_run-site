@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './DataTable.css';
+import LoadingSpinner from '../LoadingSpinner';
 
 const DataTable = ({
   title,
@@ -29,17 +30,12 @@ const DataTable = ({
 
   if (loading) {
     return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-      </div>
+      <LoadingSpinner
+        size='lg'
+        color='white'
+        text='Loading data...'
+        centered={true}
+      />
     );
   }
 

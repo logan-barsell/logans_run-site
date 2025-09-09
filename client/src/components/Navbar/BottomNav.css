@@ -6,6 +6,7 @@
 
 #newsSub {
   color: var(--main);
+  /* Can now use .text-main utility class instead */
 }
 
 #newsSub:hover {
@@ -23,6 +24,7 @@
   letter-spacing: normal;
   margin-top: 27px;
   color: white;
+  /* Can now use .text-base .font-secondary .text-white utility classes */
 }
 
 @media only screen and (max-width: 650px) {
