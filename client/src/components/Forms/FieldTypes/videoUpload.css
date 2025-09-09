@@ -28,5 +28,5 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
-  font-size: clamp(0.8rem, 2vw, 1rem);
+  font-size: var(--text-sm);
 }

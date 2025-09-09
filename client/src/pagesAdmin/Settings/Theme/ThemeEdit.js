@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchTheme, updateTheme } from '../../../redux/actions';
 import { EditableForm } from '../../../components/Forms';
+import ResponsiveImageDisplay from '../../../components/Forms/ResponsiveImageDisplay';
 import { useAlert } from '../../../contexts/AlertContext';
 import {
   uploadImageToFirebase,
@@ -101,19 +102,11 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
               <div className='mb-4'>
                 {currentHeaderDisplay !== 'band-name-only' &&
                   initialValues.bandLogo && (
-                    <div className='text-center mb-3'>
-                      <img
-                        src={initialValues.bandLogo}
-                        alt='Band Logo'
-                        style={{
-                          maxWidth: '100%',
-                          height: 'auto',
-                          maxHeight: '200px',
-                          display: 'block',
-                          margin: '0 auto',
-                        }}
-                      />
-                    </div>
+                    <ResponsiveImageDisplay
+                      src={initialValues.bandLogo}
+                      alt='Band Logo'
+                      maxHeight='200px'
+                    />
                   )}
               </div>
             </>

@@ -6,6 +6,7 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import CurrentMembers from './CurrentMembers';
 import { useAlert } from '../../contexts/AlertContext';
 import { EditableForm } from '../../components/Forms';
+import ResponsiveImageDisplay from '../../components/Forms/ResponsiveImageDisplay';
 import { BIO_FIELDS } from './constants';
 import {
   uploadImageToFirebase,
@@ -108,36 +109,20 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
               {/* Image Display */}
               <div className='mb-4'>
                 {currentImageType === 'band-logo' && theme?.bandLogoUrl && (
-                  <div className='text-center mb-3'>
-                    <img
-                      src={theme.bandLogoUrl}
-                      alt='Band Logo'
-                      style={{
-                        maxWidth: '100%',
-                        height: 'auto',
-                        maxHeight: '200px',
-                        display: 'block',
-                        margin: '0 auto',
-                      }}
-                    />
-                  </div>
+                  <ResponsiveImageDisplay
+                    src={theme.bandLogoUrl}
+                    alt='Band Logo'
+                    maxHeight='200px'
+                  />
                 )}
 
                 {currentImageType === 'custom-image' &&
                   initialValues.customImage && (
-                    <div className='text-center mb-3'>
-                      <img
-                        src={initialValues.customImage}
-                        alt='Custom bio display'
-                        style={{
-                          maxWidth: '100%',
-                          height: 'auto',
-                          maxHeight: '200px',
-                          display: 'block',
-                          margin: '0 auto',
-                        }}
-                      />
-                    </div>
+                    <ResponsiveImageDisplay
+                      src={initialValues.customImage}
+                      alt='Custom bio display'
+                      maxHeight='200px'
+                    />
                   )}
               </div>
             </>

@@ -139,21 +139,19 @@ a.btn-danger:disabled {
   }
 }
 
-/* Responsive font size - match App.css */
-@media (max-width: 777px) {
-  .btn {
-    font-size: 3vw;
-  }
+/* ===== BUTTON TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
+.btn {
+  font-size: var(--button-size);
 }
-@media (max-width: 550px) {
-  .btn {
-    font-size: 4vw;
-  }
-}
+
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries */
+
 @media (max-width: 400px) {
   .btn {
     padding: 4px 8px;
-    font-size: 4vw;
   }
 }
 

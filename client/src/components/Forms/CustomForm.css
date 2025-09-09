@@ -287,31 +287,15 @@
   }
 }
 
-@media screen and (max-width: 600px) {
-  .custom-form-container.bio-form label {
-    font-size: 20px;
-  }
-  .custom-form-container.bio-form textarea.form-control {
-    font-size: 21px;
-  }
+/* ===== CUSTOM FORM TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
+.custom-form-container.bio-form label {
+  font-size: var(--label-size);
 }
 
-@media screen and (max-width: 400px) {
-  .custom-form-container.bio-form label {
-    font-size: 14px;
-  }
-  .custom-form-container.bio-form textarea.form-control {
-    font-size: 16px;
-  }
-}
-
-@media screen and (max-width: 270px) {
-  .custom-form-container.bio-form label {
-    font-size: 12px;
-  }
-  .custom-form-container.bio-form textarea.form-control {
-    font-size: 14px;
-  }
+.custom-form-container.bio-form textarea.form-control {
+  font-size: var(--input-size);
 }
 
 /* Auth form specific styles */

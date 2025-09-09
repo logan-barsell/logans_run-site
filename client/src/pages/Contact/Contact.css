@@ -29,7 +29,7 @@
 }
 
 #contact p {
-  font-size: 1.4vw;
+  font-size: var(--body-base);
 }
 
 #contact a:hover {
@@ -84,44 +84,15 @@
   margin: 0px 10px;
 }
 
-@media (max-width: 991px) {
-  #contact p {
-    font-size: 2vw;
-  }
+/* ===== CONTACT PAGE TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
+#contact label {
+  font-size: var(--label-size);
 }
 
-@media (max-width: 800px) {
-  #contact p {
-    font-size: 2.5vw;
-  }
-}
-
-@media (max-width: 800px) {
-  #contact p {
-    font-size: 3vw;
-  }
-}
-
-@media (max-width: 777px) {
-  #contact p {
-    font-size: 2.5vw;
-  }
-  #contact label {
-    font-size: 3vw;
-  }
-}
-
-@media (max-width: 750px) {
-  #contact p {
-    font-size: 2.5vw;
-  }
-}
-
-@media (max-width: 650px) {
-  #contact p {
-    font-size: 3vw;
-  }
-}
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries, remove font-size ones */
 
 @media (max-width: 500px) {
   .socmed a {
@@ -131,16 +102,7 @@
 
 @media (max-width: 550px) {
   #contact img {
-    width: 10vw;
-  }
-  #contact label {
-    font-size: 4vw;
-  }
-}
-
-@media (max-width: 450px) {
-  #contact p {
-    font-size: 3.5vw;
+    width: clamp(32px, 10vw, 55px);
   }
 }
 
@@ -169,13 +131,6 @@
   }
 }
 
-@media only screen and (max-width: 400px) {
-  #contact .secondary-font svg {
-    width: 14px;
-    height: 14px;
-  }
-}
-
 @media only screen and (max-width: 330px) {
   .socmed.contact a {
     width: 20px;
@@ -188,17 +143,6 @@
   .socmed.contact a svg {
     width: 20px;
     height: 20px;
-  }
-
-  #contact .secondary-font svg {
-    width: 12px;
-    height: 12px;
-  }
-}
-
-@media (max-width: 291px) {
-  #contact p {
-    font-size: 4.5vw;
   }
 }
 

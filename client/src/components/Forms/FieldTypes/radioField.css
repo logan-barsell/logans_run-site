@@ -70,10 +70,13 @@
   margin-bottom: 0.75rem;
 }
 
+/* ===== RADIO FIELD TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
 /* Description text styling */
 .radio-description {
   color: white;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 300;
   margin-top: 0.25rem;
   line-height: 1.4;
@@ -83,7 +86,7 @@
 /* Form text styling */
 .form-text {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: var(--text-xs);
   margin-top: 0.5rem;
 }
 
@@ -93,30 +96,32 @@
   user-select: none;
   transition: color 0.2s ease;
   color: white;
-  font-size: 16px;
+  font-size: var(--text-sm);
   font-weight: 400;
   margin-left: 0.5rem;
   font-family: var(--secondary-font);
   line-height: 1.4;
   padding-top: 0.125rem;
+  display: flex;
+  align-items: center;
 }
 
 /* Form check container styling */
 .form-check {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 0.5rem;
 }
 
 /* Radio input alignment */
 .form-check-input[type='radio'] {
-  margin-top: 0.125rem;
+  margin-top: 0;
   flex-shrink: 0;
 }
 
 /* Checkbox input alignment (for toggle mode) */
 .form-check-input[type='checkbox'] {
-  margin-top: 0.125rem;
+  margin-top: 0;
   flex-shrink: 0;
 }
 
@@ -196,33 +201,12 @@
   }
 }
 
-/* Mobile responsive adjustments */
-@media only screen and (max-width: 576px) {
-  .form-check-label {
-    font-size: 14px !important;
-  }
-
-  .radio-description {
-    font-size: 12px !important;
-  }
-
-  .form-text {
-    font-size: 12px !important;
-  }
-}
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries, remove font-size ones */
 
 @media only screen and (max-width: 400px) {
   .form-check-label {
-    font-size: 13px !important;
     margin-left: 0.25rem !important;
-  }
-
-  .radio-description {
-    font-size: 11px !important;
-  }
-
-  .form-text {
-    font-size: 11px !important;
   }
 
   .form-check-input[type='radio'],
@@ -240,18 +224,6 @@
 }
 
 @media only screen and (max-width: 330px) {
-  .form-check-label {
-    font-size: 12px !important;
-  }
-
-  .radio-description {
-    font-size: 10px !important;
-  }
-
-  .form-text {
-    font-size: 10px !important;
-  }
-
   .form-check-input[type='radio'],
   .form-check-input[type='checkbox'] {
     width: 14px !important;

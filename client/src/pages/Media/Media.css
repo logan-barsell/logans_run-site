@@ -134,52 +134,28 @@
   color: var(--main);
   margin: 15vh auto 27vh;
 }
-@media screen and (max-width: 992px) {
-  .selectCategory select {
-    font-size: 2vw;
-  }
-  .title {
-    font-size: 2.5vw;
-  }
-  .date {
-    font-size: 2vw;
-  }
+/* ===== MEDIA PAGE TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
+.selectCategory select {
+  font-size: var(--input-size);
 }
 
-@media screen and (max-width: 794px) {
-  .selectCategory select {
-    font-size: 3vw;
-  }
-  .title {
-    font-size: 3vw;
-  }
-  .date {
-    font-size: 2.5vw;
-  }
+.title {
+  font-size: var(--text-2xl);
 }
+
+.date {
+  font-size: var(--text-sm);
+}
+
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries, remove font-size ones */
 
 @media screen and (max-width: 572px) {
   #pictures {
     grid-template-columns: repeat(auto-fit, minmax(181px, 1fr));
     grid-gap: 15px;
     margin: 22px auto;
-  }
-  .selectCategory select {
-    font-size: 4vw;
-  }
-  .title {
-    font-size: 3.5vw;
-  }
-  .date {
-    font-size: 3vw;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .title {
-    font-size: 4vw;
-  }
-  .date {
-    font-size: 3.5vw;
   }
 }

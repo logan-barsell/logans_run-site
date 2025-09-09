@@ -42,22 +42,25 @@
   align-items: flex-start;
 }
 
+/* ===== FEATURED RELEASES CAROUSEL TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
 .featured-release-title {
-  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-size: var(--text-2xl);
   font-family: var(--secondary-font);
   color: #fff;
   margin-bottom: 0.5rem;
 }
 
 .featured-release-type {
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-size: var(--text-sm);
   color: #bbb;
   font-family: var(--secondary-font);
   margin-bottom: 1.2rem;
 }
 
 .featured-release-listen-btn {
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-size: var(--text-base);
   padding: 0.5em 1.5em;
   font-family: var(--secondary-font);
 }

@@ -106,13 +106,16 @@ react-datepicker__month .react-datepicker__day-name,
   width: fit-content;
 }
 
+/* ===== DATE FIELD TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
 @media (max-width: 408px) {
   .react-datepicker__day-name,
   .react-datepicker__day,
   .react-datepicker__time-name {
     width: 1.3rem;
     line-height: 1.3rem;
-    font-size: 15px;
+    font-size: var(--text-sm);
   }
   .react-datepicker__current-month,
   .react-datepicker-time__header,
@@ -122,7 +125,7 @@ react-datepicker__month .react-datepicker__day-name,
     .react-datepicker__time-box
     ul.react-datepicker__time-list
     li.react-datepicker__time-list-item {
-    font-size: 17px;
+    font-size: var(--text-base);
   }
 }
 
@@ -132,7 +135,7 @@ react-datepicker__month .react-datepicker__day-name,
   .react-datepicker__time-name {
     width: 1rem;
     line-height: 1rem;
-    font-size: 12px;
+    font-size: var(--text-xs);
   }
   .react-datepicker__current-month,
   .react-datepicker-time__header,
@@ -142,6 +145,6 @@ react-datepicker__month .react-datepicker__day-name,
     .react-datepicker__time-box
     ul.react-datepicker__time-list
     li.react-datepicker__time-list-item {
-    font-size: 14px;
+    font-size: var(--text-sm);
   }
 }

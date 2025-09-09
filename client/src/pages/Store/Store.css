@@ -1,5 +1,5 @@
 #store {
-  font-size: 18px;
+  font-size: var(--text-lg);
   color: white;
 }
 
