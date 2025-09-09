@@ -198,12 +198,38 @@ async function getSESStatus(domain) {
   }
 }
 
+/**
+ * Send generic email with band branding
+ * @param {Object} emailData - Email data object with to, subject, html
+ * @param {string} bandName - Band name for FROM address
+ */
+async function sendEmailWithBranding(emailData, bandName) {
+  try {
+    // Generate band white-label FROM address
+    const fromAddress = generateFromAddress(bandName);
+
+    logger.info(`📧 Sending email for ${bandName} to ${emailData.to}`);
+
+    return await emailService.sendEmail({
+      ...emailData,
+      from: fromAddress,
+    });
+  } catch (error) {
+    logger.error(`❌ Failed to send email for ${bandName}:`, error);
+    throw new AppError(
+      error.message || 'Failed to send email',
+      error.statusCode || 500
+    );
+  }
+}
+
 module.exports = {
   getBandEmailConfig,
   generateFromAddress,
   sendNewsletterConfirmationWithBranding,
   sendWelcomeEmailWithBranding,
   sendContentNotificationWithBranding,
+  sendEmailWithBranding,
   validateDomainForSES,
   getSESStatus,
 };

@@ -90,7 +90,7 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
   return (
     <div className='mb-5 pb-5'>
       <EditableForm
-        title='Update Bio'
+        title='Edit Bio'
         containerId='bioEdit'
         className='bio-form'
         fields={bioFields}

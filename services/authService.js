@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const config = require('../config');
 const UserService = require('./userService');
 const TokenService = require('./tokenService');
-const EmailService = require('./emailService');
+const BandsyteEmailService = require('./bandsyteEmailService');
 const ThemeService = require('./themeService');
 const TwoFactorService = require('./twoFactorService');
 const { AppError } = require('../middleware/errorHandler');
@@ -229,7 +229,7 @@ async function sendEmailVerificationWithToken(userId, email, role = 'USER') {
 
   // Send verification email
   const verificationLink = `${config.clientURL}/auth/verify-email?token=${verificationToken}`;
-  await EmailService.sendEmailVerification(
+  await BandsyteEmailService.sendEmailVerificationWithBranding(
     email,
     verificationLink,
     role,
@@ -301,7 +301,11 @@ async function requestPasswordReset(email) {
 
   // Send reset email
   const resetUrl = `${config.clientURL}/reset-password?token=${resetToken}`;
-  await EmailService.sendPasswordReset(user.adminEmail, resetUrl, bandName);
+  await BandsyteEmailService.sendPasswordResetWithBranding(
+    user.adminEmail,
+    resetUrl,
+    bandName
+  );
   logger.info(`📧 Password reset email sent to user ${user._id}`);
 }
 
@@ -340,7 +344,10 @@ async function resetPassword(token, newPassword) {
   const bandName = theme.siteTitle || config.appName;
 
   // Send success notification email
-  await EmailService.sendPasswordResetSuccess(user.adminEmail, bandName);
+  await BandsyteEmailService.sendPasswordResetSuccessWithBranding(
+    user.adminEmail,
+    bandName
+  );
 
   logger.info(`🔑 Password successfully reset for user ${uuid}`);
 }

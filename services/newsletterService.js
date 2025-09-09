@@ -1,6 +1,7 @@
 const NewsletterSubscriber = require('../models/NewsletterSubscriber');
 const Theme = require('../models/Theme');
-const EmailService = require('./emailService');
+const BandsyteEmailService = require('./bandsyteEmailService');
+const BandEmailService = require('./bandEmailService');
 const newsletterNotification = require('../templates/newsletterNotification');
 const musicNotification = require('../templates/musicNotification');
 const videoNotification = require('../templates/videoNotification');
@@ -265,7 +266,7 @@ async function sendContentNotification(contentType, content) {
         const devFromAddress = generateFromAddress(bandName);
 
         // Send single test email using the proper content notification flow
-        await EmailService.sendContentNotification(
+        await BandsyteEmailService.sendContentNotificationWithBranding(
           'loganjbars@gmail.com',
           bandName,
           contentType,
@@ -335,11 +336,14 @@ async function sendContentNotification(contentType, content) {
           }
 
           // Queue email with throttler (non-blocking)
-          await EmailService.sendEmail({
-            to: subscriber.email,
-            subject: emailTemplate.subject,
-            html: emailTemplate.html,
-          });
+          await BandEmailService.sendEmailWithBranding(
+            {
+              to: subscriber.email,
+              subject: emailTemplate.subject,
+              html: emailTemplate.html,
+            },
+            bandName
+          );
 
           // Update last email sent timestamp
           subscriber.lastEmailSent = new Date();

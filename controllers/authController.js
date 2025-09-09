@@ -6,7 +6,7 @@ const { AppError } = require('../middleware/errorHandler');
 const { setAuthCookies, clearAuthCookies } = require('../utils/cookie-utils');
 const { getClientIp } = require('../utils/request-utils');
 const logger = require('../utils/logger');
-const { sendLoginAlert } = require('../services/emailService');
+const BandsyteEmailService = require('../services/bandsyteEmailService');
 const ThemeService = require('../services/themeService');
 const SecurityPreferencesService = require('../services/securityPreferencesService');
 const TwoFactorService = require('../services/twoFactorService');
@@ -63,7 +63,13 @@ async function login(req, res, next) {
       if (loginAlertsEnabled) {
         const theme = await ThemeService.getTheme();
         const bandName = theme.siteTitle || 'Bandsyte';
-        await sendLoginAlert(email, bandName, ip, userAgent, 'Unknown');
+        await BandsyteEmailService.sendLoginAlertWithBranding(
+          email,
+          bandName,
+          ip,
+          userAgent,
+          'Unknown'
+        );
         logger.info(`📧 Login alert sent to user ${email}`);
       }
     } catch (emailError) {
@@ -125,7 +131,7 @@ async function completeTwoFactorLogin(req, res, next) {
         const theme = await ThemeService.getTheme();
         const bandName = theme.siteTitle || 'Bandsyte';
         const user = await UserService.findUserById(userId);
-        await sendLoginAlert(
+        await BandsyteEmailService.sendLoginAlertWithBranding(
           user.adminEmail,
           bandName,
           ip,

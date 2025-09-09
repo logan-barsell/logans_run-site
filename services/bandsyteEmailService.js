@@ -314,6 +314,49 @@ async function sendTwoFactorCodeWithBranding(to, code, bandName) {
   }
 }
 
+/**
+ * Send content notification with Bandsyte branding
+ * @param {string} to - Recipient email
+ * @param {string} bandName - Band name
+ * @param {string} contentType - Type of content (music, video, show, etc.)
+ * @param {Object} content - Content data
+ * @param {string} unsubscribeToken - Unsubscribe token
+ * @param {string} customFromAddress - Custom from address
+ */
+async function sendContentNotificationWithBranding(
+  to,
+  bandName,
+  contentType,
+  content,
+  unsubscribeToken,
+  customFromAddress
+) {
+  try {
+    // Generate Bandsyte white-label FROM address
+    const fromAddress = generateBandsyteFromAddress('support');
+
+    logger.info(`📧 Sending content notification for ${bandName} to ${to}`);
+
+    return await emailService.sendContentNotification(
+      to,
+      bandName,
+      contentType,
+      content,
+      unsubscribeToken,
+      fromAddress
+    );
+  } catch (error) {
+    logger.error(
+      `❌ Failed to send content notification for ${bandName}:`,
+      error
+    );
+    throw new AppError(
+      error.message || 'Failed to send content notification',
+      error.statusCode || 500
+    );
+  }
+}
+
 module.exports = {
   generateBandsyteFromAddress,
   sendNewsletterSignupNotificationWithBranding,
@@ -325,4 +368,5 @@ module.exports = {
   sendWelcomeEmailWithBranding,
   sendLoginAlertWithBranding,
   sendTwoFactorCodeWithBranding,
+  sendContentNotificationWithBranding,
 };

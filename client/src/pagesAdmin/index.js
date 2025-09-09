@@ -1,5 +1,4 @@
 import '../App.css';
-// import '../plugins/loading-bar.css'; // Removed
 
 import React, { useState } from 'react';
 import {
@@ -29,7 +28,7 @@ const AdminPages = () => {
     { name: 'Music', value: '/music' },
     { name: 'Store', value: '/store' },
     { name: 'Media', value: '/media' },
-    { name: 'Bio', value: '/aboutus' },
+    { name: 'Bio', value: '/bio' },
     { name: 'Contact', value: '/contact' },
   ];
 
@@ -98,7 +97,7 @@ const AdminPages = () => {
               element={<MediaEdit />}
             />
             <Route
-              path='/aboutus'
+              path='/bio'
               exact
               element={<BioEdit />}
             />
