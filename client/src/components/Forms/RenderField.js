@@ -492,6 +492,8 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         helperText={field.helperText}
       />
     );
+  } else if (type === 'divider') {
+    return <hr className='my-4 border-secondary opacity-50' />;
   }
   return null;
 });

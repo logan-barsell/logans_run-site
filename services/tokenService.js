@@ -8,7 +8,7 @@ const UserService = require('./userService');
 const SessionService = require('./sessionService');
 const { setAuthCookies } = require('../utils/cookie-utils');
 const { getClientIp } = require('../utils/request-utils');
-const EmailService = require('./emailService');
+const BandsyteEmailService = require('./bandsyteEmailService');
 const ThemeService = require('./themeService');
 const Session = require('../models/Session');
 
@@ -93,7 +93,7 @@ async function verifyRefreshToken(token, ip, userAgent) {
         const theme = await ThemeService.getTheme();
         const bandName = theme.siteTitle || 'Bandsyte';
 
-        await EmailService.sendSecurityAlert(
+        await BandsyteEmailService.sendSecurityAlertWithBranding(
           user.adminEmail,
           bandName,
           'token_reuse',
@@ -127,7 +127,7 @@ async function verifyRefreshToken(token, ip, userAgent) {
         const theme = await ThemeService.getTheme();
         const bandName = theme.siteTitle || 'Bandsyte';
 
-        await EmailService.sendSecurityAlert(
+        await BandsyteEmailService.sendSecurityAlertWithBranding(
           user.adminEmail,
           bandName,
           'device_change',

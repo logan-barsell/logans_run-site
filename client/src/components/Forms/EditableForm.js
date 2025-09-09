@@ -88,12 +88,13 @@ const EditableForm = ({
       <Form
         onSubmit={(values, form) => handleFormSubmit(values, form)}
         initialValues={initialValues}
-        keepDirtyOnReinitialize={true}
+        keepDirtyOnReinitialize={false}
         subscription={{
           values: true,
           errors: true,
           pristine: true,
           submitting: true,
+          dirty: true,
         }}
         render={({
           handleSubmit,
@@ -102,8 +103,14 @@ const EditableForm = ({
           errors,
           pristine,
           submitting,
+          dirty,
         }) => {
           const hasValidationErrors = Object.keys(errors || {}).length > 0;
+
+          // Reset isSaved flag when form becomes dirty (any field changes)
+          if (dirty && isSaved) {
+            setIsSaved(false);
+          }
 
           // Fix pristine state calculation to handle missing fields using internal baseline
           let actualPristine = pristine;

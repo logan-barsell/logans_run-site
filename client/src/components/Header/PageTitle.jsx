@@ -35,7 +35,7 @@ const PageTitle = ({
       </Tag>
       {divider && (
         <Divider
-          className='w-75 mx-auto'
+          className='w-75 mx-auto my-2'
           variant='white'
         />
       )}

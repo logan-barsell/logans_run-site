@@ -1,6 +1,6 @@
 const ContactService = require('../services/contactService');
 const { AppError } = require('../middleware/errorHandler');
-const { sendContactNotification } = require('../services/emailService');
+const BandsyteEmailService = require('../services/bandsyteEmailService');
 const themeService = require('../services/themeService');
 const logger = require('../utils/logger');
 
@@ -55,7 +55,7 @@ async function sendMessage(req, res, next) {
 
     // Send notification email to admin
     const contactData = { name, email, title, message };
-    await sendContactNotification(
+    await BandsyteEmailService.sendContactNotificationWithBranding(
       process.env.ADMIN_EMAIL || 'admin@bandsyte.com',
       contactData,
       bandName

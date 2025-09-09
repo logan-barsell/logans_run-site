@@ -62,6 +62,7 @@ const ContactEdit = ({ fetchContactInfo, contactInfo }) => {
   return (
     <div className='mb-5 pb-5'>
       <EditableForm
+        title='Edit Contact'
         fields={contactFields}
         initialValues={initialValues}
         onSubmit={handleSubmit}

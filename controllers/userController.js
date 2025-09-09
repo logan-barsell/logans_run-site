@@ -1,7 +1,7 @@
 const UserService = require('../services/userService');
 const SessionService = require('../services/sessionService');
 const TokenService = require('../services/tokenService');
-const EmailService = require('../services/emailService');
+const BandsyteEmailService = require('../services/bandsyteEmailService');
 const ThemeService = require('../services/themeService');
 const { AppError } = require('../middleware/errorHandler');
 const { clearAuthCookies } = require('../utils/cookie-utils');
@@ -82,7 +82,10 @@ async function changePassword(req, res, next) {
       const theme = await ThemeService.getTheme();
       const bandName = theme.siteTitle || 'Bandsyte';
 
-      await EmailService.sendPasswordResetSuccess(user.adminEmail, bandName);
+      await BandsyteEmailService.sendPasswordResetSuccessWithBranding(
+        user.adminEmail,
+        bandName
+      );
     } catch (emailError) {
       logger.error('Failed to send password change notification:', emailError);
       // Don't fail the password change if email fails

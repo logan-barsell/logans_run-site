@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const EmailService = require('./emailService');
+const BandsyteEmailService = require('./bandsyteEmailService');
 const { addMinutes } = require('../utils/dates');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
@@ -39,15 +39,10 @@ async function sendTwoFactorCode(userId, bandName = 'Bandsyte') {
     await user.save();
 
     // Send email
-    await EmailService.sendEmail(
+    await BandsyteEmailService.sendTwoFactorCodeWithBranding(
       user.adminEmail,
-      null, // Subject will be set by template
-      null, // HTML will be set by template
-      'twoFactorCode',
-      {
-        code,
-        bandName,
-      }
+      code,
+      bandName
     );
 
     logger.info(`📧 2FA code sent to user ${user.adminEmail}`);

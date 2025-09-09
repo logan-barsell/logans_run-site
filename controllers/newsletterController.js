@@ -1,6 +1,6 @@
 const NewsletterService = require('../services/newsletterService');
-const EmailService = require('../services/emailService');
 const BandEmailService = require('../services/bandEmailService');
+const BandsyteEmailService = require('../services/bandsyteEmailService');
 const ThemeService = require('../services/themeService');
 const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
@@ -32,7 +32,7 @@ async function newsletterSignup(req, res, next) {
     );
 
     // Send notification email to band admin
-    await EmailService.sendNewsletterSignupNotification(
+    await BandsyteEmailService.sendNewsletterSignupNotificationWithBranding(
       process.env.ADMIN_EMAIL || 'admin@bandsyte.com',
       email,
       bandName

@@ -350,8 +350,7 @@ body {
 }
 
 /* Remove hr margin entirely */
-hr {
-  margin: 5px auto !important;
+hr:not(.border-secondary) {
   background-color: white;
 }
 

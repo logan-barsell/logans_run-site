@@ -8,6 +8,7 @@ import { PACE_THEME_OPTIONS } from './animationOptions';
 
 // Theme form fields configuration
 export const THEME_FIELDS = [
+  // Basic Information Section
   {
     name: 'bandLogo',
     type: 'image',
@@ -15,6 +16,35 @@ export const THEME_FIELDS = [
     required: false,
     helperText: 'Upload your band logo for the header',
   },
+  {
+    name: 'siteTitle',
+    type: 'text',
+    label: 'Band Name',
+    required: false,
+    placeholder: 'Enter your band name',
+  },
+  {
+    name: 'greeting',
+    type: 'text',
+    label: 'Greeting',
+    required: false,
+    placeholder: 'Enter your greeting (e.g., HELLO., WELCOME., ROCK ON.)',
+  },
+  {
+    name: 'introduction',
+    type: 'text',
+    label: 'Introduction',
+    required: false,
+    placeholder:
+      'Enter your introduction (e.g., We are a punk rock band from Seattle)',
+  },
+
+  // Divider
+  {
+    type: 'divider',
+  },
+
+  // Header & Navigation Section
   {
     name: 'headerDisplay',
     type: 'dropdown',
@@ -30,12 +60,10 @@ export const THEME_FIELDS = [
     required: true,
   },
   {
-    name: 'backgroundColor',
-    type: 'color',
-    label: 'Background Color',
-    colorType: 'background',
-    required: true,
+    type: 'divider',
   },
+
+  // Colors Section
   {
     name: 'primaryColor',
     type: 'color',
@@ -51,6 +79,19 @@ export const THEME_FIELDS = [
     required: true,
   },
   {
+    name: 'backgroundColor',
+    type: 'color',
+    label: 'Background Color',
+    colorType: 'background',
+    required: true,
+  },
+
+  // Divider
+  {
+    type: 'divider',
+  },
+
+  {
     name: 'primaryFont',
     type: 'font',
     label: 'Primary Font',
@@ -64,6 +105,12 @@ export const THEME_FIELDS = [
     optgroups: SECONDARY_FONT_OPTIONS,
     required: true,
   },
+
+  // Divider
+  {
+    type: 'divider',
+  },
+
   {
     name: 'socialMediaIconStyle',
     type: 'socialMediaIconStyle',

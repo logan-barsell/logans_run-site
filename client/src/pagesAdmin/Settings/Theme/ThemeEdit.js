@@ -66,6 +66,9 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   // Get current theme data for initial values
   const initialValues = {
     bandLogo: theme?.bandLogoUrl || '',
+    siteTitle: theme?.siteTitle || '',
+    greeting: theme?.greeting || '',
+    introduction: theme?.introduction || '',
     headerDisplay: theme?.headerDisplay || 'band-name-and-logo',
     headerPosition: theme?.headerPosition || 'left',
     backgroundColor: theme?.backgroundColor || 'black',
