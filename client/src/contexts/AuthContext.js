@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }) => {
 
       return () => {
         clearInterval(refreshInterval);
-        console.log('🧹 Cleared auto-refresh interval');
       };
     }
   }, [authenticated]);

@@ -1,116 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Form } from 'react-final-form';
 import { CustomForm, SaveButton } from './index';
-import { useFormChanges } from '../../hooks/useFormChanges';
+import RenderField from './RenderField';
 
 /**
  * EditableForm - A reusable form component for editable data with save functionality
+ * Now uses react-final-form for consistent form handling
  *
  * @param {Object} props
  * @param {string} props.title - Form title
  * @param {string} props.containerId - Container ID for styling
- * @param {Object} props.initialData - Initial/saved data from Redux/API
- * @param {Function} props.onSave - Save function to call
+ * @param {Array} props.fields - Array of field configurations
+ * @param {Object} props.initialValues - Initial form values from Redux/API
+ * @param {Function} props.onSubmit - Submit function to call
  * @param {Function} props.onSuccess - Optional success callback
  * @param {Function} props.onError - Optional error callback
- * @param {Function} props.compareFunction - Optional custom comparison function
- * @param {Function} props.transformData - Optional function to transform data before save
- * @param {Object} props.validationErrors - Optional validation errors object
- * @param {React.ReactNode} props.children - Form fields (render prop pattern)
+ * @param {Function} props.transformData - Optional function to transform data before submit
  * @param {Object} props.formProps - Additional props to pass to the form
+ * @param {boolean} props.loading - Whether form is in loading state
+ * @param {boolean} props.hideDefaultSaveButton - Whether to hide the default SaveButton
+ * @param {string} props.successMessage - Custom success message (default: "Update Successful")
+ * @param {number} props.successDuration - How long to show success message in ms (default: 3000)
  */
 const EditableForm = ({
   title,
   containerId,
-  initialData,
-  onSave,
+  fields = [],
+  initialValues = {},
+  onSubmit,
   onSuccess,
   onError,
-  compareFunction = null,
   transformData = null,
-  validationErrors = {},
-  children,
   formProps = {},
+  loading = false,
+  children, // Custom content to render before fields
+  hideDefaultSaveButton = false, // Option to hide the default SaveButton
+  successMessage = 'Update Successful', // Custom success message
   ...props
 }) => {
-  const [formData, setFormData] = useState({});
-  const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [baselineValues, setBaselineValues] = useState(initialValues || {});
 
-  // Initialize form data when initial data changes
+  // Keep internal baseline in sync when external initialValues change (e.g., after fetch)
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-      setIsSaved(false);
-    }
-  }, [initialData]);
+    setBaselineValues(initialValues || {});
+  }, [initialValues]);
 
-  // Use change detection hook
-  const { hasChanges, isDirty, markAsSaved, saveButtonDisabled } =
-    useFormChanges(initialData, formData, compareFunction);
-
-  // Check if there are any validation errors
-  const hasValidationErrors = Object.keys(validationErrors).some(
-    key => validationErrors[key] !== null && validationErrors[key] !== undefined
-  );
-
-  const handleInputChange = e => {
-    const { name, value } = e.target;
-
-    // Handle boolean values (for radio buttons and checkboxes)
-    let processedValue = value;
-    if (value === 'true') {
-      processedValue = true;
-    } else if (value === 'false') {
-      processedValue = false;
-    }
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: processedValue,
-    }));
-    setIsSaved(false);
-  };
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-
-    // Prevent submission if there are validation errors
-    if (hasValidationErrors) {
-      return;
-    }
-
-    if (saveButtonDisabled) return;
-
-    setIsSaving(true);
+  const handleFormSubmit = async (values, form) => {
     try {
-      // Transform data if provided, otherwise use formData directly
-      const dataToSave = transformData ? transformData(formData) : formData;
+      // Transform data if provided, otherwise use values directly
+      const dataToSubmit = transformData ? transformData(values) : values;
 
-      await onSave(dataToSave);
-      markAsSaved();
+      await onSubmit(dataToSubmit);
+
+      // Update the form's initial values to match current values (makes form pristine)
+      form.batch(() => {
+        Object.keys(dataToSubmit).forEach(key => {
+          form.change(key, dataToSubmit[key]);
+        });
+        form.reset(dataToSubmit);
+      });
+
+      // Indicate success (SaveButton will show success text and be disabled)
       setIsSaved(true);
 
+      // Update internal baseline so subsequent change detection compares against saved values
+      setBaselineValues(dataToSubmit);
+
       if (onSuccess) {
-        onSuccess();
+        onSuccess(form);
       }
     } catch (err) {
-      console.error('Form save failed:', err);
+      console.error('Form submit failed:', err);
       if (onError) {
         onError(err);
       }
-    } finally {
-      setIsSaving(false);
+      throw err; // Re-throw to let react-final-form handle submission state
     }
-  };
-
-  // Create context for form fields to access
-  const formContext = {
-    formData,
-    handleInputChange,
-    isSaving,
-    isSaved,
-    hasChanges,
-    isDirty,
   };
 
   return (
@@ -119,23 +85,94 @@ const EditableForm = ({
       containerId={containerId}
       {...props}
     >
-      <form
-        onSubmit={handleSubmit}
-        {...formProps}
-      >
-        {/* Render children with form context */}
-        {typeof children === 'function' ? children(formContext) : children}
+      <Form
+        onSubmit={(values, form) => handleFormSubmit(values, form)}
+        initialValues={initialValues}
+        keepDirtyOnReinitialize={true}
+        subscription={{
+          values: true,
+          errors: true,
+          pristine: true,
+          submitting: true,
+        }}
+        render={({
+          handleSubmit,
+          form,
+          values,
+          errors,
+          pristine,
+          submitting,
+        }) => {
+          const hasValidationErrors = Object.keys(errors || {}).length > 0;
 
-        <div className='mt-5 d-grid col-12 sm:col-6 mx-auto'>
-          <SaveButton
-            hasChanges={hasChanges}
-            isDirty={isDirty}
-            isSaving={isSaving}
-            isSaved={isSaved}
-            disabled={saveButtonDisabled || hasValidationErrors}
-          />
-        </div>
-      </form>
+          // Fix pristine state calculation to handle missing fields using internal baseline
+          let actualPristine = pristine;
+          if (baselineValues && values) {
+            const baselineKeys = Object.keys(baselineValues);
+            const allFieldsMatch = baselineKeys.every(key => {
+              const baselineValue = baselineValues[key] ?? '';
+              const currentValue = values[key] ?? '';
+              return baselineValue === currentValue;
+            });
+            actualPristine = allFieldsMatch;
+          }
+
+          const hasChanges = !actualPristine;
+          const isSubmitting = submitting || loading;
+
+          return (
+            <form
+              onSubmit={handleSubmit}
+              {...formProps}
+              onChange={e => {
+                if (formProps && typeof formProps.onChange === 'function') {
+                  formProps.onChange(e);
+                }
+                if (isSaved) {
+                  setIsSaved(false);
+                }
+              }}
+            >
+              {/* Render custom content if provided */}
+              {children && (
+                <div className='mb-4'>
+                  {typeof children === 'function'
+                    ? children({ values, form, pristine, submitting })
+                    : children}
+                </div>
+              )}
+
+              {/* Render fields using RenderField component */}
+              {fields.map((field, index) => (
+                <div
+                  key={field.name || index}
+                  className='mb-sm-3 mb-2'
+                >
+                  <RenderField field={field} />
+                </div>
+              ))}
+
+              {!hideDefaultSaveButton && (
+                <div className='mt-5 d-grid col-12 sm:col-6 mx-auto'>
+                  <SaveButton
+                    hasChanges={hasChanges}
+                    isDirty={hasChanges}
+                    isSaving={isSubmitting}
+                    isSaved={isSaved}
+                    savedText={successMessage}
+                    disabled={
+                      !hasChanges ||
+                      hasValidationErrors ||
+                      isSubmitting ||
+                      isSaved
+                    }
+                  />
+                </div>
+              )}
+            </form>
+          );
+        }}
+      />
     </CustomForm>
   );
 };

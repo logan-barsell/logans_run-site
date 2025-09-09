@@ -5,11 +5,13 @@ import ErrorMessage from '../../components/ErrorMessage';
 import { login } from '../../services/authService';
 import { useAlert } from '../../contexts/AlertContext';
 import Button from '../../components/Button/Button';
+import SaveButton from '../../components/Forms/SaveButton';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Signin = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const { showError, showSuccess } = useAlert();
   const navigate = useNavigate();
 
@@ -36,6 +38,7 @@ const Signin = () => {
         }
 
         // Normal login success
+        setIsSuccess(true);
         showSuccess('Login successful! Redirecting...');
         setTimeout(() => {
           window.location.href = '/settings';
@@ -55,6 +58,7 @@ const Signin = () => {
   };
 
   const getButtonText = () => {
+    if (isSuccess) return 'Success!';
     if (isLoading) return 'Logging in...';
     return 'Login';
   };
@@ -67,10 +71,14 @@ const Signin = () => {
     >
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, submitting }) => (
+        subscription={{ values: true, submitting: true }}
+        render={({ handleSubmit, submitting, values }) => (
           <form
             onSubmit={handleSubmit}
             className='mt-4'
+            onChange={() => {
+              if (isSuccess) setIsSuccess(false);
+            }}
           >
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <div className='mb-3'>
@@ -118,14 +126,17 @@ const Signin = () => {
               </Field>
             </div>
             <div className='d-flex flex-column gap-2'>
-              <Button
-                type='submit'
-                variant='danger'
-                disabled={submitting || isLoading}
-                loading={isLoading}
-              >
-                {getButtonText()}
-              </Button>
+              <SaveButton
+                hasChanges={Boolean(values?.email && values?.password)}
+                isDirty={Boolean(values?.email && values?.password)}
+                isSaving={isLoading}
+                isSaved={isSuccess}
+                saveText='Login'
+                savedText='Success!'
+                savingText='Logging in...'
+                buttonType='submit'
+                className='btn btn-danger submitForm'
+              />
               <div className='text-center mt-5'>
                 <Link
                   to='/forgot-password'

@@ -15,7 +15,9 @@ import {
 export const fetchSecurityPreferences = () => async dispatch => {
   dispatch({ type: FETCH_SECURITY_PREFERENCES_LOADING });
   try {
-    const data = await getSecurityPreferences();
+    const response = await getSecurityPreferences();
+    // Extract the data from the API response
+    const data = response.success ? response.data : response;
     dispatch({ type: FETCH_SECURITY_PREFERENCES, payload: data });
   } catch (errorData) {
     dispatch({ type: FETCH_SECURITY_PREFERENCES_ERROR, payload: errorData });
@@ -27,7 +29,9 @@ export const updateSecurityPreferencesAction =
   preferences => async dispatch => {
     dispatch({ type: UPDATE_SECURITY_PREFERENCES_LOADING });
     try {
-      const data = await updateSecurityPreferences(preferences);
+      const response = await updateSecurityPreferences(preferences);
+      // Extract the data from the API response
+      const data = response.success ? response.data : response;
       dispatch({ type: UPDATE_SECURITY_PREFERENCES, payload: data });
       return { success: true, data };
     } catch (errorData) {

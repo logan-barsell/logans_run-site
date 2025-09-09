@@ -128,21 +128,25 @@ const ImageUploadField = forwardRef(
     ref
   ) => {
     return (
-      <Field name={name}>
-        {({ input: { value, onChange, ...input } }) => (
-          <ImageUpload
-            {...props}
-            name={name}
-            value={value}
-            onChange={onChange}
-            setImage={setImage}
-            multiple={multiple}
-            required={required}
-            onFileChange={onFileChange}
-            ref={ref}
-          />
-        )}
-      </Field>
+      <div className='mb-4 d-flex justify-content-center'>
+        <div style={{ width: '100%', maxWidth: '400px' }}>
+          <Field name={name}>
+            {({ input: { value, onChange } }) => (
+              <ImageUpload
+                {...props}
+                name={name}
+                value={value}
+                onChange={onChange}
+                setImage={setImage}
+                multiple={multiple}
+                required={required}
+                onFileChange={onFileChange}
+                ref={ref}
+              />
+            )}
+          </Field>
+        </div>
+      </div>
     );
   }
 );

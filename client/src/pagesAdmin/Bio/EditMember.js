@@ -5,7 +5,7 @@ import {
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
 import { useAlert } from '../../contexts/AlertContext';
-import editMemberFields from './editMemberFields';
+import { editMemberFields } from './constants';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { updateMember as updateMemberService } from '../../services/membersService';
 
@@ -62,8 +62,8 @@ const EditMember = ({ member, fetchMembers }) => {
       await updateMemberService(member._id, updatedMember);
       showSuccess('Member updated successfully');
       fetchMembers();
-    } catch (_error) {
-      showError('Failed to update member');
+    } catch (error) {
+      showError(error.message || 'Failed to update member');
     }
   };
 

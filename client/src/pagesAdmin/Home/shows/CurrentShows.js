@@ -48,10 +48,12 @@ const CurrentShows = ({ fetchShows, shows }) => {
   useEffect(() => {
     if (isUpdating.current && showsSettingsState?.loading === false) {
       if (showsSettingsState?.error) {
-        showError('Failed to update show system');
+        showError(
+          showsSettingsState?.error?.message || 'Failed to update show system'
+        );
         setShowSystem(showsSettings?.showSystem || 'custom');
       } else if (showsSettingsState?.data) {
-        showSuccess('Show system updated successfully!');
+        showSuccess('Show system updated successfully');
       }
       isUpdating.current = false;
     }

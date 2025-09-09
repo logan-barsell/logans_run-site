@@ -39,7 +39,7 @@ const EditPlayer = ({ player }) => {
 
       await updatePlayer(updatedPlayer);
       dispatch(fetchPlayers());
-      showSuccess('Music player updated successfully!');
+      showSuccess('Music player updated successfully');
     } catch (err) {
       showError(err.message || 'Failed to update music player');
     }

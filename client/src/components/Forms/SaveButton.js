@@ -36,7 +36,7 @@ const SaveButton = ({
   const isDisabled =
     externalDisabled !== null
       ? externalDisabled
-      : !hasChanges || !isDirty || isSaving;
+      : !hasChanges || !isDirty || isSaving || isSaved;
 
   const handleClick = e => {
     if (buttonType !== 'submit' && onSave) {

@@ -21,7 +21,7 @@ const EditVideo = ({ video, fetchVideos }) => {
       showSuccess('Video updated successfully');
       fetchVideos();
     } catch (err) {
-      showError('Failed to update video');
+      showError(err.message || 'Failed to update video');
     }
   };
 

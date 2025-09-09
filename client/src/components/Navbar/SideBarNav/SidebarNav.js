@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from '../../components/icons';
+import { ChevronLeft, ChevronRight } from '../../icons';
 import SideNavTab from './SideNavTab';
 
 const SidebarNav = ({
@@ -13,19 +13,17 @@ const SidebarNav = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Handle navigation with proper routing
   const handleTabClick = tabId => {
     const tab = tabs.find(t => t.id === tabId);
     if (tab) {
       if (tab.defaultSubTab) {
-        // Navigate to default sub-tab for tabs that have sub-tabs
         navigate(`${tab.path}/${tab.defaultSubTab}`);
       } else {
-        // Navigate to main tab for tabs without sub-tabs
         navigate(tab.path);
       }
     }
   };
+
   return (
     <aside
       className={`sidebar-nav shadow-sm position-relative ${
@@ -40,7 +38,6 @@ const SidebarNav = ({
         overflow: 'visible',
       }}
     >
-      {/* Toggle Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className='sidebar-toggle btn btn-sm btn-outline-light position-absolute'
@@ -57,7 +54,6 @@ const SidebarNav = ({
         {sidebarOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
       </button>
 
-      {/* Sidebar Content */}
       <div
         style={{
           opacity: sidebarOpen ? 1 : 0,
@@ -68,7 +64,6 @@ const SidebarNav = ({
       >
         {sidebarOpen && (
           <>
-            {/* Navigation Tabs */}
             <nav
               className='d-flex flex-column gap-2'
               style={{ marginTop: '60px' }}
@@ -86,7 +81,6 @@ const SidebarNav = ({
         )}
       </div>
 
-      {/* Collapsed State - Show Icons Only */}
       <div
         style={{
           opacity: sidebarOpen ? 0 : 1,

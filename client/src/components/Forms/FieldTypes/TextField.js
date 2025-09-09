@@ -4,10 +4,10 @@ import { Field } from 'react-final-form';
 const TextField = ({
   label,
   name,
-  initialValue,
   required,
   placeholder,
   helperText,
+  displayHelperText,
   validate,
   validationState,
   onValidationChange,
@@ -30,7 +30,7 @@ const TextField = ({
   // Run validation immediately for required fields
   useEffect(() => {
     if (isRequired) {
-      const validation = handleValidation(initialValue || '');
+      const validation = handleValidation('');
       const newValidationState = {
         isValid: !validation,
         error: validation,
@@ -38,7 +38,7 @@ const TextField = ({
       };
       setLocalValidationState(newValidationState);
     }
-  }, [isRequired, initialValue]);
+  }, [isRequired]);
 
   const handleValidation = value => {
     // Handle required validation
@@ -76,14 +76,11 @@ const TextField = ({
     }
   };
 
-  const val = initialValue ? initialValue : '';
-
   return (
     <div className={`form-group ${className}`}>
       <Field
         name={name}
         validate={handleValidation}
-        initialValue={val}
       >
         {({ input, meta }) => (
           <>
@@ -175,6 +172,17 @@ const TextField = ({
                   {helperText}
                 </div>
               )}
+            {helperText && displayHelperText && (
+              <div
+                className='form-text'
+                style={{
+                  fontFamily: 'var(--secondary-font)',
+                  fontSize: '0.875rem',
+                }}
+              >
+                {helperText}
+              </div>
+            )}
           </>
         )}
       </Field>

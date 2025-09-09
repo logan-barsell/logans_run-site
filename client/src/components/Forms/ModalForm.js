@@ -5,6 +5,7 @@ import { Form } from 'react-final-form';
 
 import RenderField from './RenderField';
 import Button from '../Button/Button';
+import SaveButton from './SaveButton';
 
 const ModalForm = ({
   onSubmit,
@@ -17,6 +18,7 @@ const ModalForm = ({
   submitButtonVariant = 'danger',
   cancelButtonVariant = 'dark',
   isModal = true, // For backward compatibility
+  successText = 'Success', // Custom success message
 }) => {
   // Create refs for all image fields
   const imageRefs = useRef({});
@@ -35,6 +37,9 @@ const ModalForm = ({
   // State to track if form has meaningful changes
   const [hasChanges, setHasChanges] = useState(false);
 
+  // State to track success state
+  const [isSuccess, setIsSuccess] = useState(false);
+
   // Ref to track if component is mounted
   const isMountedRef = useRef(true);
 
@@ -51,6 +56,13 @@ const ModalForm = ({
       setter(value);
     }
   }, []);
+
+  // Clear success state whenever the form becomes dirty
+  useEffect(() => {
+    if (hasChanges && isSuccess) {
+      setIsSuccess(false);
+    }
+  }, [hasChanges, isSuccess]);
 
   // Extract initial values from fields
   const initialValues = fields.reduce((acc, field) => {
@@ -167,6 +179,7 @@ const ModalForm = ({
     safeSetState(setImageValues, {});
     safeSetState(setIsSubmitting, false);
     safeSetState(setHasChanges, false);
+    safeSetState(setIsSuccess, false);
   };
 
   // Handle form cancellation
@@ -194,6 +207,8 @@ const ModalForm = ({
             requestAnimationFrame(() => safeSetState(setHasChanges, changed));
           }
 
+          // (moved) Resetting success state handled by useEffect above
+
           const handleFormSubmit = async event => {
             setIsSubmitting(true);
             try {
@@ -201,10 +216,21 @@ const ModalForm = ({
               if (result) {
                 return result; // Return validation errors
               }
-              // Success - clean up form first
+              // Success - set success state and update form's initial values to make it pristine
+              form.batch(() => {
+                Object.keys(values).forEach(key => {
+                  form.change(key, values[key]);
+                });
+                form.reset(values);
+              });
+
+              // Clean up form then close
               onFormRestart(form);
-              // Call success callback (which can handle modal closing)
-              onSuccess?.();
+              if (typeof closeModal === 'function') {
+                closeModal();
+              } else {
+                onSuccess?.();
+              }
             } finally {
               safeSetState(setIsSubmitting, false);
             }
@@ -229,9 +255,16 @@ const ModalForm = ({
                   </Button>
                 </div>
                 <div className='d-grid col-6'>
-                  <Button
-                    variant={submitButtonVariant}
-                    type='submit'
+                  <SaveButton
+                    hasChanges={hasChanges}
+                    isDirty={hasChanges}
+                    isSaving={isSubmitting}
+                    isSaved={false}
+                    saveText={submitButtonText}
+                    savedText=''
+                    savingText='Submitting...'
+                    buttonType='submit'
+                    className={`btn btn-${submitButtonVariant} submitForm`}
                     disabled={
                       Object.keys(errors || {}).length !== 0 ||
                       imageRequired ||
@@ -242,9 +275,7 @@ const ModalForm = ({
                         field => field.required && !values[field.name]
                       )
                     }
-                  >
-                    {isSubmitting ? 'Submitting...' : submitButtonText}
-                  </Button>
+                  />
                 </div>
               </div>
             </form>

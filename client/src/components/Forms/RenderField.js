@@ -5,15 +5,22 @@ import {
   TimeField,
   PriceField,
   PriceFields,
+  TextareaField,
+  SelectField,
+  RadioField,
 } from './FieldTypes';
 import { ImageUploadField } from './FieldTypes/ImageUpload';
 import { VideoUploadField } from './FieldTypes/VideoUpload';
 import ConditionalVideoUploadField from './FieldTypes/ConditionalVideoUpload';
+import ConditionalImageUploadField from './FieldTypes/ConditionalImageUpload';
 import ConditionalNumberField from './FieldTypes/ConditionalNumber';
 import ConditionalTextField from './FieldTypes/ConditionalText';
 import ConditionalYoutubeUrlField from './FieldTypes/ConditionalYoutubeUrl';
 import OptionsField from './FieldTypes/OptionsField';
 import NumberField from './FieldTypes/NumberField';
+import ColorSelectorField from './FieldTypes/ColorSelectorField';
+import FontSelectField from './FieldTypes/FontSelectField';
+import SocialMediaIconStyleField from './FieldTypes/SocialMediaIconStyleField';
 import {
   validateSpotifyUrl,
   validateSpotifySocialUrl,
@@ -40,7 +47,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
     type,
     initialValue,
     initialValues,
-    required, // <-- add required
+    required,
   } = field;
 
   if (type === 'text') {
@@ -50,6 +57,8 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         name={name}
         placeholder={placeholder}
         initialValue={initialValue}
+        helperText={field.helperText}
+        displayHelperText={field.displayHelperText}
       />
     );
   } else if (type === 'email') {
@@ -100,6 +109,22 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
       />
     );
   } else if (type === 'image') {
+    // Check if this is a conditional field
+    if (field.conditionField && field.conditionValue) {
+      return (
+        <ConditionalImageUploadField
+          ref={imageRef}
+          label={label}
+          name={name}
+          conditionField={field.conditionField}
+          conditionValue={field.conditionValue}
+          initialValue={initialValue}
+          required={required}
+          onFileChange={onFileChange}
+        />
+      );
+    }
+
     return (
       <ImageUploadField
         ref={imageRef}
@@ -108,6 +133,20 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         initialValue={initialValue}
         required={required}
         onFileChange={onFileChange}
+      />
+    );
+  } else if (type === 'radio') {
+    return (
+      <RadioField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        options={options}
+        toggle={field.toggle}
+        enabledText={field.enabledText}
+        disabledText={field.disabledText}
+        disabled={field.disabled}
+        helperText={field.helperText}
       />
     );
   } else if (type === 'video') {
@@ -127,6 +166,19 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         ref={imageRef}
         label={label}
         name={name}
+        initialValue={initialValue}
+        required={required}
+        onFileChange={onFileChange}
+      />
+    );
+  } else if (type === 'conditionalImage') {
+    return (
+      <ConditionalImageUploadField
+        ref={imageRef}
+        label={label}
+        name={name}
+        conditionField={field.conditionField}
+        conditionValue={field.conditionValue}
         initialValue={initialValue}
         required={required}
         onFileChange={onFileChange}
@@ -379,6 +431,65 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         options={options}
         initialValue={initialValue}
         required={required}
+      />
+    );
+  } else if (type === 'textarea') {
+    return (
+      <TextareaField
+        label={label}
+        name={name}
+        initialValue={initialValue}
+        placeholder={placeholder}
+        rows={field.rows || 3}
+        required={required}
+        helperText={field.helperText}
+      />
+    );
+  } else if (type === 'dropdown') {
+    return (
+      <SelectField
+        label={label}
+        name={name}
+        options={options}
+        initialValue={initialValue}
+        placeholder={placeholder}
+        required={required}
+        helperText={field.helperText}
+      />
+    );
+  } else if (type === 'color') {
+    return (
+      <ColorSelectorField
+        label={label}
+        name={name}
+        type={field.colorType || 'primary'}
+        initialValue={initialValue}
+        required={required}
+        helperText={field.helperText}
+      />
+    );
+  } else if (type === 'font') {
+    return (
+      <FontSelectField
+        label={label}
+        name={name}
+        optgroups={field.optgroups || []}
+        initialValue={initialValue}
+        placeholder={placeholder}
+        required={required}
+        helperText={field.helperText}
+      />
+    );
+  } else if (type === 'socialMediaIconStyle') {
+    return (
+      <SocialMediaIconStyleField
+        label={label}
+        name={name}
+        options={options}
+        initialValue={initialValue}
+        placeholder={placeholder}
+        required={required}
+        helperText={field.helperText}
       />
     );
   }

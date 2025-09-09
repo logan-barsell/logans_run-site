@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { CustomForm } from '../../components/Forms';
 import ErrorMessage from '../../components/ErrorMessage';
 import Button from '../../components/Button/Button';
+import SaveButton from '../../components/Forms/SaveButton';
 import { Link } from 'react-router-dom';
 
 const TwoFactorVerification = () => {
@@ -185,9 +186,16 @@ const TwoFactorVerification = () => {
             </div>
 
             <div className='d-flex flex-column gap-2'>
-              <Button
-                type='submit'
-                variant='danger'
+              <SaveButton
+                hasChanges={true}
+                isDirty={true}
+                isSaving={isLoading}
+                isSaved={isSuccess}
+                saveText='Verify Code'
+                savedText='Success!'
+                savingText='Verifying...'
+                buttonType='submit'
+                className='btn btn-danger submitForm'
                 disabled={
                   submitting ||
                   isLoading ||
@@ -195,10 +203,7 @@ const TwoFactorVerification = () => {
                   !values?.code ||
                   values.code.length !== 6
                 }
-                loading={isLoading}
-              >
-                {getButtonText()}
-              </Button>
+              />
 
               <div className='text-center mt-3'>
                 {timeLeft > 0 ? (

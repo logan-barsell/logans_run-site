@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchBio } from '../../redux/actions';
 import { updateBio } from '../../services/bioService';
@@ -6,7 +6,7 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import CurrentMembers from './CurrentMembers';
 import { useAlert } from '../../contexts/AlertContext';
 import { EditableForm } from '../../components/Forms';
-import ImageUpload from '../../components/Forms/FieldTypes/ImageUpload';
+import { BIO_FIELDS } from './constants';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
@@ -14,32 +14,26 @@ import {
 
 const BioEdit = ({ fetchBio, bio, theme }) => {
   const { showError, showSuccess } = useAlert();
-  const [customImageFile, setCustomImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const imageUploadRef = useRef();
 
   useEffect(() => {
     fetchBio();
   }, [fetchBio]);
 
-  const handleSave = async data => {
+  const handleSubmit = async values => {
     setUploading(true);
-    let customImageUrl = data.customImageUrl;
+    let customImageUrl = values.customImage;
 
     try {
       // Validate that custom image is provided when custom image type is selected
-      if (
-        data.imageType === 'custom-image' &&
-        !customImageFile &&
-        !customImageUrl
-      ) {
+      if (values.imageType === 'custom-image' && !values.customImage) {
         throw new Error(
           'Please upload a custom image when selecting custom image type'
         );
       }
 
       // Handle custom image upload if there's a new file
-      if (customImageFile) {
+      if (values.customImage && values.customImage instanceof File) {
         // Delete old custom image if it exists
         if (bio && bio.length > 0 && bio[0].customImageUrl) {
           try {
@@ -50,7 +44,7 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
         }
 
         try {
-          customImageUrl = await uploadImageToFirebase(customImageFile, {
+          customImageUrl = await uploadImageToFirebase(values.customImage, {
             onProgress: () => {}, // Pass empty function instead of setUploadProgress
           });
         } catch (err) {
@@ -62,22 +56,13 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
 
       // Update bio with image settings
       const dataToSave = {
-        text: data.text || (bio && bio.length > 0 ? bio[0].text : ''),
-        imageType: data.imageType,
+        text: values.text,
+        imageType: values.imageType,
         customImageUrl: customImageUrl,
       };
 
       await updateBio(dataToSave);
-      setCustomImageFile(null);
       setUploading(false);
-
-      // Clear the file input and state
-      if (
-        imageUploadRef.current &&
-        typeof imageUploadRef.current.clear === 'function'
-      ) {
-        imageUploadRef.current.clear();
-      }
     } catch (err) {
       console.error('Save bio error:', err);
       setUploading(false);
@@ -91,50 +76,15 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
     fetchBio();
   };
 
-  const handleError = error => {
-    // Only show error if it's not already handled in handleSave
-    if (error && !error.message.includes('Failed to update bio information')) {
-      showError(error.message || 'Failed to update bio information');
-    }
-  };
+  // Define the form fields configuration
+  const bioFields = BIO_FIELDS;
 
-  // Custom comparison function for bio text and image settings
-  const compareFunction = (initial, current) => {
-    if (!initial || !current) return false;
-    const initialText = initial.text || '';
-    const currentText = current.text || '';
-    const initialImageType = initial.imageType || 'band-logo';
-    const currentImageType = current.imageType || 'band-logo';
-    const initialCustomImageUrl = initial.customImageUrl || '';
-    const currentCustomImageUrl = current.customImageUrl || '';
-
-    // Check if there are actual changes to the form data OR if a new file is uploaded
-    const hasFormChanges = !(
-      initialText === currentText &&
-      initialImageType === currentImageType &&
-      initialCustomImageUrl === currentCustomImageUrl
-    );
-
-    // Check if a new file is uploaded
-    const hasFileChanges = customImageFile !== null;
-
-    const hasChanges = hasFormChanges || hasFileChanges;
-
-    // If there are no changes, return true (no changes)
-    if (!hasChanges) {
-      return true;
-    }
-
-    // If there are changes, check if the form is valid
-    // Form is invalid only if custom image type is selected but no image is provided
-    const isFormValid = !(
-      currentImageType === 'custom-image' &&
-      !customImageFile &&
-      !currentCustomImageUrl
-    );
-
-    // Return false if form is valid (allow changes), true if invalid (prevent submission)
-    return !isFormValid;
+  // Get current bio data for initial values
+  const bioData = bio && bio.length > 0 ? bio[0] : {};
+  const initialValues = {
+    text: bioData.text || '',
+    imageType: bioData.imageType || 'band-logo',
+    customImage: bioData.customImageUrl || '',
   };
 
   return (
@@ -143,23 +93,21 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
         title='Update Bio'
         containerId='bioEdit'
         className='bio-form'
-        initialData={bio && bio.length > 0 ? bio[0] : null}
-        onSave={handleSave}
-        onSuccess={handleSuccess}
-        onError={handleError}
-        compareFunction={compareFunction}
+        fields={bioFields}
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        successMessage='Update Successful'
         loading={uploading}
+        onSuccess={handleSuccess}
       >
-        {({ formData, handleInputChange }) => {
-          const currentImageType = formData.imageType || 'band-logo';
-          const showBandLogo = currentImageType === 'band-logo';
-          const showCustomImage = currentImageType === 'custom-image';
+        {({ values }) => {
+          const currentImageType = values.imageType || 'band-logo';
 
           return (
             <>
               {/* Image Display */}
               <div className='mb-4'>
-                {showBandLogo && theme?.bandLogoUrl && (
+                {currentImageType === 'band-logo' && theme?.bandLogoUrl && (
                   <div className='text-center mb-3'>
                     <img
                       src={theme.bandLogoUrl}
@@ -175,81 +123,28 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
                   </div>
                 )}
 
-                {showCustomImage && (
-                  <div className='text-center mb-3'>
-                    {(customImageFile ||
-                      (bio && bio.length > 0 && bio[0].customImageUrl)) && (
-                      <div style={{ marginBottom: 12 }}>
-                        <img
-                          src={
-                            customImageFile
-                              ? URL.createObjectURL(customImageFile)
-                              : bio[0].customImageUrl
-                          }
-                          alt='Custom Bio Preview'
-                          style={{
-                            maxWidth: '100%',
-                            height: 'auto',
-                            maxHeight: '200px',
-                            margin: '0 auto',
-                          }}
-                        />
-                      </div>
-                    )}
-                    <div className='mb-3 d-flex justify-content-center'>
-                      <ImageUpload
-                        ref={imageUploadRef}
-                        name='customImage'
-                        setImage={setCustomImageFile}
-                        initialValue={
-                          bio && bio.length > 0 ? bio[0].customImageUrl : null
-                        }
-                        onChange={handleInputChange}
+                {currentImageType === 'custom-image' &&
+                  initialValues.customImage && (
+                    <div className='text-center mb-3'>
+                      <img
+                        src={initialValues.customImage}
+                        alt='Custom bio display'
+                        style={{
+                          maxWidth: '100%',
+                          height: 'auto',
+                          maxHeight: '200px',
+                          display: 'block',
+                          margin: '0 auto',
+                        }}
                       />
                     </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Image Type Selection */}
-              <div className='mb-4'>
-                <select
-                  name='imageType'
-                  value={currentImageType}
-                  onChange={handleInputChange}
-                  className='form-select bio-image-select'
-                  id='imageType'
-                  style={{
-                    backgroundColor: 'var(--form-bg)',
-                    color: 'white',
-                    border: '2px solid rgba(425, 425, 425, 0.1)',
-                  }}
-                >
-                  <option value='band-logo'>Band Logo</option>
-                  <option value='custom-image'>Custom Image</option>
-                </select>
-                <div className='form-text bio-image-helper'>
-                  Choose whether to display the band logo or a custom image
-                  above the bio text.
-                </div>
-              </div>
-
-              {/* Bio Text */}
-              <div className='mb-3'>
-                <textarea
-                  name='text'
-                  defaultValue={formData.text || ''}
-                  onChange={handleInputChange}
-                  required
-                  className='form-control'
-                  id='bioText'
-                  rows={6}
-                />
+                  )}
               </div>
             </>
           );
         }}
       </EditableForm>
+
       <SecondaryNav label={'Members'} />
       <div className='container'>
         <div className='row'>

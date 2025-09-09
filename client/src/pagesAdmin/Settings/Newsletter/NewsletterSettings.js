@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NewsletterEdit from './NewsletterEdit';
 import SubscribersList from './SubscribersList';
-import TabNavigation from '../../components/Tabs/TabNavigation';
-import { Gear, People } from '../../components/icons';
+import TabNavigation from '../../../components/Tabs/TabNavigation';
+import { Gear, People } from '../../../components/icons';
 
 const NewsletterSettings = ({ currentSubTab }) => {
   const navigate = useNavigate();

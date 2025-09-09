@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchTheme, updateTheme } from '../../redux/actions';
-import EditableForm from '../../components/Forms/EditableForm';
-import { RadioField } from '../../components/Forms/FieldTypes';
-import { useAlert } from '../../contexts/AlertContext';
+import { fetchTheme, updateTheme } from '../../../redux/actions';
+import EditableForm from '../../../components/Forms/EditableForm';
+import { RadioField } from '../../../components/Forms/FieldTypes';
+import { useAlert } from '../../../contexts/AlertContext';
 
 const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
   const { showSuccess, showError } = useAlert();
 
-  const handleSubmit = async formData => {
+  // Fetch theme data on component mount
+  useEffect(() => {
+    fetchTheme();
+  }, [fetchTheme]);
+
+  const handleSubmit = async values => {
     try {
-      await updateTheme(formData);
+      await updateTheme(values);
       showSuccess('Newsletter settings updated successfully!');
     } catch (error) {
       console.error('Error updating newsletter settings:', error);
@@ -21,57 +26,27 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
   return (
     <>
       <EditableForm
-        initialData={theme}
-        onSave={handleSubmit}
-        fetchData={fetchTheme}
+        initialValues={theme || {}}
+        onSubmit={handleSubmit}
         title=''
         description='Configure newsletter settings and automatic notification preferences.'
         showTitle={false}
       >
-        {({ formData, handleInputChange }) => {
-          const isNewsletterEnabled = formData.enableNewsletter === true;
+        {({ values, form }) => {
+          const isNewsletterEnabled = values?.enableNewsletter === true;
 
           // Handle newsletter enable/disable - manage notification options
-          const handleNewsletterChange = e => {
-            const newValue = e.target.value === 'true';
-            handleInputChange(e);
-
-            // If disabling newsletter, also disable all notification options
-            if (!newValue) {
-              const updates = {
-                notifyOnNewShows: false,
-                notifyOnNewMusic: false,
-                notifyOnNewVideos: false,
-              };
-
-              // Update each field
-              Object.entries(updates).forEach(([fieldName, value]) => {
-                const syntheticEvent = {
-                  target: {
-                    name: fieldName,
-                    value: String(value),
-                  },
-                };
-                handleInputChange(syntheticEvent);
-              });
-            } else {
+          const handleNewsletterChange = newValue => {
+            if (newValue === true) {
               // If enabling newsletter, enable all notification options by default
-              const updates = {
-                notifyOnNewShows: true,
-                notifyOnNewMusic: true,
-                notifyOnNewVideos: true,
-              };
-
-              // Update each field
-              Object.entries(updates).forEach(([fieldName, value]) => {
-                const syntheticEvent = {
-                  target: {
-                    name: fieldName,
-                    value: String(value),
-                  },
-                };
-                handleInputChange(syntheticEvent);
-              });
+              form.change('notifyOnNewShows', true);
+              form.change('notifyOnNewMusic', true);
+              form.change('notifyOnNewVideos', true);
+            } else {
+              // If disabling newsletter, disable all notification options
+              form.change('notifyOnNewShows', false);
+              form.change('notifyOnNewMusic', false);
+              form.change('notifyOnNewVideos', false);
             }
           };
 
@@ -82,7 +57,7 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
                 <RadioField
                   label='Newsletter Signup'
                   name='enableNewsletter'
-                  value={formData.enableNewsletter}
+                  initialValue={values?.enableNewsletter}
                   onChange={handleNewsletterChange}
                   toggle={true}
                   enabledText='Visitors can subscribe to your newsletter through your website'
@@ -152,10 +127,9 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
                   <RadioField
                     label='New Shows & Events'
                     name='notifyOnNewShows'
-                    value={
-                      isNewsletterEnabled ? formData.notifyOnNewShows : false
+                    initialValue={
+                      isNewsletterEnabled ? values?.notifyOnNewShows : false
                     }
-                    onChange={handleInputChange}
                     toggle={true}
                     enabledText='Subscribers will be notified when you add new shows to your site'
                     disabledText='Subscribers will not be notified when you add new shows to your site'
@@ -169,10 +143,9 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
                   <RadioField
                     label='New Music & Albums'
                     name='notifyOnNewMusic'
-                    value={
-                      isNewsletterEnabled ? formData.notifyOnNewMusic : false
+                    initialValue={
+                      isNewsletterEnabled ? values?.notifyOnNewMusic : false
                     }
-                    onChange={handleInputChange}
                     toggle={true}
                     enabledText='Subscribers will be notified when you add new music to your site'
                     disabledText='Subscribers will not be notified when you add new music to your site'
@@ -185,10 +158,9 @@ const NewsletterEdit = ({ theme, fetchTheme, updateTheme }) => {
                   <RadioField
                     label='New Videos'
                     name='notifyOnNewVideos'
-                    value={
-                      isNewsletterEnabled ? formData.notifyOnNewVideos : false
+                    initialValue={
+                      isNewsletterEnabled ? values?.notifyOnNewVideos : false
                     }
-                    onChange={handleInputChange}
                     toggle={true}
                     enabledText='Subscribers will be notified when you add new videos to your site'
                     disabledText='Subscribers will not be notified when you add new videos to your site'
