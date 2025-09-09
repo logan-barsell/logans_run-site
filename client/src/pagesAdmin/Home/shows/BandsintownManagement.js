@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateShowsSettings } from '../../../redux/actions';
 import { EditableForm } from '../../../components/Forms';
@@ -12,63 +12,57 @@ const BandsintownManagement = ({ showSystem, showsSettings }) => {
   const dispatch = useDispatch();
   const { showError, showSuccess } = useAlert();
 
-  const handleSaveBandsintown = data => {
-    dispatch(
+  // Define the form fields configuration
+  const bandsintownFields = [
+    {
+      name: 'bandsintownArtist',
+      type: 'text',
+      label: 'Artist Name / ID',
+      placeholder: 'Enter your Bandsintown artist name',
+      required: false,
+    },
+  ];
+
+  const handleSubmit = async values => {
+    await dispatch(
       updateShowsSettings({
         showSystem,
-        bandsintownArtist: data.bandsintownArtist || '',
+        bandsintownArtist: values.bandsintownArtist || '',
       })
     );
   };
 
-  const handleBandsintownSuccess = () => {
-    showSuccess('Bandsintown settings updated successfully!');
+  const handleSuccess = () => {
+    showSuccess('Bandsintown settings updated successfully');
   };
 
-  const handleBandsintownError = err => {
+  const handleError = err => {
     showError(err.message || 'Failed to update Bandsintown settings');
   };
 
-  // Custom comparison function for bandsintown settings
-  const compareBandsintownFunction = (initial, current) => {
-    if (!initial || !current) return false;
-    const initialArtist = initial.bandsintownArtist || '';
-    const currentArtist = current.bandsintownArtist || '';
-    return initialArtist === currentArtist;
-  };
+  // Get current settings data for initial values
+  const initialValues = useMemo(
+    () => ({
+      bandsintownArtist: showsSettings?.bandsintownArtist || '',
+    }),
+    [showsSettings?.bandsintownArtist]
+  );
+
+  // Add a key to force form re-initialization when data changes
+  const formKey = `bandsintown-${showsSettings?.bandsintownArtist || 'empty'}`;
 
   return (
     <>
       <EditableForm
+        key={formKey}
         title='Bandsintown Settings'
         containerId='bandsintownEdit'
-        initialData={showsSettings}
-        onSave={handleSaveBandsintown}
-        onSuccess={handleBandsintownSuccess}
-        onError={handleBandsintownError}
-        compareFunction={compareBandsintownFunction}
-      >
-        {({ formData, handleInputChange }) => (
-          <div className='mb-sm-3 mb-2'>
-            <label
-              htmlFor='bandsintownArtist'
-              className='form-label'
-            >
-              Artist Name / ID
-            </label>
-            <input
-              id='bandsintownArtist'
-              name='bandsintownArtist'
-              className='form-control mb-3'
-              type='text'
-              value={formData.bandsintownArtist || ''}
-              onChange={handleInputChange}
-              placeholder='Enter your Bandsintown artist name'
-              autoComplete='off'
-            />
-          </div>
-        )}
-      </EditableForm>
+        fields={bandsintownFields}
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        onSuccess={handleSuccess}
+        onError={handleError}
+      />
 
       {/* BandsintownWidget and SetupGuide outside the form */}
       {showsSettings?.bandsintownArtist && (

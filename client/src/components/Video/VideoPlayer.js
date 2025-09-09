@@ -30,7 +30,6 @@ const VideoPlayer = ({
       video.muted = true;
       video.play().catch(() => {
         // Autoplay failed, which is expected in some browsers
-        console.log('Autoplay prevented by browser');
       });
     };
 

@@ -4,12 +4,12 @@ import {
   fetchNewsletterSubscribers,
   fetchNewsletterStats,
   removeNewsletterSubscriberAction,
-} from '../../redux/actions';
-import { useAlert } from '../../contexts/AlertContext';
+} from '../../../redux/actions';
+import { useAlert } from '../../../contexts/AlertContext';
 import { format } from 'date-fns';
-import { DataTable } from '../../components/DataTable';
-import Button from '../../components/Button/Button';
-import StaticAlert from '../../components/Alert/StaticAlert';
+import { DataTable } from '../../../components/DataTable';
+import Button from '../../../components/Button/Button';
+import StaticAlert from '../../../components/Alert/StaticAlert';
 import './SubscribersList.css';
 
 const SubscribersList = ({

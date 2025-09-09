@@ -215,6 +215,18 @@ const preselectedColors = {
     { name: 'Teal', value: '#008080' },
     { name: 'Maroon', value: '#800000' },
   ],
+  background: [
+    { name: 'Black', value: 'black' },
+    { name: 'Purple', value: 'purple' },
+    { name: 'Red', value: 'red' },
+    { name: 'Green', value: 'green' },
+    { name: 'Teal', value: 'teal' },
+    { name: 'Blue', value: 'blue' },
+    { name: 'Burgundy', value: 'burgundy' },
+    { name: 'Gray', value: 'gray' },
+    { name: 'Brown', value: 'brown' },
+    { name: 'Pink', value: 'pink' },
+  ],
 };
 
 // Helper function to get color palette

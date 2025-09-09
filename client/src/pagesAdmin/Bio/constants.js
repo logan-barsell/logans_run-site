@@ -1,4 +1,37 @@
-const editMemberFields = member => {
+// Field definitions for Bio Edit form
+
+export const BIO_FIELDS = [
+  {
+    name: 'customImage',
+    type: 'image',
+    label: 'Custom Image',
+    conditionField: 'imageType',
+    conditionValue: 'custom-image',
+    required: false,
+  },
+  {
+    name: 'imageType',
+    type: 'dropdown',
+    label: 'Image Display Type',
+    options: [
+      { name: 'Band Logo', value: 'band-logo' },
+      { name: 'Custom Image', value: 'custom-image' },
+    ],
+    initialValue: 'band-logo',
+    helperText:
+      'Choose whether to display the band logo or a custom image above the bio text.',
+  },
+  {
+    name: 'text',
+    type: 'textarea',
+    label: 'Bio Text',
+    rows: 6,
+    required: true,
+    placeholder: 'Enter your bio text here...',
+  },
+];
+
+export const editMemberFields = member => {
   const { bioPic, name, role, facebook, instagram, tiktok, youtube, x } =
     member;
   return [
@@ -53,5 +86,3 @@ const editMemberFields = member => {
     },
   ];
 };
-
-export default editMemberFields;

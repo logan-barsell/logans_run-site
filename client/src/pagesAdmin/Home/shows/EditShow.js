@@ -52,7 +52,7 @@ const EditShow = ({ show, fetchShows }) => {
       };
 
       await updateShowService(id, updatedShow);
-      showSuccess('Show updated successfully!');
+      showSuccess('Show updated successfully');
 
       // Fetch updated shows data
       fetchShows();

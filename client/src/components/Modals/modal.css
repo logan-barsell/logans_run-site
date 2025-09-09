@@ -4,6 +4,10 @@
    =========================================== */
 
 /* Base Modal Structure */
+.modal-backdrop.show {
+  opacity: 0.8;
+}
+
 .modal-content {
   background-color: var(--modal-bg);
   border: 2px solid var(--main);

@@ -49,7 +49,7 @@ const EditFeaturedRelease = ({ release, fetchReleases }) => {
       showSuccess('Featured release updated successfully');
       fetchReleases(); // This now calls the Redux action
     } catch (error) {
-      showError('Failed to update featured release');
+      showError(error.message || 'Failed to update featured release');
     }
   };
 

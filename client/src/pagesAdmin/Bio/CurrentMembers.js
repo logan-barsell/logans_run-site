@@ -24,6 +24,12 @@ const CurrentMembers = ({ fetchMembers, members }) => {
       x: member.x,
     };
 
+    const hasAnySocial = Object.values(links).some(
+      v => typeof v === 'string' && v.trim() !== ''
+    );
+
+    if (!hasAnySocial) return null;
+
     return (
       <SocialIcons
         links={links}
@@ -44,6 +50,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
     members.forEach(member => {
       const { _id, bioPic, name, role } = member;
       const imgURL = bioPic || '';
+
       const socials = renderSocialIcons(member);
 
       items.push({
@@ -57,7 +64,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
         content: [
           {
             prefix: 'Member Socials',
-            value: socials || (
+            value: socials ?? (
               <>
                 <br />
                 No Socials

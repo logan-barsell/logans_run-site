@@ -9,12 +9,12 @@ import {
   CreditCard,
 } from '../../components/icons';
 import './Settings.css';
-import SidebarNav from './SidebarNav';
-import ThemeSettings from './ThemeSettings';
-import NewsletterSettings from './NewsletterSettings';
-import SecuritySettings from './SecuritySettings';
-import AccountSettings from './AccountSettings';
-import BillingSettings from './BillingSettings';
+import SidebarNav from '../../components/Navbar/SideBarNav/SidebarNav';
+import ThemeEdit from './Theme/ThemeEdit';
+import NewsletterSettings from './Newsletter/NewsletterSettings';
+import SecuritySettings from './Security/SecuritySettings';
+import AccountSettings from './Account/AccountSettings';
+import BillingSettings from './Billing/BillingSettings';
 
 const Settings = ({ theme }) => {
   const location = useLocation();
@@ -47,7 +47,7 @@ const Settings = ({ theme }) => {
       id: 'theme',
       label: 'Theme & Design',
       icon: <Palette />,
-      component: ThemeSettings,
+      component: ThemeEdit,
       path: '/settings/theme',
     },
     {
