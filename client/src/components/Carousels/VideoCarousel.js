@@ -15,7 +15,7 @@ function VideoCarousel({ videos }) {
       <div className='carousel-inner'>
         {videos.map((video, idx) => (
           <div
-            key={video.videoId || video._id}
+            key={video.videoId || video.id}
             className={`carousel-item${idx === 0 ? ' active' : ''}`}
           >
             {/* make this container relative so overlay & caption can sit on top */}

@@ -30,6 +30,7 @@ async function login(req, res, next) {
     const userAgent = req.headers['user-agent'] || 'unknown';
 
     const result = await AuthService.login({
+      tenantId: req.tenantId,
       email,
       password,
       ip,
@@ -58,17 +59,21 @@ async function login(req, res, next) {
     // Send login alert if user has it enabled
     try {
       const loginAlertsEnabled =
-        await SecurityPreferencesService.isLoginAlertsEnabled(result.user.id);
+        await SecurityPreferencesService.isLoginAlertsEnabled(
+          req.tenantId,
+          result.user.id
+        );
 
       if (loginAlertsEnabled) {
-        const theme = await ThemeService.getTheme();
+        const theme = await ThemeService.getTheme(req.tenantId);
         const bandName = theme.siteTitle || 'Bandsyte';
         await BandsyteEmailService.sendLoginAlertWithBranding(
           email,
           bandName,
           ip,
           userAgent,
-          'Unknown'
+          'Unknown',
+          req.tenantId
         );
         logger.info(`📧 Login alert sent to user ${email}`);
       }
@@ -112,6 +117,7 @@ async function completeTwoFactorLogin(req, res, next) {
 
     // Complete the login process
     const result = await AuthService.completeTwoFactorLogin({
+      tenantId: req.tenantId,
       userId,
       ip,
       userAgent,
@@ -125,18 +131,22 @@ async function completeTwoFactorLogin(req, res, next) {
     // Send login alert if user has it enabled
     try {
       const loginAlertsEnabled =
-        await SecurityPreferencesService.isLoginAlertsEnabled(userId);
+        await SecurityPreferencesService.isLoginAlertsEnabled(
+          req.tenantId,
+          userId
+        );
 
       if (loginAlertsEnabled) {
-        const theme = await ThemeService.getTheme();
+        const theme = await ThemeService.getTheme(req.tenantId);
         const bandName = theme.siteTitle || 'Bandsyte';
-        const user = await UserService.findUserById(userId);
+        const user = await UserService.findUserById(req.tenantId, userId);
         await BandsyteEmailService.sendLoginAlertWithBranding(
           user.adminEmail,
           bandName,
           ip,
           userAgent,
-          'Unknown'
+          'Unknown',
+          req.tenantId
         );
         logger.info(`📧 Login alert sent to user ${user.adminEmail}`);
       }
@@ -177,6 +187,7 @@ async function signup(req, res, next) {
     const userAgent = req.headers['user-agent'] || 'unknown';
 
     const result = await AuthService.signup({
+      tenantId: req.tenantId,
       email,
       password,
       userType,
@@ -216,7 +227,7 @@ async function logout(req, res, next) {
     );
 
     // End only this specific session
-    await SessionService.endSession(sessionId, userId);
+    await SessionService.endSession(req.tenantId, sessionId, userId);
 
     // Revoke only this session's refresh token
     await TokenService.revokeSessionRefreshToken(sessionId);
@@ -257,7 +268,7 @@ async function refresh(req, res, next) {
  */
 async function checkAuth(req, res, next) {
   try {
-    const user = await UserService.getUserById(req.user._id);
+    const user = await UserService.getUserById(req.tenantId, req.user.id);
     res.status(200).json({
       success: true,
       data: user, // Return full user object like /user/me
@@ -289,7 +300,7 @@ async function verifyEmail(req, res, next) {
       message: 'Email verified successfully',
       data: {
         user: {
-          id: user._id,
+          id: user.id,
           adminEmail: user.adminEmail,
           verified: user.verified,
         },
@@ -315,7 +326,7 @@ async function requestPasswordReset(req, res, next) {
       });
     }
 
-    await AuthService.requestPasswordReset(email);
+    await AuthService.requestPasswordReset(req.tenantId, email);
 
     // Don't reveal if email exists or not for security
     res.status(200).json({
@@ -346,7 +357,7 @@ async function resetPassword(req, res, next) {
       });
     }
 
-    await AuthService.resetPassword(token, newPassword);
+    await AuthService.resetPassword(req.tenantId, token, newPassword);
 
     res.status(200).json({
       success: true,
@@ -366,29 +377,21 @@ async function resendEmailVerification(req, res, next) {
     const { email } = req.body;
 
     if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email is required',
-      });
+      throw new AppError('Email is required', 400);
     }
 
-    const user = await UserService.findUserByEmail(email);
+    const user = await UserService.getUserByEmail(req.tenantId, email);
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      });
+      throw new AppError('User not found', 404);
     }
 
     if (user.verified) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email is already verified',
-      });
+      throw new AppError('Email is already verified', 400);
     }
 
     await AuthService.sendEmailVerificationWithToken(
-      user._id.toString(),
+      req.tenantId,
+      user.id,
       user.adminEmail,
       user.role
     );
@@ -399,33 +402,6 @@ async function resendEmailVerification(req, res, next) {
     });
   } catch (error) {
     logger.error('Resend verification error:', error);
-    next(error);
-  }
-}
-
-/**
- * Initialize default user (admin only)
- */
-async function initializeDefaultUser(req, res, next) {
-  try {
-    const user = await UserService.initializeDefaultUser();
-    res.status(200).json({
-      success: true,
-      data: {
-        user: {
-          id: user._id,
-          bandName: user.bandName,
-          adminEmail: user.adminEmail,
-          role: user.role,
-          userType: user.userType,
-          verified: user.verified,
-          status: user.status,
-        },
-      },
-      message: 'Default user initialized successfully',
-    });
-  } catch (error) {
-    logger.error('Initialize user error:', error);
     next(error);
   }
 }
@@ -441,5 +417,4 @@ module.exports = {
   requestPasswordReset,
   resetPassword,
   resendEmailVerification,
-  initializeDefaultUser,
 };

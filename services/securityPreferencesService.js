@@ -1,17 +1,21 @@
-const User = require('../models/User');
 const logger = require('../utils/logger');
+const { AppError } = require('../middleware/errorHandler');
+const { withTenant } = require('../db/withTenant');
 
 /**
  * Get security preferences for a user
  */
-async function getSecurityPreferences(userId) {
+async function getSecurityPreferences(tenantId, userId) {
   try {
-    const user = await User.findById(userId).select(
-      'securityPreferences twoFactorEnabled'
+    const user = await withTenant(tenantId, async tx =>
+      tx.user.findUnique({
+        where: { id: userId },
+        select: { securityPreferences: true, twoFactorEnabled: true },
+      })
     );
 
     if (!user) {
-      throw new Error('User not found');
+      throw new AppError('User not found', 404);
     }
 
     return {
@@ -33,32 +37,38 @@ async function getSecurityPreferences(userId) {
 /**
  * Update security preferences for a user
  */
-async function updateSecurityPreferences(userId, preferences) {
+async function updateSecurityPreferences(tenantId, userId, preferences) {
   try {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      throw new Error('User not found');
+    // Ensure user exists first
+    const existing = await withTenant(tenantId, async tx =>
+      tx.user.findUnique({ where: { id: userId }, select: { id: true } })
+    );
+    if (!existing) {
+      throw new AppError('User not found', 404);
     }
 
-    // Update security preferences
+    const data = {};
     if (preferences.loginAlerts !== undefined) {
-      user.securityPreferences = user.securityPreferences || {};
-      user.securityPreferences.loginAlerts = preferences.loginAlerts;
+      data.securityPreferences = { loginAlerts: preferences.loginAlerts };
     }
-
     if (preferences.twoFactorEnabled !== undefined) {
-      user.twoFactorEnabled = preferences.twoFactorEnabled;
+      data.twoFactorEnabled = preferences.twoFactorEnabled;
     }
 
-    await user.save();
+    const updated = await withTenant(tenantId, async tx =>
+      tx.user.update({
+        where: { id: userId },
+        data,
+        select: { securityPreferences: true, twoFactorEnabled: true },
+      })
+    );
 
     return {
       success: true,
       message: 'Security preferences updated successfully',
       data: {
-        loginAlerts: user.securityPreferences?.loginAlerts ?? false,
-        twoFactorEnabled: user.twoFactorEnabled ?? false,
+        loginAlerts: updated.securityPreferences?.loginAlerts ?? false,
+        twoFactorEnabled: updated.twoFactorEnabled ?? false,
       },
     };
   } catch (error) {
@@ -73,9 +83,14 @@ async function updateSecurityPreferences(userId, preferences) {
 /**
  * Check if user has login alerts enabled
  */
-async function isLoginAlertsEnabled(userId) {
+async function isLoginAlertsEnabled(tenantId, userId) {
   try {
-    const user = await User.findById(userId).select('securityPreferences');
+    const user = await withTenant(tenantId, async tx =>
+      tx.user.findUnique({
+        where: { id: userId },
+        select: { securityPreferences: true },
+      })
+    );
 
     if (!user) {
       return false;

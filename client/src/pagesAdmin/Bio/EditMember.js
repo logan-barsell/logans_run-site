@@ -47,8 +47,9 @@ const EditMember = ({ member, fetchMembers }) => {
         }
       }
 
+      const memberId = member.id; // Prisma UUID id
       const updatedMember = {
-        id: member._id,
+        id: memberId,
         bioPic: imageUrl,
         name: fields.name,
         role: fields.role,
@@ -59,7 +60,7 @@ const EditMember = ({ member, fetchMembers }) => {
         x: normalizeUrl(fields.x),
       };
 
-      await updateMemberService(member._id, updatedMember);
+      await updateMemberService(memberId, updatedMember);
       showSuccess('Member updated successfully');
       fetchMembers();
     } catch (error) {

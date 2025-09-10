@@ -79,7 +79,7 @@ const Videos = ({ fetchVideos, videos, loading, error }) => {
         {filteredVideos && filteredVideos.length ? (
           filteredVideos.slice(0, limit).map(video => (
             <Video
-              key={video._id}
+              key={video.id}
               video={video}
             />
           ))

@@ -1,15 +1,32 @@
-const memberModel = require('../models/Member');
-const Bio = require('../models/BioText');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { withTenant } = require('../db/withTenant');
+const { whitelistFields } = require('../utils/fieldWhitelist');
+
+// Bio allowed fields
+const BIO_FIELDS = ['name', 'text', 'imageType', 'customImageUrl'];
+
+// Member allowed fields
+const MEMBER_FIELDS = [
+  'name',
+  'role',
+  'bioPic',
+  'facebook',
+  'instagram',
+  'tiktok',
+  'youtube',
+  'x',
+];
 
 /**
- * Get bio information
+ * Get bio information (single row per tenant)
  */
-async function getBio() {
+async function getBio(tenantId) {
   try {
-    const bio = await Bio.find();
-    return bio;
+    return await withTenant(tenantId, async tx => {
+      const bio = await tx.bio.findUnique({ where: { tenantId } });
+      return bio; // may be null
+    });
   } catch (error) {
     logger.error('❌ Error fetching bio:', error);
     throw new AppError(
@@ -20,30 +37,24 @@ async function getBio() {
 }
 
 /**
- * Update bio content and image settings
+ * Update bio content and image settings (no implicit create)
  */
-async function updateBio(bioData) {
+async function updateBio(tenantId, bioData) {
   try {
     if (!bioData) {
       throw new AppError('Bio data is required', 400);
     }
 
-    const updateData = {
-      text: bioData.text || bioData.data,
-    };
+    const data = whitelistFields(bioData, BIO_FIELDS);
 
-    // Add image type and custom image URL if provided
-    if (bioData.imageType) {
-      updateData.imageType = bioData.imageType;
-    }
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.bio.findUnique({ where: { tenantId } });
+      if (!existing) throw new AppError('Bio not found for tenant', 404);
 
-    if (bioData.customImageUrl) {
-      updateData.customImageUrl = bioData.customImageUrl;
-    }
-
-    await Bio.updateOne({ name: 'bio' }, updateData, { upsert: true });
-    logger.info('✅ Bio updated successfully');
-    return updateData;
+      const updated = await tx.bio.update({ where: { tenantId }, data });
+      logger.info('✅ Bio updated successfully');
+      return updated;
+    });
   } catch (error) {
     logger.error('❌ Error updating bio:', error);
     throw new AppError(
@@ -54,24 +65,23 @@ async function updateBio(bioData) {
 }
 
 /**
- * Add a new member
+ * Add a new member (tenant scoped)
  */
-async function addMember(memberData) {
+async function addMember(tenantId, memberData) {
   try {
     if (!memberData || Object.keys(memberData).length === 0) {
       throw new AppError('Member data is required', 400);
     }
 
-    const newMember = {};
-    for (let key in memberData) {
-      newMember[key] = memberData[key];
-    }
+    const data = whitelistFields(memberData, MEMBER_FIELDS);
 
-    const member = new memberModel(newMember);
-    await member.save();
-
-    logger.info('✅ New member added successfully');
-    return member;
+    return await withTenant(tenantId, async tx => {
+      const newMember = await tx.member.create({
+        data: { ...data, tenantId },
+      });
+      logger.info('✅ Member added successfully');
+      return newMember;
+    });
   } catch (error) {
     logger.error('❌ Error adding member:', error);
     throw new AppError(
@@ -82,22 +92,21 @@ async function addMember(memberData) {
 }
 
 /**
- * Delete a member by ID
+ * Delete a member by ID (tenant scoped)
  */
-async function deleteMember(id) {
+async function deleteMember(tenantId, id) {
   try {
     if (!id) {
       throw new AppError('Member ID is required', 400);
     }
 
-    const deletedMember = await memberModel.findOneAndDelete({ _id: id });
-
-    if (!deletedMember) {
-      throw new AppError('Member not found', 404);
-    }
-
-    logger.info(`✅ Member deleted successfully: ${id}`);
-    return deletedMember;
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.member.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Member not found', 404);
+      const deleted = await tx.member.delete({ where: { id } });
+      logger.info(`✅ Member deleted successfully: ${id}`);
+      return deleted;
+    });
   } catch (error) {
     logger.error('❌ Error deleting member:', error);
     throw new AppError(
@@ -108,12 +117,16 @@ async function deleteMember(id) {
 }
 
 /**
- * Get all members
+ * Get all members for a tenant
  */
-async function getMembers() {
+async function getMembers(tenantId) {
   try {
-    const members = await memberModel.find().sort({ order: 1 });
-    return members;
+    return await withTenant(tenantId, async tx => {
+      return await tx.member.findMany({
+        where: { tenantId },
+        orderBy: { createdAt: 'asc' },
+      });
+    });
   } catch (error) {
     logger.error('❌ Error fetching members:', error);
     throw new AppError(
@@ -124,29 +137,26 @@ async function getMembers() {
 }
 
 /**
- * Update a member by ID
+ * Update a member by ID (tenant scoped)
  */
-async function updateMember(id, updateData) {
+async function updateMember(tenantId, id, updateData) {
   try {
     if (!id) {
       throw new AppError('Member ID is required', 400);
     }
-
     if (!updateData || Object.keys(updateData).length === 0) {
       throw new AppError('Member update data is required', 400);
     }
 
-    const updatedMember = await memberModel.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
+    const data = whitelistFields(updateData, MEMBER_FIELDS);
+
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.member.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Member not found', 404);
+      const updated = await tx.member.update({ where: { id }, data });
+      logger.info(`✅ Member updated successfully: ${id}`);
+      return updated;
     });
-
-    if (!updatedMember) {
-      throw new AppError('Member not found', 404);
-    }
-
-    logger.info(`✅ Member updated successfully: ${id}`);
-    return updatedMember;
   } catch (error) {
     logger.error('❌ Error updating member:', error);
     throw new AppError(

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTheme, updateTheme } from '../redux/actions';
 import { getColorPalette } from '../utils/colorPalettes';
+import { toRgbString } from '../utils/cssColors';
 
 const ThemeContext = createContext();
 
@@ -21,6 +22,8 @@ const updateCSSVariables = theme => {
   }
   if (theme.secondaryColor) {
     root.style.setProperty('--secondary', theme.secondaryColor);
+    const rgb = toRgbString(theme.secondaryColor);
+    if (rgb) root.style.setProperty('--secondary-rgb', rgb);
   }
 
   // Use color palette for background colors

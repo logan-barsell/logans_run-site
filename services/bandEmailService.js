@@ -1,22 +1,22 @@
-const Theme = require('../models/Theme');
+const ThemeService = require('./themeService');
 const emailService = require('./emailService');
 const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
 /**
  * Get email configuration for a band
- * @param {string} bandId - Band identifier
+ * @param {string} tenantId - Tenant identifier
  * @returns {Object} Email configuration
  */
-async function getBandEmailConfig(bandId) {
+async function getBandEmailConfig(tenantId) {
   try {
-    const theme = await Theme.findOne();
+    const theme = await ThemeService.getTheme(tenantId);
     if (!theme) {
       throw new AppError('Theme configuration not found', 404);
     }
 
     return {
-      bandName: theme.bandName || 'Band',
+      bandName: theme.siteTitle || 'Band',
       bandLogoUrl: theme.bandLogoUrl,
       primaryColor: theme.primaryColor || '#000000',
       secondaryColor: theme.secondaryColor || '#ffffff',
@@ -56,7 +56,8 @@ function generateFromAddress(bandName) {
 async function sendNewsletterConfirmationWithBranding(
   email,
   bandName,
-  unsubscribeToken
+  unsubscribeToken,
+  tenantId = null
 ) {
   try {
     // Generate white-label FROM address
@@ -70,7 +71,8 @@ async function sendNewsletterConfirmationWithBranding(
       email,
       bandName,
       unsubscribeToken,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(
@@ -89,14 +91,19 @@ async function sendNewsletterConfirmationWithBranding(
  * @param {string} email - User email
  * @param {string} bandName - Band name
  */
-async function sendWelcomeEmailWithBranding(email, bandName) {
+async function sendWelcomeEmailWithBranding(email, bandName, tenantId = null) {
   try {
     // Generate white-label FROM address
     const fromAddress = generateFromAddress(bandName);
 
     logger.info(`📧 Sending welcome email for ${bandName} to ${email}`);
 
-    return await emailService.sendWelcomeEmail(email, bandName, fromAddress);
+    return await emailService.sendWelcomeEmail(
+      email,
+      bandName,
+      fromAddress,
+      tenantId
+    );
   } catch (error) {
     logger.error(`❌ Failed to send welcome email for ${bandName}:`, error);
     throw new AppError(
@@ -119,7 +126,8 @@ async function sendContentNotificationWithBranding(
   bandName,
   contentType,
   content,
-  unsubscribeToken
+  unsubscribeToken,
+  tenantId = null
 ) {
   try {
     // Generate white-label FROM address
@@ -135,7 +143,8 @@ async function sendContentNotificationWithBranding(
       contentType,
       content,
       unsubscribeToken,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(
@@ -203,17 +212,26 @@ async function getSESStatus(domain) {
  * @param {Object} emailData - Email data object with to, subject, html
  * @param {string} bandName - Band name for FROM address
  */
-async function sendEmailWithBranding(emailData, bandName) {
+async function sendEmailWithBranding(emailData, bandName, tenantId = null) {
   try {
     // Generate band white-label FROM address
     const fromAddress = generateFromAddress(bandName);
 
     logger.info(`📧 Sending email for ${bandName} to ${emailData.to}`);
 
-    return await emailService.sendEmail({
-      ...emailData,
-      from: fromAddress,
-    });
+    // Call positional emailService API
+    const to = emailData.to;
+    const subject = emailData.subject || null;
+    const html = emailData.html || null;
+    return await emailService.sendEmail(
+      to,
+      subject,
+      html,
+      null,
+      {},
+      fromAddress,
+      tenantId
+    );
   } catch (error) {
     logger.error(`❌ Failed to send email for ${bandName}:`, error);
     throw new AppError(

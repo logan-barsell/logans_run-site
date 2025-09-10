@@ -13,7 +13,7 @@ const DeleteItem = ({
   isImage = false,
 }) => {
   const [modalCloseFn, setModalCloseFn] = React.useState(null);
-  const itemId = item.id || item._id;
+  const itemId = item.id;
 
   // Callback to receive closeModal function from BaseModal
   const handleCloseModalCallback = React.useCallback(closeFn => {
@@ -69,10 +69,10 @@ const DeleteItem = ({
         </Button>
         <Button
           onClick={async () => {
-            await onDelete(item);
             if (modalCloseFn) {
               modalCloseFn();
             }
+            await onDelete(item);
           }}
           type='button'
           variant='danger'

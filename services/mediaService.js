@@ -1,118 +1,31 @@
-const MediaImage = require('../models/MediaImage');
-const Video = require('../models/Video');
-const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { withTenant } = require('../db/withTenant');
+const { toDate } = require('../utils/dates');
+const { whitelistFields } = require('../utils/fieldWhitelist');
 
-/**
- * Update a video
- */
-async function updateVideo(videoData) {
-  try {
-    if (!videoData || !videoData._id) {
-      throw new AppError('Video data and ID are required', 400);
-    }
+// Video allowed fields
+const VIDEO_FIELDS = ['category', 'title', 'date', 'link', 'embedLink'];
 
-    const video = await Video.findOneAndUpdate(
-      { _id: videoData._id },
-      videoData,
-      { new: true, runValidators: true }
-    );
+// Media image allowed fields
+const MEDIA_IMAGE_FIELDS = ['imageUrl', 'altText', 'category'];
 
-    if (!video) {
-      throw new AppError('Video not found', 404);
-    }
-
-    logger.info(`✅ Video updated successfully: ${videoData._id}`);
-    return video;
-  } catch (error) {
-    logger.error('❌ Error updating video:', error);
-    throw new AppError(
-      error.message || 'Error updating video',
-      error.statusCode || 500
-    );
-  }
-}
-
-/**
- * Delete a video by ID
- */
-async function deleteVideo(id) {
-  try {
-    if (!id) {
-      throw new AppError('Video ID is required', 400);
-    }
-
-    const deletedVideo = await Video.findByIdAndDelete(id);
-
-    if (!deletedVideo) {
-      throw new AppError('Video not found', 404);
-    }
-
-    logger.info(`✅ Video deleted successfully: ${id}`);
-    return deletedVideo;
-  } catch (error) {
-    logger.error('❌ Error deleting video:', error);
-    throw new AppError(
-      error.message || 'Error deleting video',
-      error.statusCode || 500
-    );
-  }
-}
-
-/**
- * Get videos with optional category filter
- */
-async function getVideos(category = null) {
-  try {
-    let videos;
-    if (category) {
-      videos = await Video.find({ category }).sort({ date: -1 });
-    } else {
-      videos = await Video.find().sort({ date: -1 });
-    }
-    return videos;
-  } catch (error) {
-    logger.error('❌ Error fetching videos:', error);
-    throw new AppError(
-      error.message || 'Error fetching videos',
-      error.statusCode || 500
-    );
-  }
-}
-
-/**
- * Add a new video
- */
-async function addVideo(videoData) {
+async function addVideo(tenantId, videoData) {
   try {
     if (!videoData || Object.keys(videoData).length === 0) {
       throw new AppError('Video data is required', 400);
     }
 
-    const video = new Video(videoData);
-    await video.save();
+    const data = whitelistFields(videoData, VIDEO_FIELDS);
+    if ('date' in data) data.date = toDate(data.date);
 
-    logger.info('✅ New video added successfully');
-
-    // Send newsletter notification for new video
-    try {
-      await NewsletterService.sendContentNotification('video', {
-        title: video.title || 'New Video',
-        description: video.category
-          ? `New ${video.category} video`
-          : 'New video uploaded',
-        duration: video.duration,
+    return await withTenant(tenantId, async tx => {
+      const newVideo = await tx.video.create({
+        data: { ...data, tenantId },
       });
-    } catch (notificationError) {
-      logger.error(
-        'Failed to send newsletter notification:',
-        notificationError
-      );
-      // Don't fail the video creation if newsletter fails
-    }
-
-    return video;
+      logger.info('✅ Video added successfully');
+      return newVideo;
+    });
   } catch (error) {
     logger.error('❌ Error adding video:', error);
     throw new AppError(
@@ -122,13 +35,84 @@ async function addVideo(videoData) {
   }
 }
 
-/**
- * Get all media images
- */
-async function getMediaImages() {
+async function getVideos(tenantId, category) {
   try {
-    const images = await MediaImage.find();
-    return images;
+    return await withTenant(tenantId, async tx => {
+      const where = { tenantId };
+      if (category) where.category = category;
+
+      return await tx.video.findMany({
+        where,
+        orderBy: { date: 'desc' },
+      });
+    });
+  } catch (error) {
+    logger.error('❌ Error fetching videos:', error);
+    throw new AppError(
+      error.message || 'Error fetching videos',
+      error.statusCode || 500
+    );
+  }
+}
+
+async function updateVideo(tenantId, id, videoData) {
+  try {
+    if (!id) {
+      throw new AppError('Video ID is required', 400);
+    }
+    if (!videoData || Object.keys(videoData).length === 0) {
+      throw new AppError('Video update data is required', 400);
+    }
+
+    const data = whitelistFields(videoData, VIDEO_FIELDS);
+    if ('date' in data) data.date = toDate(data.date);
+
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.video.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Video not found', 404);
+      const updated = await tx.video.update({ where: { id }, data });
+      logger.info(`✅ Video updated successfully: ${id}`);
+      return updated;
+    });
+  } catch (error) {
+    logger.error('❌ Error updating video:', error);
+    throw new AppError(
+      error.message || 'Error updating video',
+      error.statusCode || 500
+    );
+  }
+}
+
+async function deleteVideo(tenantId, id) {
+  try {
+    if (!id) {
+      throw new AppError('Video ID is required', 400);
+    }
+
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.video.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Video not found', 404);
+      const deleted = await tx.video.delete({ where: { id } });
+      logger.info(`✅ Video deleted successfully: ${id}`);
+      return deleted;
+    });
+  } catch (error) {
+    logger.error('❌ Error deleting video:', error);
+    throw new AppError(
+      error.message || 'Error deleting video',
+      error.statusCode || 500
+    );
+  }
+}
+
+async function getMediaImages(tenantId) {
+  try {
+    return await withTenant(tenantId, async tx => {
+      return await tx.mediaImage.findMany({
+        where: { tenantId },
+        orderBy: { createdAt: 'desc' },
+      });
+    });
   } catch (error) {
     logger.error('❌ Error fetching media images:', error);
     throw new AppError(
@@ -138,61 +122,34 @@ async function getMediaImages() {
   }
 }
 
-/**
- * Remove a media image by ID
- */
-async function removeMediaImage(id) {
-  try {
-    if (!id) {
-      throw new AppError('Image ID is required', 400);
-    }
-
-    const deletedImage = await MediaImage.findOneAndDelete({ _id: id });
-
-    if (!deletedImage) {
-      throw new AppError('Image not found', 404);
-    }
-
-    logger.info(`✅ Media image deleted successfully: ${id}`);
-    return deletedImage;
-  } catch (error) {
-    logger.error('❌ Error deleting media image:', error);
-    throw new AppError(
-      error.message || 'Error deleting media image',
-      error.statusCode || 500
-    );
-  }
-}
-
-/**
- * Add media image(s)
- */
-async function addMediaImage(imageData) {
+async function addMediaImage(tenantId, imageData) {
   try {
     if (!imageData) {
       throw new AppError('Image data is required', 400);
     }
 
-    // Check if the request body is an array or single object
-    if (Array.isArray(imageData)) {
-      // Multiple images
-      if (imageData.length === 0) {
-        throw new AppError('At least one image is required', 400);
+    // Handle both single image and array of images
+    const images = Array.isArray(imageData) ? imageData : [imageData];
+    const processedImages = images.map(img => {
+      const data = whitelistFields(img, MEDIA_IMAGE_FIELDS);
+      return { ...data, tenantId };
+    });
+
+    return await withTenant(tenantId, async tx => {
+      if (processedImages.length === 1) {
+        const newImage = await tx.mediaImage.create({
+          data: processedImages[0],
+        });
+        logger.info('✅ Media image added successfully');
+        return newImage;
+      } else {
+        const newImages = await tx.mediaImage.createMany({
+          data: processedImages,
+        });
+        logger.info(`✅ ${newImages.count} media images added successfully`);
+        return newImages;
       }
-
-      const mediaImages = imageData.map(imageData => new MediaImage(imageData));
-      const savedImages = await MediaImage.insertMany(mediaImages);
-
-      logger.info(`✅ ${savedImages.length} media images added successfully`);
-      return savedImages;
-    } else {
-      // Single image
-      const image = new MediaImage(imageData);
-      const savedImage = await image.save();
-
-      logger.info('✅ Media image added successfully');
-      return savedImage;
-    }
+    });
   } catch (error) {
     logger.error('❌ Error adding media image:', error);
     throw new AppError(
@@ -202,12 +159,34 @@ async function addMediaImage(imageData) {
   }
 }
 
+async function removeMediaImage(tenantId, id) {
+  try {
+    if (!id) {
+      throw new AppError('Image ID is required', 400);
+    }
+
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.mediaImage.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Image not found', 404);
+      const deleted = await tx.mediaImage.delete({ where: { id } });
+      logger.info(`✅ Media image deleted successfully: ${id}`);
+      return deleted;
+    });
+  } catch (error) {
+    logger.error('❌ Error removing media image:', error);
+    throw new AppError(
+      error.message || 'Error removing media image',
+      error.statusCode || 500
+    );
+  }
+}
+
 module.exports = {
+  addVideo,
+  getVideos,
   updateVideo,
   deleteVideo,
-  getVideos,
-  addVideo,
   getMediaImages,
-  removeMediaImage,
   addMediaImage,
+  removeMediaImage,
 };

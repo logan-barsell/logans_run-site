@@ -11,7 +11,7 @@ const DeletePlayer = ({ player }) => {
 
   const onDelete = async () => {
     try {
-      await deletePlayer(player._id);
+      await deletePlayer(player.id);
       dispatch(fetchPlayers());
       showSuccess('Music player deleted successfully!');
     } catch (err) {
@@ -31,8 +31,8 @@ const DeletePlayer = ({ player }) => {
         </>
       }
       modalProps={{
-        id: `del_player_${player._id}`,
-        label: `del_player_label_${player._id}`,
+        id: `del_player_${player.id}`,
+        label: `del_player_label_${player.id}`,
       }}
       buttonText='Remove'
       confirmText={`Remove ${player.title} from music?`}

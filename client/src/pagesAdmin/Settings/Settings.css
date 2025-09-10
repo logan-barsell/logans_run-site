@@ -266,11 +266,7 @@ nav,
 }
 
 /* Ensure secondary color variable is available */
-:root {
-  --secondary-rgb: 240, 128, 128;
-}
+/* Removed hardcoded --secondary-rgb; now derived dynamically via ThemeContext in App.css root */
 
 /* Update secondary color when theme changes */
-[data-theme] {
-  --secondary-rgb: 240, 128, 128;
-}
+/* Removed redundant [data-theme] override; relies on CSS custom properties set in JS */

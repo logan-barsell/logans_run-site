@@ -11,20 +11,14 @@
     "build": "npm run build --prefix client",
     "install-client": "npm install --prefix client",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
-    "generate-secret": "node scripts/generateJWTSecret.js",
-    "migrate-theme": "node migrations/addThemeFields.js",
-    "migrate-background": "node migrations/updateBackgroundColor.js",
-    "migrate-social-icons": "node migrations/addSocialMediaIconStyle.js",
-    "migrate-new-themes": "node migrations/addNewBackgroundThemes.js",
-    "migrate-brown": "node migrations/addBrownTheme.js",
-    "migrate-fix-fonts": "node migrations/fixSecondaryFont.js",
-    "migrate-greeting-intro": "node migrations/migrationRunner.js"
+    "generate-secret": "node scripts/generateJWTSecret.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-ses": "^3.873.0",
+    "@prisma/client": "^6.15.0",
     "@stripe/react-stripe-js": "^1.10.0",
     "@stripe/stripe-js": "^1.35.0",
     "axios": "^1.11.0",
@@ -42,7 +36,6 @@
     "firebase-admin": "^13.4.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^6.4.6",
     "morgan": "^1.10.1",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.19",
@@ -50,5 +43,8 @@
     "stripe": "^10.2.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.15.0"
   }
 }

@@ -44,7 +44,7 @@ const EditFeaturedVideo = ({ video, fetchVideos }) => {
         payload.releaseDate = new Date(payload.releaseDate);
       }
 
-      const id = video._id || video.id;
+      const id = video.id;
       await updateFeaturedVideo(id, payload);
       showSuccess('Featured video updated successfully');
       fetchVideos();

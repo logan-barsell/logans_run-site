@@ -1,5 +1,4 @@
 const MediaService = require('../services/mediaService');
-const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
 /**
@@ -7,7 +6,11 @@ const logger = require('../utils/logger');
  */
 async function updateVideo(req, res, next) {
   try {
-    const result = await MediaService.updateVideo(req.body);
+    const result = await MediaService.updateVideo(
+      req.tenantId,
+      req.body.id,
+      req.body
+    );
     res.status(200).json({
       success: true,
       data: result,
@@ -23,7 +26,7 @@ async function updateVideo(req, res, next) {
  */
 async function deleteVideo(req, res, next) {
   try {
-    const result = await MediaService.deleteVideo(req.params.id);
+    await MediaService.deleteVideo(req.tenantId, req.params.id);
     res.status(200).json({
       success: true,
       message: 'Video deleted successfully',
@@ -40,7 +43,7 @@ async function deleteVideo(req, res, next) {
 async function getVideos(req, res, next) {
   try {
     const qCategory = req.query.category;
-    const videos = await MediaService.getVideos(qCategory);
+    const videos = await MediaService.getVideos(req.tenantId, qCategory);
     res.status(200).json({
       success: true,
       data: videos,
@@ -56,7 +59,7 @@ async function getVideos(req, res, next) {
  */
 async function addVideo(req, res, next) {
   try {
-    const result = await MediaService.addVideo(req.body);
+    const result = await MediaService.addVideo(req.tenantId, req.body);
     res.status(201).json({
       success: true,
       data: result,
@@ -72,7 +75,7 @@ async function addVideo(req, res, next) {
  */
 async function getMediaImages(req, res, next) {
   try {
-    const images = await MediaService.getMediaImages();
+    const images = await MediaService.getMediaImages(req.tenantId);
     res.status(200).json({
       success: true,
       data: images,
@@ -88,7 +91,7 @@ async function getMediaImages(req, res, next) {
  */
 async function removeMediaImage(req, res, next) {
   try {
-    const result = await MediaService.removeMediaImage(req.params.id);
+    await MediaService.removeMediaImage(req.tenantId, req.params.id);
     res.status(200).json({
       success: true,
       message: 'Image deleted successfully',
@@ -104,7 +107,7 @@ async function removeMediaImage(req, res, next) {
  */
 async function addMediaImage(req, res, next) {
   try {
-    const result = await MediaService.addMediaImage(req.body);
+    const result = await MediaService.addMediaImage(req.tenantId, req.body);
     res.status(201).json({
       success: true,
       data: result,

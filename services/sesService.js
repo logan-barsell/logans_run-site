@@ -1,4 +1,4 @@
-const NewsletterSubscriber = require('../models/NewsletterSubscriber');
+const { prisma } = require('../prisma');
 const logger = require('../utils/logger');
 
 /**
@@ -45,15 +45,15 @@ async function handleBounce(bounceData) {
 
       // For hard bounces, immediately deactivate subscriber
       if (bounceType === 'Permanent') {
-        await NewsletterSubscriber.updateOne(
-          { email: email.toLowerCase() },
-          {
+        await prisma.newsletterSubscriber.updateMany({
+          where: { email: email.toLowerCase() },
+          data: {
             isActive: false,
             bouncedAt: new Date(),
             bounceType: bounceSubType,
             bounceReason: recipient.diagnosticCode || 'Permanent bounce',
-          }
-        );
+          },
+        });
         logger.info(`📧 Hard bounce: deactivated ${email} (${bounceSubType})`);
       }
       // For soft bounces, you might want to implement retry logic
@@ -87,15 +87,15 @@ async function handleComplaint(complaintData) {
       const email = recipient.emailAddress;
 
       // Immediately deactivate subscriber on complaint (CAN-SPAM requirement)
-      await NewsletterSubscriber.updateOne(
-        { email: email.toLowerCase() },
-        {
+      await prisma.newsletterSubscriber.updateMany({
+        where: { email: email.toLowerCase() },
+        data: {
           isActive: false,
           unsubscribedAt: new Date(),
           unsubscribeReason: 'complaint',
           complaintType: recipient.complaintFeedbackType || 'abuse',
-        }
-      );
+        },
+      });
 
       logger.info(`📧 Complaint processed: deactivated ${email}`);
     } catch (error) {

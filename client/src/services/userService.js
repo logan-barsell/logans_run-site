@@ -32,17 +32,3 @@ export const changePassword = async (currentPassword, newPassword) => {
     throw errorData;
   }
 };
-
-// Initialize default user
-export const initializeDefaultUser = async () => {
-  try {
-    const response = await api.post('/auth/initialize');
-    return response.data.data; // Extract data from { success: true, data: [...] }
-  } catch (error) {
-    const errorData = handleServiceError(error, {
-      operation: 'initializeDefaultUser',
-      customMessage: 'Failed to initialize user account. Please try again.',
-    });
-    throw errorData;
-  }
-};

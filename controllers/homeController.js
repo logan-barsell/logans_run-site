@@ -1,5 +1,4 @@
 const HomeService = require('../services/homeService');
-const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
 /**
@@ -7,7 +6,7 @@ const logger = require('../utils/logger');
  */
 async function getHomeImages(req, res, next) {
   try {
-    const images = await HomeService.getHomeImages();
+    const images = await HomeService.getHomeImages(req.tenantId);
     res.status(200).json({
       success: true,
       data: images,
@@ -23,7 +22,7 @@ async function getHomeImages(req, res, next) {
  */
 async function removeImage(req, res, next) {
   try {
-    const result = await HomeService.removeImage(req.params.id);
+    await HomeService.removeImage(req.tenantId, req.params.id);
     res.status(200).json({
       success: true,
       message: 'Image deleted successfully',
@@ -39,7 +38,7 @@ async function removeImage(req, res, next) {
  */
 async function addHomeImage(req, res, next) {
   try {
-    const result = await HomeService.addHomeImage(req.body);
+    const result = await HomeService.addHomeImage(req.tenantId, req.body);
     res.status(201).json({
       success: true,
       data: result,
@@ -55,7 +54,7 @@ async function addHomeImage(req, res, next) {
  */
 async function addShow(req, res, next) {
   try {
-    const result = await HomeService.addShow(req.body);
+    const result = await HomeService.addShow(req.tenantId, req.body);
     res.status(201).json({
       success: true,
       data: result,
@@ -71,7 +70,7 @@ async function addShow(req, res, next) {
  */
 async function getShows(req, res, next) {
   try {
-    const shows = await HomeService.getShows();
+    const shows = await HomeService.getShows(req.tenantId);
     res.status(200).json({
       success: true,
       data: shows,
@@ -87,7 +86,11 @@ async function getShows(req, res, next) {
  */
 async function updateShow(req, res, next) {
   try {
-    const result = await HomeService.updateShow(req.params.id, req.body);
+    const result = await HomeService.updateShow(
+      req.tenantId,
+      req.params.id,
+      req.body
+    );
     res.status(200).json({
       success: true,
       data: result,
@@ -103,7 +106,7 @@ async function updateShow(req, res, next) {
  */
 async function deleteShow(req, res, next) {
   try {
-    const result = await HomeService.deleteShow(req.params.id);
+    await HomeService.deleteShow(req.tenantId, req.params.id);
     res.status(200).json({
       success: true,
       message: 'Show deleted successfully',

@@ -19,17 +19,17 @@ const {
 } = require('../utils/dates');
 
 const login = async options => {
-  const { email, password, ip, userAgent } = options;
+  const { tenantId, email, password, ip, userAgent } = options;
 
-  const user = await UserService.findUserByEmail(email);
+  const user = await UserService.findUserByEmail(tenantId, email);
 
   if (!user) {
     throw new AppError('Invalid email or password', 401);
   }
 
   // Check if account is locked due to too many failed attempts
-  if (user.isAccountLocked()) {
-    const remainingTime = user.getLockoutTimeRemaining();
+  if (UserService.checkAccountLocked(user)) {
+    const remainingTime = UserService.getLockoutTimeRemaining(user);
     throw new AppError(
       `Account is temporarily locked due to too many failed login attempts. Try again in ${remainingTime} minutes.`,
       423 // Locked status code
@@ -43,25 +43,25 @@ const login = async options => {
 
   if (!isAuthenticated) {
     // Handle failed login attempt
-    await user.handleFailedLogin();
+    await UserService.handleFailedLogin(tenantId, user.id);
     throw new AppError('Invalid email or password', 401);
   }
 
   // Handle successful login (reset failed attempts)
-  await user.handleSuccessfulLogin();
+  await UserService.handleSuccessfulLogin(tenantId, user.id);
 
   // Check if 2FA is enabled
   if (user.twoFactorEnabled) {
     // Automatically send 2FA code
-    const theme = await ThemeService.getTheme();
+    const theme = await ThemeService.getTheme(tenantId);
     const bandName = theme.siteTitle || 'Bandsyte';
 
-    await TwoFactorService.sendTwoFactorCode(user._id.toString(), bandName);
+    await TwoFactorService.sendTwoFactorCode(tenantId, user.id, bandName);
 
     // Return user info but require 2FA verification
     return {
       requiresTwoFactor: true,
-      userId: user._id.toString(),
+      userId: user.id,
       user: formatUser(user),
       codeSent: true,
     };
@@ -70,7 +70,7 @@ const login = async options => {
   // Proceed with normal login if 2FA is not enabled
   let session;
   try {
-    session = await SessionService.createSession(user._id.toString(), {
+    session = await SessionService.createSession(tenantId, user.id, {
       ipAddress: ip,
       userAgent,
       expiresAt: addDays(7), // Expires in 7 days
@@ -80,13 +80,13 @@ const login = async options => {
   }
 
   const accessToken = TokenService.generateAccessToken({
-    id: user._id.toString(),
+    id: user.id,
     uuid: user.uuid,
     sessionId: session.sessionId,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
-      id: user._id.toString(),
+      id: user.id,
       uuid: user.uuid,
       sessionId: session.sessionId,
     },
@@ -101,9 +101,9 @@ const login = async options => {
 };
 
 const completeTwoFactorLogin = async options => {
-  const { userId, ip, userAgent } = options;
+  const { tenantId, userId, ip, userAgent } = options;
 
-  const user = await UserService.findUserById(userId);
+  const user = await UserService.findUserById(tenantId, userId);
 
   if (!user) {
     throw new AppError('User not found', 404);
@@ -118,7 +118,7 @@ const completeTwoFactorLogin = async options => {
 
   let session;
   try {
-    session = await SessionService.createSession(user._id.toString(), {
+    session = await SessionService.createSession(tenantId, user.id, {
       ipAddress: ip,
       userAgent,
       expiresAt: addDays(7), // Expires in 7 days
@@ -128,13 +128,13 @@ const completeTwoFactorLogin = async options => {
   }
 
   const accessToken = TokenService.generateAccessToken({
-    id: user._id.toString(),
+    id: user.id,
     uuid: user.uuid,
     sessionId: session.sessionId,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
-      id: user._id.toString(),
+      id: user.id,
       uuid: user.uuid,
       sessionId: session.sessionId,
     },
@@ -149,15 +149,22 @@ const completeTwoFactorLogin = async options => {
 };
 
 const signup = async options => {
-  const { email, password, userType = 'USER', ip, userAgent } = options;
+  const {
+    tenantId,
+    email,
+    password,
+    userType = 'USER',
+    ip,
+    userAgent,
+  } = options;
 
-  const existingUser = await UserService.findUserByEmail(email);
+  const existingUser = await UserService.findUserByEmail(tenantId, email);
 
   if (existingUser) {
     throw new AppError('Email is already in use', 400);
   }
 
-  const newUser = await UserService.createUser({
+  const newUser = await UserService.createUser(tenantId, {
     adminEmail: email,
     password,
     role: 'USER',
@@ -170,25 +177,26 @@ const signup = async options => {
 
   // send email for account verification
   await sendEmailVerificationWithToken(
-    newUser._id.toString(),
+    tenantId,
+    newUser.id,
     newUser.adminEmail
   );
 
-  await SessionService.createSession(newUser._id.toString(), {
+  await SessionService.createSession(tenantId, newUser.id, {
     ipAddress: ip,
     userAgent,
     expiresAt: addDays(7), // Expires in 7 days
   });
 
   const accessToken = TokenService.generateAccessToken({
-    id: newUser._id.toString(),
+    id: newUser.id,
     uuid: newUser.uuid,
     role: newUser.role,
     userType: newUser.userType,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
-      id: newUser._id.toString(),
+      id: newUser.id,
       uuid: newUser.uuid,
       role: newUser.role,
       userType: newUser.userType,
@@ -204,10 +212,16 @@ const signup = async options => {
   };
 };
 
-// Send Verification Email
-async function sendEmailVerificationWithToken(userId, email, role = 'USER') {
+// Send Verification Email (tenant-aware)
+async function sendEmailVerificationWithToken(
+  tenantId,
+  userId,
+  email,
+  role = 'USER'
+) {
   const expiresAt = addDays(3); // 3 days from now
   const verificationToken = TokenService.generateSignedToken({
+    tenantId,
     userId,
     expiresAt,
   });
@@ -217,14 +231,14 @@ async function sendEmailVerificationWithToken(userId, email, role = 'USER') {
   // Store token in Redis with user ID
   await redisClient.set(
     `email-verify:${userId}`,
-    JSON.stringify({ hashedToken, email }),
+    JSON.stringify({ hashedToken, email, tenantId }),
     {
       EX: TOKEN_EXPIRY,
     }
   );
 
   // Get the actual band name from theme
-  const theme = await ThemeService.getTheme();
+  const theme = await ThemeService.getTheme(tenantId);
   const bandName = theme.siteTitle || config.appName;
 
   // Send verification email
@@ -249,7 +263,11 @@ async function verifyEmail(token) {
   if (!storedData)
     throw new AppError('Invalid or expired email verification link', 400);
 
-  const { hashedToken, email } = JSON.parse(storedData);
+  const {
+    hashedToken,
+    email,
+    tenantId: storedTenantId,
+  } = JSON.parse(storedData);
 
   if (!hashedToken || hashedToken !== hashValue(token)) {
     logger.warn(`⚠️ Email verification failed due to token mismatch`);
@@ -259,18 +277,20 @@ async function verifyEmail(token) {
   // Delete the token from Redis
   await redisClient.del(`email-verify:${payload.userId}`);
 
+  // Determine tenantId (prefer token, fallback to stored data)
+  const tenantId = payload.tenantId || storedTenantId;
+  if (!tenantId) {
+    throw new AppError('Tenant not found for verification', 400);
+  }
+
   // Verify User and update email if needed
   const updates = { verified: true, adminEmail: email };
-  return await UserService.updateUserWithIdentifier(
-    payload.userId,
-    updates,
-    true
-  );
+  return await UserService.updateUser(tenantId, payload.userId, updates);
 }
 
-// Request Password Reset
-async function requestPasswordReset(email) {
-  const user = await UserService.findUserByEmail(email);
+// Request Password Reset (tenant-aware)
+async function requestPasswordReset(tenantId, email) {
+  const user = await UserService.getUserByEmail(tenantId, email);
   if (!user) {
     logger.warn(
       `⚠️ Password reset requested for non-existent email: ${hashValue(
@@ -284,19 +304,24 @@ async function requestPasswordReset(email) {
   // Generate a secure reset token
   const expiresAt = addHours(1); // 1 hour from now
   const resetToken = TokenService.generateSignedToken({
-    userId: user._id.toString(),
+    tenantId,
+    userId: user.id,
     expiresAt,
   });
   const hashedToken = hashValue(resetToken);
 
   const RESET_TOKEN_EXPIRY = hoursToSeconds(1); // 1 hour
   // Store token in Redis with user ID
-  await redisClient.set(`password-reset:${user._id}`, hashedToken, {
-    EX: RESET_TOKEN_EXPIRY,
-  });
+  await redisClient.set(
+    `password-reset:${user.id}`,
+    JSON.stringify({ hashedToken, tenantId }),
+    {
+      EX: RESET_TOKEN_EXPIRY,
+    }
+  );
 
   // Get the actual band name from theme
-  const theme = await ThemeService.getTheme();
+  const theme = await ThemeService.getTheme(tenantId);
   const bandName = theme.siteTitle || config.appName;
 
   // Send reset email
@@ -306,10 +331,10 @@ async function requestPasswordReset(email) {
     resetUrl,
     bandName
   );
-  logger.info(`📧 Password reset email sent to user ${user._id}`);
+  logger.info(`📧 Password reset email sent to user ${user.id}`);
 }
 
-async function resetPassword(token, newPassword) {
+async function resetPassword(tenantId, token, newPassword) {
   const payload = TokenService.verifySignedToken(token);
 
   if (!payload) {
@@ -317,21 +342,31 @@ async function resetPassword(token, newPassword) {
     throw new AppError('Invalid or expired reset token', 400);
   }
 
-  // Retrieve stored hash & user ID
-  const hashedToken = await redisClient.get(`password-reset:${payload.userId}`);
+  // Retrieve stored hash & tenant
+  const stored = await redisClient.get(`password-reset:${payload.userId}`);
+  if (!stored) {
+    logger.warn(`⚠️ Password reset attempt failed due to token missing`);
+    throw new AppError('Invalid reset token', 400);
+  }
+  const { hashedToken, tenantId: storedTenantId } = JSON.parse(stored);
   if (!hashedToken || hashedToken !== hashValue(token)) {
     logger.warn(`⚠️ Password reset attempt failed due to token mismatch`);
     throw new AppError('Invalid reset token', 400);
   }
 
   // Get user details for email notification
-  const user = await UserService.findUserById(payload.userId);
+  const resolvedTenantId = payload.tenantId || storedTenantId || tenantId;
+  if (!resolvedTenantId) {
+    throw new AppError('Tenant not found for password reset', 400);
+  }
+  const user = await UserService.findUserById(resolvedTenantId, payload.userId);
   if (!user) {
     throw new AppError('User not found', 404);
   }
 
   // Update user with the new password
-  const { uuid } = await UserService.saveNewPassword(
+  await UserService.saveNewPassword(
+    resolvedTenantId,
     payload.userId,
     newPassword
   );
@@ -340,7 +375,7 @@ async function resetPassword(token, newPassword) {
   await redisClient.del(`password-reset:${payload.userId}`);
 
   // Get the actual band name from theme
-  const theme = await ThemeService.getTheme();
+  const theme = await ThemeService.getTheme(resolvedTenantId);
   const bandName = theme.siteTitle || config.appName;
 
   // Send success notification email
@@ -349,7 +384,7 @@ async function resetPassword(token, newPassword) {
     bandName
   );
 
-  logger.info(`🔑 Password successfully reset for user ${uuid}`);
+  logger.info(`🔑 Password successfully reset for user ${payload.userId}`);
 }
 
 const AuthService = {

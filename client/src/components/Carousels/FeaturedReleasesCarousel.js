@@ -14,7 +14,7 @@ function FeaturedReleasesCarousel({ releases }) {
       <div className='carousel-inner'>
         {releases.map((release, idx) => (
           <div
-            key={release._id}
+            key={release.id}
             className={`carousel-item${idx === 0 ? ' active' : ''}`}
           >
             <div className='featured-release-slide d-flex flex-column flex-md-row align-items-center'>

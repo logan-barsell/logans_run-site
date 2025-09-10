@@ -10,7 +10,7 @@ const { setAuthCookies } = require('../utils/cookie-utils');
 const { getClientIp } = require('../utils/request-utils');
 const BandsyteEmailService = require('./bandsyteEmailService');
 const ThemeService = require('./themeService');
-const Session = require('../models/Session');
+const { withTenant } = require('../db/withTenant');
 
 const ACCESS_TOKEN_SECRET =
   process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET;
@@ -68,7 +68,7 @@ function verifyAccessToken(token) {
 }
 
 // Verify Refresh Token & Ensure It Matches Stored Token
-async function verifyRefreshToken(token, ip, userAgent) {
+async function verifyRefreshToken(token, ip, userAgent, tenantId) {
   const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
   const storedData = await redisClient.get(`refreshToken:${decoded.sessionId}`);
 
@@ -88,9 +88,9 @@ async function verifyRefreshToken(token, ip, userAgent) {
 
     // Send security alert email to user about suspicious activity
     try {
-      const user = await UserService.findUserById(userId);
+      const user = await UserService.findUserById(tenantId, userId);
       if (user && user.adminEmail) {
-        const theme = await ThemeService.getTheme();
+        const theme = await ThemeService.getTheme(tenantId);
         const bandName = theme.siteTitle || 'Bandsyte';
 
         await BandsyteEmailService.sendSecurityAlertWithBranding(
@@ -111,7 +111,7 @@ async function verifyRefreshToken(token, ip, userAgent) {
       // Don't fail the security check if email fails
     }
 
-    await UserService.endAllUserSessions(userId, true); // Revoke all tokens and end sessions
+    await UserService.endAllUserSessions(tenantId, userId); // Revoke all tokens and end sessions
     throw new AppError('Suspicious activity detected - Token reuse', 403);
   }
 
@@ -122,9 +122,9 @@ async function verifyRefreshToken(token, ip, userAgent) {
 
     // Send security alert email to user about device change
     try {
-      const user = await UserService.findUserById(decoded.id);
+      const user = await UserService.findUserById(tenantId, decoded.id);
       if (user && user.adminEmail) {
-        const theme = await ThemeService.getTheme();
+        const theme = await ThemeService.getTheme(tenantId);
         const bandName = theme.siteTitle || 'Bandsyte';
 
         await BandsyteEmailService.sendSecurityAlertWithBranding(
@@ -147,7 +147,7 @@ async function verifyRefreshToken(token, ip, userAgent) {
       // Don't fail the security check if email fails
     }
 
-    await UserService.endAllUserSessions(decoded.id, true); // Revoke all tokens and end sessions
+    await UserService.endAllUserSessions(tenantId, decoded.id); // Revoke all tokens and end sessions
     throw new AppError(
       'Suspicious activity detected - Token used from a different device',
       403
@@ -168,10 +168,15 @@ async function refreshAccessToken(req, res) {
     throw new AppError('Refresh token required', 401);
   }
 
-  const decoded = await verifyRefreshToken(oldRefreshToken, ip, userAgent);
+  const decoded = await verifyRefreshToken(
+    oldRefreshToken,
+    ip,
+    userAgent,
+    req.tenantId
+  );
 
   // Update existing session instead of creating new one
-  await SessionService.updateSession(decoded.sessionId, {
+  await SessionService.updateSession(req.tenantId, decoded.sessionId, {
     updatedAt: new Date(),
   });
 
@@ -192,14 +197,16 @@ async function revokeSessionRefreshToken(sessionId) {
 }
 
 // Revoke All Refresh Tokens for a User (for "End All Sessions")
-async function revokeRefreshTokens(userId) {
-  // Get all active sessions for the user
-  const sessions = await Session.find({ userId, isActive: true });
-
-  // Revoke refresh tokens for each session
-  for (const session of sessions) {
-    await redisClient.del(`refreshToken:${session.sessionId}`);
-  }
+async function revokeRefreshTokens(tenantId, userId) {
+  await withTenant(tenantId, async tx => {
+    const sessions = await tx.session.findMany({
+      where: { tenantId, userId, isActive: true },
+      select: { sessionId: true },
+    });
+    for (const { sessionId } of sessions) {
+      await redisClient.del(`refreshToken:${sessionId}`);
+    }
+  });
 }
 
 function generateSignedToken(payload) {

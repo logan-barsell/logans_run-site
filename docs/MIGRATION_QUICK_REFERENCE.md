@@ -2,79 +2,74 @@
 
 ## Quick Commands
 
-### Create New Migration
+### Create & Apply Migration (dev)
 
 ```bash
-node scripts/createMigration.js "Description" version_number
+npx prisma migrate dev --name <change-name>
 ```
 
-### Check Applied Migrations
+### Apply Pending Migrations (staging/prod)
 
 ```bash
-# In MongoDB shell
-db.migrations.find().sort({version: 1})
+npx prisma migrate deploy
+```
+
+### Inspect Data
+
+```bash
+npx prisma studio
 ```
 
 ## Common Patterns
 
-### Add Field with Default
+### Add Column
 
-```javascript
-run: async () => {
-  const docs = await Model.find({ newField: { $exists: false } });
-  for (const doc of docs) {
-    doc.newField = 'default';
-    await doc.save();
-  }
-};
+```prisma
+model Theme {
+  id        String @id @default(uuid())
+  tenantId  String
+  // ...
+  newField  String? @db.Text
+}
 ```
 
-### Update Existing Data
+### Add Composite Unique
 
-```javascript
-run: async () => {
-  const docs = await Model.find({ oldField: { $exists: true } });
-  for (const doc of docs) {
-    doc.newField = doc.oldField;
-    await doc.save();
-  }
-};
+```prisma
+@@unique([tenantId, email], name: "tenantId_email")
 ```
 
-### Remove Field
+### Add Relation
 
-```javascript
-run: async () => {
-  await Model.updateMany({}, { $unset: { oldField: 1 } });
-};
+```prisma
+userId   String
+user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 ```
 
 ## File Locations
 
-- **Migration Runner**: `migrations/migrationRunner.js`
-- **Schema Validator**: `utils/schemaValidator.js`
-- **Migration Generator**: `scripts/createMigration.js`
+- **Schema**: `prisma/schema.prisma`
+- **Migrations**: `prisma/migrations/`
+- **Prisma Client**: `prisma/index.js`
 - **Full Guide**: `docs/MIGRATION_GUIDE.md`
 
 ## Workflow
 
-1. **Update Model** → Add field to schema
-2. **Create Migration** → `node scripts/createMigration.js "Description" version`
-3. **Edit Migration** → Add logic to migration file
-4. **Register Migration** → Add to migrationRunner.js
-5. **Deploy** → Migration runs automatically
+1. Update model(s) in `schema.prisma`
+2. Create migration: `npx prisma migrate dev --name <name>`
+3. Verify locally; commit migration files
+4. Deploy; run `npx prisma migrate deploy` on target env
 
 ## Troubleshooting
 
-- **Not Running**: Check server logs, verify registration
-- **Failing**: Test locally, check database permissions
-- **Schema Issues**: Check validation logs, verify model schema
+- **Client missing**: `npx prisma generate`
+- **Migration failed**: Inspect SQL in `prisma/migrations/`, verify `DATABASE_URL`
+- **Unique constraint**: Confirm indexes in schema
 
 ## Best Practices
 
 - ✅ Keep migrations small and focused
 - ✅ Test locally before deploying
 - ✅ Use descriptive names
-- ✅ Increment version numbers sequentially
-- ❌ Never reuse version numbers
-- ❌ Don't skip testing
+- ✅ Prefer declarative schema; avoid manual SQL when possible
+- ❌ Don’t edit generated SQL after commit

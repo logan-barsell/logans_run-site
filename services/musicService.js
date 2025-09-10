@@ -1,61 +1,29 @@
-const SpotifyPlayer = require('../models/SpotifyPlayer');
+const { withTenant } = require('../db/withTenant');
 const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const {
+  validateSpotifyUrl,
+  extractMusicType,
+} = require('../utils/spotifyValidation');
+const { whitelistFields } = require('../utils/fieldWhitelist');
 
-// Spotify URL validation patterns
-const SPOTIFY_PATTERNS = {
-  track: /^https?:\/\/(?:open\.)?spotify\.com\/track\/([a-zA-Z0-9]{22})/,
-  album: /^https?:\/\/(?:open\.)?spotify\.com\/album\/([a-zA-Z0-9]{22})/,
-  playlist: /^https?:\/\/(?:open\.)?spotify\.com\/playlist\/([a-zA-Z0-9]{22})/,
-};
-
-const SUPPORTED_TYPES = ['track', 'album', 'playlist'];
-
-/**
- * Validate Spotify URL
- */
-function validateSpotifyUrl(url) {
-  if (!url || typeof url !== 'string') {
-    throw new AppError('URL is required and must be a string', 400);
-  }
-
-  const trimmedUrl = url.trim();
-  if (!trimmedUrl) {
-    throw new AppError('URL cannot be empty', 400);
-  }
-
-  try {
-    new URL(trimmedUrl);
-  } catch (error) {
-    throw new AppError('Invalid URL format', 400);
-  }
-
-  for (const [type, pattern] of Object.entries(SPOTIFY_PATTERNS)) {
-    const match = trimmedUrl.match(pattern);
-    if (match) {
-      if (!SUPPORTED_TYPES.includes(type)) {
-        throw new AppError(
-          `${
-            type.charAt(0).toUpperCase() + type.slice(1)
-          } URLs are not supported for embedding`,
-          400
-        );
-      }
-      return { isValid: true, type, id: match[1] };
-    }
-  }
-
-  throw new AppError(
-    'Not a valid Spotify URL. Must be a track, album, or playlist URL',
-    400
-  );
-}
+// Spotify player allowed fields
+const SPOTIFY_PLAYER_FIELDS = [
+  'title',
+  'date',
+  'bgColor',
+  'spotifyLink',
+  'embedLink',
+  'appleMusicLink',
+  'youtubeLink',
+  'soundcloudLink',
+];
 
 /**
  * Add a new Spotify player
  */
-async function addPlayer(playerData) {
+async function addPlayer(tenantId, playerData) {
   try {
     if (!playerData || Object.keys(playerData).length === 0) {
       throw new AppError('Player data is required', 400);
@@ -66,37 +34,28 @@ async function addPlayer(playerData) {
     // Validate Spotify URL
     validateSpotifyUrl(spotifyLink);
 
-    const newPlayer = new SpotifyPlayer(playerData);
-    await newPlayer.save();
+    // Whitelist allowed fields
+    const filteredData = whitelistFields(playerData, SPOTIFY_PLAYER_FIELDS);
+
+    const newPlayer = await withTenant(tenantId, async tx => {
+      return await tx.spotifyPlayer.create({
+        data: {
+          ...filteredData,
+          tenantId,
+        },
+      });
+    });
 
     logger.info('✅ New Spotify player added successfully');
 
     // Send newsletter notification for new music
     try {
-      // Extract music type from Spotify URL for better description
-      let musicType = 'music';
-      if (newPlayer.spotifyLink) {
-        const spotifyPatterns = {
-          track:
-            /^https?:\/\/(?:open\.)?spotify\.com\/track\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
-          album:
-            /^https?:\/\/(?:open\.)?spotify\.com\/album\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
-          playlist:
-            /^https?:\/\/(?:open\.)?spotify\.com\/playlist\/([a-zA-Z0-9]{22})(?:\?.*)?$/,
-        };
+      const musicType = extractMusicType(newPlayer.spotifyLink);
 
-        for (const [type, pattern] of Object.entries(spotifyPatterns)) {
-          if (pattern.test(newPlayer.spotifyLink)) {
-            musicType = type;
-            break;
-          }
-        }
-      }
-
-      await NewsletterService.sendContentNotification('music', {
+      await NewsletterService.sendContentNotification(tenantId, 'music', {
         title: newPlayer.title || 'New Music',
-        type: musicType, // Pass the extracted type
-        releaseDate: newPlayer.date, // Use the correct field name
+        type: musicType,
+        releaseDate: newPlayer.date,
         spotifyLink: newPlayer.spotifyLink,
       });
     } catch (notificationError) {
@@ -120,30 +79,41 @@ async function addPlayer(playerData) {
 /**
  * Update a Spotify player
  */
-async function updatePlayer(playerData) {
+async function updatePlayer(tenantId, playerData) {
   try {
-    if (!playerData || !playerData._id) {
+    if (!playerData || !playerData.id) {
       throw new AppError('Player data and ID are required', 400);
     }
 
-    const { spotifyLink } = playerData;
+    const { spotifyLink, id } = playerData;
 
     // Validate Spotify URL if it's being updated
     if (spotifyLink) {
       validateSpotifyUrl(spotifyLink);
     }
 
-    const updatedPlayer = await SpotifyPlayer.findByIdAndUpdate(
-      playerData._id,
-      playerData,
-      { new: true, runValidators: true }
-    );
+    // Whitelist allowed fields
+    const filteredData = whitelistFields(playerData, SPOTIFY_PLAYER_FIELDS);
 
-    if (!updatedPlayer) {
-      throw new AppError('Player not found', 404);
-    }
+    const updatedPlayer = await withTenant(tenantId, async tx => {
+      const existing = await tx.spotifyPlayer.findUnique({
+        where: {
+          id,
+          tenantId,
+        },
+      });
+      if (!existing) throw new AppError('Player not found', 404);
 
-    logger.info(`✅ Spotify player updated successfully: ${playerData._id}`);
+      return await tx.spotifyPlayer.update({
+        where: {
+          id,
+          tenantId,
+        },
+        data: filteredData,
+      });
+    });
+
+    logger.info(`✅ Spotify player updated successfully: ${id}`);
     return updatedPlayer;
   } catch (error) {
     logger.error('❌ Error updating Spotify player:', error);
@@ -157,20 +127,30 @@ async function updatePlayer(playerData) {
 /**
  * Delete a Spotify player by ID
  */
-async function deletePlayer(id) {
+async function deletePlayer(tenantId, id) {
   try {
     if (!id) {
       throw new AppError('Player ID is required', 400);
     }
 
-    const deletedPlayer = await SpotifyPlayer.findByIdAndDelete(id);
+    await withTenant(tenantId, async tx => {
+      const existing = await tx.spotifyPlayer.findUnique({
+        where: {
+          id,
+          tenantId,
+        },
+      });
+      if (!existing) throw new AppError('Player not found', 404);
 
-    if (!deletedPlayer) {
-      throw new AppError('Player not found', 404);
-    }
+      await tx.spotifyPlayer.delete({
+        where: {
+          id,
+          tenantId,
+        },
+      });
+    });
 
     logger.info(`✅ Spotify player deleted successfully: ${id}`);
-    return deletedPlayer;
   } catch (error) {
     logger.error('❌ Error deleting Spotify player:', error);
     throw new AppError(
@@ -183,13 +163,20 @@ async function deletePlayer(id) {
 /**
  * Get a Spotify player by ID
  */
-async function getPlayer(id) {
+async function getPlayer(tenantId, id) {
   try {
     if (!id) {
       throw new AppError('Player ID is required', 400);
     }
 
-    const player = await SpotifyPlayer.findById(id);
+    const player = await withTenant(tenantId, async tx => {
+      return await tx.spotifyPlayer.findUnique({
+        where: {
+          id,
+          tenantId,
+        },
+      });
+    });
 
     if (!player) {
       throw new AppError('Player not found', 404);
@@ -208,9 +195,19 @@ async function getPlayer(id) {
 /**
  * Get all Spotify players
  */
-async function getPlayers() {
+async function getPlayers(tenantId) {
   try {
-    const players = await SpotifyPlayer.find().sort({ createdAt: -1 });
+    const players = await withTenant(tenantId, async tx => {
+      return await tx.spotifyPlayer.findMany({
+        where: {
+          tenantId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    });
+
     return players;
   } catch (error) {
     logger.error('❌ Error fetching Spotify players:', error);

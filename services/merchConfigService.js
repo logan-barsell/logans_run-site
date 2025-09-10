@@ -1,67 +1,34 @@
-const MerchConfig = require('../models/MerchConfig');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { withTenant } = require('../db/withTenant');
+const { validateMerchConfig } = require('../utils/merchConfigValidation');
+const { whitelistFields } = require('../utils/fieldWhitelist');
 
-/**
- * Get merch config (public endpoint - only returns valid configs)
- */
-async function getMerchConfig() {
+// Merch config allowed fields
+const MERCH_CONFIG_FIELDS = [
+  'storeType',
+  'shopDomain',
+  'storefrontAccessToken',
+  'collectionId',
+  'paymentLinkIds',
+  'publishableKey',
+  'storefrontUrl',
+];
+
+async function getMerchConfig(tenantId) {
   try {
-    const merchConfig = await MerchConfig.findOne();
-
-    if (!merchConfig) {
-      return null;
-    }
-
-    // Check if the configuration is valid for the selected store type
-    let isValid = false;
-
-    if (merchConfig.storeType === 'shopify') {
-      isValid =
-        merchConfig.shopDomain &&
-        merchConfig.storefrontAccessToken &&
-        merchConfig.collectionId;
-    } else if (merchConfig.storeType === 'stripe') {
-      // For Stripe, we need both publishable key and at least one valid buy button ID
-      const hasValidPublishableKey =
-        merchConfig.publishableKey &&
-        typeof merchConfig.publishableKey === 'string' &&
-        merchConfig.publishableKey.trim() !== '';
-
-      const hasValidBuyButtonIds =
-        merchConfig.paymentLinkIds &&
-        Array.isArray(merchConfig.paymentLinkIds) &&
-        merchConfig.paymentLinkIds.length > 0 &&
-        merchConfig.paymentLinkIds.some(
-          id => id && typeof id === 'string' && id.trim() !== ''
-        );
-
-      isValid = hasValidPublishableKey && hasValidBuyButtonIds;
-    } else if (merchConfig.storeType === 'external') {
-      // External stores can have empty URLs - they just won't be accessible
-      isValid = true;
-    }
-
-    // Only return the config if it's valid
-    if (!isValid && merchConfig.storeType === 'stripe') {
-      logger.warn('Stripe config validation failed:', {
-        hasValidPublishableKey:
-          merchConfig.publishableKey &&
-          typeof merchConfig.publishableKey === 'string' &&
-          merchConfig.publishableKey.trim() !== '',
-        hasValidBuyButtonIds:
-          merchConfig.paymentLinkIds &&
-          Array.isArray(merchConfig.paymentLinkIds) &&
-          merchConfig.paymentLinkIds.length > 0 &&
-          merchConfig.paymentLinkIds.some(
-            id => id && typeof id === 'string' && id.trim() !== ''
-          ),
-        publishableKey: merchConfig.publishableKey,
-        paymentLinkIds: merchConfig.paymentLinkIds,
+    return await withTenant(tenantId, async tx => {
+      const merchConfig = await tx.merchConfig.findUnique({
+        where: { tenantId },
       });
-    }
+      if (!merchConfig) return null;
 
-    return isValid ? merchConfig : null;
+      const { isValid, details } = validateMerchConfig(merchConfig);
+      if (!isValid && merchConfig.storeType === 'stripe') {
+        logger.warn('Stripe config validation failed:', details);
+      }
+      return isValid ? merchConfig : null;
+    });
   } catch (error) {
     logger.error('❌ Error fetching merch config:', error);
     throw new AppError(
@@ -71,48 +38,45 @@ async function getMerchConfig() {
   }
 }
 
-/**
- * Get merch config for admin (returns all configs)
- */
-async function getMerchConfigAdmin() {
+async function getMerchConfigAdmin(tenantId) {
   try {
-    const merchConfig = await MerchConfig.findOne();
-    return merchConfig || null;
+    return await withTenant(tenantId, async tx => {
+      const merchConfig = await tx.merchConfig.findUnique({
+        where: { tenantId },
+      });
+      if (!merchConfig) return null;
+
+      const { isValid, details } = validateMerchConfig(merchConfig);
+      return { ...merchConfig, isValid, details };
+    });
   } catch (error) {
-    logger.error('❌ Error fetching merch config admin:', error);
+    logger.error('❌ Error fetching merch config (admin):', error);
     throw new AppError(
-      error.message || 'Error fetching merch config admin',
+      error.message || 'Error fetching merch config',
       error.statusCode || 500
     );
   }
 }
 
-/**
- * Create or update merch config
- */
-async function updateMerchConfig(configData) {
+async function updateMerchConfig(tenantId, configData) {
   try {
-    if (!configData) {
+    if (!configData || Object.keys(configData).length === 0) {
       throw new AppError('Merch config data is required', 400);
     }
 
-    // Allow store type changes without validation
-    // Users can switch between types freely and save incomplete configurations
+    const data = whitelistFields(configData, MERCH_CONFIG_FIELDS);
 
-    let merchConfig = await MerchConfig.findOne();
-
-    if (merchConfig) {
-      // Update existing config
-      Object.assign(merchConfig, configData);
-      await merchConfig.save();
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.merchConfig.findUnique({ where: { tenantId } });
+      if (!existing)
+        throw new AppError('Merch config does not exist for tenant', 404);
+      const updated = await tx.merchConfig.update({
+        where: { tenantId },
+        data,
+      });
       logger.info('✅ Merch config updated successfully');
-    } else {
-      // Create new config
-      merchConfig = await MerchConfig.create(configData);
-      logger.info('✅ New merch config created successfully');
-    }
-
-    return merchConfig;
+      return updated;
+    });
   } catch (error) {
     logger.error('❌ Error updating merch config:', error);
     throw new AppError(
@@ -122,18 +86,15 @@ async function updateMerchConfig(configData) {
   }
 }
 
-/**
- * Delete merch config
- */
-async function deleteMerchConfig() {
+async function deleteMerchConfig(tenantId) {
   try {
-    const result = await MerchConfig.deleteMany({});
-
-    if (result.deletedCount > 0) {
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.merchConfig.findUnique({ where: { tenantId } });
+      if (!existing) return { deletedCount: 0 };
+      await tx.merchConfig.delete({ where: { tenantId } });
       logger.info('✅ Merch config deleted successfully');
-    }
-
-    return result;
+      return { deletedCount: 1 };
+    });
   } catch (error) {
     logger.error('❌ Error deleting merch config:', error);
     throw new AppError(

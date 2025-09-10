@@ -36,6 +36,22 @@ function addMinutes(minutes) {
 }
 
 /**
+ * Safely convert various inputs to a Date, or null if invalid
+ * @param {Date|number|string|null|undefined} value
+ * @returns {Date|null}
+ */
+function toDate(value) {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  if (typeof value === 'number') return new Date(value);
+  if (typeof value === 'string') {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
+
+/**
  * Converts days to seconds
  * @param {number} days - Number of days
  * @returns {number} Seconds
@@ -57,6 +73,7 @@ module.exports = {
   addDays,
   addHours,
   addMinutes,
+  toDate,
   daysToSeconds,
   hoursToSeconds,
 };

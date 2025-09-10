@@ -20,7 +20,7 @@ const Pictures = ({ fetchMediaImages, images, loading, error }) => {
   const renderMediaImages = (images || []).slice(0, limit).map(image => {
     return (
       <div
-        key={image._id}
+        key={image.id}
         className='img-container'
       >
         <img

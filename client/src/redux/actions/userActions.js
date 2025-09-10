@@ -9,22 +9,7 @@ import {
   DELETE_USER_LOADING,
   DELETE_USER_ERROR,
 } from './types';
-import {
-  initializeDefaultUser,
-  updateUser,
-  changePassword,
-} from '../../services/userService';
-
-// Initialize default user (this is what the service actually does)
-export const initializeUser = () => async dispatch => {
-  dispatch({ type: FETCH_USERS_LOADING });
-  try {
-    const data = await initializeDefaultUser();
-    dispatch({ type: FETCH_USERS, payload: data });
-  } catch (errorData) {
-    dispatch({ type: FETCH_USERS_ERROR, payload: errorData });
-  }
-};
+import { updateUser, changePassword } from '../../services/userService';
 
 // Update user profile (userId parameter ignored as service doesn't use it)
 export const updateUserProfileAction = (userId, userData) => async dispatch => {

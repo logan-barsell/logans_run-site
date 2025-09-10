@@ -1,5 +1,4 @@
 const ShowsSettingsService = require('../services/showsSettingsService');
-const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
 /**
@@ -7,8 +6,8 @@ const logger = require('../utils/logger');
  */
 async function getShowsSettings(req, res, next) {
   try {
-    const settings = await ShowsSettingsService.getShowsSettings();
-    res.json({
+    const settings = await ShowsSettingsService.getShowsSettings(req.tenantId);
+    res.status(200).json({
       success: true,
       data: settings,
     });
@@ -24,8 +23,11 @@ async function getShowsSettings(req, res, next) {
 async function updateShowsSettings(req, res, next) {
   try {
     const update = req.body;
-    const result = await ShowsSettingsService.updateShowsSettings(update);
-    res.json({
+    const result = await ShowsSettingsService.updateShowsSettings(
+      req.tenantId,
+      update
+    );
+    res.status(200).json({
       success: true,
       data: result,
     });

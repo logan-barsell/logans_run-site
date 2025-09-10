@@ -8,7 +8,7 @@ const DeleteMember = ({ member, fetchMembers }) => {
   const { showError, showSuccess } = useAlert();
 
   const onDelete = async item => {
-    const id = item._id || item.id;
+    const id = item.id;
     try {
       // Try to delete image, but don't fail the entire operation if it fails
       if (member && member.bioPic) {

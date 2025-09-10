@@ -7,7 +7,6 @@ module.exports = {
   ...appConfig,
 
   // Modular configurations
-  connectDatabase: require('./database'),
   corsMiddleware: require('./cors'),
   helmetMiddleware: require('./helmet'),
   setupMiddleware: require('./middleware'),

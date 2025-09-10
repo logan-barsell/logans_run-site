@@ -12,7 +12,7 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
 
     shows.forEach(show => {
       const {
-        _id,
+        id,
         poster,
         venue,
         location,
@@ -43,7 +43,7 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
       accordionItems.push({
         data: show,
         group: 'shows',
-        id: _id,
+        id,
         name: venue,
         header: venue,
         img: poster,

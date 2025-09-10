@@ -1,6 +1,6 @@
 # Bandsyte - Band Website Platform
 
-A comprehensive web platform for bands to create and customize their own professional websites. Built with React, Node.js, and MongoDB.
+A comprehensive web platform for bands to create and customize their own professional websites. Built with React, Node.js, and Postgres (via Prisma).
 
 ## About Bandsyte
 
@@ -21,7 +21,7 @@ Bandsyte is a business that provides online services for bands to create and cus
 
 - **Frontend**: React, Redux, Bootstrap
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose
+- **Database**: Postgres (Prisma ORM)
 - **Email**: AWS SES
 - **Authentication**: JWT with refresh tokens
 - **File Storage**: Firebase Storage

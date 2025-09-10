@@ -1,8 +1,8 @@
-const User = require('../models/User');
 const BandsyteEmailService = require('./bandsyteEmailService');
 const { addMinutes } = require('../utils/dates');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { withTenant } = require('../db/withTenant');
 
 /**
  * Generate a 6-digit verification code
@@ -18,9 +18,11 @@ function generateTwoFactorCode() {
  * @param {string} bandName - Band name for email template
  * @returns {Object} Result object
  */
-async function sendTwoFactorCode(userId, bandName = 'Bandsyte') {
+async function sendTwoFactorCode(tenantId, userId, bandName = 'Bandsyte') {
   try {
-    const user = await User.findById(userId);
+    const user = await withTenant(tenantId, async tx =>
+      tx.user.findUnique({ where: { id: userId } })
+    );
     if (!user) {
       throw new AppError('User not found', 404);
     }
@@ -34,9 +36,12 @@ async function sendTwoFactorCode(userId, bandName = 'Bandsyte') {
     const expiryTime = addMinutes(5); // Code expires in 5 minutes
 
     // Save code to user
-    user.twoFactorCode = code;
-    user.twoFactorCodeExpiry = expiryTime;
-    await user.save();
+    await withTenant(tenantId, async tx =>
+      tx.user.update({
+        where: { id: userId },
+        data: { twoFactorCode: code, twoFactorCodeExpiry: expiryTime },
+      })
+    );
 
     // Send email
     await BandsyteEmailService.sendTwoFactorCodeWithBranding(
@@ -64,9 +69,11 @@ async function sendTwoFactorCode(userId, bandName = 'Bandsyte') {
  * @param {string} code - Verification code
  * @returns {Object} Result object
  */
-async function verifyTwoFactorCode(userId, code) {
+async function verifyTwoFactorCode(tenantId, userId, code) {
   try {
-    const user = await User.findById(userId);
+    const user = await withTenant(tenantId, async tx =>
+      tx.user.findUnique({ where: { id: userId } })
+    );
     if (!user) {
       throw new AppError('User not found', 404);
     }
@@ -76,9 +83,12 @@ async function verifyTwoFactorCode(userId, code) {
     }
 
     // Check if code is valid and not expired
-    if (!user.isTwoFactorCodeValid()) {
+    const isValid =
+      user.twoFactorCode &&
+      user.twoFactorCodeExpiry &&
+      new Date(user.twoFactorCodeExpiry) > new Date();
+    if (!isValid)
       throw new AppError('Verification code has expired or is invalid', 400);
-    }
 
     // Check if code matches
     if (user.twoFactorCode !== code) {
@@ -86,9 +96,12 @@ async function verifyTwoFactorCode(userId, code) {
     }
 
     // Clear the code after successful verification
-    user.twoFactorCode = undefined;
-    user.twoFactorCodeExpiry = undefined;
-    await user.save();
+    await withTenant(tenantId, async tx =>
+      tx.user.update({
+        where: { id: userId },
+        data: { twoFactorCode: null, twoFactorCodeExpiry: null },
+      })
+    );
 
     logger.info(`✅ 2FA verification successful for user ${user.adminEmail}`);
 
@@ -107,15 +120,15 @@ async function verifyTwoFactorCode(userId, code) {
  * @param {string} userId - User ID
  * @returns {Object} Result object
  */
-async function enableTwoFactor(userId) {
+async function enableTwoFactor(tenantId, userId) {
   try {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new AppError('User not found', 404);
-    }
-
-    user.twoFactorEnabled = true;
-    await user.save();
+    const user = await withTenant(tenantId, async tx =>
+      tx.user.update({
+        where: { id: userId },
+        data: { twoFactorEnabled: true },
+      })
+    );
+    if (!user) throw new AppError('User not found', 404);
 
     logger.info(`🔐 2FA enabled for user ${user.adminEmail}`);
 
@@ -134,17 +147,19 @@ async function enableTwoFactor(userId) {
  * @param {string} userId - User ID
  * @returns {Object} Result object
  */
-async function disableTwoFactor(userId) {
+async function disableTwoFactor(tenantId, userId) {
   try {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new AppError('User not found', 404);
-    }
-
-    user.twoFactorEnabled = false;
-    user.twoFactorCode = undefined;
-    user.twoFactorCodeExpiry = undefined;
-    await user.save();
+    const user = await withTenant(tenantId, async tx =>
+      tx.user.update({
+        where: { id: userId },
+        data: {
+          twoFactorEnabled: false,
+          twoFactorCode: null,
+          twoFactorCodeExpiry: null,
+        },
+      })
+    );
+    if (!user) throw new AppError('User not found', 404);
 
     logger.info(`🔓 2FA disabled for user ${user.adminEmail}`);
 
@@ -163,10 +178,12 @@ async function disableTwoFactor(userId) {
  * @param {string} userId - User ID
  * @returns {boolean} Whether 2FA is enabled
  */
-async function isTwoFactorEnabled(userId) {
+async function isTwoFactorEnabled(tenantId, userId) {
   try {
-    const user = await User.findById(userId);
-    return user ? user.twoFactorEnabled : false;
+    const user = await withTenant(tenantId, async tx =>
+      tx.user.findUnique({ where: { id: userId } })
+    );
+    return user ? !!user.twoFactorEnabled : false;
   } catch (error) {
     logger.error('Error checking 2FA status:', error);
     return false;

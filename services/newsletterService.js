@@ -1,5 +1,6 @@
-const NewsletterSubscriber = require('../models/NewsletterSubscriber');
-const Theme = require('../models/Theme');
+const { withTenant } = require('../db/withTenant');
+const { prisma } = require('../prisma');
+const ThemeService = require('./themeService');
 const BandsyteEmailService = require('./bandsyteEmailService');
 const BandEmailService = require('./bandEmailService');
 const newsletterNotification = require('../templates/newsletterNotification');
@@ -9,6 +10,15 @@ const showNotification = require('../templates/showNotification');
 const { generateFromAddress } = require('./bandEmailService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { whitelistFields } = require('../utils/fieldWhitelist');
+
+// Allowed preference fields
+const PREFERENCE_FIELDS = [
+  'receiveAutomaticNotifications',
+  'notifyOnNewMusic',
+  'notifyOnNewVideos',
+  'notifyOnNewShows',
+];
 
 /**
  * Newsletter Service
@@ -18,16 +28,20 @@ const { AppError } = require('../middleware/errorHandler');
 /**
  * Add a new newsletter subscriber
  */
-async function addSubscriber(email, signupSource = 'website') {
+async function addSubscriber(tenantId, email, signupSource = 'website') {
   try {
     logger.info(
       `📧 Attempting to add subscriber: ${email} from source: ${signupSource}`
     );
 
-    // Check if subscriber already exists
-    const existingSubscriber = await NewsletterSubscriber.findOne({
-      email: email.toLowerCase(),
-    });
+    const normalized = email.toLowerCase();
+
+    // Check if subscriber already exists (scoped to tenant)
+    const existingSubscriber = await withTenant(tenantId, async tx =>
+      tx.newsletterSubscriber.findUnique({
+        where: { tenantId_email: { tenantId, email: normalized } },
+      })
+    );
 
     if (existingSubscriber) {
       logger.info(
@@ -43,23 +57,32 @@ async function addSubscriber(email, signupSource = 'website') {
       } else {
         // Reactivate existing subscriber
         logger.info(`📧 Reactivating existing subscriber: ${email}`);
-        existingSubscriber.isActive = true;
-        existingSubscriber.unsubscribedAt = null;
-        existingSubscriber.signupSource = signupSource;
-        await existingSubscriber.save();
+        const reactivated = await withTenant(tenantId, async tx =>
+          tx.newsletterSubscriber.update({
+            where: { tenantId_email: { tenantId, email: normalized } },
+            data: {
+              isActive: true,
+              unsubscribedAt: null,
+              signupSource,
+            },
+          })
+        );
         logger.info(`📧 Successfully reactivated subscriber: ${email}`);
-        return existingSubscriber;
+        return reactivated;
       }
     }
 
     // Create new subscriber
     logger.info(`📧 Creating new subscriber: ${email}`);
-    const subscriber = new NewsletterSubscriber({
-      email: email.toLowerCase(),
-      signupSource,
-    });
-
-    await subscriber.save();
+    const subscriber = await withTenant(tenantId, async tx =>
+      tx.newsletterSubscriber.create({
+        data: {
+          tenantId,
+          email: normalized,
+          signupSource,
+        },
+      })
+    );
     logger.info(
       `📧 Successfully created new subscriber: ${email} with token: ${subscriber.unsubscribeToken}`
     );
@@ -77,17 +100,20 @@ async function addSubscriber(email, signupSource = 'website') {
 /**
  * Get all active subscribers with pagination
  */
-async function getActiveSubscribers(page = 1, limit = 20) {
+async function getActiveSubscribers(tenantId, page = 1, limit = 20) {
   try {
     const skip = (page - 1) * limit;
 
-    const subscribers = await NewsletterSubscriber.find({ isActive: true })
-      .sort({ subscribedAt: -1 }) // Sort by newest first
-      .skip(skip)
-      .limit(limit);
-
-    const total = await NewsletterSubscriber.countDocuments({
-      isActive: true,
+    const where = { tenantId, isActive: true };
+    const [subscribers, total] = await withTenant(tenantId, async tx => {
+      const list = await tx.newsletterSubscriber.findMany({
+        where,
+        orderBy: { subscribedAt: 'desc' },
+        skip,
+        take: limit,
+      });
+      const count = await tx.newsletterSubscriber.count({ where });
+      return [list, count];
     });
 
     return {
@@ -112,29 +138,25 @@ async function getActiveSubscribers(page = 1, limit = 20) {
 /**
  * Get subscribers for specific notification type
  */
-async function getSubscribersForNotification(notificationType) {
+async function getSubscribersForNotification(tenantId, notificationType) {
   try {
-    const query = {
-      isActive: true,
-      'preferences.receiveAutomaticNotifications': true,
-    };
+    // Use JSONB contains to filter by preferences efficiently
+    let prefFilter = { receiveAutomaticNotifications: true };
+    if (notificationType === 'show') prefFilter.notifyOnNewShows = true;
+    if (notificationType === 'music') prefFilter.notifyOnNewMusic = true;
+    if (notificationType === 'video') prefFilter.notifyOnNewVideos = true;
 
-    // Add specific notification preference
-    switch (notificationType) {
-      case 'show':
-        query['preferences.notifyOnNewShows'] = true;
-        break;
-      case 'music':
-        query['preferences.notifyOnNewMusic'] = true;
-        break;
-      case 'video':
-        query['preferences.notifyOnNewVideos'] = true;
-        break;
-      default:
-        break;
-    }
+    const subscribers = await withTenant(tenantId, async tx =>
+      tx.newsletterSubscriber.findMany({
+        where: {
+          tenantId,
+          isActive: true,
+          preferences: { contains: prefFilter },
+        },
+      })
+    );
 
-    return await NewsletterSubscriber.find(query);
+    return subscribers;
   } catch (error) {
     logger.error(
       `❌ Error getting subscribers for ${notificationType} notifications:`,
@@ -151,10 +173,10 @@ async function getSubscribersForNotification(notificationType) {
 /**
  * Send notification emails for new content
  */
-async function sendContentNotification(contentType, content) {
+async function sendContentNotification(tenantId, contentType, content) {
   try {
     // Check if newsletter notifications are enabled
-    const theme = await Theme.findOne();
+    const theme = await ThemeService.getTheme(tenantId);
     if (!theme || !theme.enableNewsletter) {
       logger.info('📧 Newsletter notifications disabled, skipping email');
       return {
@@ -198,7 +220,10 @@ async function sendContentNotification(contentType, content) {
     }
 
     // Get subscribers for this notification type
-    const subscribers = await getSubscribersForNotification(contentType);
+    const subscribers = await getSubscribersForNotification(
+      tenantId,
+      contentType
+    );
 
     if (subscribers.length === 0) {
       logger.info(`📧 No subscribers for ${contentType} notifications`);
@@ -225,43 +250,6 @@ async function sendContentNotification(contentType, content) {
       );
 
       try {
-        // Use the appropriate template based on content type
-        let emailTemplate;
-        switch (contentType) {
-          case 'music':
-            emailTemplate = musicNotification(
-              bandName,
-              content,
-              theme,
-              'test-token-123'
-            );
-            break;
-          case 'video':
-            emailTemplate = videoNotification(
-              bandName,
-              content,
-              theme,
-              'test-token-123'
-            );
-            break;
-          case 'show':
-            emailTemplate = showNotification(
-              bandName,
-              content,
-              theme,
-              'test-token-123'
-            );
-            break;
-          default:
-            emailTemplate = newsletterNotification(
-              bandName,
-              content,
-              contentType,
-              colors,
-              'test-token-123'
-            );
-        }
-
         // Generate white-label FROM address for development
         const devFromAddress = generateFromAddress(bandName);
 
@@ -272,7 +260,8 @@ async function sendContentNotification(contentType, content) {
           contentType,
           content,
           'test-token-123',
-          devFromAddress
+          devFromAddress,
+          tenantId
         );
 
         results = [
@@ -342,12 +331,17 @@ async function sendContentNotification(contentType, content) {
               subject: emailTemplate.subject,
               html: emailTemplate.html,
             },
-            bandName
+            bandName,
+            tenantId
           );
 
           // Update last email sent timestamp
-          subscriber.lastEmailSent = new Date();
-          await subscriber.save();
+          await withTenant(tenantId, async tx =>
+            tx.newsletterSubscriber.update({
+              where: { id: subscriber.id },
+              data: { lastEmailSent: new Date() },
+            })
+          );
 
           return { success: true, email: subscriber.email };
         } catch (error) {
@@ -399,8 +393,8 @@ async function sendContentNotification(contentType, content) {
  */
 async function getSubscriberByToken(token) {
   try {
-    const subscriber = await NewsletterSubscriber.findOne({
-      unsubscribeToken: token,
+    const subscriber = await prisma.newsletterSubscriber.findUnique({
+      where: { unsubscribeToken: token },
     });
 
     if (!subscriber) {
@@ -424,9 +418,12 @@ async function unsubscribe(token) {
   try {
     const subscriber = await getSubscriberByToken(token);
 
-    subscriber.isActive = false;
-    subscriber.unsubscribedAt = new Date();
-    await subscriber.save();
+    await withTenant(subscriber.tenantId, async tx =>
+      tx.newsletterSubscriber.update({
+        where: { unsubscribeToken: token },
+        data: { isActive: false, unsubscribedAt: new Date() },
+      })
+    );
 
     logger.info(`📧 Subscriber unsubscribed: ${subscriber.email}`);
     return { success: true, message: 'Successfully unsubscribed' };
@@ -442,22 +439,25 @@ async function unsubscribe(token) {
 /**
  * Admin unsubscribe a subscriber by ID (for admin management)
  */
-async function adminUnsubscribe(subscriberId) {
+async function adminUnsubscribe(tenantId, subscriberId) {
   try {
-    const subscriber = await NewsletterSubscriber.findById(subscriberId);
-
-    if (!subscriber) {
-      throw new AppError('Subscriber not found', 404);
-    }
-
-    if (!subscriber.isActive) {
+    const subscriber = await withTenant(tenantId, async tx =>
+      tx.newsletterSubscriber.findUnique({ where: { id: subscriberId } })
+    );
+    if (!subscriber) throw new AppError('Subscriber not found', 404);
+    if (!subscriber.isActive)
       throw new AppError('Subscriber is already unsubscribed', 400);
-    }
 
-    subscriber.isActive = false;
-    subscriber.unsubscribedAt = new Date();
-    subscriber.unsubscribeReason = 'admin';
-    await subscriber.save();
+    await withTenant(tenantId, async tx =>
+      tx.newsletterSubscriber.update({
+        where: { id: subscriberId },
+        data: {
+          isActive: false,
+          unsubscribedAt: new Date(),
+          unsubscribeReason: 'admin',
+        },
+      })
+    );
 
     logger.info(`📧 Admin unsubscribed: ${subscriber.email}`);
     return { success: true, message: 'Subscriber unsubscribed successfully' };
@@ -473,18 +473,24 @@ async function adminUnsubscribe(subscriberId) {
 /**
  * Update subscriber preferences
  */
-async function updatePreferences(email, preferences) {
+async function updatePreferences(tenantId, email, preferences) {
   try {
-    const subscriber = await NewsletterSubscriber.findOne({
-      email: email.toLowerCase(),
-    });
+    const normalized = email.toLowerCase();
+    const allowed = whitelistFields(preferences, PREFERENCE_FIELDS);
+    const existing = await withTenant(tenantId, async tx =>
+      tx.newsletterSubscriber.findUnique({
+        where: { tenantId_email: { tenantId, email: normalized } },
+      })
+    );
+    if (!existing) throw new AppError('Subscriber not found', 404);
 
-    if (!subscriber) {
-      throw new AppError('Subscriber not found', 404);
-    }
-
-    subscriber.preferences = { ...subscriber.preferences, ...preferences };
-    await subscriber.save();
+    const merged = { ...(existing.preferences || {}), ...allowed };
+    await withTenant(tenantId, async tx =>
+      tx.newsletterSubscriber.update({
+        where: { tenantId_email: { tenantId, email: normalized } },
+        data: { preferences: merged },
+      })
+    );
 
     logger.info(`📧 Preferences updated for: ${email}`);
     return { success: true, message: 'Preferences updated successfully' };
@@ -500,15 +506,27 @@ async function updatePreferences(email, preferences) {
 /**
  * Get subscriber statistics
  */
-async function getStats() {
+async function getStats(tenantId) {
   try {
-    const totalSubscribers = await NewsletterSubscriber.countDocuments();
-    const activeSubscribers = await NewsletterSubscriber.countDocuments({
-      isActive: true,
-    });
-    const recentSubscribers = await NewsletterSubscriber.countDocuments({
-      subscribedAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }, // Last 30 days
-    });
+    const [totalSubscribers, activeSubscribers, recentSubscribers] =
+      await withTenant(tenantId, async tx => {
+        const whereTenant = { tenantId };
+        const total = await tx.newsletterSubscriber.count({
+          where: whereTenant,
+        });
+        const active = await tx.newsletterSubscriber.count({
+          where: { tenantId, isActive: true },
+        });
+        const recent = await tx.newsletterSubscriber.count({
+          where: {
+            tenantId,
+            subscribedAt: {
+              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+            },
+          },
+        });
+        return [total, active, recent];
+      });
 
     return {
       total: totalSubscribers,

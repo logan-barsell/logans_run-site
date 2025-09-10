@@ -37,7 +37,7 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         data: state.data.map(user =>
-          user._id === action.payload._id ? action.payload : user
+          user.id === action.payload.id ? action.payload : user
         ),
         updateLoading: false,
         updateError: null,
@@ -51,7 +51,7 @@ export const userReducer = (state = initialState, action) => {
     case DELETE_USER:
       return {
         ...state,
-        data: state.data.filter(user => user._id !== action.payload._id),
+        data: state.data.filter(user => user.id !== action.payload.id),
         deleteLoading: false,
         deleteError: null,
       };

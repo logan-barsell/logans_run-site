@@ -18,24 +18,30 @@ async function newsletterSignup(req, res, next) {
     }
 
     // Add subscriber to database
-    const subscriber = await NewsletterService.addSubscriber(email, 'website');
+    const subscriber = await NewsletterService.addSubscriber(
+      req.tenantId,
+      email,
+      'website'
+    );
 
     // Get the actual band name from theme
-    const theme = await ThemeService.getTheme();
+    const theme = await ThemeService.getTheme(req.tenantId);
     const bandName = theme.siteTitle || 'Bandsyte';
 
     // Send newsletter confirmation email to fan using band email service
     await BandEmailService.sendNewsletterConfirmationWithBranding(
       email, // subscriber email (used for both sending and display)
       bandName, // band name
-      subscriber.unsubscribeToken // unsubscribe token
+      subscriber.unsubscribeToken, // unsubscribe token
+      req.tenantId
     );
 
     // Send notification email to band admin
     await BandsyteEmailService.sendNewsletterSignupNotificationWithBranding(
       process.env.ADMIN_EMAIL || 'admin@bandsyte.com',
       email,
-      bandName
+      bandName,
+      req.tenantId
     );
 
     logger.info(`📧 Newsletter signup: ${email}`);
@@ -107,7 +113,7 @@ async function unsubscribe(req, res, next) {
  */
 async function getNewsletterStats(req, res, next) {
   try {
-    const stats = await NewsletterService.getStats();
+    const stats = await NewsletterService.getStats(req.tenantId);
 
     res.status(200).json({
       success: true,
@@ -127,7 +133,11 @@ async function getNewsletterSubscribers(req, res, next) {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
 
-    const result = await NewsletterService.getActiveSubscribers(page, limit);
+    const result = await NewsletterService.getActiveSubscribers(
+      req.tenantId,
+      page,
+      limit
+    );
 
     res.status(200).json({
       success: true,
@@ -151,7 +161,7 @@ async function adminUnsubscribeSubscriber(req, res, next) {
       throw new AppError('Subscriber ID is required', 400);
     }
 
-    await NewsletterService.adminUnsubscribe(subscriberId);
+    await NewsletterService.adminUnsubscribe(req.tenantId, subscriberId);
 
     res.status(200).json({
       success: true,

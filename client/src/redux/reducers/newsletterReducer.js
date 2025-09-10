@@ -81,7 +81,7 @@ export const newsletterReducer = (state = initialState, action) => {
     case REMOVE_NEWSLETTER_SUBSCRIBER:
       return {
         ...state,
-        data: state.data.filter(sub => sub._id !== action.payload._id),
+        data: state.data.filter(sub => sub.id !== action.payload.id),
         removeLoading: false,
         removeError: null,
       };

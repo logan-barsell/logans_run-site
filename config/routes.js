@@ -1,4 +1,12 @@
+const { generateCSRFToken } = require('../middleware/csrf');
+
 const setupRoutes = app => {
+  // Utility routes
+  app.get('/api/csrf-token', generateCSRFToken);
+  app.get('/api/whoami', (req, res) => {
+    res.json({ tenantId: req.tenantId });
+  });
+
   // API Routes
   app.use('/api/auth', require('../routes/authRoutes'));
   app.use('/api/user', require('../routes/userRoutes'));

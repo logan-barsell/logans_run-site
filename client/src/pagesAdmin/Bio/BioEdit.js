@@ -21,6 +21,9 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
     fetchBio();
   }, [fetchBio]);
 
+  // Normalize bio state to single object (supports legacy array or object)
+  const bioRow = Array.isArray(bio) ? bio[0] || {} : bio || {};
+
   const handleSubmit = async values => {
     setUploading(true);
     let customImageUrl = values.customImage;
@@ -33,29 +36,36 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
         );
       }
 
-      // Handle custom image upload if there's a new file
-      if (values.customImage && values.customImage instanceof File) {
-        // Delete old custom image if it exists
-        if (bio && bio.length > 0 && bio[0].customImageUrl) {
-          try {
-            await deleteImageFromFirebase(bio[0].customImageUrl);
-          } catch (error) {
-            // ignore
-          }
-        }
+      // Handle custom image upload if there's a new file or FileList
+      if (values.customImage) {
+        const file =
+          values.customImage instanceof FileList
+            ? values.customImage[0]
+            : values.customImage;
 
-        try {
-          customImageUrl = await uploadImageToFirebase(values.customImage, {
-            onProgress: () => {}, // Pass empty function instead of setUploadProgress
-          });
-        } catch (err) {
-          setUploading(false);
-          showError('Failed to upload custom image');
-          throw err;
+        if (file instanceof File) {
+          // Delete old custom image if it exists
+          if (bioRow && bioRow.customImageUrl) {
+            try {
+              await deleteImageFromFirebase(bioRow.customImageUrl);
+            } catch (error) {
+              // ignore
+            }
+          }
+
+          try {
+            customImageUrl = await uploadImageToFirebase(file, {
+              onProgress: () => {}, // Pass empty function instead of setUploadProgress
+            });
+          } catch (err) {
+            setUploading(false);
+            showError('Failed to upload custom image');
+            throw err;
+          }
         }
       }
 
-      // Update bio with image settings
+      // Update bio with image settings (do not send raw customImage)
       const dataToSave = {
         text: values.text,
         imageType: values.imageType,
@@ -81,11 +91,10 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
   const bioFields = BIO_FIELDS;
 
   // Get current bio data for initial values
-  const bioData = bio && bio.length > 0 ? bio[0] : {};
   const initialValues = {
-    text: bioData.text || '',
-    imageType: bioData.imageType || 'band-logo',
-    customImage: bioData.customImageUrl || '',
+    text: bioRow.text || '',
+    imageType: bioRow.imageType || 'band-logo',
+    customImage: bioRow.customImageUrl || '',
   };
 
   return (

@@ -12,7 +12,7 @@ const EditShow = ({ show, fetchShows }) => {
   const { showError, showSuccess } = useAlert();
 
   const onEdit = async fields => {
-    const id = show._id;
+    const id = show.id;
     try {
       let posterUrl = show.poster || '';
 
@@ -64,7 +64,7 @@ const EditShow = ({ show, fetchShows }) => {
 
   return (
     <EditItem
-      key={`edit-show-${show._id}-${show.venue}-${show.location}-${show.doorprice}-${show.advprice}`} // Force re-render when show data changes
+      key={`edit-show-${show.id}-${show.venue}-${show.location}-${show.doorprice}-${show.advprice}`}
       item={show}
       editFields={editShowFields}
       onEdit={onEdit}

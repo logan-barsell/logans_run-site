@@ -13,10 +13,10 @@ const logger = require('../utils/logger');
  */
 async function updateUser(req, res, next) {
   try {
-    const user = await UserService.updateUserWithIdentifier(
+    const user = await UserService.updateUser(
+      req.tenantId,
       req.user.id,
-      req.body,
-      true
+      req.body
     );
     res.status(200).json({
       success: true,
@@ -24,23 +24,6 @@ async function updateUser(req, res, next) {
     });
   } catch (error) {
     logger.error('❌ Failed to update user:', error);
-    next(error);
-  }
-}
-
-/**
- * Initialize default user (admin only)
- */
-async function initializeDefaultUser(req, res, next) {
-  try {
-    const user = await UserService.initializeDefaultUser();
-    res.status(200).json({
-      success: true,
-      data: user,
-      message: 'Default user initialized successfully',
-    });
-  } catch (error) {
-    logger.error('❌ Failed to initialize default user:', error);
     next(error);
   }
 }
@@ -60,7 +43,7 @@ async function changePassword(req, res, next) {
     }
 
     // Get user with password
-    const user = await UserService.findUserById(userId);
+    const user = await UserService.findUserById(req.tenantId, userId);
     if (!user) {
       return next(new AppError('User not found', 404));
     }
@@ -75,11 +58,11 @@ async function changePassword(req, res, next) {
     }
 
     // Update password using the secure method
-    await UserService.saveNewPassword(userId, newPassword);
+    await UserService.saveNewPassword(req.tenantId, userId, newPassword);
 
     // Send password change notification email
     try {
-      const theme = await ThemeService.getTheme();
+      const theme = await ThemeService.getTheme(req.tenantId);
       const bandName = theme.siteTitle || 'Bandsyte';
 
       await BandsyteEmailService.sendPasswordResetSuccessWithBranding(
@@ -111,6 +94,7 @@ async function getSessions(req, res, next) {
     const limit = parseInt(req.query.limit) || 10;
 
     const { sessions, count } = await SessionService.getSessions(
+      req.tenantId,
       userId,
       page,
       limit
@@ -118,7 +102,7 @@ async function getSessions(req, res, next) {
 
     // Format sessions for frontend
     const formattedSessions = sessions.map(session => ({
-      id: session._id,
+      id: session.id,
       sessionId: session.sessionId,
       loginTime: session.loginTime,
       logoutTime: session.logoutTime,
@@ -159,7 +143,11 @@ async function endSession(req, res, next) {
     const userId = req.user.id;
 
     // Find and end the specific session
-    const session = await SessionService.endSession(sessionId, userId);
+    const session = await SessionService.endSession(
+      req.tenantId,
+      sessionId,
+      userId
+    );
     if (!session) {
       return next(new AppError('Session not found', 404));
     }
@@ -193,6 +181,7 @@ async function endAllOtherSessions(req, res, next) {
     );
 
     const endedCount = await SessionService.endAllOtherSessions(
+      req.tenantId,
       userId,
       currentSessionId
     );
@@ -233,7 +222,6 @@ function getLocationInfo(ipAddress) {
 
 module.exports = {
   updateUser,
-  initializeDefaultUser,
   changePassword,
   getSessions,
   endSession,

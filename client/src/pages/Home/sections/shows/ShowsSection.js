@@ -63,7 +63,7 @@ const ShowsSection = ({
 
     shows.map(show => {
       const {
-        _id,
+        id,
         poster,
         venue,
         location,
@@ -91,7 +91,7 @@ const ShowsSection = ({
           })
         : 'TBD';
       return accordionItems.push({
-        id: _id,
+        id: id,
         venue,
         date: dateString,
         poster: poster,

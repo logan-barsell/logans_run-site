@@ -33,7 +33,7 @@ const EditPlayer = ({ player }) => {
 
       const updatedPlayer = {
         ...fields,
-        _id: player._id,
+        id: player.id,
         embedLink,
       };
 
@@ -53,8 +53,8 @@ const EditPlayer = ({ player }) => {
       variant='wide'
       title='EDIT MUSIC'
       modalProps={{
-        id: `edit_player_${player._id}`,
-        label: `edit_player_label_${player._id}`,
+        id: `edit_player_${player.id}`,
+        label: `edit_player_label_${player.id}`,
       }}
     />
   );

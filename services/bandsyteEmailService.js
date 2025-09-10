@@ -24,7 +24,8 @@ function generateBandsyteFromAddress(fromType = 'support') {
 async function sendNewsletterSignupNotificationWithBranding(
   to,
   fanEmail,
-  bandName
+  bandName,
+  tenantId = null
 ) {
   try {
     // Generate Bandsyte white-label FROM address
@@ -38,7 +39,8 @@ async function sendNewsletterSignupNotificationWithBranding(
       to,
       fanEmail,
       bandName,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(
@@ -69,7 +71,8 @@ async function sendSecurityAlertWithBranding(
   timestamp,
   ipAddress,
   userAgent,
-  location
+  location,
+  tenantId = null
 ) {
   try {
     // Generate Bandsyte white-label FROM address
@@ -85,7 +88,8 @@ async function sendSecurityAlertWithBranding(
       ipAddress,
       userAgent,
       location,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(`❌ Failed to send security alert for ${bandName}:`, error);
@@ -102,7 +106,12 @@ async function sendSecurityAlertWithBranding(
  * @param {string} resetLink - Password reset link
  * @param {string} bandName - Band name
  */
-async function sendPasswordResetWithBranding(to, resetLink, bandName) {
+async function sendPasswordResetWithBranding(
+  to,
+  resetLink,
+  bandName,
+  tenantId = null
+) {
   try {
     // Generate Bandsyte white-label FROM address
     const fromAddress = generateBandsyteFromAddress('support');
@@ -113,7 +122,8 @@ async function sendPasswordResetWithBranding(to, resetLink, bandName) {
       to,
       resetLink,
       bandName,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(`❌ Failed to send password reset for ${bandName}:`, error);
@@ -130,7 +140,12 @@ async function sendPasswordResetWithBranding(to, resetLink, bandName) {
  * @param {string} bandName - Band name
  * @param {string} timestamp - When the reset occurred
  */
-async function sendPasswordResetSuccessWithBranding(to, bandName, timestamp) {
+async function sendPasswordResetSuccessWithBranding(
+  to,
+  bandName,
+  timestamp,
+  tenantId = null
+) {
   try {
     // Generate Bandsyte white-label FROM address
     const fromAddress = generateBandsyteFromAddress('support');
@@ -141,7 +156,8 @@ async function sendPasswordResetSuccessWithBranding(to, bandName, timestamp) {
       to,
       bandName,
       timestamp,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(
@@ -166,7 +182,8 @@ async function sendEmailVerificationWithBranding(
   to,
   verificationLink,
   role,
-  bandName
+  bandName,
+  tenantId = null
 ) {
   try {
     // Generate Bandsyte white-label FROM address
@@ -179,7 +196,8 @@ async function sendEmailVerificationWithBranding(
       verificationLink,
       role,
       bandName,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(
@@ -199,7 +217,12 @@ async function sendEmailVerificationWithBranding(
  * @param {Object} contactData - Contact form data
  * @param {string} bandName - Band name
  */
-async function sendContactNotificationWithBranding(to, contactData, bandName) {
+async function sendContactNotificationWithBranding(
+  to,
+  contactData,
+  bandName,
+  tenantId = null
+) {
   try {
     // Generate Bandsyte white-label FROM address
     const fromAddress = generateBandsyteFromAddress('support');
@@ -210,7 +233,8 @@ async function sendContactNotificationWithBranding(to, contactData, bandName) {
       to,
       contactData,
       bandName,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(
@@ -229,14 +253,19 @@ async function sendContactNotificationWithBranding(to, contactData, bandName) {
  * @param {string} to - Band admin email
  * @param {string} bandName - Band name
  */
-async function sendWelcomeEmailWithBranding(to, bandName) {
+async function sendWelcomeEmailWithBranding(to, bandName, tenantId = null) {
   try {
     // Generate Bandsyte white-label FROM address
     const fromAddress = generateBandsyteFromAddress('support');
 
     logger.info(`📧 Sending welcome email for ${bandName} to ${to}`);
 
-    return await emailService.sendWelcomeEmail(to, bandName, fromAddress);
+    return await emailService.sendWelcomeEmail(
+      to,
+      bandName,
+      fromAddress,
+      tenantId
+    );
   } catch (error) {
     logger.error(`❌ Failed to send welcome email for ${bandName}:`, error);
     throw new AppError(
@@ -261,7 +290,8 @@ async function sendLoginAlertWithBranding(
   timestamp,
   ipAddress,
   userAgent,
-  location
+  location,
+  tenantId = null
 ) {
   try {
     // Generate Bandsyte white-label FROM address
@@ -275,7 +305,8 @@ async function sendLoginAlertWithBranding(
       ipAddress,
       userAgent,
       location,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(`❌ Failed to send login alert for ${bandName}:`, error);
@@ -292,7 +323,12 @@ async function sendLoginAlertWithBranding(
  * @param {string} code - Two-factor code
  * @param {string} bandName - Band name
  */
-async function sendTwoFactorCodeWithBranding(to, code, bandName) {
+async function sendTwoFactorCodeWithBranding(
+  to,
+  code,
+  bandName,
+  tenantId = null
+) {
   try {
     // Generate Bandsyte white-label FROM address
     const fromAddress = generateBandsyteFromAddress('support');
@@ -303,7 +339,8 @@ async function sendTwoFactorCodeWithBranding(to, code, bandName) {
       to,
       code,
       bandName,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(`❌ Failed to send two-factor code for ${bandName}:`, error);
@@ -329,7 +366,8 @@ async function sendContentNotificationWithBranding(
   contentType,
   content,
   unsubscribeToken,
-  customFromAddress
+  customFromAddress,
+  tenantId = null
 ) {
   try {
     // Generate Bandsyte white-label FROM address
@@ -343,7 +381,8 @@ async function sendContentNotificationWithBranding(
       contentType,
       content,
       unsubscribeToken,
-      fromAddress
+      fromAddress,
+      tenantId
     );
   } catch (error) {
     logger.error(

@@ -52,7 +52,7 @@ const FeaturedReleasesEdit = ({ fetchFeaturedReleases, featuredReleases }) => {
           )}
           {releases.map(release => (
             <div
-              key={release._id}
+              key={release.id}
               className='vid-container'
             >
               <img

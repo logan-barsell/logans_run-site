@@ -4,7 +4,7 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import { connect } from 'react-redux';
 import { fetchBio, fetchMembers } from '../../redux/actions';
 import { useTheme } from '../../contexts/ThemeContext';
-import { PageTitle, Divider, NoContent } from '../../components/Header';
+import { PageTitle, Divider } from '../../components/Header';
 import StaticAlert from '../../components/Alert/StaticAlert';
 
 import SocialIcons from '../../components/SocialIcons';
@@ -90,10 +90,10 @@ const BioPage = ({
   };
 
   const renderMembers = (members || []).map((member, index) => {
-    const { _id, bioPic, name, role } = member;
+    const { id, bioPic, name, role } = member;
 
     return (
-      <div key={_id}>
+      <div key={id}>
         {index === 0 ? null : <Divider />}
         <div className='row justify-content-center mb-5 mt-4 mx-1 gap-4'>
           <div className='col-12 col-md-5 bioPic'>
