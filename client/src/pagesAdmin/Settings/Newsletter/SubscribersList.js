@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   fetchNewsletterSubscribers,
@@ -128,7 +128,7 @@ const SubscribersList = ({
       <Button
         variant='outline-danger'
         size='sm'
-        onClick={() => handleUnsubscribe(subscriber._id)}
+        onClick={() => handleUnsubscribe(subscriber.id)}
       >
         Unsubscribe
       </Button>
@@ -295,7 +295,7 @@ const SubscribersList = ({
         pagination={newsletter.pagination}
         onPageChange={fetchSubscribers}
         rowActions={subscriberRowActions}
-        getRowKey={subscriber => subscriber._id}
+        getRowKey={subscriber => subscriber.id}
       />
     </div>
   );

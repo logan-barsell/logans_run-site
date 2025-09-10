@@ -29,7 +29,4 @@ router.post('/resend-verification', authController.resendEmailVerification);
 router.post('/forgot-password', authController.requestPasswordReset);
 router.post('/reset-password', authController.resetPassword);
 
-// User initialization endpoint
-router.post('/initialize', authController.initializeDefaultUser);
-
 module.exports = router;

@@ -12,7 +12,7 @@ const EditVideo = ({ video, fetchVideos }) => {
       const path = new URL(fields.link).pathname;
       const embedLink = `https://www.youtube.com/embed${path}`;
       const updatedVideo = {
-        _id: video._id,
+        id: video.id,
         ...fields,
         embedLink,
       };

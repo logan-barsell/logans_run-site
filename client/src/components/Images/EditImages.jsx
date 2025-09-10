@@ -50,7 +50,7 @@ const EditImages = ({
       {images.length > 0 ? (
         images.map(image => (
           <div
-            key={image._id}
+            key={image.id}
             className={`img-container ${
               imagesPosition === 'bottom' ? 'mt-5' : null
             }`}

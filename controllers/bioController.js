@@ -7,11 +7,9 @@ const logger = require('../utils/logger');
  */
 async function getBio(req, res, next) {
   try {
-    const bio = await BioService.getBio();
-    res.status(200).json({
-      success: true,
-      data: bio,
-    });
+    const bio = await BioService.getBio(req.tenantId);
+    if (!bio) return next(new AppError('Bio not found', 404));
+    res.status(200).json({ success: true, data: bio });
   } catch (error) {
     logger.error('❌ Failed to fetch bio information:', error);
     next(error);
@@ -24,11 +22,8 @@ async function getBio(req, res, next) {
 async function updateBio(req, res, next) {
   try {
     const content = req.body;
-    const result = await BioService.updateBio(content);
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
+    const result = await BioService.updateBio(req.tenantId, content);
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
     logger.error('❌ Failed to update bio:', error);
     next(error);
@@ -40,11 +35,8 @@ async function updateBio(req, res, next) {
  */
 async function addMember(req, res, next) {
   try {
-    const result = await BioService.addMember(req.body);
-    res.status(201).json({
-      success: true,
-      data: result,
-    });
+    const result = await BioService.addMember(req.tenantId, req.body);
+    res.status(201).json({ success: true, data: result });
   } catch (error) {
     logger.error('❌ Failed to add member:', error);
     next(error);
@@ -56,11 +48,10 @@ async function addMember(req, res, next) {
  */
 async function deleteMember(req, res, next) {
   try {
-    const result = await BioService.deleteMember(req.params.id);
-    res.status(200).json({
-      success: true,
-      message: 'Member deleted successfully',
-    });
+    await BioService.deleteMember(req.tenantId, req.params.id);
+    res
+      .status(200)
+      .json({ success: true, message: 'Member deleted successfully' });
   } catch (error) {
     logger.error('❌ Failed to delete member:', error);
     next(error);
@@ -72,11 +63,8 @@ async function deleteMember(req, res, next) {
  */
 async function getMembers(req, res, next) {
   try {
-    const members = await BioService.getMembers();
-    res.status(200).json({
-      success: true,
-      data: members,
-    });
+    const members = await BioService.getMembers(req.tenantId);
+    res.status(200).json({ success: true, data: members });
   } catch (error) {
     logger.error('❌ Failed to fetch members:', error);
     next(error);
@@ -88,11 +76,12 @@ async function getMembers(req, res, next) {
  */
 async function updateMember(req, res, next) {
   try {
-    const result = await BioService.updateMember(req.params.id, req.body);
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
+    const result = await BioService.updateMember(
+      req.tenantId,
+      req.params.id,
+      req.body
+    );
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
     logger.error('❌ Failed to update member:', error);
     next(error);

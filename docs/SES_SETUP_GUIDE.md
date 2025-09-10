@@ -165,8 +165,8 @@ Check your application logs for:
 
 ### Database Updates Not Working
 
-1. Verify MongoDB connection
-2. Check NewsletterSubscriber model fields
+1. Verify database connectivity (Prisma health)
+2. Check `newsletterSubscriber` Prisma model fields
 3. Confirm email addresses are properly formatted
 
 ## Security Considerations

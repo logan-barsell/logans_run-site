@@ -73,34 +73,13 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Mongoose validation error
-  if (err.name === 'ValidationError') {
-    const message = Object.values(err.errors)
-      .map(val => val.message)
-      .join(', ');
+  // Duplicate key error (generic)
+  if (err.code === 'P2002' || err.code === 11000) {
+    const field = err.meta?.target?.[0] || Object.keys(err.keyValue || {})[0];
+    const message = field ? `${field} already exists.` : 'Duplicate value.';
     return res.status(400).json({
       success: false,
       message,
-      statusCode: 400,
-    });
-  }
-
-  // Mongoose duplicate key error
-  if (err.code === 11000) {
-    const field = Object.keys(err.keyValue)[0];
-    const message = `${field} already exists.`;
-    return res.status(400).json({
-      success: false,
-      message,
-      statusCode: 400,
-    });
-  }
-
-  // Mongoose cast error (invalid ObjectId)
-  if (err.name === 'CastError') {
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid resource ID.',
       statusCode: 400,
     });
   }

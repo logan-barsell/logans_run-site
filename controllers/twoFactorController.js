@@ -7,10 +7,14 @@ const logger = require('../utils/logger');
  */
 async function sendCode(req, res, next) {
   try {
-    const userId = req.user._id.toString();
+    const userId = req.user.id;
     const bandName = req.body.bandName || 'Bandsyte';
 
-    const result = await TwoFactorService.sendTwoFactorCode(userId, bandName);
+    const result = await TwoFactorService.sendTwoFactorCode(
+      req.tenantId,
+      userId,
+      bandName
+    );
 
     res.status(200).json({
       success: true,
@@ -28,17 +32,18 @@ async function sendCode(req, res, next) {
  */
 async function verifyCode(req, res, next) {
   try {
-    const userId = req.user._id.toString();
+    const userId = req.user.id;
     const { code } = req.body;
 
     if (!code) {
-      return res.status(400).json({
-        success: false,
-        message: 'Verification code is required',
-      });
+      throw new AppError('Verification code is required', 400);
     }
 
-    const result = await TwoFactorService.verifyTwoFactorCode(userId, code);
+    const result = await TwoFactorService.verifyTwoFactorCode(
+      req.tenantId,
+      userId,
+      code
+    );
 
     res.status(200).json({
       success: true,
@@ -55,9 +60,9 @@ async function verifyCode(req, res, next) {
  */
 async function enableTwoFactorController(req, res, next) {
   try {
-    const userId = req.user._id.toString();
+    const userId = req.user.id;
 
-    const result = await TwoFactorService.enableTwoFactor(userId);
+    const result = await TwoFactorService.enableTwoFactor(req.tenantId, userId);
 
     res.status(200).json({
       success: true,
@@ -74,9 +79,12 @@ async function enableTwoFactorController(req, res, next) {
  */
 async function disableTwoFactorController(req, res, next) {
   try {
-    const userId = req.user._id.toString();
+    const userId = req.user.id;
 
-    const result = await TwoFactorService.disableTwoFactor(userId);
+    const result = await TwoFactorService.disableTwoFactor(
+      req.tenantId,
+      userId
+    );
 
     res.status(200).json({
       success: true,
@@ -93,8 +101,11 @@ async function disableTwoFactorController(req, res, next) {
  */
 async function getTwoFactorStatus(req, res, next) {
   try {
-    const userId = req.user._id.toString();
-    const isEnabled = await TwoFactorService.isTwoFactorEnabled(userId);
+    const userId = req.user.id;
+    const isEnabled = await TwoFactorService.isTwoFactorEnabled(
+      req.tenantId,
+      userId
+    );
 
     res.status(200).json({
       success: true,

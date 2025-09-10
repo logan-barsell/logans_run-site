@@ -59,7 +59,7 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
   const handleRemove = async image => {
     try {
       const imageName = extractStoragePathFromUrl(image.imgLink);
-      await removeHomeImage(image._id);
+      await removeHomeImage(image.id);
       await deleteImageFromFirebase(imageName);
       showSuccess('Home carousel image removed successfully');
       fetchHomeImages();

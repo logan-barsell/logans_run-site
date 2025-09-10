@@ -66,7 +66,7 @@ async function requireAuth(req, res, next) {
 
     if (sessionId && userId) {
       // End only the current session
-      await SessionService.endSession(sessionId, userId);
+      await SessionService.endSession(req.tenantId, sessionId, userId);
       // Revoke only the current session's refresh token
       await TokenService.revokeSessionRefreshToken(sessionId);
     }
@@ -92,7 +92,7 @@ async function requireAuth(req, res, next) {
       throw new AppError('Unauthorized - Please log in', 401);
     }
 
-    const user = await UserService.findUserById(decoded.id);
+    const user = await UserService.findUserById(req.tenantId, decoded.id);
     if (!user) {
       logger.warn(`❌ User not found: ${decoded.id}`);
       await logoutUser();
@@ -107,6 +107,7 @@ async function requireAuth(req, res, next) {
 
     // Validate that the current session is still active
     const currentSession = await SessionService.getCurrentSession(
+      req.tenantId,
       decoded.sessionId,
       decoded.id
     );
@@ -117,7 +118,7 @@ async function requireAuth(req, res, next) {
     }
 
     req.user = {
-      ...user.toObject(),
+      ...user,
       sessionId: decoded.sessionId,
       id: decoded.id,
     };

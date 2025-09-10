@@ -24,32 +24,40 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
     let bandLogoUrl = values.bandLogo;
 
     try {
-      // Handle band logo upload if there's a new file
-      if (values.bandLogo && values.bandLogo instanceof File) {
-        // Delete old band logo if it exists
-        if (theme && theme.bandLogoUrl) {
-          try {
-            await deleteImageFromFirebase(theme.bandLogoUrl);
-          } catch (error) {
-            // ignore
-          }
-        }
+      // Handle band logo upload if there's a new file or FileList
+      if (values.bandLogo) {
+        const file =
+          values.bandLogo instanceof FileList
+            ? values.bandLogo[0]
+            : values.bandLogo;
 
-        try {
-          bandLogoUrl = await uploadImageToFirebase(values.bandLogo, {
-            onProgress: () => {}, // Pass empty function instead of setUploadProgress
-          });
-        } catch (err) {
-          setUploading(false);
-          showError('Failed to upload band logo');
-          return;
+        if (file instanceof File) {
+          // Delete old band logo if it exists
+          if (theme && theme.bandLogoUrl) {
+            try {
+              await deleteImageFromFirebase(theme.bandLogoUrl);
+            } catch (error) {
+              // ignore
+            }
+          }
+
+          try {
+            bandLogoUrl = await uploadImageToFirebase(file, {
+              onProgress: () => {}, // Pass empty function instead of setUploadProgress
+            });
+          } catch (err) {
+            setUploading(false);
+            showError('Failed to upload band logo');
+            return;
+          }
         }
       }
 
       // Update theme with logo settings
+      const { bandLogo, ...rest } = values;
       const dataToSave = {
-        ...values,
-        bandLogoUrl: bandLogoUrl,
+        ...rest,
+        bandLogoUrl,
       };
 
       await updateTheme(dataToSave);

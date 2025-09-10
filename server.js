@@ -2,41 +2,21 @@ const express = require('express');
 require('dotenv').config();
 
 // Import configurations
-const {
-  connectDatabase,
-  corsMiddleware,
-  helmetMiddleware,
-  setupMiddleware,
-  setupRoutes,
-  setupMonitoring,
-} = require('./config');
+const { setupMiddleware, setupRoutes, setupMonitoring } = require('./config');
 
-// Import middleware
+// Import error handler
 const { errorHandler } = require('./middleware/errorHandler');
-const { generateCSRFToken } = require('./middleware/csrf');
+// Import logger
 const logger = require('./utils/logger');
-
-// Connect to database
-connectDatabase();
 
 const app = express();
 
 // Apply middleware
-app.use(corsMiddleware);
-app.use(helmetMiddleware);
 setupMiddleware(app);
 setupMonitoring(app);
 
 // Setup routes
 setupRoutes(app);
-
-// Basic route
-app.get('/', (req, res) => {
-  res.send('EXPRESS ===> REACT');
-});
-
-// CSRF token endpoint
-app.get('/api/csrf-token', generateCSRFToken);
 
 // Error handling middleware (must be last)
 app.use(errorHandler);

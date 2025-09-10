@@ -2,6 +2,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const statusMonitor = require('express-status-monitor');
 const logger = require('../utils/logger');
+const { prisma } = require('../prisma');
 
 /**
  * Request logging middleware with custom format
@@ -171,7 +172,15 @@ const healthCheck = (req, res) => {
  */
 const detailedHealthCheck = async (req, res) => {
   try {
-    const mongoose = require('mongoose');
+    // Check database connectivity via a lightweight query
+    let databaseStatus = 'connected';
+    try {
+      // SELECT 1 works across most SQL databases supported by Prisma
+      // eslint-disable-next-line no-unused-vars
+      const _ = await prisma.$queryRaw`SELECT 1`;
+    } catch (dbError) {
+      databaseStatus = 'disconnected';
+    }
 
     const health = {
       status: 'OK',
@@ -186,9 +195,7 @@ const detailedHealthCheck = async (req, res) => {
         rss: Math.round(process.memoryUsage().rss / 1024 / 1024),
       },
       database: {
-        status:
-          mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-        readyState: mongoose.connection.readyState,
+        status: databaseStatus,
       },
       system: {
         platform: process.platform,
@@ -197,16 +204,12 @@ const detailedHealthCheck = async (req, res) => {
       },
     };
 
-    // Check if any critical services are down
-    if (mongoose.connection.readyState !== 1) {
-      health.status = 'DEGRADED';
-      health.database.status = 'disconnected';
-    }
+    // Degrade overall status if database is disconnected
+    const success = databaseStatus === 'connected';
+    if (!success) health.status = 'DEGRADED';
 
-    const statusCode = health.status === 'OK' ? 200 : 503;
-
-    res.status(statusCode).json({
-      success: health.status === 'OK',
+    res.status(success ? 200 : 503).json({
+      success,
       data: health,
     });
   } catch (error) {

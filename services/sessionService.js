@@ -1,5 +1,5 @@
-const Session = require('../models/Session');
 const logger = require('../utils/logger');
+const { withTenant } = require('../db/withTenant');
 
 const baseFields = {
   sessionId: true,
@@ -18,19 +18,22 @@ const baseFields = {
  * @param {Object} sessionData - Additional session data such as ipAddress and userAgent.
  * @returns {Object} The created session.
  */
-async function createSession(userId, sessionData) {
-  const session = new Session({
-    userId,
-    sessionId: `session_${Date.now()}_${Math.random()
-      .toString(36)
-      .substr(2, 9)}`,
-    ipAddress: sessionData.ipAddress,
-    userAgent: sessionData.userAgent,
-    expiresAt: sessionData.expiresAt,
+async function createSession(tenantId, userId, sessionData) {
+  return await withTenant(tenantId, async tx => {
+    const session = await tx.session.create({
+      data: {
+        tenantId,
+        userId,
+        sessionId: `session_${Date.now()}_${Math.random()
+          .toString(36)
+          .substr(2, 9)}`,
+        ipAddress: sessionData.ipAddress,
+        userAgent: sessionData.userAgent,
+        expiresAt: sessionData.expiresAt,
+      },
+    });
+    return session;
   });
-
-  await session.save();
-  return session;
 }
 
 /**
@@ -40,19 +43,21 @@ async function createSession(userId, sessionData) {
  * @param {number} limit - The number of sessions per page.
  * @returns {Object} An object with sessions and the total count.
  */
-async function getSessions(userId, page, limit) {
+async function getSessions(tenantId, userId, page, limit) {
   const skip = (page - 1) * limit;
-
-  const [sessions, count] = await Promise.all([
-    Session.find({ userId, isActive: true })
-      .sort({ updatedAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .select(baseFields),
-    Session.countDocuments({ userId, isActive: true }),
-  ]);
-
-  return { sessions, count };
+  return await withTenant(tenantId, async tx => {
+    const where = { tenantId, userId, isActive: true };
+    const [sessions, count] = await Promise.all([
+      tx.session.findMany({
+        where,
+        orderBy: { updatedAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      tx.session.count({ where }),
+    ]);
+    return { sessions, count };
+  });
 }
 
 /**
@@ -61,22 +66,20 @@ async function getSessions(userId, page, limit) {
  * @param {string} userId - The ID of the user.
  * @returns {Object|null} The ended session or null if not found.
  */
-async function endSession(sessionId, userId) {
-  const session = await Session.findOne({ sessionId, userId, isActive: true });
-
-  if (!session) {
-    return null;
-  }
-
-  const now = new Date();
-  const logoutTime = session.expiresAt < now ? session.expiresAt : now;
-
-  await Session.findByIdAndUpdate(session._id, {
-    logoutTime,
-    isActive: false,
+async function endSession(tenantId, sessionId, userId) {
+  return await withTenant(tenantId, async tx => {
+    const session = await tx.session.findFirst({
+      where: { tenantId, sessionId, userId, isActive: true },
+    });
+    if (!session) return null;
+    const now = new Date();
+    const logoutTime = session.expiresAt < now ? session.expiresAt : now;
+    await tx.session.update({
+      where: { id: session.id },
+      data: { logoutTime, isActive: false },
+    });
+    return session;
   });
-
-  return session;
 }
 
 /**
@@ -85,23 +88,26 @@ async function endSession(sessionId, userId) {
  * @param {string} currentSessionId - The ID of the current session to keep.
  * @returns {number} The count of sessions ended.
  */
-async function endAllOtherSessions(userId, currentSessionId) {
-  const sessions = await Session.find({
-    userId,
-    isActive: true,
-    sessionId: { $ne: currentSessionId },
-  });
-
-  for (const session of sessions) {
-    const now = new Date();
-    const logoutTime = session.expiresAt < now ? session.expiresAt : now;
-    await Session.findByIdAndUpdate(session._id, {
-      logoutTime,
-      isActive: false,
+async function endAllOtherSessions(tenantId, userId, currentSessionId) {
+  return await withTenant(tenantId, async tx => {
+    const sessions = await tx.session.findMany({
+      where: {
+        tenantId,
+        userId,
+        isActive: true,
+        NOT: { sessionId: currentSessionId },
+      },
     });
-  }
-
-  return sessions.length;
+    const now = new Date();
+    for (const session of sessions) {
+      const logoutTime = session.expiresAt < now ? session.expiresAt : now;
+      await tx.session.update({
+        where: { id: session.id },
+        data: { logoutTime, isActive: false },
+      });
+    }
+    return sessions.length;
+  });
 }
 
 /**
@@ -110,14 +116,19 @@ async function endAllOtherSessions(userId, currentSessionId) {
  * @param {Object} updateData - Data to update in the session.
  * @returns {Object|null} The updated session or null if not found.
  */
-async function updateSession(sessionId, updateData) {
+async function updateSession(tenantId, sessionId, updateData) {
   try {
-    const session = await Session.findOneAndUpdate(
-      { sessionId, isActive: true },
-      { ...updateData, updatedAt: new Date() },
-      { new: true }
-    );
-    return session;
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.session.findFirst({
+        where: { tenantId, sessionId, isActive: true },
+      });
+      if (!existing) return null;
+      const session = await tx.session.update({
+        where: { id: existing.id },
+        data: { ...updateData, updatedAt: new Date() },
+      });
+      return session;
+    });
   } catch (error) {
     logger.error('Error updating session:', error);
     return null;
@@ -130,16 +141,13 @@ async function updateSession(sessionId, updateData) {
  * @param {string} userId - The ID of the user for security validation.
  * @returns {Object|null} The current session or null if not found.
  */
-async function getCurrentSession(sessionId, userId) {
+async function getCurrentSession(tenantId, sessionId, userId) {
   try {
-    // Direct lookup by sessionId, validate userId for security
-    const session = await Session.findOne({
-      sessionId,
-      userId,
-      isActive: true,
-    });
-
-    return session;
+    return await withTenant(tenantId, async tx =>
+      tx.session.findFirst({
+        where: { tenantId, sessionId, userId, isActive: true },
+      })
+    );
   } catch (error) {
     logger.error('Error getting current session:', error);
     return null;

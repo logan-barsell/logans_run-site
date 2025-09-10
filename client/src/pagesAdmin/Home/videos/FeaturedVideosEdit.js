@@ -8,7 +8,7 @@ import { useAlert } from '../../../contexts/AlertContext';
 import AddFeaturedVideo from './AddFeaturedVideo';
 import EditFeaturedVideo from './EditFeaturedVideo';
 import DeleteFeaturedVideo from './DeleteFeaturedVideo';
-import { PageTitle, Divider, NoContent } from '../../../components/Header';
+import { PageTitle, NoContent } from '../../../components/Header';
 
 const FeaturedVideosEdit = ({ fetchFeaturedVideos, featuredVideos }) => {
   const { showError } = useAlert();
@@ -59,7 +59,7 @@ const FeaturedVideosEdit = ({ fetchFeaturedVideos, featuredVideos }) => {
           {videos.length === 0 && <NoContent>No Featured Videos</NoContent>}
           {videos.map(video => (
             <VideoItem
-              key={video._id}
+              key={video.id}
               youtubeLink={video.youtubeLink}
               title={video.title}
               description={video.description}

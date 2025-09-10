@@ -15,7 +15,7 @@ const DataTable = ({
   className = '',
   headerActions = null,
   rowActions = null,
-  getRowKey = (item, index) => item.id || item._id || index,
+  getRowKey = (item, index) => item.id || index,
 }) => {
   const [goToPage, setGoToPage] = useState('');
 

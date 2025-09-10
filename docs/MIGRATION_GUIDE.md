@@ -1,277 +1,148 @@
-# Database Migration Guide
+# Prisma + Neon Postgres Migration Guide
 
-This guide explains how to use the automated migration system to handle database schema changes safely and consistently.
+This guide replaces all legacy MongoDB/Mongoose content. It documents how we design, run, and deploy schema changes using Prisma with a Neon (Postgres) database in a multi-tenant app.
 
-## Overview
+## Stack
 
-The migration system automatically applies database schema changes when the server starts, ensuring that:
+- ORM: Prisma
+- DB: Postgres (Neon)
+- Multi-tenancy: Row-level scoping via `tenantId` and `withTenant(tenantId, tx)`
+- Migrations: Prisma Migrate (SQL in `prisma/migrations/`)
 
-- All environments (dev, staging, production) have consistent schemas
-- Schema changes are version-controlled and tracked
-- No manual database intervention is required
-- Changes are applied safely and only once
+## Environment
 
-## How It Works
+Add your Neon connection string to `.env`:
 
-1. **Server Startup**: When the server starts, it automatically runs pending migrations
-2. **Schema Validation**: After migrations, it validates all schemas and auto-fixes issues
-3. **Tracking**: Applied migrations are recorded in the database to prevent re-running
-4. **Logging**: All migration activities are logged for debugging
+```bash
+DATABASE_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require"
+```
 
-## Adding New Fields to Models
+Prisma reads `DATABASE_URL` for all commands.
 
-### Step 1: Update the Model Schema
+## Project Layout
 
-Edit your model file (e.g., `models/Theme.js`):
+- `prisma/schema.prisma` – models and relations (single source of truth)
+- `prisma/migrations/*` – auto-generated SQL migrations
+- `prisma/index.js` – PrismaClient export
+- `db/withTenant.js` – helper that scopes all queries by tenant
 
-```javascript
-const ThemeSchema = new Schema({
-  // ... existing fields
-  newField: { type: String, default: 'default value' },
+## Multi-Tenancy Pattern
+
+- Controllers must pass `tenantId` as the first arg to services.
+- Services wrap all DB operations in `withTenant(tenantId, tx)`.
+- Models include `tenantId` and composite uniques (e.g., `tenantId_email`).
+
+Example:
+
+```js
+return withTenant(tenantId, async tx => {
+  return tx.newsletterSubscriber.findUnique({
+    where: { tenantId_email: { tenantId, email } },
+  });
 });
 ```
 
-### Step 2: Create a Migration
+## Local Development Workflow
 
-Use the migration generator script:
+1. Edit models in `prisma/schema.prisma`.
+2. Create & apply a migration locally:
 
 ```bash
-node scripts/createMigration.js "Add new field" 2
+npx prisma migrate dev --name <change-name>
 ```
 
-This creates a new file: `migrations/migration-2.js`
+3. Inspect data if needed:
 
-### Step 3: Edit the Migration
-
-Open the generated migration file and add your logic:
-
-```javascript
-// Migration 2: Add new field
-const Theme = require('../models/Theme');
-
-module.exports = {
-  version: 2,
-  name: 'Add new field',
-  run: async () => {
-    // Find all documents missing the new field
-    const themes = await Theme.find({ newField: { $exists: false } });
-
-    // Update each document
-    for (const theme of themes) {
-      theme.newField = 'default value';
-      await theme.save();
-    }
-
-    console.log(`Updated ${themes.length} themes with new field`);
-  },
-};
+```bash
+npx prisma studio
 ```
 
-### Step 4: Register the Migration
+4. Run the app and verify:
 
-Add the migration to `migrations/migrationRunner.js`:
-
-```javascript
-const migration1 = require('./migration-1');
-const migration2 = require('./migration-2');
-
-const migrations = [
-  migration1,
-  migration2, // Add your new migration here
-];
+```bash
+npm run dev
 ```
 
-### Step 5: Deploy
+What `migrate dev` does:
 
-Deploy your changes. The migration will run automatically on server startup.
+- Validates schema
+- Creates SQL under `prisma/migrations/<timestamp>_<name>`
+- Applies to local DB
+- Regenerates Prisma Client
 
-## Common Migration Patterns
+## CI/Production Deployment
 
-### Adding a Field with Default Value
+Commit migrations to VCS. On deploy (CI or server):
 
-```javascript
-run: async () => {
-  const documents = await Model.find({ newField: { $exists: false } });
-  for (const doc of documents) {
-    doc.newField = 'default value';
-    await doc.save();
-  }
-};
+```bash
+npx prisma migrate deploy
 ```
 
-### Updating Existing Data
+This applies any pending SQL migrations to the database configured by `DATABASE_URL`.
 
-```javascript
-run: async () => {
-  const documents = await Model.find({ oldField: { $exists: true } });
-  for (const doc of documents) {
-    doc.newField = doc.oldField; // Copy old value to new field
-    await doc.save();
-  }
-};
+## Common Changes
+
+- Add column: update model, run `migrate dev`
+- Add unique/composite index: define in model (e.g., `@@unique([tenantId, email], name: "tenantId_email")`), run `migrate dev`
+- Add relation: add FK fields and relation blocks; confirm `onDelete`/`onUpdate`
+
+## Health Check
+
+We verify DB connectivity using a lightweight query:
+
+```js
+await prisma.$queryRaw`SELECT 1`;
 ```
 
-### Removing a Field
+If it fails, health status becomes `DEGRADED` (HTTP 503).
 
-```javascript
-run: async () => {
-  await Model.updateMany({}, { $unset: { oldField: 1 } });
-};
+## Error Handling
+
+- Duplicate key: Prisma code `P2002` (generic fallback supported)
+- Not found: perform `findUnique` first; throw `new AppError('...', 404)`
+- All services/controllers must avoid Mongoose-specific logic
+
+## Data Seeding (Dev Only)
+
+```bash
+node scripts/seed-core-dev.js
 ```
 
-### Complex Data Transformations
+Use for non-critical development data only.
 
-```javascript
-run: async () => {
-  const documents = await Model.find({});
-  for (const doc of documents) {
-    // Transform data as needed
-    doc.transformedField = doc.oldField.toUpperCase();
-    await doc.save();
-  }
-};
-```
+## Converting Legacy Code
 
-## Schema Validation
+For any stragglers in feature branches:
 
-The system also includes automatic schema validation that:
-
-- Checks for missing required fields
-- Applies default values
-- Fixes schema inconsistencies
-- Logs all auto-fixes
-
-### Adding Schema Validation
-
-To add validation for a new model, edit `utils/schemaValidator.js`:
-
-```javascript
-const schemaValidators = {
-  // ... existing validators
-
-  validateNewModel: async () => {
-    const documents = await NewModel.find();
-    for (const doc of documents) {
-      let needsUpdate = false;
-
-      if (!doc.requiredField) {
-        doc.requiredField = 'default value';
-        needsUpdate = true;
-      }
-
-      if (needsUpdate) {
-        await doc.save();
-      }
-    }
-  },
-};
-```
-
-Then add it to the `validateAllSchemas` function:
-
-```javascript
-async function validateAllSchemas() {
-  await schemaValidators.validateTheme();
-  await schemaValidators.validateNewModel(); // Add this line
-}
-```
+- Replace `_id` with `id`
+- Move queries to services using Prisma Client
+- Add `tenantId` and wrap in `withTenant`
 
 ## Troubleshooting
 
-### Migration Not Running
+- Client missing: `npx prisma generate`
+- Migration failed: inspect SQL in `prisma/migrations/`, verify `DATABASE_URL`, rerun `migrate dev` (dev) or `migrate deploy` (prod)
+- Unique constraint errors: confirm indexes in schema
 
-1. **Check server logs** for migration output
-2. **Verify migration is registered** in `migrationRunner.js`
-3. **Check migration version** - must be higher than last applied
-4. **Ensure database connection** is working
-
-### Migration Fails
-
-1. **Check error logs** for specific failure reason
-2. **Verify migration logic** - test locally first
-3. **Check database permissions** - ensure write access
-4. **Rollback if needed** - manually fix database state
-
-### Schema Validation Issues
-
-1. **Check validation logs** for auto-fixes applied
-2. **Verify model schema** matches validation logic
-3. **Test locally** before deploying
-
-## Best Practices
-
-### Migration Design
-
-- **Keep migrations small** - one logical change per migration
-- **Make migrations idempotent** - safe to run multiple times
-- **Test migrations locally** before deploying
-- **Use descriptive names** for migrations
-- **Include rollback logic** for complex migrations
-
-### Version Management
-
-- **Increment version numbers** sequentially
-- **Never reuse version numbers**
-- **Document breaking changes**
-- **Coordinate with team** on migration versions
-
-### Testing
-
-- **Test migrations locally** with production-like data
-- **Verify schema validation** works correctly
-- **Check migration logs** for expected output
-- **Test rollback procedures** if applicable
-
-## Migration Commands
-
-### Create New Migration
+## Useful Commands
 
 ```bash
-node scripts/createMigration.js "Description" version_number
+# Create & apply a migration locally
+npx prisma migrate dev --name <name>
+
+# Apply pending migrations (staging/prod)
+npx prisma migrate deploy
+
+# Inspect data
+npx prisma studio
+
+# Generate Prisma Client
+npx prisma generate
+
+# Reset dev DB (dangerous, dev only)
+npx prisma migrate reset
 ```
 
-### Check Migration Status
+---
 
-```bash
-# Check database for applied migrations
-db.migrations.find().sort({version: 1})
-```
-
-### Manual Migration (Emergency)
-
-```bash
-# Connect to database and run migration manually
-node -e "
-const mongoose = require('mongoose');
-const { runMigrations } = require('./migrations/migrationRunner');
-mongoose.connect('your_connection_string').then(() => {
-  runMigrations().then(() => process.exit(0));
-});
-"
-```
-
-## File Structure
-
-```
-├── migrations/
-│   ├── migrationRunner.js      # Main migration orchestrator
-│   ├── migration-1.js          # Individual migration files
-│   └── migration-2.js
-├── utils/
-│   └── schemaValidator.js      # Schema validation logic
-├── scripts/
-│   └── createMigration.js      # Migration generator
-└── docs/
-    └── MIGRATION_GUIDE.md      # This file
-```
-
-## Support
-
-If you encounter issues:
-
-1. **Check server logs** for detailed error messages
-2. **Review this guide** for common solutions
-3. **Test locally** to reproduce the issue
-4. **Document the problem** for future reference
-
-Remember: The migration system is designed to be safe and automatic. When in doubt, test locally first!
+All schema work must go through Prisma migrations. MongoDB/Mongoose docs are deprecated and removed.

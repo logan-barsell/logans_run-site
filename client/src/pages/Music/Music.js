@@ -102,7 +102,7 @@ const MusicPage = ({
         />
       ) : players && players.length > 0 ? (
         players.map(player => (
-          <div key={player._id}>
+          <div key={player.id}>
             <SecondaryNav label={player.title} />
             <div className='audioPlayer container'>
               <div className='player-container'>

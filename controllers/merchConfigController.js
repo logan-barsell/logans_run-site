@@ -1,5 +1,4 @@
 const MerchConfigService = require('../services/merchConfigService');
-const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
 /**
@@ -7,11 +6,8 @@ const logger = require('../utils/logger');
  */
 async function getMerchConfig(req, res, next) {
   try {
-    const merchConfig = await MerchConfigService.getMerchConfig();
-    res.json({
-      success: true,
-      data: merchConfig,
-    });
+    const merchConfig = await MerchConfigService.getMerchConfig(req.tenantId);
+    res.status(200).json({ success: true, data: merchConfig });
   } catch (error) {
     logger.error('❌ Failed to fetch merch config:', error);
     next(error);
@@ -23,11 +19,10 @@ async function getMerchConfig(req, res, next) {
  */
 async function getMerchConfigAdmin(req, res, next) {
   try {
-    const merchConfig = await MerchConfigService.getMerchConfigAdmin();
-    res.json({
-      success: true,
-      data: merchConfig,
-    });
+    const merchConfig = await MerchConfigService.getMerchConfigAdmin(
+      req.tenantId
+    );
+    res.status(200).json({ success: true, data: merchConfig });
   } catch (error) {
     logger.error('❌ Failed to fetch merch config admin:', error);
     next(error);
@@ -40,11 +35,11 @@ async function getMerchConfigAdmin(req, res, next) {
 async function updateMerchConfig(req, res, next) {
   try {
     const configData = req.body;
-    const result = await MerchConfigService.updateMerchConfig(configData);
-    res.json({
-      success: true,
-      data: result,
-    });
+    const result = await MerchConfigService.updateMerchConfig(
+      req.tenantId,
+      configData
+    );
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
     logger.error('❌ Failed to update merch config:', error);
     next(error);
@@ -56,8 +51,8 @@ async function updateMerchConfig(req, res, next) {
  */
 async function deleteMerchConfig(req, res, next) {
   try {
-    const result = await MerchConfigService.deleteMerchConfig();
-    res.json({
+    const result = await MerchConfigService.deleteMerchConfig(req.tenantId);
+    res.status(200).json({
       success: true,
       message: 'Merch config deleted successfully',
       deletedCount: result.deletedCount,

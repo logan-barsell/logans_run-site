@@ -48,7 +48,7 @@ const MusicEdit = ({ fetchPlayers, players }) => {
     }
     return (
       <div
-        key={player._id}
+        key={player.id}
         className='list-group-item list-group-item-action'
         aria-current='true'
       >

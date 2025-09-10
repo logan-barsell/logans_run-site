@@ -66,7 +66,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
   const handleRemove = async image => {
     try {
       const imageName = extractStoragePathFromUrl(image.imgLink);
-      await removeMediaImage(image._id);
+      await removeMediaImage(image.id);
       try {
         await deleteImageFromFirebase(imageName);
       } catch (error) {

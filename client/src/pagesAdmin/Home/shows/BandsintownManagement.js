@@ -48,13 +48,9 @@ const BandsintownManagement = ({ showSystem, showsSettings }) => {
     [showsSettings?.bandsintownArtist]
   );
 
-  // Add a key to force form re-initialization when data changes
-  const formKey = `bandsintown-${showsSettings?.bandsintownArtist || 'empty'}`;
-
   return (
     <>
       <EditableForm
-        key={formKey}
         title='Bandsintown Settings'
         containerId='bandsintownEdit'
         fields={bandsintownFields}

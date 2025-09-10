@@ -7,7 +7,7 @@ const DeleteFeaturedVideo = ({ video, fetchVideos }) => {
   const { showError, showSuccess } = useAlert();
 
   const onDelete = async item => {
-    const id = item._id || item.id;
+    const id = item.id;
     try {
       await deleteFeaturedVideoService(id);
       showSuccess('Featured video deleted successfully!');

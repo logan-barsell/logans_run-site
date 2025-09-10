@@ -1,5 +1,7 @@
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const MerchConfigService = require('./merchConfigService');
+const ThemeService = require('./themeService');
 const admin = require('firebase-admin');
 const path = require('path');
 const serviceAccount = require(path.join(
@@ -45,8 +47,13 @@ function checkStripeAvailable() {
 /**
  * Get all products from Stripe
  */
-async function getProducts() {
+async function getProducts(tenantId) {
   try {
+    // Ensure tenant has stripe merch configured
+    const merch = await MerchConfigService.getMerchConfig(tenantId);
+    if (!merch || merch.storeType !== 'stripe') {
+      throw new AppError('Stripe store is not configured for tenant', 400);
+    }
     checkStripeAvailable();
 
     const products = await stripe.products.list({
@@ -94,8 +101,12 @@ async function getProducts() {
 /**
  * Create a checkout session
  */
-async function createCheckoutSession(products) {
+async function createCheckoutSession(tenantId, products) {
   try {
+    const merch = await MerchConfigService.getMerchConfig(tenantId);
+    if (!merch || merch.storeType !== 'stripe') {
+      throw new AppError('Stripe store is not configured for tenant', 400);
+    }
     checkStripeAvailable();
 
     const productlist = [];
@@ -133,8 +144,12 @@ async function createCheckoutSession(products) {
 /**
  * Get shipping rate
  */
-async function getShippingRate() {
+async function getShippingRate(tenantId) {
   try {
+    const merch = await MerchConfigService.getMerchConfig(tenantId);
+    if (!merch || merch.storeType !== 'stripe') {
+      throw new AppError('Stripe store is not configured for tenant', 400);
+    }
     checkStripeAvailable();
 
     const shippingRate = await stripe.shippingRates.list({
@@ -157,8 +172,12 @@ async function getShippingRate() {
 /**
  * Create a new product
  */
-async function createProduct(productData) {
+async function createProduct(tenantId, productData) {
   try {
+    const merch = await MerchConfigService.getMerchConfig(tenantId);
+    if (!merch || merch.storeType !== 'stripe') {
+      throw new AppError('Stripe store is not configured for tenant', 400);
+    }
     checkStripeAvailable();
 
     if (!productData.name || !productData.price) {
@@ -193,8 +212,12 @@ async function createProduct(productData) {
 /**
  * Update an existing product
  */
-async function updateProduct(productId, updateData) {
+async function updateProduct(tenantId, productId, updateData) {
   try {
+    const merch = await MerchConfigService.getMerchConfig(tenantId);
+    if (!merch || merch.storeType !== 'stripe') {
+      throw new AppError('Stripe store is not configured for tenant', 400);
+    }
     checkStripeAvailable();
 
     if (!productId) {
@@ -215,8 +238,12 @@ async function updateProduct(productId, updateData) {
 /**
  * Delete a product
  */
-async function deleteProduct(productId) {
+async function deleteProduct(tenantId, productId) {
   try {
+    const merch = await MerchConfigService.getMerchConfig(tenantId);
+    if (!merch || merch.storeType !== 'stripe') {
+      throw new AppError('Stripe store is not configured for tenant', 400);
+    }
     checkStripeAvailable();
 
     if (!productId) {

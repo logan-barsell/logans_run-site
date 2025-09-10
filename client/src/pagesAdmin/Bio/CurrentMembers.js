@@ -48,7 +48,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
     const items = [];
 
     members.forEach(member => {
-      const { _id, bioPic, name, role } = member;
+      const { id, bioPic, name, role } = member;
       const imgURL = bioPic || '';
 
       const socials = renderSocialIcons(member);
@@ -56,7 +56,7 @@ const CurrentMembers = ({ fetchMembers, members }) => {
       items.push({
         data: member,
         group: 'members',
-        id: _id,
+        id,
         name,
         header: name,
         img: imgURL,

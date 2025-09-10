@@ -32,6 +32,13 @@ const CurrentShows = ({ fetchShows, shows }) => {
     }
   }, [showsSettings]);
 
+  // Ensure we fetch fresh shows for admin when using custom management
+  useEffect(() => {
+    if (showSystem === 'custom') {
+      fetchShows();
+    }
+  }, [fetchShows, showSystem]);
+
   const handleShowSystemChange = e => {
     const newSystem = e.target.value;
     isUpdating.current = true;

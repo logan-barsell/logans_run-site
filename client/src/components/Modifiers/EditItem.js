@@ -14,7 +14,7 @@ const EditItem = ({
 }) => {
   // Handle different data structures - some items have data nested under .data
   const itemData = item.data || item;
-  const id = itemData._id || itemData.id || item._id || item.id;
+  const id = itemData.id || item.id;
 
   // Memoize the fields to prevent re-creation on every render
   const fields = useMemo(() => {

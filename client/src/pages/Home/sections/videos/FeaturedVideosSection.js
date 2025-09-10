@@ -40,7 +40,7 @@ const FeaturedVideosSection = ({
         videoId = v.youtubeLink;
       }
       return {
-        _id: v._id,
+        id: v.id,
         videoId,
         videoType: v.videoType || 'youtube',
         displayMode: v.displayMode || 'full',

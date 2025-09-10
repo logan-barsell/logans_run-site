@@ -1,16 +1,33 @@
-const showModel = require('../models/Show');
-const HomeImage = require('../models/HomeImage');
-const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { withTenant } = require('../db/withTenant');
+const { toDate } = require('../utils/dates');
+const { whitelistFields } = require('../utils/fieldWhitelist');
 
-/**
- * Get all home images
- */
-async function getHomeImages() {
+// Home image allowed fields
+const HOME_IMAGE_FIELDS = ['imageUrl', 'altText', 'order'];
+
+// Show allowed fields
+const SHOW_FIELDS = [
+  'poster',
+  'venue',
+  'location',
+  'date',
+  'doors',
+  'showtime',
+  'doorprice',
+  'advprice',
+  'tixlink',
+];
+
+async function getHomeImages(tenantId) {
   try {
-    const images = await HomeImage.find();
-    return images;
+    return await withTenant(tenantId, async tx => {
+      return await tx.homeImage.findMany({
+        where: { tenantId },
+        orderBy: { createdAt: 'asc' },
+      });
+    });
   } catch (error) {
     logger.error('❌ Error fetching home images:', error);
     throw new AppError(
@@ -20,61 +37,56 @@ async function getHomeImages() {
   }
 }
 
-/**
- * Remove a home image by ID
- */
-async function removeImage(id) {
+async function removeImage(tenantId, id) {
   try {
     if (!id) {
       throw new AppError('Image ID is required', 400);
     }
 
-    const deletedImage = await HomeImage.findOneAndDelete({ _id: id });
-
-    if (!deletedImage) {
-      throw new AppError('Image not found', 404);
-    }
-
-    logger.info(`✅ Home image deleted successfully: ${id}`);
-    return deletedImage;
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.homeImage.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Image not found', 404);
+      const deleted = await tx.homeImage.delete({ where: { id } });
+      logger.info(`✅ Home image deleted successfully: ${id}`);
+      return deleted;
+    });
   } catch (error) {
-    logger.error('❌ Error deleting home image:', error);
+    logger.error('❌ Error removing home image:', error);
     throw new AppError(
-      error.message || 'Error deleting home image',
+      error.message || 'Error removing home image',
       error.statusCode || 500
     );
   }
 }
 
-/**
- * Add home image(s)
- */
-async function addHomeImage(imageData) {
+async function addHomeImage(tenantId, imageData) {
   try {
     if (!imageData) {
       throw new AppError('Image data is required', 400);
     }
 
-    // Check if the request body is an array or single object
-    if (Array.isArray(imageData)) {
-      // Multiple images
-      if (imageData.length === 0) {
-        throw new AppError('At least one image is required', 400);
+    // Handle both single image and array of images
+    const images = Array.isArray(imageData) ? imageData : [imageData];
+    const processedImages = images.map(img => {
+      const data = whitelistFields(img, HOME_IMAGE_FIELDS);
+      return { ...data, tenantId };
+    });
+
+    return await withTenant(tenantId, async tx => {
+      if (processedImages.length === 1) {
+        const newImage = await tx.homeImage.create({
+          data: processedImages[0],
+        });
+        logger.info('✅ Home image added successfully');
+        return newImage;
+      } else {
+        const newImages = await tx.homeImage.createMany({
+          data: processedImages,
+        });
+        logger.info(`✅ ${newImages.count} home images added successfully`);
+        return newImages;
       }
-
-      const homeImages = imageData.map(imageData => new HomeImage(imageData));
-      const savedImages = await HomeImage.insertMany(homeImages);
-
-      logger.info(`✅ ${savedImages.length} home images added successfully`);
-      return savedImages;
-    } else {
-      // Single image
-      const image = new HomeImage(imageData);
-      const savedImage = await image.save();
-
-      logger.info('✅ Home image added successfully');
-      return savedImage;
-    }
+    });
   } catch (error) {
     logger.error('❌ Error adding home image:', error);
     throw new AppError(
@@ -84,37 +96,22 @@ async function addHomeImage(imageData) {
   }
 }
 
-/**
- * Add a new show
- */
-async function addShow(showData) {
+async function addShow(tenantId, showData) {
   try {
     if (!showData || Object.keys(showData).length === 0) {
       throw new AppError('Show data is required', 400);
     }
 
-    const newShow = new showModel(showData);
-    await newShow.save();
+    const data = whitelistFields(showData, SHOW_FIELDS);
+    if ('date' in data) data.date = toDate(data.date);
 
-    logger.info('✅ New show added successfully');
-
-    // Send newsletter notification for new show
-    try {
-      await NewsletterService.sendContentNotification('show', {
-        title: newShow.venue || 'New Show',
-        date: newShow.date,
-        venue: newShow.venue,
-        location: newShow.location,
-        description: `New show at ${newShow.venue}${
-          newShow.location ? ` in ${newShow.location}` : ''
-        }`,
+    return await withTenant(tenantId, async tx => {
+      const newShow = await tx.show.create({
+        data: { ...data, tenantId },
       });
-    } catch (newsletterError) {
-      logger.error('Failed to send newsletter notification:', newsletterError);
-      // Don't fail the show creation if newsletter fails
-    }
-
-    return newShow;
+      logger.info('✅ Show added successfully');
+      return newShow;
+    });
   } catch (error) {
     logger.error('❌ Error adding show:', error);
     throw new AppError(
@@ -124,13 +121,14 @@ async function addShow(showData) {
   }
 }
 
-/**
- * Get all shows
- */
-async function getShows() {
+async function getShows(tenantId) {
   try {
-    const shows = await showModel.find().sort({ date: 1 });
-    return shows;
+    return await withTenant(tenantId, async tx => {
+      return await tx.show.findMany({
+        where: { tenantId },
+        orderBy: { date: 'asc' },
+      });
+    });
   } catch (error) {
     logger.error('❌ Error fetching shows:', error);
     throw new AppError(
@@ -140,30 +138,25 @@ async function getShows() {
   }
 }
 
-/**
- * Update a show by ID
- */
-async function updateShow(id, showData) {
+async function updateShow(tenantId, id, showData) {
   try {
     if (!id) {
       throw new AppError('Show ID is required', 400);
     }
-
     if (!showData || Object.keys(showData).length === 0) {
       throw new AppError('Show update data is required', 400);
     }
 
-    const updatedShow = await showModel.findByIdAndUpdate(id, showData, {
-      new: true,
-      runValidators: true,
+    const data = whitelistFields(showData, SHOW_FIELDS);
+    if ('date' in data) data.date = toDate(data.date);
+
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.show.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Show not found', 404);
+      const updated = await tx.show.update({ where: { id }, data });
+      logger.info(`✅ Show updated successfully: ${id}`);
+      return updated;
     });
-
-    if (!updatedShow) {
-      throw new AppError('Show not found', 404);
-    }
-
-    logger.info(`✅ Show updated successfully: ${id}`);
-    return updatedShow;
   } catch (error) {
     logger.error('❌ Error updating show:', error);
     throw new AppError(
@@ -173,23 +166,19 @@ async function updateShow(id, showData) {
   }
 }
 
-/**
- * Delete a show by ID
- */
-async function deleteShow(id) {
+async function deleteShow(tenantId, id) {
   try {
     if (!id) {
       throw new AppError('Show ID is required', 400);
     }
 
-    const deletedShow = await showModel.findByIdAndDelete(id);
-
-    if (!deletedShow) {
-      throw new AppError('Show not found', 404);
-    }
-
-    logger.info(`✅ Show deleted successfully: ${id}`);
-    return deletedShow;
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.show.findUnique({ where: { id } });
+      if (!existing) throw new AppError('Show not found', 404);
+      const deleted = await tx.show.delete({ where: { id } });
+      logger.info(`✅ Show deleted successfully: ${id}`);
+      return deleted;
+    });
   } catch (error) {
     logger.error('❌ Error deleting show:', error);
     throw new AppError(

@@ -1,18 +1,19 @@
-const ShowsSettings = require('../models/ShowsSettings');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { withTenant } = require('../db/withTenant');
+const { whitelistFields } = require('../utils/fieldWhitelist');
 
-/**
- * Get shows settings, create default if none exists
- */
-async function getShowsSettings() {
+// Shows settings allowed fields
+const SHOWS_SETTINGS_FIELDS = ['showSystem', 'bandsintownArtist'];
+
+async function getShowsSettings(tenantId) {
   try {
-    let settings = await ShowsSettings.findOne();
-    if (!settings) {
-      settings = await ShowsSettings.create({});
-      logger.info('✅ Created new shows settings');
-    }
-    return settings;
+    return await withTenant(tenantId, async tx => {
+      const settings = await tx.showsSettings.findUnique({
+        where: { tenantId },
+      });
+      return settings; // may be null
+    });
   } catch (error) {
     logger.error('❌ Error fetching shows settings:', error);
     throw new AppError(
@@ -22,25 +23,28 @@ async function getShowsSettings() {
   }
 }
 
-/**
- * Update or create shows settings
- */
-async function updateShowsSettings(update) {
+async function updateShowsSettings(tenantId, update) {
   try {
-    if (!update) {
+    if (!update || Object.keys(update).length === 0) {
       throw new AppError('Shows settings data is required', 400);
     }
 
-    let settings = await ShowsSettings.findOne();
-    if (settings) {
-      Object.assign(settings, update);
-      await settings.save();
+    const data = whitelistFields(update, SHOWS_SETTINGS_FIELDS);
+
+    return await withTenant(tenantId, async tx => {
+      const existing = await tx.showsSettings.findUnique({
+        where: { tenantId },
+      });
+      if (!existing) {
+        throw new AppError('Shows settings not found', 404);
+      }
+      const result = await tx.showsSettings.update({
+        where: { tenantId },
+        data,
+      });
       logger.info('✅ Shows settings updated successfully');
-    } else {
-      settings = await ShowsSettings.create(update);
-      logger.info('✅ Shows settings created successfully');
-    }
-    return settings;
+      return result;
+    });
   } catch (error) {
     logger.error('❌ Error updating shows settings:', error);
     throw new AppError(

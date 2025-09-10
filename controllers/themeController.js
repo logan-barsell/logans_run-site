@@ -7,11 +7,9 @@ const logger = require('../utils/logger');
  */
 async function getTheme(req, res, next) {
   try {
-    const theme = await ThemeService.getTheme();
-    res.json({
-      success: true,
-      data: theme,
-    });
+    const theme = await ThemeService.getTheme(req.tenantId);
+    if (!theme) return next(new AppError('Theme not found', 404));
+    res.json({ success: true, data: theme });
   } catch (error) {
     logger.error('❌ Failed to fetch theme:', error);
     next(error);
@@ -24,18 +22,12 @@ async function getTheme(req, res, next) {
 async function updateTheme(req, res, next) {
   try {
     const update = req.body;
-    const result = await ThemeService.updateTheme(update);
-    res.json({
-      success: true,
-      data: result,
-    });
+    const result = await ThemeService.updateTheme(req.tenantId, update);
+    res.json({ success: true, data: result });
   } catch (error) {
     logger.error('❌ Failed to update theme:', error);
     next(error);
   }
 }
 
-module.exports = {
-  getTheme,
-  updateTheme,
-};
+module.exports = { getTheme, updateTheme };

@@ -7,7 +7,7 @@ const logger = require('../utils/logger');
  */
 async function getProducts(req, res, next) {
   try {
-    const products = await BillingService.getProducts();
+    const products = await BillingService.getProducts(req.tenantId);
     res.json({
       success: true,
       data: products,
@@ -24,7 +24,10 @@ async function getProducts(req, res, next) {
 async function createCheckoutSession(req, res, next) {
   try {
     const products = JSON.parse(Object.keys(req.body)[0]);
-    const session = await BillingService.createCheckoutSession(products);
+    const session = await BillingService.createCheckoutSession(
+      req.tenantId,
+      products
+    );
     res.json({
       success: true,
       data: { url: session.url },
@@ -40,7 +43,7 @@ async function createCheckoutSession(req, res, next) {
  */
 async function getShipping(req, res, next) {
   try {
-    const shippingRate = await BillingService.getShippingRate();
+    const shippingRate = await BillingService.getShippingRate(req.tenantId);
     res.json({
       success: true,
       data: shippingRate,
@@ -56,7 +59,7 @@ async function getShipping(req, res, next) {
  */
 async function createProduct(req, res, next) {
   try {
-    const result = await BillingService.createProduct(req.body);
+    const result = await BillingService.createProduct(req.tenantId, req.body);
     res.status(201).json({
       success: true,
       data: result,
@@ -72,7 +75,11 @@ async function createProduct(req, res, next) {
  */
 async function updateProduct(req, res, next) {
   try {
-    const result = await BillingService.updateProduct(req.params.id, req.body);
+    const result = await BillingService.updateProduct(
+      req.tenantId,
+      req.params.id,
+      req.body
+    );
     res.json({
       success: true,
       data: result,
@@ -88,7 +95,7 @@ async function updateProduct(req, res, next) {
  */
 async function deleteProduct(req, res, next) {
   try {
-    await BillingService.deleteProduct(req.params.id);
+    await BillingService.deleteProduct(req.tenantId, req.params.id);
     res.json({
       success: true,
       message: 'Product deleted successfully',

@@ -36,7 +36,7 @@ export const sessionsReducer = (state = initialState, action) => {
     case DELETE_SESSION:
       return {
         ...state,
-        data: state.data.filter(session => session._id !== action.payload._id),
+        data: state.data.filter(session => session.id !== action.payload.id),
         deleteLoading: false,
         deleteError: null,
       };

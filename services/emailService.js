@@ -1,6 +1,6 @@
 const logger = require('../utils/logger');
 const emailTemplates = require('../templates');
-const Theme = require('../models/Theme');
+const ThemeService = require('./themeService');
 const { AppError } = require('../middleware/errorHandler');
 const sesThrottler = require('../utils/sesThrottler');
 
@@ -20,7 +20,8 @@ async function sendEmail(
   html,
   templateType = null,
   templateData = {},
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   try {
     // In development without AWS credentials, just log the email
@@ -41,7 +42,7 @@ async function sendEmail(
       // Fetch theme data for email styling
       let theme = null;
       try {
-        theme = await Theme.findOne();
+        theme = tenantId ? await ThemeService.getTheme(tenantId) : null;
       } catch (error) {
         logger.warn('Could not fetch theme for email template:', error.message);
       }
@@ -193,7 +194,8 @@ async function sendEmailVerification(
   verificationLink,
   role = 'USER',
   bandName = 'Bandsyte',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject =
     role === 'ADMIN' || role === 'SUPERADMIN'
@@ -216,7 +218,8 @@ async function sendEmailVerification(
       role,
       bandName,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -227,7 +230,8 @@ async function sendPasswordReset(
   to,
   resetLink,
   bandName = 'Bandsyte',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `Reset Your Password - ${bandName} Admin`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -246,7 +250,8 @@ async function sendPasswordReset(
       link: resetLink,
       bandName,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -256,7 +261,8 @@ async function sendPasswordReset(
 async function sendWelcomeEmail(
   to,
   bandName = 'Bandsyte',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `Welcome to Bandsyte - ${bandName} Website is Live!`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -274,7 +280,8 @@ async function sendWelcomeEmail(
     {
       bandName,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -285,7 +292,8 @@ async function sendContactNotification(
   to,
   contactData,
   bandName = 'Bandsyte',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `New Fan Message - ${bandName}`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -304,7 +312,8 @@ async function sendContactNotification(
       contactData,
       bandName,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -315,7 +324,8 @@ async function sendNewsletterConfirmation(
   email,
   bandName = 'Bandsyte',
   unsubscribeToken = '',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `You're In The Loop - ${bandName} Newsletter`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -335,7 +345,8 @@ async function sendNewsletterConfirmation(
       bandName,
       unsubscribeToken,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -346,7 +357,8 @@ async function sendNewsletterSignupNotification(
   to,
   fanEmail,
   bandName = 'Bandsyte',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `New Newsletter Signup - ${bandName}`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -365,7 +377,8 @@ async function sendNewsletterSignupNotification(
       fanEmail,
       bandName,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -378,7 +391,8 @@ async function sendContentNotification(
   contentType = 'content',
   content = {},
   unsubscribeToken = '',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   // Determine the appropriate template based on content type
   let templateType = 'newsletterNotification'; // Default fallback
@@ -415,7 +429,8 @@ async function sendContentNotification(
       contentType,
       unsubscribeToken,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -442,7 +457,8 @@ async function sendPasswordResetSuccess(
   to,
   bandName = 'Bandsyte',
   timestamp = new Date().toLocaleString(),
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `Password Reset Successful - ${bandName} Admin`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -461,7 +477,8 @@ async function sendPasswordResetSuccess(
       bandName,
       timestamp,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -476,7 +493,8 @@ async function sendSecurityAlert(
   ipAddress = 'Unknown',
   userAgent = 'Unknown',
   location = 'Unknown',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `Security Alert - ${bandName} Admin`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -499,7 +517,8 @@ async function sendSecurityAlert(
       userAgent,
       location,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -512,7 +531,8 @@ async function sendLoginAlert(
   ipAddress = 'Unknown',
   userAgent = 'Unknown',
   location = 'Unknown',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `Login Alert - ${bandName} Admin`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -534,7 +554,8 @@ async function sendLoginAlert(
       userAgent,
       location,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 
@@ -545,7 +566,8 @@ async function sendTwoFactorCode(
   to,
   code,
   bandName = 'Bandsyte',
-  customFromAddress = null
+  customFromAddress = null,
+  tenantId = null
 ) {
   const subject = `Two-Factor Authentication Code - ${bandName} Admin`;
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -564,7 +586,8 @@ async function sendTwoFactorCode(
       code,
       bandName,
     },
-    fromAddress
+    fromAddress,
+    tenantId
   );
 }
 

@@ -9,11 +9,9 @@ const logger = require('../utils/logger');
  */
 async function getContactInfo(req, res, next) {
   try {
-    const info = await ContactService.getContactInfo();
-    res.status(200).json({
-      success: true,
-      data: info,
-    });
+    const info = await ContactService.getContactInfo(req.tenantId);
+    if (!info) return next(new AppError('Contact info not found', 404));
+    res.status(200).json({ success: true, data: info });
   } catch (error) {
     logger.error('❌ Failed to fetch contact information:', error);
     next(error);
@@ -26,11 +24,11 @@ async function getContactInfo(req, res, next) {
 async function updateContact(req, res, next) {
   try {
     const updatedInfo = req.body;
-    const result = await ContactService.updateContact(updatedInfo);
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
+    const result = await ContactService.updateContact(
+      req.tenantId,
+      updatedInfo
+    );
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
     logger.error('❌ Failed to update contact information:', error);
     next(error);
@@ -50,7 +48,7 @@ async function sendMessage(req, res, next) {
     }
 
     // Get the actual band name from theme
-    const theme = await themeService.getTheme();
+    const theme = await themeService.getTheme(req.tenantId);
     const bandName = theme.siteTitle || 'Bandsyte';
 
     // Send notification email to admin
@@ -58,7 +56,8 @@ async function sendMessage(req, res, next) {
     await BandsyteEmailService.sendContactNotificationWithBranding(
       process.env.ADMIN_EMAIL || 'admin@bandsyte.com',
       contactData,
-      bandName
+      bandName,
+      req.tenantId
     );
 
     logger.info(
@@ -67,10 +66,9 @@ async function sendMessage(req, res, next) {
       }`
     );
 
-    res.status(200).json({
-      success: true,
-      message: 'Message sent successfully',
-    });
+    res
+      .status(200)
+      .json({ success: true, message: 'Message sent successfully' });
   } catch (error) {
     logger.error('❌ Contact form submission failed:', error);
     next(error);
