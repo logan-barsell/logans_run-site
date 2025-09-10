@@ -32,11 +32,11 @@ const StripeStore = ({ updateMerchConfig, merchConfig, forceValidation }) => {
         storeType: 'stripe',
         publishableKey: values.publishableKey,
         paymentLinkIds: paymentLinkIdsArray,
-        // Clear other store type fields
-        shopDomain: '',
-        storefrontAccessToken: '',
-        collectionId: '',
-        storefrontUrl: '',
+        // Preserve other store type fields
+        shopDomain: merchConfig?.shopDomain || '',
+        storefrontAccessToken: merchConfig?.storefrontAccessToken || '',
+        collectionId: merchConfig?.collectionId || '',
+        storefrontUrl: merchConfig?.storefrontUrl || '',
       };
 
       await updateMerchConfig(configData);

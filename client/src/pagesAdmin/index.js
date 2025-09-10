@@ -77,6 +77,16 @@ const AdminPages = () => {
               }
             />
             <Route
+              path='/2fa-verification'
+              exact
+              element={
+                <Navigate
+                  to='/settings/theme'
+                  replace
+                />
+              }
+            />
+            <Route
               path='/home'
               exact
               element={<HomeEdit />}

@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Field } from 'react-final-form';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAlert } from '../../contexts/AlertContext';
-import { useAuth } from '../../contexts/AuthContext';
 import { CustomForm } from '../../components/Forms';
 import ErrorMessage from '../../components/ErrorMessage';
 import Button from '../../components/Button/Button';
 import SaveButton from '../../components/Forms/SaveButton';
 import { Link } from 'react-router-dom';
+import {
+  completeTwoFactorAuth,
+  resendTwoFactorCode,
+  checkAuthentication,
+} from '../../redux/actions/authActions';
 
 const TwoFactorVerification = () => {
   const { showSuccess, showError } = useAlert();
-  const { setAuthenticated } = useAuth();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Get 2FA state from Redux
+  const { twoFactor } = useSelector(state => state.auth);
+  const { completing, sendingCode, error } = twoFactor;
+
   const [isSuccess, setIsSuccess] = useState(false);
-  const [sendingCode, setSendingCode] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [canResend, setCanResend] = useState(false);
 
@@ -52,80 +58,33 @@ const TwoFactorVerification = () => {
   };
 
   const onSubmit = async values => {
-    setError(null);
-    setIsLoading(true);
     setIsSuccess(false);
 
-    try {
-      const response = await fetch('/api/auth/complete-2fa', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          code: values.code,
-        }),
-      });
+    const result = await dispatch(completeTwoFactorAuth(userId, values.code));
 
-      const data = await response.json();
+    if (result.success) {
+      setIsSuccess(true);
+      showSuccess('Login successful! Redirecting...');
 
-      if (data.success) {
-        setIsSuccess(true);
-        showSuccess('Login successful! Redirecting...');
-        setAuthenticated(true);
-        setTimeout(() => {
-          window.location.href = '/settings';
-        }, 1000);
-      } else {
-        const errorMessage = data.message || 'Invalid verification code';
-        setError(errorMessage);
-        showError(errorMessage);
-      }
-    } catch (err) {
-      const errorMessage =
-        err.message || 'Failed to verify code. Please try again.';
-      setError(errorMessage);
-      showError(errorMessage);
-    } finally {
-      setIsLoading(false);
+      // Trigger auth check after component state updates to avoid memory leak
+      await dispatch(checkAuthentication());
+    } else {
+      showError(result.error);
     }
   };
 
   const handleResendCode = async () => {
-    setSendingCode(true);
-    try {
-      const response = await fetch('/api/2fa/send-code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          bandName: bandName || 'Bandsyte',
-        }),
-      });
+    const result = await dispatch(
+      resendTwoFactorCode(userId, user?.tenantId, bandName || 'Bandsyte')
+    );
 
-      const data = await response.json();
-
-      if (data.success) {
-        showSuccess('New verification code sent to your email');
-        setTimeLeft(300); // Reset timer
-        setCanResend(false);
-      } else {
-        showError(data.message || 'Failed to send new code');
-      }
-    } catch (error) {
-      console.error('Resend code error:', error);
-      showError('Failed to send new code. Please try again.');
-    } finally {
-      setSendingCode(false);
+    if (result.success) {
+      showSuccess('New verification code sent to your email');
+      setTimeLeft(300); // Reset timer
+      setCanResend(false);
+    } else {
+      showError(result.error);
     }
-  };
-
-  const getButtonText = () => {
-    if (isSuccess) return 'Success!';
-    if (isLoading) return 'Verifying...';
-    return 'Verify Code';
   };
 
   if (!userId || !user) {
@@ -166,7 +125,6 @@ const TwoFactorVerification = () => {
                       style={{
                         fontSize: '1.5rem',
                         letterSpacing: '0.5rem',
-                        fontFamily: 'monospace',
                       }}
                       autoComplete='one-time-code'
                       autoFocus
@@ -189,7 +147,7 @@ const TwoFactorVerification = () => {
               <SaveButton
                 hasChanges={true}
                 isDirty={true}
-                isSaving={isLoading}
+                isSaving={completing}
                 isSaved={isSuccess}
                 saveText='Verify Code'
                 savedText='Success!'
@@ -198,7 +156,7 @@ const TwoFactorVerification = () => {
                 className='btn btn-danger submitForm'
                 disabled={
                   submitting ||
-                  isLoading ||
+                  completing ||
                   isSuccess ||
                   !values?.code ||
                   values.code.length !== 6
@@ -219,14 +177,14 @@ const TwoFactorVerification = () => {
                   </p>
                 ) : (
                   <p
-                    className='text-warning mb-2'
+                    className='text-warning mb-2 secondary-font'
                     style={{ fontSize: '0.9rem' }}
                   >
                     <strong>Code has expired</strong>
                   </p>
                 )}
 
-                <div className='d-flex flex-column gap-2'>
+                <div className='d-flex flex-column gap-2 secondary-font'>
                   <Button
                     type='button'
                     variant='outline-light'

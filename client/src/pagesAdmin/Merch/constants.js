@@ -30,6 +30,7 @@ export const STRIPE_FIELDS = [
     type: 'text',
     label: 'Publishable Key',
     placeholder: 'pk_test_... or pk_live_...',
+    required: true,
     helperText:
       'Your Stripe publishable key. You can find this in your Stripe dashboard under Developers > API keys.',
     displayHelperText: true,
@@ -41,6 +42,7 @@ export const STRIPE_FIELDS = [
     placeholder: `Enter Stripe buy button IDs, one per line
 buy_btn_1Rj6noHCVtmXVGiSacAIQc0j
 buy_btn_1Rj6noHCVtmXVGiSacAIQc0k`,
+    required: true,
     helperText:
       'Enter your Stripe buy button IDs, one per line. You can find these in your Stripe dashboard under Products > Payment Links.',
     displayHelperText: true,

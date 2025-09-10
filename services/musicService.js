@@ -7,6 +7,7 @@ const {
   extractMusicType,
 } = require('../utils/spotifyValidation');
 const { whitelistFields } = require('../utils/fieldWhitelist');
+const { toDate } = require('../utils/dates');
 
 // Spotify player allowed fields
 const SPOTIFY_PLAYER_FIELDS = [
@@ -36,6 +37,7 @@ async function addPlayer(tenantId, playerData) {
 
     // Whitelist allowed fields
     const filteredData = whitelistFields(playerData, SPOTIFY_PLAYER_FIELDS);
+    if ('date' in filteredData) filteredData.date = toDate(filteredData.date);
 
     const newPlayer = await withTenant(tenantId, async tx => {
       return await tx.spotifyPlayer.create({
@@ -94,6 +96,7 @@ async function updatePlayer(tenantId, playerData) {
 
     // Whitelist allowed fields
     const filteredData = whitelistFields(playerData, SPOTIFY_PLAYER_FIELDS);
+    if ('date' in filteredData) filteredData.date = toDate(filteredData.date);
 
     const updatedPlayer = await withTenant(tenantId, async tx => {
       const existing = await tx.spotifyPlayer.findUnique({

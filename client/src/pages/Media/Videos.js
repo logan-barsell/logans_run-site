@@ -69,9 +69,10 @@ const Videos = ({ fetchVideos, videos, loading, error }) => {
         >
           <option disabled>Select Category</option>
           <option value='all'>All Videos</option>
-          <option value='musicVids'>Music Videos</option>
-          <option value='liveVids'>Live Performances</option>
-          <option value='vlogs'>Vlogs</option>
+          <option value='MUSIC_VIDEO'>Music Videos</option>
+          <option value='LIVE_PERFORMANCE'>Live Performances</option>
+          <option value='VLOG'>Vlogs</option>
+          <option value='LYRIC_VIDEO'>Lyric Videos</option>
         </select>
       </div>
       <Divider />

@@ -140,19 +140,37 @@ async function getActiveSubscribers(tenantId, page = 1, limit = 20) {
  */
 async function getSubscribersForNotification(tenantId, notificationType) {
   try {
-    // Use JSONB contains to filter by preferences efficiently
-    let prefFilter = { receiveAutomaticNotifications: true };
-    if (notificationType === 'show') prefFilter.notifyOnNewShows = true;
-    if (notificationType === 'music') prefFilter.notifyOnNewMusic = true;
-    if (notificationType === 'video') prefFilter.notifyOnNewVideos = true;
+    // Build the where clause for JSON preferences
+    const whereClause = {
+      tenantId,
+      isActive: true,
+      preferences: {
+        path: ['receiveAutomaticNotifications'],
+        equals: true,
+      },
+    };
+
+    // Add notification type specific filter
+    if (notificationType === 'show') {
+      whereClause.preferences = {
+        path: ['notifyOnNewShows'],
+        equals: true,
+      };
+    } else if (notificationType === 'music') {
+      whereClause.preferences = {
+        path: ['notifyOnNewMusic'],
+        equals: true,
+      };
+    } else if (notificationType === 'video') {
+      whereClause.preferences = {
+        path: ['notifyOnNewVideos'],
+        equals: true,
+      };
+    }
 
     const subscribers = await withTenant(tenantId, async tx =>
       tx.newsletterSubscriber.findMany({
-        where: {
-          tenantId,
-          isActive: true,
-          preferences: { contains: prefFilter },
-        },
+        where: whereClause,
       })
     );
 

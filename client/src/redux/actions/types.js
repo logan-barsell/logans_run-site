@@ -64,6 +64,7 @@ export const AUTH_LOADING = 'AUTH_LOADING';
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOGOUT = 'LOGOUT';
+export const LOGIN_LOADING = 'LOGIN_LOADING';
 export const UPDATE_USER = 'UPDATE_USER';
 
 // Newsletter
@@ -135,6 +136,12 @@ export const DISABLE_TWO_FACTOR_ERROR = 'disable_two_factor_error';
 export const VERIFY_TWO_FACTOR = 'verify_two_factor';
 export const VERIFY_TWO_FACTOR_LOADING = 'verify_two_factor_loading';
 export const VERIFY_TWO_FACTOR_ERROR = 'verify_two_factor_error';
+export const COMPLETE_TWO_FACTOR = 'complete_two_factor';
+export const COMPLETE_TWO_FACTOR_LOADING = 'complete_two_factor_loading';
+export const COMPLETE_TWO_FACTOR_ERROR = 'complete_two_factor_error';
+export const SEND_TWO_FACTOR_CODE = 'send_two_factor_code';
+export const SEND_TWO_FACTOR_CODE_LOADING = 'send_two_factor_code_loading';
+export const SEND_TWO_FACTOR_CODE_ERROR = 'send_two_factor_code_error';
 
 // CSRF
 export const FETCH_CSRF_TOKEN = 'fetch_csrf_token';

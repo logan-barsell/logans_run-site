@@ -27,7 +27,9 @@
 .no-products {
   margin-top: 30px;
 }
-
+.BuyButton-container.is-cardLayout {
+  border-radius: unset !important;
+}
 /* Product Cards - following existing merch styles */
 .shopify-storefront .card,
 .stripe-storefront .card {
@@ -127,19 +129,15 @@
   justify-items: center;
 }
 
-.shopify-storefront .product-item,
 .stripe-storefront .product-item {
-  width: 100%;
+  width: fit-content;
   max-width: 350px;
 }
 
-/* Stripe-specific styling */
-.stripe-storefront .product-item {
-  height: 343px;
-  overflow: hidden;
-  padding: 45px 10px;
+.shopify-storefront .product-item {
+  width: 100%;
+  max-width: 350px;
 }
-
 /* Ensure Stripe buy buttons display properly */
 .stripe-storefront stripe-buy-button {
   width: 100%;

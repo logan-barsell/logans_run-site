@@ -55,6 +55,7 @@ const EditItem = ({
           fields={fields}
           onSubmit={data => onEdit(data, itemData)}
           onSuccess={handleFormSuccess}
+          resetMode='values'
         />
       ) : (
         <div>No edit fields provided</div>

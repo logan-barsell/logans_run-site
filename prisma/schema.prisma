@@ -201,17 +201,24 @@ model Show {
   updatedAt DateTime  @updatedAt
 }
 
+enum VideoCategory {
+  LIVE_PERFORMANCE
+  VLOG
+  MUSIC_VIDEO
+  LYRIC_VIDEO
+}
+
 model Video {
-  id        String    @id @default(uuid())
-  tenant    Tenant    @relation(fields: [tenantId], references: [id])
+  id        String        @id @default(uuid())
+  tenant    Tenant        @relation(fields: [tenantId], references: [id])
   tenantId  String
-  category  String?
+  category  VideoCategory
   title     String?
   date      DateTime?
   link      String?
   embedLink String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }
 
 model FeaturedVideo {

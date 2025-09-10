@@ -34,6 +34,10 @@ const THEME_FIELDS = [
   'socialMediaIconStyle',
   'paceTheme',
   'displayMode',
+  'enableNewsletter',
+  'notifyOnNewShows',
+  'notifyOnNewMusic',
+  'notifyOnNewVideos',
 ];
 
 async function getTheme(tenantId) {

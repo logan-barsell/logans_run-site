@@ -124,13 +124,8 @@ const newsletterNotification = (
     case 'video':
       contentDetails = `
         <div class="content-details">
-          <h3>${content.title || 'New Video'}</h3>
-          ${content.description ? `<p>${content.description}</p>` : ''}
-          ${
-            content.duration
-              ? `<p><strong>Duration:</strong> ${content.duration}</p>`
-              : ''
-          }
+          <h3>${content.title}</h3>
+          <p>${content.description}</p>
         </div>
       `;
       ctaText = 'Watch Video';

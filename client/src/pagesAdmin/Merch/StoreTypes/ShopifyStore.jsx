@@ -31,10 +31,10 @@ const ShopifyStore = ({ updateMerchConfig, merchConfig, forceValidation }) => {
         shopDomain: values.shopDomain,
         storefrontAccessToken: values.storefrontAccessToken,
         collectionId: values.collectionId,
-        // Clear other store type fields
-        publishableKey: '',
-        paymentLinkIds: [],
-        storefrontUrl: '',
+        // Preserve other store type fields
+        publishableKey: merchConfig?.publishableKey || '',
+        paymentLinkIds: merchConfig?.paymentLinkIds || [],
+        storefrontUrl: merchConfig?.storefrontUrl || '',
       };
 
       await updateMerchConfig(configData);

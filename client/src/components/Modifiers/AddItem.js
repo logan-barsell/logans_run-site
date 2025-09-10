@@ -65,6 +65,7 @@ const AddItem = ({
         onSubmit={handleSubmit}
         onSuccess={handleFormSuccess}
         loading={loading}
+        resetMode='initial'
         {...rest}
       />
     </BaseModal>

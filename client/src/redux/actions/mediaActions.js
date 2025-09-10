@@ -15,8 +15,14 @@ export const fetchMediaImages = () => async dispatch => {
     const data = await getMediaImages();
     dispatch({ type: FETCH_MEDIA_IMAGES, payload: data });
   } catch (errorData) {
-    // errorData is already processed by handleServiceError in the service
-    dispatch({ type: FETCH_MEDIA_IMAGES_ERROR, payload: errorData });
+    // Ensure only serializable data is stored in Redux
+    const serializableError = {
+      message: errorData.message,
+      statusCode: errorData.statusCode,
+      errorType: errorData.errorType,
+      severity: errorData.severity,
+    };
+    dispatch({ type: FETCH_MEDIA_IMAGES_ERROR, payload: serializableError });
   }
 };
 
@@ -27,7 +33,13 @@ export const fetchVideos = () => async dispatch => {
     const data = await getVideos();
     dispatch({ type: FETCH_VIDEOS, payload: data });
   } catch (errorData) {
-    // errorData is already processed by handleServiceError in the service
-    dispatch({ type: FETCH_VIDEOS_ERROR, payload: errorData });
+    // Ensure only serializable data is stored in Redux
+    const serializableError = {
+      message: errorData.message,
+      statusCode: errorData.statusCode,
+      errorType: errorData.errorType,
+      severity: errorData.severity,
+    };
+    dispatch({ type: FETCH_VIDEOS_ERROR, payload: serializableError });
   }
 };

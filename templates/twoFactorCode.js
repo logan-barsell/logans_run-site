@@ -19,7 +19,7 @@ const twoFactorCode = (code, bandName = 'Bandsyte', theme = {}) => ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Your Login Code - ${bandName} Admin</title>
       ${
-        theme.bandLogoUrl
+        theme && theme.bandLogoUrl
           ? `
       <meta property="og:image" content="${theme.bandLogoUrl}" />
       <meta name="twitter:image" content="${theme.bandLogoUrl}" />
@@ -51,7 +51,7 @@ const twoFactorCode = (code, bandName = 'Bandsyte', theme = {}) => ({
       <div class="container">
         <div class="header">
           ${
-            theme.bandLogoUrl
+            theme && theme.bandLogoUrl
               ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
               : ''
           }

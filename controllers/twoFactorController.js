@@ -4,14 +4,33 @@ const logger = require('../utils/logger');
 
 /**
  * Send 2FA code to user's email
+ * Can be called with or without authentication:
+ * - With auth: uses req.user.id and req.tenantId (for authenticated users managing 2FA)
+ * - Without auth: uses req.body.userId and req.body.tenantId (for login process)
  */
 async function sendCode(req, res, next) {
   try {
-    const userId = req.user.id;
+    // Determine userId and tenantId based on whether user is authenticated
+    const userId = req.user?.id || req.body.userId;
+    const tenantId = req.tenantId || req.body.tenantId;
     const bandName = req.body.bandName || 'Bandsyte';
 
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'User ID is required',
+      });
+    }
+
+    if (!tenantId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID is required',
+      });
+    }
+
     const result = await TwoFactorService.sendTwoFactorCode(
-      req.tenantId,
+      tenantId,
       userId,
       bandName
     );
