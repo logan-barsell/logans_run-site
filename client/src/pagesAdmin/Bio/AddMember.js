@@ -9,54 +9,10 @@ import normalizeUrl from '../../utils/normalizeUrl';
 import { useAlert } from '../../contexts/AlertContext';
 import { PlusSquareFill } from '../../components/icons';
 import Button from '../../components/Button/Button';
+import { addMemberFields } from './constants';
 
 const AddMember = ({ fetchMembers }) => {
   const { showError, showSuccess } = useAlert();
-  const txtFields = [
-    {
-      label: 'Upload Image',
-      name: 'bioPic',
-      type: 'image',
-      required: true,
-    },
-    { label: 'Name', name: 'name', type: 'text' },
-    { label: 'Role', name: 'role', type: 'text' },
-    {
-      label: 'Facebook',
-      name: 'facebook',
-      type: 'facebookUrl',
-      required: false,
-      placeholder: 'Enter Facebook URL',
-    },
-    {
-      label: 'Instagram',
-      name: 'instagram',
-      type: 'instagramUrl',
-      required: false,
-      placeholder: 'Enter Instagram URL',
-    },
-    {
-      label: 'TikTok',
-      name: 'tiktok',
-      type: 'tiktokUrl',
-      required: false,
-      placeholder: 'Enter TikTok URL',
-    },
-    {
-      label: 'YouTube',
-      name: 'youtube',
-      type: 'youtubeSocialUrl',
-      required: false,
-      placeholder: 'Enter YouTube URL',
-    },
-    {
-      label: 'X',
-      name: 'x',
-      type: 'xUrl',
-      required: false,
-      placeholder: 'Enter X (Twitter) URL',
-    },
-  ];
 
   const [uploading, setUploading] = React.useState(false);
 
@@ -123,15 +79,16 @@ const AddMember = ({ fetchMembers }) => {
           icon={<PlusSquareFill />}
           iconPosition='left'
         >
-          {uploading ? 'Uploading...' : 'Add Member'}
+          {uploading ? 'Adding...' : 'Add Member'}
         </Button>
       }
       onSuccess={handleFormSuccess}
     >
       <ModalForm
-        fields={txtFields}
+        fields={addMemberFields}
         onSubmit={onSubmit}
         onSuccess={handleFormSuccess}
+        resetMode='initial'
       />
     </BaseModal>
   );

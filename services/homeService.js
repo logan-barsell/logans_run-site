@@ -5,7 +5,7 @@ const { toDate } = require('../utils/dates');
 const { whitelistFields } = require('../utils/fieldWhitelist');
 
 // Home image allowed fields
-const HOME_IMAGE_FIELDS = ['imageUrl', 'altText', 'order'];
+const HOME_IMAGE_FIELDS = ['name', 'imgLink'];
 
 // Show allowed fields
 const SHOW_FIELDS = [
@@ -104,6 +104,8 @@ async function addShow(tenantId, showData) {
 
     const data = whitelistFields(showData, SHOW_FIELDS);
     if ('date' in data) data.date = toDate(data.date);
+    if ('doors' in data) data.doors = toDate(data.doors);
+    if ('showtime' in data) data.showtime = toDate(data.showtime);
 
     return await withTenant(tenantId, async tx => {
       const newShow = await tx.show.create({
@@ -149,6 +151,8 @@ async function updateShow(tenantId, id, showData) {
 
     const data = whitelistFields(showData, SHOW_FIELDS);
     if ('date' in data) data.date = toDate(data.date);
+    if ('doors' in data) data.doors = toDate(data.doors);
+    if ('showtime' in data) data.showtime = toDate(data.showtime);
 
     return await withTenant(tenantId, async tx => {
       const existing = await tx.show.findUnique({ where: { id } });

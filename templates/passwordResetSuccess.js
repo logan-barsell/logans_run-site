@@ -44,7 +44,7 @@ const passwordResetSuccess = (
       <div class="container">
         <div class="header">
           ${
-            theme.bandLogoUrl
+            theme && theme.bandLogoUrl
               ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
               : ''
           }

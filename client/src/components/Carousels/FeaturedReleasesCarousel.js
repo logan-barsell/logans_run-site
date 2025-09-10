@@ -17,7 +17,7 @@ function FeaturedReleasesCarousel({ releases }) {
             key={release.id}
             className={`carousel-item${idx === 0 ? ' active' : ''}`}
           >
-            <div className='featured-release-slide d-flex flex-column flex-md-row align-items-center'>
+            <div className='featured-release-slide d-flex  flex-md-row align-items-center'>
               <div className='featured-release-cover flex-shrink-0'>
                 <img
                   src={release.coverImage}

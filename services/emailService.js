@@ -41,10 +41,21 @@ async function sendEmail(
 
       // Fetch theme data for email styling
       let theme = null;
+      if (!tenantId) {
+        throw new AppError('tenantId is required for themed emails', 400);
+      }
+
       try {
-        theme = tenantId ? await ThemeService.getTheme(tenantId) : null;
+        theme = await ThemeService.getTheme(tenantId);
+        if (!theme) {
+          throw new AppError('Theme configuration not found', 404);
+        }
       } catch (error) {
-        logger.warn('Could not fetch theme for email template:', error.message);
+        logger.error('❌ Failed to fetch theme for email template:', error);
+        throw new AppError(
+          `Failed to fetch theme data for email: ${error.message}`,
+          500
+        );
       }
 
       // Handle different template parameter patterns

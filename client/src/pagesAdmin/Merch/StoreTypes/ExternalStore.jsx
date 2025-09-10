@@ -21,12 +21,12 @@ const ExternalStore = ({ updateMerchConfig, merchConfig }) => {
       const configData = {
         storeType: 'external',
         storefrontUrl: values.storefrontUrl,
-        // Clear other store type fields
-        shopDomain: '',
-        storefrontAccessToken: '',
-        collectionId: '',
-        publishableKey: '',
-        paymentLinkIds: [],
+        // Preserve other store type fields
+        shopDomain: merchConfig?.shopDomain || '',
+        storefrontAccessToken: merchConfig?.storefrontAccessToken || '',
+        collectionId: merchConfig?.collectionId || '',
+        publishableKey: merchConfig?.publishableKey || '',
+        paymentLinkIds: merchConfig?.paymentLinkIds || [],
       };
 
       await updateMerchConfig(configData);

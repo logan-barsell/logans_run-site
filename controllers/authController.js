@@ -113,7 +113,7 @@ async function completeTwoFactorLogin(req, res, next) {
     const userAgent = req.headers['user-agent'] || 'unknown';
 
     // Verify the 2FA code first
-    await TwoFactorService.verifyTwoFactorCode(userId, code);
+    await TwoFactorService.verifyTwoFactorCode(req.tenantId, userId, code);
 
     // Complete the login process
     const result = await AuthService.completeTwoFactorLogin({
@@ -143,6 +143,7 @@ async function completeTwoFactorLogin(req, res, next) {
         await BandsyteEmailService.sendLoginAlertWithBranding(
           user.adminEmail,
           bandName,
+          new Date().toLocaleString(),
           ip,
           userAgent,
           'Unknown',

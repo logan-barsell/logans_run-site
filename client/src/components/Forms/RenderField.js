@@ -59,6 +59,20 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         initialValue={initialValue}
         helperText={field.helperText}
         displayHelperText={field.displayHelperText}
+        required={required}
+      />
+    );
+  } else if (type === 'password') {
+    return (
+      <TextField
+        label={label}
+        name={name}
+        type='password'
+        placeholder={placeholder}
+        initialValue={initialValue}
+        helperText={field.helperText}
+        displayHelperText={field.displayHelperText}
+        required={required}
       />
     );
   } else if (type === 'email') {
@@ -68,6 +82,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         name={name}
         placeholder={placeholder || 'Enter email address'}
         initialValue={initialValue}
+        required={required}
         validate={value => {
           if (!value) return undefined;
           const validation = validateEmail(value);

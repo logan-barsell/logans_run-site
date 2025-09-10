@@ -47,7 +47,8 @@ async function sendTwoFactorCode(tenantId, userId, bandName = 'Bandsyte') {
     await BandsyteEmailService.sendTwoFactorCodeWithBranding(
       user.adminEmail,
       code,
-      bandName
+      bandName,
+      tenantId
     );
 
     logger.info(`📧 2FA code sent to user ${user.adminEmail}`);
@@ -83,10 +84,11 @@ async function verifyTwoFactorCode(tenantId, userId, code) {
     }
 
     // Check if code is valid and not expired
+    const now = new Date();
+    const expiryDate = new Date(user.twoFactorCodeExpiry);
     const isValid =
-      user.twoFactorCode &&
-      user.twoFactorCodeExpiry &&
-      new Date(user.twoFactorCodeExpiry) > new Date();
+      user.twoFactorCode && user.twoFactorCodeExpiry && expiryDate > now;
+
     if (!isValid)
       throw new AppError('Verification code has expired or is invalid', 400);
 

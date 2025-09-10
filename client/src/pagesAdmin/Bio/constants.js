@@ -31,6 +31,52 @@ export const BIO_FIELDS = [
   },
 ];
 
+export const addMemberFields = [
+  {
+    label: 'Upload Image',
+    name: 'bioPic',
+    type: 'image',
+    required: true,
+  },
+  { label: 'Name', name: 'name', type: 'text' },
+  { label: 'Role', name: 'role', type: 'text' },
+  {
+    label: 'Facebook',
+    name: 'facebook',
+    type: 'facebookUrl',
+    required: false,
+    placeholder: 'Enter Facebook URL',
+  },
+  {
+    label: 'Instagram',
+    name: 'instagram',
+    type: 'instagramUrl',
+    required: false,
+    placeholder: 'Enter Instagram URL',
+  },
+  {
+    label: 'TikTok',
+    name: 'tiktok',
+    type: 'tiktokUrl',
+    required: false,
+    placeholder: 'Enter TikTok URL',
+  },
+  {
+    label: 'YouTube',
+    name: 'youtube',
+    type: 'youtubeSocialUrl',
+    required: false,
+    placeholder: 'Enter YouTube URL',
+  },
+  {
+    label: 'X',
+    name: 'x',
+    type: 'xUrl',
+    required: false,
+    placeholder: 'Enter X (Twitter) URL',
+  },
+];
+
 export const editMemberFields = member => {
   const { bioPic, name, role, facebook, instagram, tiktok, youtube, x } =
     member;

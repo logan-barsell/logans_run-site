@@ -67,7 +67,9 @@ async function changePassword(req, res, next) {
 
       await BandsyteEmailService.sendPasswordResetSuccessWithBranding(
         user.adminEmail,
-        bandName
+        bandName,
+        new Date().toLocaleString(),
+        req.tenantId
       );
     } catch (emailError) {
       logger.error('Failed to send password change notification:', emailError);

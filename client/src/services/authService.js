@@ -124,3 +124,36 @@ export const resendEmailVerification = async email => {
     throw errorData;
   }
 };
+
+export const completeTwoFactor = async (userId, code) => {
+  try {
+    const response = await api.post('/auth/complete-2fa', {
+      userId,
+      code,
+    });
+    return response.data;
+  } catch (error) {
+    const errorData = handleServiceError(error, {
+      operation: 'completeTwoFactor',
+      customMessage: 'Failed to verify 2FA code. Please try again.',
+    });
+    throw errorData;
+  }
+};
+
+export const sendTwoFactorCode = async (userId, tenantId, bandName) => {
+  try {
+    const response = await api.post('/2fa/send-code', {
+      userId,
+      tenantId,
+      bandName,
+    });
+    return response.data;
+  } catch (error) {
+    const errorData = handleServiceError(error, {
+      operation: 'sendTwoFactorCode',
+      customMessage: 'Failed to send 2FA code. Please try again.',
+    });
+    throw errorData;
+  }
+};

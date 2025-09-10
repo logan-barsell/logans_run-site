@@ -3,17 +3,27 @@ const { AppError } = require('../middleware/errorHandler');
 const { withTenant } = require('../db/withTenant');
 const { toDate } = require('../utils/dates');
 const { whitelistFields } = require('../utils/fieldWhitelist');
+const NewsletterService = require('./newsletterService');
+const {
+  validateVideoCategory,
+  getCategoryDescription,
+} = require('../utils/videoValidation');
 
 // Video allowed fields
 const VIDEO_FIELDS = ['category', 'title', 'date', 'link', 'embedLink'];
 
 // Media image allowed fields
-const MEDIA_IMAGE_FIELDS = ['imageUrl', 'altText', 'category'];
+const MEDIA_IMAGE_FIELDS = ['name', 'imgLink'];
 
 async function addVideo(tenantId, videoData) {
   try {
     if (!videoData || Object.keys(videoData).length === 0) {
       throw new AppError('Video data is required', 400);
+    }
+
+    // Validate category before processing
+    if (videoData.category) {
+      validateVideoCategory(videoData.category);
     }
 
     const data = whitelistFields(videoData, VIDEO_FIELDS);
@@ -24,6 +34,32 @@ async function addVideo(tenantId, videoData) {
         data: { ...data, tenantId },
       });
       logger.info('✅ Video added successfully');
+
+      // Send newsletter notification for new video
+      try {
+        // Validate required fields for notification
+        if (!newVideo.category) {
+          throw new AppError(
+            'Video category is required for notifications',
+            400
+          );
+        }
+        if (!newVideo.title) {
+          throw new AppError('Video title is required for notifications', 400);
+        }
+
+        await NewsletterService.sendContentNotification(tenantId, 'video', {
+          title: newVideo.title,
+          description: getCategoryDescription(newVideo.category),
+        });
+      } catch (notificationError) {
+        logger.error(
+          'Failed to send newsletter notification:',
+          notificationError
+        );
+        // Don't fail the video creation if newsletter fails
+      }
+
       return newVideo;
     });
   } catch (error) {

@@ -18,7 +18,7 @@ const ModalForm = ({
   submitButtonVariant = 'danger',
   cancelButtonVariant = 'dark',
   isModal = true, // For backward compatibility
-  successText = 'Success', // Custom success message
+  resetMode = 'initial', // 'initial' for AddItem, 'values' for EditItem
 }) => {
   // Create refs for all image fields
   const imageRefs = useRef({});
@@ -221,7 +221,7 @@ const ModalForm = ({
                 Object.keys(values).forEach(key => {
                   form.change(key, values[key]);
                 });
-                form.reset(values);
+                form.reset(resetMode === 'initial' ? initialValues : values);
               });
 
               // Clean up form then close

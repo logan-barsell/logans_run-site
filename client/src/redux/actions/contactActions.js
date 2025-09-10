@@ -13,6 +13,13 @@ export const fetchContactInfo = () => async dispatch => {
     dispatch({ type: FETCH_CONTACT_INFO, payload: data });
   } catch (errorData) {
     // errorData is already processed by handleServiceError in the service
-    dispatch({ type: FETCH_CONTACT_INFO_ERROR, payload: errorData });
+    // Ensure only serializable data is stored in Redux
+    const serializableError = {
+      message: errorData.message,
+      statusCode: errorData.statusCode,
+      errorType: errorData.errorType,
+      severity: errorData.severity,
+    };
+    dispatch({ type: FETCH_CONTACT_INFO_ERROR, payload: serializableError });
   }
 };
