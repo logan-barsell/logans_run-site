@@ -1,6 +1,6 @@
 import '../App.css';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -23,18 +23,21 @@ import { AlertContainer } from '../components/Alert';
 
 const AdminPages = () => {
   const location = useLocation();
-  const routes = [
-    { name: 'Home', value: '/home' },
-    { name: 'Music', value: '/music' },
-    { name: 'Store', value: '/store' },
-    { name: 'Media', value: '/media' },
-    { name: 'Bio', value: '/bio' },
-    { name: 'Contact', value: '/contact' },
-  ];
+  const routes = useMemo(
+    () => [
+      { name: 'Home', value: '/home' },
+      { name: 'Music', value: '/music' },
+      { name: 'Store', value: '/store' },
+      { name: 'Media', value: '/media' },
+      { name: 'Bio', value: '/bio' },
+      { name: 'Contact', value: '/contact' },
+    ],
+    []
+  );
 
   const currentUrl = location.pathname;
 
-  let initialState = 0; // Default to Home (index 0)
+  let initialState = null; // Default to no active nav item
   for (let i = 0; i < routes.length; i++) {
     // Check all routes
     if (routes[i].value === currentUrl) {
@@ -43,8 +46,32 @@ const AdminPages = () => {
     }
   }
 
+  // If we're on a settings page, ensure no nav item is highlighted
+  if (currentUrl.startsWith('/settings')) {
+    initialState = null;
+  }
+
   const [activeIndex, setActiveIndex] = useState(initialState);
   const [toggle, setToggle] = useState(false);
+
+  // Update activeIndex when URL changes
+  useEffect(() => {
+    let newActiveIndex = null; // Default to no active nav item
+    for (let i = 0; i < routes.length; i++) {
+      // Check all routes
+      if (routes[i].value === currentUrl) {
+        newActiveIndex = i;
+        break; // Found the route, no need to continue
+      }
+    }
+
+    // If we're on a settings page, ensure no nav item is highlighted
+    if (currentUrl.startsWith('/settings')) {
+      newActiveIndex = null;
+    }
+
+    setActiveIndex(newActiveIndex);
+  }, [currentUrl, routes]);
 
   return (
     <div

@@ -103,7 +103,7 @@
   background-color: var(--accordion-bg);
   border: 2px solid var(--background);
   border-radius: 3px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--secondary-font);
 }
 
 .final-form .cancel {

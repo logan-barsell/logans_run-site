@@ -215,7 +215,6 @@ export const handleServiceError = (error, options = {}) => {
 
   return {
     message,
-    error,
     errorType,
     statusCode,
     severity: getErrorSeverity(errorType),
