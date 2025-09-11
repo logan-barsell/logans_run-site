@@ -1,6 +1,6 @@
 import React from 'react';
 import './featuredReleasesCarousel.css';
-import capitalize from '../../utils/capitalize';
+import { capitalize } from '../../utils/strings';
 import Button from '../Button/Button';
 
 function FeaturedReleasesCarousel({ releases }) {

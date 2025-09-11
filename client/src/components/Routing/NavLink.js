@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ActiveContext } from '../../contexts/ActiveContext';
 import { fetchPublicMerchConfig } from '../../redux/actions';
-import { shouldShowStoreNav } from '../../utils/merchConfigValidator';
+import { shouldShowStoreNav } from '../../utils/validation';
 
 const NavLink = ({ routes, menuToggle, footer }) => {
   const { setActiveIndex, activeIndex, toggle } = useContext(ActiveContext);

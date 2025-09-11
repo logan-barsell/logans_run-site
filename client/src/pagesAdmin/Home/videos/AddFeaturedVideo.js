@@ -1,7 +1,7 @@
 import React from 'react';
 import { featuredVideoFields } from './constants';
 import { addFeaturedVideo as addFeaturedVideoService } from '../../../services/featuredContentService';
-import { uploadVideoToFirebase } from '../../../utils/firebaseVideo';
+import { uploadVideoToFirebase } from '../../../utils/firebase';
 import AddItem from '../../../components/Modifiers/AddItem';
 import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';

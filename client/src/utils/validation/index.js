@@ -40,3 +40,16 @@ export {
   getPasswordStrengthColor,
   getPasswordStrengthText,
 } from './passwordValidation';
+
+// Merch config validation
+export {
+  validateMerchConfig,
+  shouldShowStoreNav,
+  shouldAllowStoreAccess,
+} from './merchConfigValidator';
+
+// Stripe validation
+export {
+  validateStripeConfig,
+  isStripeConfigComplete,
+} from './stripeValidation';

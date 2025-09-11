@@ -3,7 +3,7 @@ import EditItem from '../../../components/Modifiers/EditItem';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
-} from '../../../utils/firebaseImage';
+} from '../../../utils/firebase';
 import { featuredReleaseFields } from './constants';
 import { updateFeaturedRelease } from '../../../services/featuredContentService';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import ModalForm from '../../components/Forms/ModalForm';
 import BaseModal from '../../components/Modals/BaseModal';
-import { uploadImageToFirebase } from '../../utils/firebaseImage';
+import { uploadImageToFirebase } from '../../utils/firebase';
 import { addMember } from '../../services/membersService';
-import normalizeUrl from '../../utils/normalizeUrl';
+import { normalizeUrl } from '../../utils/strings';
 import { PlusSquareFill } from '../../components/icons';
 import Button from '../../components/Button/Button';
 import { addMemberFields } from './constants';

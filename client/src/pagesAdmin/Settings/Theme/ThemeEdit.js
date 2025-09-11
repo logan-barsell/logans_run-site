@@ -7,7 +7,7 @@ import { useAlert } from '../../../contexts/AlertContext';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
-} from '../../../utils/firebaseImage';
+} from '../../../utils/firebase';
 import { THEME_FIELDS } from './constants';
 
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {

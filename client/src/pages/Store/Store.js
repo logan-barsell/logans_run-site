@@ -6,7 +6,7 @@ import SecondaryNav from '../../components/Navbar/SecondaryNav';
 import ShopifyStorefront from '../../components/Storefront/ShopifyStorefront';
 import StripeStorefront from '../../components/Storefront/StripeStorefront';
 import NotFound from '../NotFound';
-import { shouldAllowStoreAccess } from '../../utils/merchConfigValidator';
+import { shouldAllowStoreAccess } from '../../utils/validation';
 import StaticAlert from '../../components/Alert/StaticAlert';
 import { PageLoader } from '../../components/LoadingSpinner';
 

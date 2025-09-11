@@ -4,7 +4,7 @@ import { updateFeaturedVideo } from '../../../services/featuredContentService';
 import {
   uploadVideoToFirebase,
   safeDeleteVideoFromFirebase,
-} from '../../../utils/firebaseVideo';
+} from '../../../utils/firebase';
 import EditItem from '../../../components/Modifiers/EditItem';
 
 const EditFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {

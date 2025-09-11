@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchContactInfo } from '../../redux/actions';
 import { updateContact } from '../../services/contactService';
-import normalizeUrl from '../../utils/normalizeUrl';
+import { normalizeUrl } from '../../utils/strings';
 import { EditableForm } from '../../components/Forms';
 import { useAlert } from '../../contexts/AlertContext';
 import { normalizePhone } from '../../utils/validation';
