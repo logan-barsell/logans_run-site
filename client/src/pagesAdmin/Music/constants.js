@@ -1,3 +1,10 @@
+export const musicTypes = [
+  { name: 'Album', value: 'ALBUM' },
+  { name: 'Single', value: 'SINGLE' },
+  { name: 'EP', value: 'EP' },
+  { name: 'LP', value: 'LP' },
+];
+
 export const ADD_PLAYER_FIELDS = [
   {
     label: 'Background Color',
@@ -11,6 +18,13 @@ export const ADD_PLAYER_FIELDS = [
     initialValue: 'auto',
   },
   { label: 'Title', name: 'title', type: 'text' },
+  {
+    label: 'Type',
+    name: 'type',
+    type: 'options',
+    options: musicTypes,
+    initialValue: 'ALBUM',
+  },
   { label: 'Release Date', name: 'date', type: 'date' },
   {
     label: 'Spotify Link',
@@ -43,6 +57,7 @@ export const editPlayerFields = player => {
   const {
     bgColor,
     title,
+    type,
     date,
     spotifyLink,
     appleMusicLink,
@@ -77,6 +92,13 @@ export const editPlayerFields = player => {
       initialValue: bgColor || '0',
     },
     { label: 'Title', name: 'title', type: 'text', initialValue: title },
+    {
+      label: 'Type',
+      name: 'type',
+      type: 'options',
+      options: musicTypes,
+      initialValue: type || 'ALBUM',
+    },
     {
       label: 'Release Date',
       name: 'date',

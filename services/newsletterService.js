@@ -1,15 +1,9 @@
 const { withTenant } = require('../db/withTenant');
 const { prisma } = require('../prisma');
 const ThemeService = require('./themeService');
-const BandsyteEmailService = require('./bandsyteEmailService');
 const BandEmailService = require('./bandEmailService');
-const newsletterNotification = require('../templates/newsletterNotification');
-const musicNotification = require('../templates/musicNotification');
-const videoNotification = require('../templates/videoNotification');
-const showNotification = require('../templates/showNotification');
-const { generateFromAddress } = require('./bandEmailService');
-const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const logger = require('../utils/logger');
 const { whitelistFields } = require('../utils/fieldWhitelist');
 
 // Allowed preference fields
@@ -248,12 +242,6 @@ async function sendContentNotification(tenantId, contentType, content) {
       return { success: true, message: 'No subscribers to notify' };
     }
 
-    // Get theme colors for email styling
-    const colors = {
-      primary: theme.primaryColor,
-      secondary: theme.secondaryColor,
-    };
-
     const bandName = theme.siteTitle || 'Bandsyte';
     let emailsSent = 0;
     let errors = 0;
@@ -268,17 +256,13 @@ async function sendContentNotification(tenantId, contentType, content) {
       );
 
       try {
-        // Generate white-label FROM address for development
-        const devFromAddress = generateFromAddress(bandName);
-
         // Send single test email using the proper content notification flow
-        await BandsyteEmailService.sendContentNotificationWithBranding(
+        await BandEmailService.sendContentNotificationWithBranding(
           'loganjbars@gmail.com',
           bandName,
           contentType,
           content,
           'test-token-123',
-          devFromAddress,
           tenantId
         );
 
@@ -305,51 +289,13 @@ async function sendContentNotification(tenantId, contentType, content) {
       // Production mode: Send to all subscribers
       emailPromises = subscribers.map(async subscriber => {
         try {
-          // Use the appropriate template based on content type
-          let emailTemplate;
-          switch (contentType) {
-            case 'music':
-              emailTemplate = musicNotification(
-                bandName,
-                content,
-                theme,
-                subscriber.unsubscribeToken
-              );
-              break;
-            case 'video':
-              emailTemplate = videoNotification(
-                bandName,
-                content,
-                theme,
-                subscriber.unsubscribeToken
-              );
-              break;
-            case 'show':
-              emailTemplate = showNotification(
-                bandName,
-                content,
-                theme,
-                subscriber.unsubscribeToken
-              );
-              break;
-            default:
-              emailTemplate = newsletterNotification(
-                bandName,
-                content,
-                contentType,
-                colors,
-                subscriber.unsubscribeToken
-              );
-          }
-
-          // Queue email with throttler (non-blocking)
-          await BandEmailService.sendEmailWithBranding(
-            {
-              to: subscriber.email,
-              subject: emailTemplate.subject,
-              html: emailTemplate.html,
-            },
+          // Use the same content notification flow as development
+          await BandEmailService.sendContentNotificationWithBranding(
+            subscriber.email,
             bandName,
+            contentType,
+            content,
+            subscriber.unsubscribeToken,
             tenantId
           );
 

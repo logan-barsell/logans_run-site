@@ -24,6 +24,14 @@ async function sendEmail(
   tenantId = null
 ) {
   try {
+    // Validate that either templateType is provided, or both subject and html are provided
+    if (!templateType && (!subject || !html)) {
+      throw new AppError(
+        'Either templateType must be provided, or both subject and html must be provided',
+        400
+      );
+    }
+
     // In development without AWS credentials, just log the email
     if (
       process.env.NODE_ENV !== 'production' &&
@@ -125,15 +133,6 @@ async function sendEmail(
           templateData.bandName,
           theme
         );
-      } else if (templateType === 'newsletterNotification') {
-        // Newsletter notification template needs bandName, content, contentType, unsubscribeToken, theme
-        template = emailTemplates[templateType](
-          templateData.bandName,
-          templateData.content,
-          templateData.contentType,
-          templateData.unsubscribeToken,
-          theme
-        );
       } else if (templateType === 'musicNotification') {
         // Music notification template needs bandName, content, theme, unsubscribeToken
         template = emailTemplates[templateType](
@@ -198,7 +197,7 @@ async function sendEmail(
 }
 
 /**
- * Send email verification with professional template
+ * Send email verification to band with professional template
  */
 async function sendEmailVerification(
   to,
@@ -235,7 +234,7 @@ async function sendEmailVerification(
 }
 
 /**
- * Send password reset with professional template
+ * Send password reset to band with professional template
  */
 async function sendPasswordReset(
   to,
@@ -267,7 +266,7 @@ async function sendPasswordReset(
 }
 
 /**
- * Send welcome email with professional template
+ * Send welcome email to band with professional template
  */
 async function sendWelcomeEmail(
   to,
@@ -297,7 +296,7 @@ async function sendWelcomeEmail(
 }
 
 /**
- * Send contact form notification
+ * Send contact form notification to band
  */
 async function sendContactNotification(
   to,
@@ -329,7 +328,7 @@ async function sendContactNotification(
 }
 
 /**
- * Send newsletter confirmation
+ * Send newsletter confirmation to subscriber
  */
 async function sendNewsletterConfirmation(
   email,
@@ -394,7 +393,7 @@ async function sendNewsletterSignupNotification(
 }
 
 /**
- * Send content notification with professional template
+ * Send content notification to subscriber with professional template
  */
 async function sendContentNotification(
   to,
@@ -406,7 +405,7 @@ async function sendContentNotification(
   tenantId = null
 ) {
   // Determine the appropriate template based on content type
-  let templateType = 'newsletterNotification'; // Default fallback
+  let templateType;
 
   switch (contentType) {
     case 'music':
@@ -419,7 +418,10 @@ async function sendContentNotification(
       templateType = 'showNotification';
       break;
     default:
-      templateType = 'newsletterNotification';
+      throw new AppError(
+        `Invalid content type: ${contentType}. Must be one of: music, video, show`,
+        400
+      );
   }
 
   let fromAddress = process.env.FROM_EMAIL || 'noreply@bandsyte.com';
@@ -446,23 +448,7 @@ async function sendContentNotification(
 }
 
 /**
- * Get content notification subject
- */
-function getContentNotificationSubject(contentType, bandName) {
-  switch (contentType) {
-    case 'music':
-      return `🎵 New Music Released - ${bandName}`;
-    case 'video':
-      return `🎬 New Video Uploaded - ${bandName}`;
-    case 'show':
-      return `🎤 New Show Added - ${bandName}`;
-    default:
-      return `📢 New Content Added - ${bandName}`;
-  }
-}
-
-/**
- * Send password reset success notification
+ * Send password reset success notification to band
  */
 async function sendPasswordResetSuccess(
   to,
@@ -494,7 +480,7 @@ async function sendPasswordResetSuccess(
 }
 
 /**
- * Send security alert notification
+ * Send security alert notification to band
  */
 async function sendSecurityAlert(
   to,
@@ -534,7 +520,7 @@ async function sendSecurityAlert(
 }
 
 /**
- * Send login alert notification
+ * Send login alert notification to band
  */
 async function sendLoginAlert(
   to,
@@ -571,7 +557,7 @@ async function sendLoginAlert(
 }
 
 /**
- * Send two-factor authentication code
+ * Send two-factor authentication code to band
  */
 async function sendTwoFactorCode(
   to,

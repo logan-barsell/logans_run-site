@@ -48,7 +48,7 @@ function generateFromAddress(bandName) {
 }
 
 /**
- * Send newsletter confirmation with band branding
+ * Send newsletter confirmation to subscriber with band branding
  * @param {string} email - Subscriber email (used for both sending and display)
  * @param {string} bandName - Band name
  * @param {string} unsubscribeToken - Unsubscribe token
@@ -87,34 +87,7 @@ async function sendNewsletterConfirmationWithBranding(
 }
 
 /**
- * Send welcome email with band branding
- * @param {string} email - User email
- * @param {string} bandName - Band name
- */
-async function sendWelcomeEmailWithBranding(email, bandName, tenantId = null) {
-  try {
-    // Generate white-label FROM address
-    const fromAddress = generateFromAddress(bandName);
-
-    logger.info(`📧 Sending welcome email for ${bandName} to ${email}`);
-
-    return await emailService.sendWelcomeEmail(
-      email,
-      bandName,
-      fromAddress,
-      tenantId
-    );
-  } catch (error) {
-    logger.error(`❌ Failed to send welcome email for ${bandName}:`, error);
-    throw new AppError(
-      error.message || 'Failed to send welcome email',
-      error.statusCode || 500
-    );
-  }
-}
-
-/**
- * Send content notification with band branding
+ * Send content notification to subscriber with band branding
  * @param {string} subscriberEmail - Subscriber email
  * @param {string} bandName - Band name
  * @param {string} contentType - Type of content ('music', 'video', 'show')
@@ -207,47 +180,11 @@ async function getSESStatus(domain) {
   }
 }
 
-/**
- * Send generic email with band branding
- * @param {Object} emailData - Email data object with to, subject, html
- * @param {string} bandName - Band name for FROM address
- */
-async function sendEmailWithBranding(emailData, bandName, tenantId = null) {
-  try {
-    // Generate band white-label FROM address
-    const fromAddress = generateFromAddress(bandName);
-
-    logger.info(`📧 Sending email for ${bandName} to ${emailData.to}`);
-
-    // Call positional emailService API
-    const to = emailData.to;
-    const subject = emailData.subject || null;
-    const html = emailData.html || null;
-    return await emailService.sendEmail(
-      to,
-      subject,
-      html,
-      null,
-      {},
-      fromAddress,
-      tenantId
-    );
-  } catch (error) {
-    logger.error(`❌ Failed to send email for ${bandName}:`, error);
-    throw new AppError(
-      error.message || 'Failed to send email',
-      error.statusCode || 500
-    );
-  }
-}
-
 module.exports = {
   getBandEmailConfig,
   generateFromAddress,
   sendNewsletterConfirmationWithBranding,
-  sendWelcomeEmailWithBranding,
   sendContentNotificationWithBranding,
-  sendEmailWithBranding,
   validateDomainForSES,
   getSESStatus,
 };
