@@ -119,13 +119,13 @@ const MusicEdit = ({ fetchPlayers, players, loading, error }) => {
           </div>
         </p>
 
-        <p className='d-flex justify-content-center align-items-center mb-2 mb-md-3'>
+        <div className='d-flex justify-content-center align-items-center mb-2 mb-md-3'>
           <span>Theme </span> &nbsp;
           <div
             className='theme'
             style={{ backgroundColor: `${color}`, border: `${borderStyle}` }}
           ></div>
-        </p>
+        </div>
 
         <Divider className='w-75 mx-auto' />
         <div className='buttons d-flex justify-content-center'>
