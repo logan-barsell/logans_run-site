@@ -1,4 +1,4 @@
-const { prisma } = require('../prisma');
+const { prisma } = require('../db/prisma');
 
 module.exports = async function tenantResolver(req, res, next) {
   try {

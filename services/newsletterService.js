@@ -1,5 +1,5 @@
 const { withTenant } = require('../db/withTenant');
-const { prisma } = require('../prisma');
+const { prisma } = require('../db/prisma');
 const ThemeService = require('./themeService');
 const BandEmailService = require('./bandEmailService');
 const { AppError } = require('../middleware/errorHandler');

@@ -1,4 +1,4 @@
-const { AppError } = require('../middleware/errorHandler');
+const { AppError } = require('../../middleware/errorHandler');
 
 // Video category enum mapping
 const VIDEO_CATEGORIES = {

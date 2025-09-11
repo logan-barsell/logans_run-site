@@ -2,7 +2,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const statusMonitor = require('express-status-monitor');
 const logger = require('../utils/logger');
-const { prisma } = require('../prisma');
+const { prisma } = require('../db/prisma');
 
 /**
  * Request logging middleware with custom format

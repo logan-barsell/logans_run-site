@@ -2,7 +2,7 @@ const { withTenant } = require('../db/withTenant');
 const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
-const { validateSpotifyUrl } = require('../utils/spotifyValidation');
+const { validateSpotifyUrl } = require('../utils/validation');
 const { whitelistFields } = require('../utils/fieldWhitelist');
 const { toDate } = require('../utils/dates');
 

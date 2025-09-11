@@ -1,5 +1,5 @@
 const config = require('../config');
-const { getCategoryDisplayName } = require('../utils/videoValidation');
+const { getCategoryDisplayName } = require('../utils/validation');
 
 /**
  * Video Notification Email Template

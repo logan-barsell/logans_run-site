@@ -3,7 +3,7 @@
 // Seeds core singleton tables for the DEV tenant: TenantDomain, ContactInfo, Bio
 
 require('dotenv').config();
-const { prisma } = require('../prisma');
+const { prisma } = require('../db/prisma');
 
 async function run() {
   const tenantId = process.env.DEV_TENANT_ID;
