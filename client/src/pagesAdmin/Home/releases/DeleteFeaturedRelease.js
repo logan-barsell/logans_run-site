@@ -1,6 +1,6 @@
 import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
-import { deleteImageFromFirebase } from '../../../utils/firebaseImage';
+import { deleteImageFromFirebase } from '../../../utils/firebase';
 import { deleteFeaturedRelease as deleteFeaturedReleaseService } from '../../../services/featuredContentService';
 
 const DeleteFeaturedRelease = ({ release, onSuccess, onError, onClose }) => {

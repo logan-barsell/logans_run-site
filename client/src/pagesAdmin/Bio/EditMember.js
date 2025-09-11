@@ -3,9 +3,9 @@ import EditItem from '../../components/Modifiers/EditItem';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
-} from '../../utils/firebaseImage';
+} from '../../utils/firebase';
 import { editMemberFields } from './constants';
-import normalizeUrl from '../../utils/normalizeUrl';
+import { normalizeUrl } from '../../utils/strings';
 import { updateMember as updateMemberService } from '../../services/membersService';
 
 const EditMember = ({ member, onSuccess, onError, onClose }) => {

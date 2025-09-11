@@ -4,7 +4,7 @@ import { fetchHomeImages } from '../../../redux/actions';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
-} from '../../../utils/firebaseImage';
+} from '../../../utils/firebase';
 import {
   uploadHomeImage,
   removeHomeImage,

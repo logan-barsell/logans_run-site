@@ -6,7 +6,7 @@ import { fetchMediaImages } from '../../../redux/actions';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
-} from '../../../utils/firebaseImage';
+} from '../../../utils/firebase';
 import {
   uploadMediaImage,
   removeMediaImage,

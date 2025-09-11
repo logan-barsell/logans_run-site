@@ -1,6 +1,6 @@
 import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
-import { deleteImageFromFirebase } from '../../../utils/firebaseImage';
+import { deleteImageFromFirebase } from '../../../utils/firebase';
 import { deleteShow as deleteShowService } from '../../../services/showsService';
 
 const DeleteShow = ({ show, onSuccess, onError, onClose }) => {

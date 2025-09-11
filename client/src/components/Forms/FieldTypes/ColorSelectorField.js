@@ -4,7 +4,7 @@ import {
   getPreselectedColors,
   getColorName,
   getColorPalette,
-} from '../../../utils/colorPalettes';
+} from '../../../utils/colors';
 
 const ColorSelectorField = ({
   name,

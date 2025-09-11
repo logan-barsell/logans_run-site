@@ -1,5 +1,5 @@
 import React from 'react';
-import { uploadImageToFirebase } from '../../../utils/firebaseImage';
+import { uploadImageToFirebase } from '../../../utils/firebase';
 import { featuredReleaseFields } from './constants';
 import { addFeaturedRelease as addFeaturedReleaseService } from '../../../services/featuredContentService';
 import AddItem from '../../../components/Modifiers/AddItem';

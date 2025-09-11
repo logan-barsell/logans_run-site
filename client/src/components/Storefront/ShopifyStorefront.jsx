@@ -5,7 +5,7 @@ import {
   createShopifyCheckout,
 } from '../../services/shopifyService';
 import { useAlert } from '../../contexts/AlertContext';
-import normalizeUrl from '../../utils/normalizeUrl';
+import { normalizeUrl } from '../../utils/strings';
 import { CartPlus, Ticket } from '../icons';
 import Button from '../Button/Button';
 import { NoContent } from '../Header';

@@ -11,7 +11,7 @@ import { BIO_FIELDS } from './constants';
 import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
-} from '../../utils/firebaseImage';
+} from '../../utils/firebase';
 
 const BioEdit = ({ fetchBio, bio, theme }) => {
   const { showError, showSuccess } = useAlert();

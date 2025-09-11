@@ -3,7 +3,7 @@ import StripeAlert from '../Alerts/StripeAlert';
 import {
   validateStripeConfig,
   isStripeConfigComplete,
-} from '../../../utils/stripeValidation';
+} from '../../../utils/validation';
 
 // Stripe validation component for admin use
 const StripeValidation = ({ merchConfig, forceValidation = false }) => {

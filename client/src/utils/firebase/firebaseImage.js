@@ -5,7 +5,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from 'firebase/storage';
-import app from '../pagesAdmin/firebase';
+import app from '../../pagesAdmin/firebase';
 
 /**
  * Uploads a file to Firebase Storage and returns the download URL.
