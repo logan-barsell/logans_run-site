@@ -243,106 +243,82 @@ async function sendContentNotification(tenantId, contentType, content) {
     }
 
     const bandName = theme.siteTitle || 'Bandsyte';
-    let emailsSent = 0;
-    let errors = 0;
 
-    let emailPromises;
-    let results;
+    // Extract all subscriber emails and unsubscribe tokens
+    const subscriberEmails = subscribers.map(sub => sub.email);
+    const unsubscribeTokens = subscribers.map(sub => sub.unsubscribeToken);
 
-    if (process.env.NODE_ENV !== 'production') {
-      // Development mode: Send only ONE test email
-      logger.info(
-        `🧪 DEV MODE: Sending single test email for ${contentType} notification to loganjbars@gmail.com (instead of ${subscribers.length} subscriber emails)`
+    logger.info(
+      `📧 Sending ${contentType} notification to ${subscribers.length} subscribers for ${bandName}`
+    );
+
+    try {
+      // Send batch email - DEV/PROD logic is now handled in emailService.sendEmail()
+      const result = await BandEmailService.sendContentNotificationWithBranding(
+        subscriberEmails,
+        bandName,
+        contentType,
+        content,
+        unsubscribeTokens,
+        tenantId
       );
 
-      try {
-        // Send single test email using the proper content notification flow
-        await BandEmailService.sendContentNotificationWithBranding(
-          'loganjbars@gmail.com',
-          bandName,
-          contentType,
-          content,
-          'test-token-123',
-          tenantId
-        );
+      // Extract results for tracking
+      let emailsSent = 0;
+      let errors = 0;
 
-        results = [
-          {
-            status: 'fulfilled',
-            value: { success: true, email: 'loganjbars@gmail.com' },
-          },
-        ];
-      } catch (error) {
-        logger.error('❌ Failed to send development test email:', error);
-        results = [
-          {
-            status: 'rejected',
-            reason: {
-              success: false,
-              email: 'loganjbars@gmail.com',
-              error: error.message,
-            },
-          },
-        ];
+      if (result.batchResults) {
+        // Batch sending results
+        emailsSent = result.successful || 0;
+        errors = result.failed || 0;
+      } else {
+        // Single email or fallback
+        emailsSent = result.success ? 1 : 0;
+        errors = result.success ? 0 : 1;
       }
-    } else {
-      // Production mode: Send to all subscribers
-      emailPromises = subscribers.map(async subscriber => {
-        try {
-          // Use the same content notification flow as development
-          await BandEmailService.sendContentNotificationWithBranding(
-            subscriber.email,
-            bandName,
-            contentType,
-            content,
-            subscriber.unsubscribeToken,
-            tenantId
-          );
 
-          // Update last email sent timestamp
+      // Update lastEmailSent for successful emails only
+      if (emailsSent > 0) {
+        const successfulEmails =
+          result.batchResults?.results
+            ?.filter(r => r.success)
+            ?.map(r => r.email) || [];
+
+        if (successfulEmails.length > 0) {
           await withTenant(tenantId, async tx =>
-            tx.newsletterSubscriber.update({
-              where: { id: subscriber.id },
+            tx.newsletterSubscriber.updateMany({
+              where: {
+                tenantId,
+                email: { in: successfulEmails },
+              },
               data: { lastEmailSent: new Date() },
             })
           );
 
-          return { success: true, email: subscriber.email };
-        } catch (error) {
-          logger.error(
-            `❌ Failed to queue notification to ${subscriber.email}:`,
-            error
+          logger.info(
+            `📧 Updated lastEmailSent for ${successfulEmails.length} successful recipients`
           );
-          return {
-            success: false,
-            email: subscriber.email,
-            error: error.message,
-          };
         }
-      });
-
-      // Wait for all emails to be queued (not sent yet - throttler handles sending)
-      results = await Promise.allSettled(emailPromises);
-    }
-
-    // Count successes and failures
-    results.forEach(result => {
-      if (result.status === 'fulfilled' && result.value.success) {
-        emailsSent++;
-      } else {
-        errors++;
       }
-    });
 
-    logger.info(
-      `📧 Content notification completed: ${emailsSent} sent, ${errors} failed`
-    );
-    return {
-      success: true,
-      message: `Notifications sent: ${emailsSent} successful, ${errors} failed`,
-      emailsSent,
-      errors,
-    };
+      logger.info(
+        `📧 Content notification completed: ${emailsSent} sent, ${errors} failed`
+      );
+
+      return {
+        success: true,
+        message: `Notifications sent: ${emailsSent} successful, ${errors} failed`,
+        emailsSent,
+        errors,
+        batchResults: result.batchResults || null,
+      };
+    } catch (error) {
+      logger.error(`❌ Failed to send ${contentType} notifications:`, error);
+      throw new AppError(
+        error.message || `Error sending ${contentType} notifications`,
+        error.statusCode || 500
+      );
+    }
   } catch (error) {
     logger.error(`❌ Error sending ${contentType} notifications:`, error);
     throw new AppError(

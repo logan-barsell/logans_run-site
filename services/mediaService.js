@@ -50,6 +50,7 @@ async function addVideo(tenantId, videoData) {
 
         await NewsletterService.sendContentNotification(tenantId, 'video', {
           title: newVideo.title,
+          category: newVideo.category,
           description: getCategoryDescription(newVideo.category),
         });
       } catch (notificationError) {

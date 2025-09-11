@@ -3,6 +3,7 @@ const { AppError } = require('../middleware/errorHandler');
 const { withTenant } = require('../db/withTenant');
 const { toDate } = require('../utils/dates');
 const { whitelistFields } = require('../utils/fieldWhitelist');
+const NewsletterService = require('./newsletterService');
 
 // Home image allowed fields
 const HOME_IMAGE_FIELDS = ['name', 'imgLink'];
@@ -112,6 +113,31 @@ async function addShow(tenantId, showData) {
         data: { ...data, tenantId },
       });
       logger.info('✅ Show added successfully');
+
+      // Send newsletter notification for new show
+      try {
+        // Validate required fields for notification
+        if (!newShow.venue) {
+          throw new AppError('Show venue is required for notifications', 400);
+        }
+
+        await NewsletterService.sendContentNotification(tenantId, 'show', {
+          venue: newShow.venue,
+          location: newShow.location,
+          date: newShow.date,
+          doors: newShow.doors,
+          showtime: newShow.showtime,
+          doorprice: newShow.doorprice,
+          advprice: newShow.advprice,
+        });
+      } catch (notificationError) {
+        logger.error(
+          'Failed to send newsletter notification:',
+          notificationError
+        );
+        // Don't fail the show creation if newsletter fails
+      }
+
       return newShow;
     });
   } catch (error) {

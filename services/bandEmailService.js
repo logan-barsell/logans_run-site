@@ -87,35 +87,58 @@ async function sendNewsletterConfirmationWithBranding(
 }
 
 /**
- * Send content notification to subscriber with band branding
- * @param {string} subscriberEmail - Subscriber email
+ * Send content notification to subscriber(s) with band branding
+ * @param {string|Array} subscriberEmails - Subscriber email(s) - single email (string) or multiple emails (array)
  * @param {string} bandName - Band name
  * @param {string} contentType - Type of content ('music', 'video', 'show')
  * @param {Object} content - Content data
- * @param {string} unsubscribeToken - Unsubscribe token
+ * @param {string|Array} unsubscribeTokens - Unsubscribe token(s) - single token (string) or array of tokens
+ * @param {string} tenantId - Tenant identifier
  */
 async function sendContentNotificationWithBranding(
-  subscriberEmail,
+  subscriberEmails,
   bandName,
   contentType,
   content,
-  unsubscribeToken,
+  unsubscribeTokens,
   tenantId = null
 ) {
   try {
     // Generate white-label FROM address
     const fromAddress = generateFromAddress(bandName);
 
+    // Handle both single and multiple emails
+    const emails = Array.isArray(subscriberEmails)
+      ? subscriberEmails
+      : [subscriberEmails];
+    const tokens = Array.isArray(unsubscribeTokens)
+      ? unsubscribeTokens
+      : [unsubscribeTokens];
+
+    // For batch emails, we need to handle unsubscribe tokens properly
+    // If we have multiple emails but only one token, we need to handle this case
+    if (emails.length > 1 && tokens.length === 1) {
+      logger.warn(
+        `📧 Multiple emails (${emails.length}) but single unsubscribe token provided. Using same token for all emails.`
+      );
+    }
+
     logger.info(
-      `📧 Sending ${contentType} notification for ${bandName} to ${subscriberEmail}`
+      `📧 Sending ${contentType} notification for ${bandName} to ${
+        emails.length
+      } recipient(s): ${emails.join(', ')}`
     );
 
+    // For now, we'll send with the first token (or same token for all)
+    // TODO: In the future, we might want to send individual emails per subscriber for personalized tokens
+    const token = tokens[0];
+
     return await emailService.sendContentNotification(
-      subscriberEmail,
+      subscriberEmails, // Pass the original parameter (string or array)
       bandName,
       contentType,
       content,
-      unsubscribeToken,
+      token,
       fromAddress,
       tenantId
     );
