@@ -4,14 +4,11 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../utils/firebaseImage';
-import { useAlert } from '../../contexts/AlertContext';
 import { editMemberFields } from './constants';
 import normalizeUrl from '../../utils/normalizeUrl';
 import { updateMember as updateMemberService } from '../../services/membersService';
 
-const EditMember = ({ member, fetchMembers }) => {
-  const { showError, showSuccess } = useAlert();
-
+const EditMember = ({ member, onSuccess, onError, onClose }) => {
   const onEdit = async fields => {
     try {
       let imageUrl = member.bioPic || '';
@@ -61,10 +58,9 @@ const EditMember = ({ member, fetchMembers }) => {
       };
 
       await updateMemberService(memberId, updatedMember);
-      showSuccess('Member updated successfully');
-      fetchMembers();
+      onSuccess('Member updated successfully');
     } catch (error) {
-      showError(error.message || 'Failed to update member');
+      onError(error.message || 'Failed to update member');
     }
   };
 
@@ -73,6 +69,7 @@ const EditMember = ({ member, fetchMembers }) => {
       item={member}
       editFields={editMemberFields}
       onEdit={onEdit}
+      onClose={onClose}
       title='EDIT MEMBER'
     />
   );

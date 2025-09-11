@@ -33,7 +33,6 @@ const DataTable = ({
       <LoadingSpinner
         size='lg'
         color='white'
-        text='Loading data...'
         centered={true}
       />
     );

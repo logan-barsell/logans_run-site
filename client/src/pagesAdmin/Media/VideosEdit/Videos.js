@@ -1,6 +1,6 @@
 import './videos.css';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { fetchVideos } from '../../../redux/actions';
 import AddVideo from './AddVideo';
@@ -11,10 +11,15 @@ import VideoItem from '../../../components/Video/VideoItem';
 import Button from '../../../components/Button/Button';
 import { addVideoFields } from './constants';
 import { PageTitle, NoContent } from '../../../components/Header';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import StaticAlert from '../../../components/Alert/StaticAlert';
+import { useAlert } from '../../../contexts/AlertContext';
 
 const videoCount = 6;
 const VideosEdit = ({ fetchVideos, videos, loading, error }) => {
   const [limit, setLimit] = useState(videoCount);
+  const { showError, showSuccess } = useAlert();
+  const operationSuccessfulRef = useRef(false);
 
   useEffect(() => {
     fetchVideos();
@@ -24,31 +29,46 @@ const VideosEdit = ({ fetchVideos, videos, loading, error }) => {
     setLimit(limit + videoCount);
   };
 
+  // Handle successful video operations
+  const handleVideoSuccess = message => {
+    showSuccess(message);
+    // Set a flag that we had a successful operation
+    operationSuccessfulRef.current = true;
+  };
+
+  const handleVideoError = error => {
+    showError(error);
+  };
+
+  // Handle modal close - only refresh if operation was successful
+  const handleModalClose = () => {
+    if (operationSuccessfulRef.current) {
+      fetchVideos();
+      operationSuccessfulRef.current = false;
+    }
+  };
+
   return (
     <div id='videoEdit'>
       <PageTitle divider>Edit Videos</PageTitle>
-      <AddVideo fetchVideos={fetchVideos} />
+      <AddVideo
+        onSuccess={handleVideoSuccess}
+        onError={handleVideoError}
+        onClose={handleModalClose}
+      />
 
       {loading ? (
-        <div
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: '200px' }}
-        >
-          <div
-            className='spinner-border text-light'
-            role='status'
-          >
-            <span className='visually-hidden'>Loading...</span>
-          </div>
-        </div>
+        <LoadingSpinner
+          size='lg'
+          color='white'
+          centered={true}
+        />
       ) : error ? (
-        <div
-          className='alert alert-danger'
-          role='alert'
-        >
-          <i className='fas fa-exclamation-triangle me-2'></i>
-          {error}
-        </div>
+        <StaticAlert
+          type={error.severity || 'danger'}
+          title={error.title || 'Error'}
+          description={error.message || error}
+        />
       ) : (
         <>
           <VideoContainer>
@@ -69,11 +89,15 @@ const VideosEdit = ({ fetchVideos, videos, loading, error }) => {
                 >
                   <EditVideo
                     video={video}
-                    fetchVideos={fetchVideos}
+                    onSuccess={handleVideoSuccess}
+                    onError={handleVideoError}
+                    onClose={handleModalClose} // NEW: pass the close callback
                   />
                   <DeleteVideo
                     video={video}
-                    fetchVideos={fetchVideos}
+                    onSuccess={handleVideoSuccess}
+                    onError={handleVideoError}
+                    onClose={handleModalClose} // NEW: pass the close callback
                   />
                 </VideoItem>
               );

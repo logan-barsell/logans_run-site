@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PageTitle } from '../components/Header';
 import { StaticAlert } from '../components/Alert';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './Unsubscribe.css';
 
 const Unsubscribe = () => {
@@ -86,12 +87,11 @@ const Unsubscribe = () => {
       case 'loading':
         return (
           <div className='text-center'>
-            <div
-              className='spinner-border text-light'
-              role='status'
-            >
-              <span className='visually-hidden'>Loading...</span>
-            </div>
+            <LoadingSpinner
+              size='lg'
+              color='white'
+              centered={true}
+            />
             <p className='mt-3 secondary-font'>
               {message || 'Processing your request...'}
             </p>
@@ -101,12 +101,11 @@ const Unsubscribe = () => {
       case 'verify':
         return (
           <div className='text-center'>
-            <div
-              className='spinner-border text-light'
-              role='status'
-            >
-              <span className='visually-hidden'>Loading...</span>
-            </div>
+            <LoadingSpinner
+              size='lg'
+              color='white'
+              centered={true}
+            />
             <p className='mt-3 secondary-font'>
               Verifying your unsubscribe request...
             </p>

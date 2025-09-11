@@ -4,6 +4,7 @@ import { fetchMediaImages } from '../../redux/actions';
 import Button from '../../components/Button/Button';
 import { NoContent } from '../../components/Header';
 import StaticAlert from '../../components/Alert/StaticAlert';
+import { PageLoader } from '../../components/LoadingSpinner';
 
 const imgCount = 12;
 const Pictures = ({ fetchMediaImages, images, loading, error }) => {
@@ -34,29 +35,24 @@ const Pictures = ({ fetchMediaImages, images, loading, error }) => {
 
   // Show loading state while fetching data
   if (loading) {
-    return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show error state if fetch failed
   if (error) {
     return (
-      <StaticAlert
-        type={error.severity}
-        title={error.title}
-        description={error.message}
-      />
+      <div
+        id='pictures'
+        className='justify-content-center fadeIn'
+      >
+        <div style={{ paddingTop: '60px' }}>
+          <StaticAlert
+            type={error.severity}
+            title={error.title}
+            description={error.message}
+          />
+        </div>
+      </div>
     );
   }
 

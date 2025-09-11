@@ -1,14 +1,11 @@
 import React from 'react';
 import { addVideo } from '../../../services/mediaService';
-import { useAlert } from '../../../contexts/AlertContext';
 import { addVideoFields } from './constants';
 import AddItem from '../../../components/Modifiers/AddItem';
 import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';
 
-const AddVideo = ({ fetchVideos }) => {
-  const { showError, showSuccess } = useAlert();
-
+const AddVideo = ({ onSuccess, onError, onClose }) => {
   const onAdd = async ({ category, title, date, link }) => {
     try {
       const path = new URL(link).pathname;
@@ -21,10 +18,9 @@ const AddVideo = ({ fetchVideos }) => {
         embedLink,
       };
       await addVideo(newVideo);
-      showSuccess('Video added successfully');
-      fetchVideos();
+      onSuccess('Video added successfully');
     } catch (error) {
-      showError('Failed to add video');
+      onError('Failed to add video');
     }
   };
 
@@ -32,6 +28,7 @@ const AddVideo = ({ fetchVideos }) => {
     <AddItem
       fields={addVideoFields}
       onAdd={onAdd}
+      onClose={onClose} // NEW: pass the close callback
       title='NEW VIDEO'
       modalProps={{ id: 'add_video_modal', label: 'add_video_modal' }}
       modalButton={

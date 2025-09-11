@@ -6,7 +6,13 @@ import DeleteShow from './DeleteShow';
 import { Ticket } from '../../../components/icons';
 import Button from '../../../components/Button/Button';
 
-const CustomShowsManagement = ({ shows, fetchShows }) => {
+const CustomShowsManagement = ({
+  shows,
+  fetchShows,
+  onSuccess,
+  onError,
+  onClose,
+}) => {
   const createAccordionItems = () => {
     const accordionItems = [];
 
@@ -77,11 +83,15 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
           <>
             <EditShow
               show={show}
-              fetchShows={fetchShows}
+              onSuccess={onSuccess}
+              onError={onError}
+              onClose={onClose}
             />
             <DeleteShow
               show={show}
-              fetchShows={fetchShows}
+              onSuccess={onSuccess}
+              onError={onError}
+              onClose={onClose}
             />
           </>
         ),
@@ -99,7 +109,11 @@ const CustomShowsManagement = ({ shows, fetchShows }) => {
         items={createAccordionItems()}
       />
       <div className='d-flex mb-5'>
-        <AddShow fetchShows={fetchShows} />
+        <AddShow
+          onSuccess={onSuccess}
+          onError={onError}
+          onClose={onClose}
+        />
       </div>
     </div>
   );

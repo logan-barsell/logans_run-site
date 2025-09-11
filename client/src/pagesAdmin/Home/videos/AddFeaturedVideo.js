@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAlert } from '../../../contexts/AlertContext';
 import { featuredVideoFields } from './constants';
 import { addFeaturedVideo as addFeaturedVideoService } from '../../../services/featuredContentService';
 import { uploadVideoToFirebase } from '../../../utils/firebaseVideo';
@@ -7,9 +6,7 @@ import AddItem from '../../../components/Modifiers/AddItem';
 import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';
 
-const AddFeaturedVideo = ({ fetchVideos }) => {
-  const { showError, showSuccess } = useAlert();
-
+const AddFeaturedVideo = ({ onSuccess, onError, onClose }) => {
   const handleAdd = async values => {
     try {
       let payload = { ...values };
@@ -29,11 +26,16 @@ const AddFeaturedVideo = ({ fetchVideos }) => {
         payload.releaseDate = new Date(payload.releaseDate);
       }
 
+      // Handle startTime and endTime - convert empty strings to null, valid strings to integers
+      payload.startTime =
+        payload.startTime === '' ? null : parseInt(payload.startTime) || null;
+      payload.endTime =
+        payload.endTime === '' ? null : parseInt(payload.endTime) || null;
+
       await addFeaturedVideoService(payload);
-      showSuccess('Featured video added successfully!');
-      fetchVideos();
+      onSuccess('Featured video added successfully!');
     } catch (err) {
-      showError(err.message || 'Failed to add featured video');
+      onError(err.message || 'Failed to add featured video');
       throw err; // Re-throw to prevent modal from closing
     }
   };
@@ -44,6 +46,7 @@ const AddFeaturedVideo = ({ fetchVideos }) => {
     <AddItem
       fields={fields}
       onAdd={handleAdd}
+      onClose={onClose}
       title='ADD FEATURED VIDEO'
       buttonText='Add Featured Video'
       modalProps={{

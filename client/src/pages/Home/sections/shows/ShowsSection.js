@@ -7,6 +7,7 @@ import { BandsintownWidget } from '../../../../components/Bandsintown';
 import StaticAlert from '../../../../components/Alert/StaticAlert';
 import Button from '../../../../components/Button/Button';
 import NoContent from '../../../../components/Header/NoContent';
+import { PageLoader } from '../../../../components/LoadingSpinner';
 
 const ShowsSection = ({
   fetchShows,
@@ -25,19 +26,7 @@ const ShowsSection = ({
 
   // Show loading state
   if (showsLoading || showsSettingsLoading) {
-    return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading shows...</span>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show error state

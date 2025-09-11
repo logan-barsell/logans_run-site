@@ -1,15 +1,12 @@
 import React from 'react';
 import { uploadImageToFirebase } from '../../../utils/firebaseImage';
-import { useAlert } from '../../../contexts/AlertContext';
 import { featuredReleaseFields } from './constants';
 import { addFeaturedRelease as addFeaturedReleaseService } from '../../../services/featuredContentService';
 import AddItem from '../../../components/Modifiers/AddItem';
 import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';
 
-const AddFeaturedRelease = ({ fetchReleases }) => {
-  const { showError, showSuccess } = useAlert();
-
+const AddFeaturedRelease = ({ onSuccess, onError, onClose }) => {
   const handleAdd = async (fields, setUploadProgress) => {
     try {
       let coverImageUrl = '';
@@ -26,10 +23,9 @@ const AddFeaturedRelease = ({ fetchReleases }) => {
           : undefined,
       };
       await addFeaturedReleaseService(payload);
-      showSuccess('Featured release added successfully');
-      await fetchReleases();
+      onSuccess('Featured release added successfully');
     } catch (error) {
-      showError('Failed to add featured release');
+      onError('Failed to add featured release');
       throw error;
     }
   };
@@ -38,6 +34,7 @@ const AddFeaturedRelease = ({ fetchReleases }) => {
     <AddItem
       fields={featuredReleaseFields()}
       onAdd={handleAdd}
+      onClose={onClose}
       title='NEW FEATURED RELEASE'
       modalProps={{
         id: 'add_featured_release_modal',

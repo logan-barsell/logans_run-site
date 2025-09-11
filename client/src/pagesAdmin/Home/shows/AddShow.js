@@ -1,15 +1,12 @@
 import React from 'react';
 import { uploadImageToFirebase } from '../../../utils/firebaseImage';
 import { addShow } from '../../../services/showsService';
-import { useAlert } from '../../../contexts/AlertContext';
 import { ADD_SHOW_FIELDS } from './constants';
 import AddItem from '../../../components/Modifiers/AddItem';
 import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';
 
-const AddShow = ({ fetchShows }) => {
-  const { showError, showSuccess } = useAlert();
-
+const AddShow = ({ onSuccess, onError, onClose }) => {
   const onAdd = async (fields, setUploadProgress) => {
     try {
       let posterUrl = '';
@@ -18,7 +15,7 @@ const AddShow = ({ fetchShows }) => {
           onProgress: () => {}, // Pass empty function instead of progress tracking
         });
       } else {
-        showError('Image required.');
+        onError('Image required.');
         return;
       }
       const newShow = {
@@ -29,10 +26,9 @@ const AddShow = ({ fetchShows }) => {
         showtime: fields.showtime.getTime(),
       };
       await addShow(newShow);
-      showSuccess('Show added successfully!');
-      fetchShows();
+      onSuccess('Show added successfully!');
     } catch (err) {
-      showError(err.message || 'Failed to add show');
+      onError(err.message || 'Failed to add show');
     }
   };
 
@@ -40,6 +36,7 @@ const AddShow = ({ fetchShows }) => {
     <AddItem
       fields={ADD_SHOW_FIELDS}
       onAdd={onAdd}
+      onClose={onClose}
       title='NEW SHOW'
       modalProps={{ id: 'add_show_modal', label: 'add_show_modal' }}
       modalButton={

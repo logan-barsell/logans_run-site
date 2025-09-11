@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import VideoItem from '../../../components/Video/VideoItem';
@@ -9,14 +9,36 @@ import AddFeaturedVideo from './AddFeaturedVideo';
 import EditFeaturedVideo from './EditFeaturedVideo';
 import DeleteFeaturedVideo from './DeleteFeaturedVideo';
 import { PageTitle, NoContent } from '../../../components/Header';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import StaticAlert from '../../../components/Alert/StaticAlert';
 
 const FeaturedVideosEdit = ({ fetchFeaturedVideos, featuredVideos }) => {
-  const { showError } = useAlert();
+  const { showError, showSuccess } = useAlert();
   const { data: videos, loading, error } = featuredVideos;
+  const operationSuccessfulRef = useRef(false);
 
   useEffect(() => {
     fetchFeaturedVideos();
   }, [fetchFeaturedVideos]);
+
+  // Handle successful video operations
+  const handleVideoSuccess = message => {
+    showSuccess(message);
+    // Set a flag that we had a successful operation
+    operationSuccessfulRef.current = true;
+  };
+
+  const handleVideoError = error => {
+    showError(error);
+  };
+
+  // Handle modal close - only refresh if operation was successful
+  const handleModalClose = () => {
+    if (operationSuccessfulRef.current) {
+      fetchFeaturedVideos();
+      operationSuccessfulRef.current = false; // Reset flag
+    }
+  };
 
   // Handle errors from Redux state
   useEffect(() => {
@@ -31,29 +53,25 @@ const FeaturedVideosEdit = ({ fetchFeaturedVideos, featuredVideos }) => {
       className='mb-4 container'
     >
       <PageTitle divider>Featured Videos</PageTitle>
-      <AddFeaturedVideo fetchVideos={fetchFeaturedVideos} />
+      <AddFeaturedVideo
+        onSuccess={handleVideoSuccess}
+        onError={handleVideoError}
+        onClose={handleModalClose}
+      />
 
       {/* Show loading state while fetching videos */}
       {loading ? (
-        <div
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: '200px' }}
-        >
-          <div
-            className='spinner-border text-light'
-            role='status'
-          >
-            <span className='visually-hidden'>Loading...</span>
-          </div>
-        </div>
+        <LoadingSpinner
+          size='lg'
+          color='white'
+          centered={true}
+        />
       ) : error ? (
-        <div
-          className='alert alert-danger'
-          role='alert'
-        >
-          <i className='fas fa-exclamation-triangle me-2'></i>
-          {error}
-        </div>
+        <StaticAlert
+          type={error.severity || 'danger'}
+          title={error.title || 'Error'}
+          description={error.message || error}
+        />
       ) : (
         <VideoContainer>
           {videos.length === 0 && <NoContent>No Featured Videos</NoContent>}
@@ -69,11 +87,15 @@ const FeaturedVideosEdit = ({ fetchFeaturedVideos, featuredVideos }) => {
             >
               <EditFeaturedVideo
                 video={video}
-                fetchVideos={fetchFeaturedVideos}
+                onSuccess={handleVideoSuccess}
+                onError={handleVideoError}
+                onClose={handleModalClose}
               />
               <DeleteFeaturedVideo
                 video={video}
-                fetchVideos={fetchFeaturedVideos}
+                onSuccess={handleVideoSuccess}
+                onError={handleVideoError}
+                onClose={handleModalClose}
               />
             </VideoItem>
           ))}

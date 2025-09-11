@@ -4,13 +4,10 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../../utils/firebaseImage';
-import { useAlert } from '../../../contexts/AlertContext';
 import { editShowFields } from './constants';
 import { updateShow as updateShowService } from '../../../services/showsService';
 
-const EditShow = ({ show, fetchShows }) => {
-  const { showError, showSuccess } = useAlert();
-
+const EditShow = ({ show, onSuccess, onError, onClose }) => {
   const onEdit = async fields => {
     const id = show.id;
     try {
@@ -52,13 +49,10 @@ const EditShow = ({ show, fetchShows }) => {
       };
 
       await updateShowService(id, updatedShow);
-      showSuccess('Show updated successfully');
-
-      // Fetch updated shows data
-      fetchShows();
+      onSuccess('Show updated successfully');
     } catch (err) {
       console.error(err);
-      showError(err.message || 'Failed to update show');
+      onError(err.message || 'Failed to update show');
     }
   };
 
@@ -68,6 +62,7 @@ const EditShow = ({ show, fetchShows }) => {
       item={show}
       editFields={editShowFields}
       onEdit={onEdit}
+      onClose={onClose}
       title='EDIT SHOW'
     />
   );

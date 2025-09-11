@@ -11,6 +11,8 @@ import {
 } from '../../../services/homeService';
 import { useAlert } from '../../../contexts/AlertContext';
 import EditImages from '../../../components/Images/EditImages';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import StaticAlert from '../../../components/Alert/StaticAlert';
 
 function extractStoragePathFromUrl(url) {
   const match = url && url.match(/\/o\/([^?]+)/);
@@ -20,7 +22,7 @@ function extractStoragePathFromUrl(url) {
   return url ? url.split('/').pop().split('?')[0] : '';
 }
 
-const CarouselEdit = ({ fetchHomeImages, images }) => {
+const CarouselEdit = ({ fetchHomeImages, images, loading, error }) => {
   const { showError, showSuccess } = useAlert();
 
   useEffect(() => {
@@ -68,6 +70,32 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
     }
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className='text-center py-5'>
+        <LoadingSpinner
+          size='lg'
+          color='white'
+          centered={true}
+        />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className='text-center py-5'>
+        <StaticAlert
+          type={error.severity || 'danger'}
+          title={error.title || 'Error'}
+          description={error.message || error}
+        />
+      </div>
+    );
+  }
+
   return (
     <EditImages
       images={images}
@@ -82,7 +110,11 @@ const CarouselEdit = ({ fetchHomeImages, images }) => {
 };
 
 function mapStateToProps({ carouselImages }) {
-  return { images: carouselImages?.data || [] };
+  return {
+    images: carouselImages?.data || [],
+    loading: carouselImages?.loading || false,
+    error: carouselImages?.error || null,
+  };
 }
 
 export default connect(mapStateToProps, { fetchHomeImages })(CarouselEdit);

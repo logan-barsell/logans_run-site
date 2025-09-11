@@ -1,12 +1,9 @@
 import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
 import { deleteImageFromFirebase } from '../../../utils/firebaseImage';
-import { useAlert } from '../../../contexts/AlertContext';
 import { deleteFeaturedRelease as deleteFeaturedReleaseService } from '../../../services/featuredContentService';
 
-const DeleteFeaturedRelease = ({ release, fetchReleases }) => {
-  const { showError, showSuccess } = useAlert();
-
+const DeleteFeaturedRelease = ({ release, onSuccess, onError, onClose }) => {
   const onDelete = async item => {
     const id = item.id;
     try {
@@ -21,10 +18,9 @@ const DeleteFeaturedRelease = ({ release, fetchReleases }) => {
       }
 
       await deleteFeaturedReleaseService(id);
-      showSuccess('Featured release deleted successfully');
-      fetchReleases();
+      onSuccess('Featured release deleted successfully');
     } catch (error) {
-      showError('Failed to delete featured release');
+      onError('Failed to delete featured release');
     }
   };
 
@@ -40,6 +36,7 @@ const DeleteFeaturedRelease = ({ release, fetchReleases }) => {
         </>
       }
       onDelete={onDelete}
+      onClose={onClose}
     />
   );
 };

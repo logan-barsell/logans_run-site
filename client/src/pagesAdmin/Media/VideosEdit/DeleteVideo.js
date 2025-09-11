@@ -1,19 +1,15 @@
 import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
-import { useAlert } from '../../../contexts/AlertContext';
 import { deleteVideo as deleteVideoService } from '../../../services/mediaService';
 
-const DeleteVideo = ({ video, fetchVideos }) => {
-  const { showError, showSuccess } = useAlert();
-
+const DeleteVideo = ({ video, onSuccess, onError, onClose }) => {
   const onDelete = async item => {
     const id = item.id;
     try {
       await deleteVideoService(id);
-      showSuccess('Video deleted successfully');
-      fetchVideos();
+      onSuccess('Video deleted successfully');
     } catch (err) {
-      showError('Failed to delete video');
+      onError('Failed to delete video');
     }
   };
 
@@ -25,6 +21,7 @@ const DeleteVideo = ({ video, fetchVideos }) => {
       title='DELETE VIDEO'
       content='Remove video from media?'
       onDelete={onDelete}
+      onClose={onClose} // NEW: pass the close callback
     />
   );
 };

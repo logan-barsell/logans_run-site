@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import SocialIcons from '../../components/SocialIcons';
 import { Divider, NoContent } from '../../components/Header';
 import StaticAlert from '../../components/Alert/StaticAlert';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const MusicPage = ({
   fetchPlayers,
@@ -83,23 +84,21 @@ const MusicPage = ({
 
       {/* Show loading state while fetching players */}
       {loading ? (
-        <div
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: '200px' }}
-        >
-          <div
-            className='spinner-border text-light'
-            role='status'
-          >
-            <span className='visually-hidden'>Loading...</span>
-          </div>
+        <div className='text-center py-5'>
+          <LoadingSpinner
+            size='lg'
+            color='white'
+            centered={true}
+          />
         </div>
       ) : error ? (
-        <StaticAlert
-          type={error.severity}
-          title={error.title}
-          description={error.message}
-        />
+        <div className='text-center py-5'>
+          <StaticAlert
+            type={error.severity}
+            title={error.title}
+            description={error.message}
+          />
+        </div>
       ) : players && players.length > 0 ? (
         players.map(player => (
           <div key={player.id}>
