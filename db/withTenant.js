@@ -1,4 +1,4 @@
-const { prisma } = require('../prisma');
+const { prisma } = require('./prisma');
 const logger = require('../utils/logger');
 
 async function withTenant(tenantId, fn, retries = 3) {

@@ -7,7 +7,7 @@ const NewsletterService = require('./newsletterService');
 const {
   validateVideoCategory,
   getCategoryDescription,
-} = require('../utils/videoValidation');
+} = require('../utils/validation');
 
 // Video allowed fields
 const VIDEO_FIELDS = ['category', 'title', 'date', 'link', 'embedLink'];

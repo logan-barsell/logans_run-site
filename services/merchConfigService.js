@@ -1,7 +1,7 @@
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
 const { withTenant } = require('../db/withTenant');
-const { validateMerchConfig } = require('../utils/merchConfigValidation');
+const { validateMerchConfig } = require('../utils/validation');
 const { whitelistFields } = require('../utils/fieldWhitelist');
 
 // Merch config allowed fields

@@ -1,9 +1,20 @@
 /**
- * Validate password strength
+ * Validates password strength (simple regex check)
+ * @param {string} password - The password to validate
+ * @returns {boolean} - True if valid, false otherwise
+ */
+function validatePassword(password) {
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return passwordRegex.test(password);
+}
+
+/**
+ * Validates password strength with detailed error messages
  * @param {string} password - Password to validate
  * @returns {Object} Validation result with isValid and errors
  */
-const validatePassword = password => {
+const validatePasswordDetailed = password => {
   const errors = [];
 
   if (!password) {
@@ -76,4 +87,5 @@ const validatePassword = password => {
 
 module.exports = {
   validatePassword,
+  validatePasswordDetailed,
 };

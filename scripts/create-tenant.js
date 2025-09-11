@@ -1,7 +1,7 @@
 // scripts/create-tenant.js
 // Usage: node scripts/create-tenant.js
 require('dotenv').config();
-const { prisma } = require('../prisma');
+const { prisma } = require('../db/prisma');
 const { v4: uuidv4 } = require('uuid');
 
 async function main() {

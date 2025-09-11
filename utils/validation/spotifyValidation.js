@@ -1,4 +1,4 @@
-const { AppError } = require('../middleware/errorHandler');
+const { AppError } = require('../../middleware/errorHandler');
 
 // Spotify URL patterns for different content types
 const SPOTIFY_PATTERNS = {
