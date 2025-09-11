@@ -2,16 +2,14 @@ const { withTenant } = require('../db/withTenant');
 const NewsletterService = require('./newsletterService');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
-const {
-  validateSpotifyUrl,
-  extractMusicType,
-} = require('../utils/spotifyValidation');
+const { validateSpotifyUrl } = require('../utils/spotifyValidation');
 const { whitelistFields } = require('../utils/fieldWhitelist');
 const { toDate } = require('../utils/dates');
 
 // Spotify player allowed fields
 const SPOTIFY_PLAYER_FIELDS = [
   'title',
+  'type',
   'date',
   'bgColor',
   'spotifyLink',
@@ -52,11 +50,12 @@ async function addPlayer(tenantId, playerData) {
 
     // Send newsletter notification for new music
     try {
-      const musicType = extractMusicType(newPlayer.spotifyLink);
+      // Use the user-selected type instead of extracting from Spotify URL
+      const musicType = newPlayer.type || 'ALBUM'; // Default to ALBUM if no type specified
 
       await NewsletterService.sendContentNotification(tenantId, 'music', {
         title: newPlayer.title || 'New Music',
-        type: musicType,
+        type: musicType.toLowerCase(), // Convert enum to lowercase for email template
         releaseDate: newPlayer.date,
         spotifyLink: newPlayer.spotifyLink,
       });

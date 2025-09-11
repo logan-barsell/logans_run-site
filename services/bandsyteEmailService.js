@@ -16,7 +16,7 @@ function generateBandsyteFromAddress(fromType = 'support') {
 }
 
 /**
- * Send newsletter signup notification with Bandsyte branding
+ * Send newsletter signup notification to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} fanEmail - Fan email who signed up
  * @param {string} bandName - Band name
@@ -55,7 +55,7 @@ async function sendNewsletterSignupNotificationWithBranding(
 }
 
 /**
- * Send security alert with Bandsyte branding
+ * Send security alert to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} bandName - Band name
  * @param {string} alertType - Type of alert
@@ -101,7 +101,7 @@ async function sendSecurityAlertWithBranding(
 }
 
 /**
- * Send password reset with Bandsyte branding
+ * Send password reset to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} resetLink - Password reset link
  * @param {string} bandName - Band name
@@ -135,7 +135,7 @@ async function sendPasswordResetWithBranding(
 }
 
 /**
- * Send password reset success with Bandsyte branding
+ * Send password reset success to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} bandName - Band name
  * @param {string} timestamp - When the reset occurred
@@ -172,7 +172,7 @@ async function sendPasswordResetSuccessWithBranding(
 }
 
 /**
- * Send email verification with Bandsyte branding
+ * Send email verification to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} verificationLink - Email verification link
  * @param {string} role - User role
@@ -212,7 +212,7 @@ async function sendEmailVerificationWithBranding(
 }
 
 /**
- * Send contact notification with Bandsyte branding
+ * Send contact notification to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {Object} contactData - Contact form data
  * @param {string} bandName - Band name
@@ -249,7 +249,7 @@ async function sendContactNotificationWithBranding(
 }
 
 /**
- * Send welcome email with Bandsyte branding
+ * Send welcome email to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} bandName - Band name
  */
@@ -276,10 +276,9 @@ async function sendWelcomeEmailWithBranding(to, bandName, tenantId = null) {
 }
 
 /**
- * Send login alert with Bandsyte branding
+ * Send login alert to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} bandName - Band name
- * @param {string} timestamp - When the login occurred
  * @param {string} ipAddress - IP address
  * @param {string} userAgent - User agent
  * @param {string} location - Location
@@ -287,7 +286,6 @@ async function sendWelcomeEmailWithBranding(to, bandName, tenantId = null) {
 async function sendLoginAlertWithBranding(
   to,
   bandName,
-  timestamp,
   ipAddress,
   userAgent,
   location,
@@ -318,7 +316,7 @@ async function sendLoginAlertWithBranding(
 }
 
 /**
- * Send two-factor code with Bandsyte branding
+ * Send two-factor code to band with Bandsyte branding
  * @param {string} to - Band admin email
  * @param {string} code - Two-factor code
  * @param {string} bandName - Band name
@@ -351,51 +349,6 @@ async function sendTwoFactorCodeWithBranding(
   }
 }
 
-/**
- * Send content notification with Bandsyte branding
- * @param {string} to - Recipient email
- * @param {string} bandName - Band name
- * @param {string} contentType - Type of content (music, video, show, etc.)
- * @param {Object} content - Content data
- * @param {string} unsubscribeToken - Unsubscribe token
- * @param {string} customFromAddress - Custom from address
- */
-async function sendContentNotificationWithBranding(
-  to,
-  bandName,
-  contentType,
-  content,
-  unsubscribeToken,
-  customFromAddress,
-  tenantId = null
-) {
-  try {
-    // Generate Bandsyte white-label FROM address
-    const fromAddress = generateBandsyteFromAddress('support');
-
-    logger.info(`📧 Sending content notification for ${bandName} to ${to}`);
-
-    return await emailService.sendContentNotification(
-      to,
-      bandName,
-      contentType,
-      content,
-      unsubscribeToken,
-      fromAddress,
-      tenantId
-    );
-  } catch (error) {
-    logger.error(
-      `❌ Failed to send content notification for ${bandName}:`,
-      error
-    );
-    throw new AppError(
-      error.message || 'Failed to send content notification',
-      error.statusCode || 500
-    );
-  }
-}
-
 module.exports = {
   generateBandsyteFromAddress,
   sendNewsletterSignupNotificationWithBranding,
@@ -407,5 +360,4 @@ module.exports = {
   sendWelcomeEmailWithBranding,
   sendLoginAlertWithBranding,
   sendTwoFactorCodeWithBranding,
-  sendContentNotificationWithBranding,
 };

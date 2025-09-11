@@ -20,15 +20,42 @@ const musicNotification = (
   unsubscribeToken = ''
 ) => {
   const musicType = content.type || 'music';
+
+  // Helper function to get proper article (a/an) for music type
+  const getArticle = type => {
+    const lowerType = type.toLowerCase();
+    return ['album', 'ep'].includes(lowerType) ? 'an' : 'a';
+  };
+
+  // Helper function to get proper display name for music type
+  const getDisplayName = type => {
+    const upperType = type.toUpperCase();
+    if (upperType === 'EP' || upperType === 'LP') {
+      return upperType;
+    }
+    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+  };
+
+  // Helper function to get lowercase display name (keeping EP/LP capitalized)
+  const getLowercaseDisplayName = type => {
+    const upperType = type.toUpperCase();
+    if (upperType === 'EP' || upperType === 'LP') {
+      return upperType; // Keep EP and LP capitalized even in lowercase context
+    }
+    return type.toLowerCase();
+  };
+
   // Build subject line
-  const subject = `🎵 New ${
-    musicType.charAt(0).toUpperCase() + musicType.slice(1)
-  } ${content.title ? `"${content.title}" ` : ''}Just Released! - ${bandName}`;
+  const subject = `🎵 New ${getDisplayName(musicType)} ${
+    content.title ? `"${content.title}" ` : ''
+  }Just Released! - ${bandName}`;
 
   // Build content details
   let contentDetails = `
     <div class="highlight">
-      <h3>${content.title || 'New Music'} by ${bandName}</h3>
+      <h3>${
+        content.title || `New ${getDisplayName(musicType)}`
+      } by ${bandName}</h3>
   `;
 
   if (content.releaseDate) {
@@ -112,11 +139,13 @@ const musicNotification = (
                 : ''
             }
             <h1>${bandName}</h1>
-            <p>New Music Released!</p>
+            <p>New ${getDisplayName(musicType)} Released!</p>
           </div>
           <div class="content">
-            <h2>We just released new music!</h2>
-            <p>Hey there! We wanted to let you know about some fresh music we just added to our site.</p>
+            <h2>We just released ${getArticle(
+              musicType
+            )} new ${getLowercaseDisplayName(musicType)}!</h2>
+            <p>Hey there! We wanted you to be the first to know about our newest release. Give it a listen and let us know what you think!</p>
             
             ${contentDetails}
             

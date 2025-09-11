@@ -57,23 +57,6 @@ function validateSpotifyUrl(url) {
 }
 
 /**
- * Extract music type from Spotify URL for newsletter notifications
- * @param {string} url - The Spotify URL
- * @returns {string} - Music type (track, album, playlist, or 'music' as fallback)
- */
-function extractMusicType(url) {
-  if (!url) return 'music';
-
-  for (const [type, pattern] of Object.entries(SPOTIFY_PATTERNS)) {
-    if (pattern.test(url)) {
-      return type;
-    }
-  }
-
-  return 'music';
-}
-
-/**
  * Generate Spotify embed URL
  * @param {string} url - The Spotify URL
  * @param {string} theme - Theme parameter (auto, 0 for dark, 1 for light)
@@ -99,6 +82,5 @@ module.exports = {
   SPOTIFY_PATTERNS,
   SUPPORTED_TYPES,
   validateSpotifyUrl,
-  extractMusicType,
   generateSpotifyEmbedUrl,
 };

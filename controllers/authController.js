@@ -143,7 +143,6 @@ async function completeTwoFactorLogin(req, res, next) {
         await BandsyteEmailService.sendLoginAlertWithBranding(
           user.adminEmail,
           bandName,
-          new Date().toLocaleString(),
           ip,
           userAgent,
           'Unknown',

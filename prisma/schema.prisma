@@ -208,6 +208,13 @@ enum VideoCategory {
   LYRIC_VIDEO
 }
 
+enum MusicType {
+  SINGLE
+  ALBUM
+  EP
+  LP
+}
+
 model Video {
   id        String        @id @default(uuid())
   tenant    Tenant        @relation(fields: [tenantId], references: [id])
@@ -242,16 +249,16 @@ model FeaturedVideo {
 }
 
 model FeaturedRelease {
-  id          String   @id @default(uuid())
-  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  id          String    @id @default(uuid())
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
   tenantId    String
   coverImage  String
   title       String
-  type        String
+  type        MusicType
   releaseDate DateTime
   musicLink   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model MediaImage {
@@ -300,10 +307,11 @@ model ShowsSettings {
 }
 
 model SpotifyPlayer {
-  id             String    @id @default(uuid())
-  tenant         Tenant    @relation(fields: [tenantId], references: [id])
+  id             String     @id @default(uuid())
+  tenant         Tenant     @relation(fields: [tenantId], references: [id])
   tenantId       String
   title          String?
+  type           MusicType?
   date           DateTime?
   bgColor        String?
   spotifyLink    String?
@@ -311,6 +319,6 @@ model SpotifyPlayer {
   appleMusicLink String?
   youtubeLink    String?
   soundcloudLink String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 }

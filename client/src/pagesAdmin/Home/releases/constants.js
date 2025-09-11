@@ -1,6 +1,6 @@
 export const releaseTypes = [
-  { name: 'Album', value: 'album' },
-  { name: 'Single', value: 'single' },
+  { name: 'Album', value: 'ALBUM' },
+  { name: 'Single', value: 'SINGLE' },
   { name: 'EP', value: 'EP' },
   { name: 'LP', value: 'LP' },
 ];
@@ -24,7 +24,7 @@ export const featuredReleaseFields = (release = {}, required = true) => [
     name: 'type',
     type: 'options',
     options: releaseTypes,
-    initialValue: release.type || 'album',
+    initialValue: release.type || 'ALBUM',
   },
   {
     label: 'Release Date',

@@ -12,7 +12,6 @@ const welcomeEmail = require('./welcomeEmail');
 const contactNotification = require('./contactNotification');
 const newsletterConfirmation = require('./newsletterConfirmation');
 const newsletterSignupNotification = require('./newsletterSignupNotification');
-const newsletterNotification = require('./newsletterNotification');
 const musicNotification = require('./musicNotification');
 const videoNotification = require('./videoNotification');
 const showNotification = require('./showNotification');
@@ -28,7 +27,6 @@ module.exports = {
   contactNotification,
   newsletterConfirmation,
   newsletterSignupNotification,
-  newsletterNotification,
   musicNotification,
   videoNotification,
   showNotification,

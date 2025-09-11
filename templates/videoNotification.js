@@ -1,4 +1,5 @@
 const config = require('../config');
+const { getCategoryDisplayName } = require('../utils/videoValidation');
 
 /**
  * Video Notification Email Template
@@ -129,11 +130,15 @@ const videoNotification = (
                           : ''
                       }
             <h1>${bandName}</h1>
-            <p>New Video Uploaded!</p>
+            <p>New ${getCategoryDisplayName(content.category)} Uploaded!</p>
           </div>
           <div class="content">
-            <h2>We just uploaded a new video!</h2>
-            <p>Hey there! We wanted to let you know about a fresh video we just added to our site.</p>
+            <h2>We just uploaded a new ${getCategoryDisplayName(
+              content.category
+            )}!</h2>
+            <p>Hey there! We wanted to let you know about a fresh ${getCategoryDisplayName(
+              content.category
+            ).toLowerCase()} we just added to our site.</p>
             
             ${contentDetails}
             
