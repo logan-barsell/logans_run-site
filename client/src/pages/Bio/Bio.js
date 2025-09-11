@@ -6,6 +6,7 @@ import { fetchBio, fetchMembers } from '../../redux/actions';
 import { useTheme } from '../../contexts/ThemeContext';
 import { PageTitle, Divider } from '../../components/Header';
 import StaticAlert from '../../components/Alert/StaticAlert';
+import LoadingSpinner, { PageLoader } from '../../components/LoadingSpinner';
 
 import SocialIcons from '../../components/SocialIcons';
 
@@ -28,30 +29,25 @@ const BioPage = ({
 
   // Show loading state while fetching data
   if (membersLoading || bioLoading) {
-    return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show error state if fetch failed
   if (membersError || bioError) {
     const error = membersError || bioError;
     return (
-      <StaticAlert
-        type={error.severity}
-        title={error.title}
-        description={error.message}
-      />
+      <div
+        id='aboutus'
+        className='fadeIn'
+      >
+        <div className='text-center py-5'>
+          <StaticAlert
+            type={error.severity}
+            title={error.title}
+            description={error.message}
+          />
+        </div>
+      </div>
     );
   }
 

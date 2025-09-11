@@ -14,6 +14,7 @@ import { PageTitle, Divider } from '../../components/Header';
 import { useAlert } from '../../contexts/AlertContext';
 import { sendContactMessage } from '../../services/contactService';
 import StaticAlert from '../../components/Alert/StaticAlert';
+import { PageLoader } from '../../components/LoadingSpinner';
 
 const ContactPage = ({
   fetchContactInfo,
@@ -32,29 +33,24 @@ const ContactPage = ({
 
   // Show loading state while fetching data
   if (loading) {
-    return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show error state if fetch failed
   if (error) {
     return (
-      <StaticAlert
-        type={error.severity}
-        title={error.title}
-        description={error.message}
-      />
+      <div
+        className='container fadeIn'
+        id='contact'
+      >
+        <div className='text-center py-5'>
+          <StaticAlert
+            type={error.severity}
+            title={error.title}
+            description={error.message}
+          />
+        </div>
+      </div>
     );
   }
 

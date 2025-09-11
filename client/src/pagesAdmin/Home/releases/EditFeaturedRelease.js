@@ -4,13 +4,10 @@ import {
   uploadImageToFirebase,
   deleteImageFromFirebase,
 } from '../../../utils/firebaseImage';
-import { useAlert } from '../../../contexts/AlertContext';
 import { featuredReleaseFields } from './constants';
 import { updateFeaturedRelease } from '../../../services/featuredContentService';
 
-const EditFeaturedRelease = ({ release, fetchReleases }) => {
-  const { showError, showSuccess } = useAlert();
-
+const EditFeaturedRelease = ({ release, onSuccess, onError, onClose }) => {
   const onEdit = async fields => {
     try {
       let newImageUrl = release.coverImage; // Keep existing image by default
@@ -46,10 +43,9 @@ const EditFeaturedRelease = ({ release, fetchReleases }) => {
       };
       const id = release.id;
       await updateFeaturedRelease(id, payload);
-      showSuccess('Featured release updated successfully');
-      fetchReleases(); // This now calls the Redux action
+      onSuccess('Featured release updated successfully');
     } catch (error) {
-      showError(error.message || 'Failed to update featured release');
+      onError(error.message || 'Failed to update featured release');
     }
   };
 
@@ -58,6 +54,7 @@ const EditFeaturedRelease = ({ release, fetchReleases }) => {
       item={release}
       editFields={featuredReleaseFields}
       onEdit={onEdit}
+      onClose={onClose}
       variant='wide'
       buttonText='Edit'
       title='EDIT FEATURED RELEASE'

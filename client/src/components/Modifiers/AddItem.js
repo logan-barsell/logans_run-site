@@ -7,6 +7,7 @@ import Button from '../Button/Button';
 const AddItem = ({
   fields,
   onAdd,
+  onClose, // NEW: callback for when modal closes
   buttonText = 'Add',
   title = 'ADD ITEM',
   modalProps = {},
@@ -58,6 +59,7 @@ const AddItem = ({
       id={defaultModalId}
       title={title}
       trigger={modalButton || <DefaultAddButton />}
+      onClose={onClose} // NEW: pass onClose to BaseModal
       onSuccess={handleFormSuccess}
     >
       <ModalForm

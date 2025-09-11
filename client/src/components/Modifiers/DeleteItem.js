@@ -6,6 +6,7 @@ import Button from '../Button/Button';
 const DeleteItem = ({
   item,
   onDelete,
+  onClose, // NEW: callback for when modal closes
   variant = 'square', // 'square' or 'wide'
   buttonText = 'Remove',
   title,
@@ -13,6 +14,7 @@ const DeleteItem = ({
   isImage = false,
 }) => {
   const [modalCloseFn, setModalCloseFn] = React.useState(null);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const itemId = item.id;
 
   // Callback to receive closeModal function from BaseModal
@@ -51,6 +53,7 @@ const DeleteItem = ({
           </Button>
         )
       }
+      onClose={onClose} // NEW: pass onClose to BaseModal
       onSuccess={handleDeleteSuccess}
       onCloseModal={handleCloseModalCallback}
     >
@@ -59,6 +62,7 @@ const DeleteItem = ({
         <Button
           type='button'
           variant='dark'
+          disabled={isDeleting}
           onClick={() => {
             if (modalCloseFn) {
               modalCloseFn();
@@ -69,15 +73,24 @@ const DeleteItem = ({
         </Button>
         <Button
           onClick={async () => {
-            if (modalCloseFn) {
-              modalCloseFn();
+            setIsDeleting(true);
+            try {
+              await onDelete(item); // Complete the delete operation first
+              if (modalCloseFn) {
+                modalCloseFn(); // Then close the modal
+              }
+            } catch (error) {
+              // Reset loading state on error
+              setIsDeleting(false);
+              throw error; // Re-throw to let parent handle the error
             }
-            await onDelete(item);
           }}
           type='button'
           variant='danger'
+          loading={isDeleting}
+          disabled={isDeleting}
         >
-          Delete
+          {isDeleting ? 'Deleting...' : 'Delete'}
         </Button>
       </div>
     </BaseModal>

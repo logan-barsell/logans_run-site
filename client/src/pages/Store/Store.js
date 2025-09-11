@@ -8,6 +8,7 @@ import StripeStorefront from '../../components/Storefront/StripeStorefront';
 import NotFound from '../NotFound';
 import { shouldAllowStoreAccess } from '../../utils/merchConfigValidator';
 import StaticAlert from '../../components/Alert/StaticAlert';
+import { PageLoader } from '../../components/LoadingSpinner';
 
 const StorePage = ({ fetchPublicMerchConfig, merchConfig, loading, error }) => {
   useEffect(() => {
@@ -16,29 +17,26 @@ const StorePage = ({ fetchPublicMerchConfig, merchConfig, loading, error }) => {
 
   // Show loading state while fetching merch config
   if (loading) {
-    return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show error state if fetch failed
   if (error) {
     return (
-      <StaticAlert
-        type={error.severity}
-        title={error.title}
-        description={error.message}
-      />
+      <div
+        id='store'
+        className='fadeIn'
+      >
+        <div className='my-2 mb-5 my-sm-5'>
+          <div className='text-center py-5'>
+            <StaticAlert
+              type={error.severity}
+              title={error.title}
+              description={error.message}
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 

@@ -1,12 +1,9 @@
 import React from 'react';
 import DeleteItem from '../../components/Modifiers/DeleteItem';
 import { deleteImageFromFirebase } from '../../utils/firebaseImage';
-import { useAlert } from '../../contexts/AlertContext';
 import { deleteMember as deleteMemberService } from '../../services/membersService';
 
-const DeleteMember = ({ member, fetchMembers }) => {
-  const { showError, showSuccess } = useAlert();
-
+const DeleteMember = ({ member, onSuccess, onError, onClose }) => {
   const onDelete = async item => {
     const id = item.id;
     try {
@@ -21,10 +18,9 @@ const DeleteMember = ({ member, fetchMembers }) => {
       }
 
       await deleteMemberService(id);
-      showSuccess('Member deleted successfully');
-      fetchMembers();
+      onSuccess('Member deleted successfully');
     } catch (err) {
-      showError('Failed to delete member');
+      onError('Failed to delete member');
     }
   };
 
@@ -38,6 +34,7 @@ const DeleteMember = ({ member, fetchMembers }) => {
         </>
       }
       onDelete={onDelete}
+      onClose={onClose}
     />
   );
 };

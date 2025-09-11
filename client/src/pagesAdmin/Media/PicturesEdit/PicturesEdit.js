@@ -15,6 +15,8 @@ import { useAlert } from '../../../contexts/AlertContext';
 import EditImages from '../../../components/Images/EditImages';
 import Button from '../../../components/Button/Button';
 import { PageTitle } from '../../../components/Header';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import StaticAlert from '../../../components/Alert/StaticAlert';
 
 function extractStoragePathFromUrl(url) {
   const match = url && url.match(/\/o\/([^?]+)/);
@@ -25,7 +27,7 @@ function extractStoragePathFromUrl(url) {
 }
 
 const imgCount = 12;
-const PicturesEdit = ({ fetchMediaImages, images }) => {
+const PicturesEdit = ({ fetchMediaImages, images, loading, error }) => {
   const { showError, showSuccess } = useAlert();
   const [limit, setLimit] = React.useState(imgCount);
 
@@ -39,7 +41,7 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
       try {
         const downloadURL = await uploadImageToFirebase(file, {
           fileName,
-          onProgress: () => {}, // Pass empty function instead of progress tracking
+          onProgress: () => {},
         });
         return { name: fileName, imgLink: downloadURL, success: true };
       } catch (error) {
@@ -83,6 +85,38 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
     setLimit(limit + imgCount);
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div id='editPictures'>
+        <PageTitle divider>Edit Pictures</PageTitle>
+        <div className='text-center py-5'>
+          <LoadingSpinner
+            size='lg'
+            color='white'
+            centered={true}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div id='editPictures'>
+        <PageTitle divider>Edit Pictures</PageTitle>
+        <div className='text-center py-5'>
+          <StaticAlert
+            type={error.severity || 'danger'}
+            title={error.title || 'Error'}
+            description={error.message || error}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div id='editPictures'>
@@ -113,7 +147,11 @@ const PicturesEdit = ({ fetchMediaImages, images }) => {
 };
 
 function mapStateToProps({ media }) {
-  return { images: media?.data || [] };
+  return {
+    images: media?.data || [],
+    loading: media?.loading || false,
+    error: media?.error || null,
+  };
 }
 
 export default connect(mapStateToProps, { fetchMediaImages })(PicturesEdit);

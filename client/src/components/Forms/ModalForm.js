@@ -67,9 +67,22 @@ const ModalForm = ({
   // Extract initial values from fields
   const initialValues = fields.reduce((acc, field) => {
     // Don't include image fields in initial values since they should only track file selections
-    if (field.initialValue !== undefined && field.type !== 'image') {
+    if (field.type === 'image') {
+      return acc;
+    }
+
+    // Handle single field with initialValue
+    if (field.initialValue !== undefined) {
       acc[field.name] = field.initialValue;
     }
+
+    // Handle compound fields with initialValues
+    if (field.initialValues !== undefined && typeof field.name === 'object') {
+      Object.keys(field.initialValues).forEach(key => {
+        acc[field.name[key]] = field.initialValues[key];
+      });
+    }
+
     return acc;
   }, {});
 
@@ -95,7 +108,38 @@ const ModalForm = ({
 
     // Handle case where one is Date and other isn't
     if (initial instanceof Date || current instanceof Date) {
-      return false;
+      // Try to convert both to timestamps for comparison
+      let initialTime, currentTime;
+
+      if (initial instanceof Date) {
+        initialTime = initial.getTime();
+      } else if (typeof initial === 'string' && initial) {
+        // Try to parse as ISO string
+        const parsed = new Date(initial);
+        if (!isNaN(parsed.getTime())) {
+          initialTime = parsed.getTime();
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+      if (current instanceof Date) {
+        currentTime = current.getTime();
+      } else if (typeof current === 'string' && current) {
+        // Try to parse as ISO string
+        const parsed = new Date(current);
+        if (!isNaN(parsed.getTime())) {
+          currentTime = parsed.getTime();
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+      return initialTime === currentTime;
     }
 
     // Handle null/undefined cases

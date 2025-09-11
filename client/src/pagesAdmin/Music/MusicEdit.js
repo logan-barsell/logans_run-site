@@ -8,6 +8,8 @@ import { fetchPlayers } from '../../redux/actions';
 import { connect } from 'react-redux';
 import { PageTitle, Divider, NoContent } from '../../components/Header';
 import { useTheme } from '../../contexts/ThemeContext';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import StaticAlert from '../../components/Alert/StaticAlert';
 import {
   Spotify,
   AppleMusic,
@@ -15,7 +17,7 @@ import {
   SoundCloud,
 } from '../../components/icons';
 
-const MusicEdit = ({ fetchPlayers, players }) => {
+const MusicEdit = ({ fetchPlayers, players, loading, error }) => {
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -142,25 +144,44 @@ const MusicEdit = ({ fetchPlayers, players }) => {
       >
         <PageTitle divider>Edit Music</PageTitle>
         <AddPlayer />
-        <div
-          id='currentPlayers'
-          className='list-group'
-        >
-          {players && players.length > 0 ? (
-            renderPlayers
-          ) : (
-            <div className='my-4'>
-              <NoContent>No Music</NoContent>
-            </div>
-          )}
-        </div>
+
+        {loading ? (
+          <LoadingSpinner
+            size='lg'
+            color='white'
+            centered={true}
+          />
+        ) : error ? (
+          <StaticAlert
+            type={error.severity || 'danger'}
+            title={error.title || 'Error'}
+            description={error.message || error}
+          />
+        ) : (
+          <div
+            id='currentPlayers'
+            className='list-group'
+          >
+            {players && players.length > 0 ? (
+              renderPlayers
+            ) : (
+              <div className='my-4'>
+                <NoContent>No Music</NoContent>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </>
   );
 };
 
 function mapStateToProps({ music }) {
-  return { players: music?.data || [] };
+  return {
+    players: music?.data || [],
+    loading: music?.loading || false,
+    error: music?.error || null,
+  };
 }
 
 export default connect(mapStateToProps, { fetchPlayers })(MusicEdit);

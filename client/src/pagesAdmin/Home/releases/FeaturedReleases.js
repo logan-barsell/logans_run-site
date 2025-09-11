@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import VideoContainer from '../../../components/Video/VideoContainer';
 import './featuredReleases.css';
@@ -8,14 +8,36 @@ import AddFeaturedRelease from './AddFeaturedRelease';
 import EditFeaturedRelease from './EditFeaturedRelease';
 import DeleteFeaturedRelease from './DeleteFeaturedRelease';
 import { PageTitle, NoContent } from '../../../components/Header';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import StaticAlert from '../../../components/Alert/StaticAlert';
 
 const FeaturedReleasesEdit = ({ fetchFeaturedReleases, featuredReleases }) => {
-  const { showError } = useAlert();
+  const { showError, showSuccess } = useAlert();
   const { data: releases, loading, error } = featuredReleases;
+  const operationSuccessfulRef = useRef(false);
 
   useEffect(() => {
     fetchFeaturedReleases();
   }, [fetchFeaturedReleases]);
+
+  // Handle successful release operations
+  const handleReleaseSuccess = message => {
+    showSuccess(message);
+    // Set a flag that we had a successful operation
+    operationSuccessfulRef.current = true;
+  };
+
+  const handleReleaseError = error => {
+    showError(error);
+  };
+
+  // Handle modal close - only refresh if operation was successful
+  const handleModalClose = () => {
+    if (operationSuccessfulRef.current) {
+      fetchFeaturedReleases();
+      operationSuccessfulRef.current = false; // Reset flag
+    }
+  };
 
   // Handle errors from Redux state
   useEffect(() => {
@@ -30,19 +52,23 @@ const FeaturedReleasesEdit = ({ fetchFeaturedReleases, featuredReleases }) => {
       className='mb-4 container'
     >
       <PageTitle divider>Featured Releases</PageTitle>
-      <AddFeaturedRelease fetchReleases={fetchFeaturedReleases} />
+      <AddFeaturedRelease
+        onSuccess={handleReleaseSuccess}
+        onError={handleReleaseError}
+        onClose={handleModalClose}
+      />
       {loading ? (
-        <div
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: '200px' }}
-        >
-          <div
-            className='spinner-border text-light'
-            role='status'
-          >
-            <span className='visually-hidden'>Loading...</span>
-          </div>
-        </div>
+        <LoadingSpinner
+          size='lg'
+          color='white'
+          centered={true}
+        />
+      ) : error ? (
+        <StaticAlert
+          type={error.severity || 'danger'}
+          title={error.title || 'Error'}
+          description={error.message || error}
+        />
       ) : (
         <VideoContainer>
           {releases.length === 0 && (
@@ -75,11 +101,15 @@ const FeaturedReleasesEdit = ({ fetchFeaturedReleases, featuredReleases }) => {
               <div className='buttons d-grid gap-1'>
                 <EditFeaturedRelease
                   release={release}
-                  fetchReleases={fetchFeaturedReleases}
+                  onSuccess={handleReleaseSuccess}
+                  onError={handleReleaseError}
+                  onClose={handleModalClose}
                 />
                 <DeleteFeaturedRelease
                   release={release}
-                  fetchReleases={fetchFeaturedReleases}
+                  onSuccess={handleReleaseSuccess}
+                  onError={handleReleaseError}
+                  onClose={handleModalClose}
                 />
               </div>
             </div>

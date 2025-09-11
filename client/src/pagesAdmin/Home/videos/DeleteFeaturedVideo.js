@@ -1,19 +1,15 @@
 import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
-import { useAlert } from '../../../contexts/AlertContext';
 import { deleteFeaturedVideo as deleteFeaturedVideoService } from '../../../services/featuredContentService';
 
-const DeleteFeaturedVideo = ({ video, fetchVideos }) => {
-  const { showError, showSuccess } = useAlert();
-
+const DeleteFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
   const onDelete = async item => {
     const id = item.id;
     try {
       await deleteFeaturedVideoService(id);
-      showSuccess('Featured video deleted successfully!');
-      fetchVideos();
+      onSuccess('Featured video deleted successfully!');
     } catch (err) {
-      showError(err.message || 'Failed to delete featured video');
+      onError(err.message || 'Failed to delete featured video');
     }
   };
 
@@ -29,6 +25,7 @@ const DeleteFeaturedVideo = ({ video, fetchVideos }) => {
         </>
       }
       onDelete={onDelete}
+      onClose={onClose}
     />
   );
 };

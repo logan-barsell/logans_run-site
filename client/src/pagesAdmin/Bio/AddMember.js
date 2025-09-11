@@ -1,19 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { fetchMembers } from '../../redux/actions';
 import ModalForm from '../../components/Forms/ModalForm';
 import BaseModal from '../../components/Modals/BaseModal';
 import { uploadImageToFirebase } from '../../utils/firebaseImage';
 import { addMember } from '../../services/membersService';
 import normalizeUrl from '../../utils/normalizeUrl';
-import { useAlert } from '../../contexts/AlertContext';
 import { PlusSquareFill } from '../../components/icons';
 import Button from '../../components/Button/Button';
 import { addMemberFields } from './constants';
 
-const AddMember = ({ fetchMembers }) => {
-  const { showError, showSuccess } = useAlert();
-
+const AddMember = ({ onSuccess, onError, onClose }) => {
   const [uploading, setUploading] = React.useState(false);
 
   const onSubmit = async values => {
@@ -51,18 +46,12 @@ const AddMember = ({ fetchMembers }) => {
         x: normalizeUrl(values.x),
       };
       await addMember(newMember);
-      showSuccess('Member added successfully');
-      fetchMembers();
+      onSuccess('Member added successfully');
       setUploading(false);
     } catch (error) {
-      showError('Failed to add member');
+      onError('Failed to add member');
       setUploading(false);
     }
-  };
-
-  // Handle successful form submission
-  const handleFormSuccess = () => {
-    // Modal will be closed automatically by BaseModal
   };
 
   return (
@@ -82,16 +71,15 @@ const AddMember = ({ fetchMembers }) => {
           {uploading ? 'Adding...' : 'Add Member'}
         </Button>
       }
-      onSuccess={handleFormSuccess}
+      onClose={onClose}
     >
       <ModalForm
         fields={addMemberFields}
         onSubmit={onSubmit}
-        onSuccess={handleFormSuccess}
         resetMode='initial'
       />
     </BaseModal>
   );
 };
 
-export default connect(null, { fetchMembers })(AddMember);
+export default AddMember;

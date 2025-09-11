@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchHomeImages } from '../../../../redux/actions';
 import Carousel from '../../../../components/Carousels/Carousel';
 import StaticAlert from '../../../../components/Alert/StaticAlert';
+import { PageLoader } from '../../../../components/LoadingSpinner';
 
 const CarouselSection = ({ fetchHomeImages, images, loading, error }) => {
   useEffect(() => {
@@ -11,21 +12,7 @@ const CarouselSection = ({ fetchHomeImages, images, loading, error }) => {
 
   // Show loading state
   if (loading) {
-    return (
-      <div className='parallax-carousel'>
-        <div
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: '200px' }}
-        >
-          <div
-            className='spinner-border text-light'
-            role='status'
-          >
-            <span className='visually-hidden'>Loading images...</span>
-          </div>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show error state

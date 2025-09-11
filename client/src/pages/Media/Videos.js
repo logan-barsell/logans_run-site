@@ -5,6 +5,7 @@ import Video from './Video';
 import Button from '../../components/Button/Button';
 import { Divider, NoContent } from '../../components/Header';
 import StaticAlert from '../../components/Alert/StaticAlert';
+import { PageLoader } from '../../components/LoadingSpinner';
 
 const videoCount = 6;
 const Videos = ({ fetchVideos, videos, loading, error }) => {
@@ -29,29 +30,24 @@ const Videos = ({ fetchVideos, videos, loading, error }) => {
 
   // Show loading state while fetching data
   if (loading) {
-    return (
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ minHeight: '200px' }}
-      >
-        <div
-          className='spinner-border text-light'
-          role='status'
-        >
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show error state if fetch failed
   if (error) {
     return (
-      <StaticAlert
-        type={error.severity}
-        title={error.title}
-        description={error.message}
-      />
+      <div
+        className='justify-content-center fadeIn'
+        id='videos'
+      >
+        <div style={{ paddingTop: '60px' }}>
+          <StaticAlert
+            type={error.severity}
+            title={error.title}
+            description={error.message}
+          />
+        </div>
+      </div>
     );
   }
 

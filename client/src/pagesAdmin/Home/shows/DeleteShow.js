@@ -1,12 +1,9 @@
 import React from 'react';
 import DeleteItem from '../../../components/Modifiers/DeleteItem';
 import { deleteImageFromFirebase } from '../../../utils/firebaseImage';
-import { useAlert } from '../../../contexts/AlertContext';
 import { deleteShow as deleteShowService } from '../../../services/showsService';
 
-const DeleteShow = ({ show, fetchShows }) => {
-  const { showError, showSuccess } = useAlert();
-
+const DeleteShow = ({ show, onSuccess, onError, onClose }) => {
   const onDelete = async item => {
     const id = item.id;
     try {
@@ -21,10 +18,9 @@ const DeleteShow = ({ show, fetchShows }) => {
       }
 
       await deleteShowService(id);
-      showSuccess('Show deleted successfully!');
-      fetchShows();
+      onSuccess('Show deleted successfully!');
     } catch (err) {
-      showError(err.message || 'Failed to delete show');
+      onError(err.message || 'Failed to delete show');
     }
   };
 
@@ -38,6 +34,7 @@ const DeleteShow = ({ show, fetchShows }) => {
         </>
       }
       onDelete={onDelete}
+      onClose={onClose}
     />
   );
 };

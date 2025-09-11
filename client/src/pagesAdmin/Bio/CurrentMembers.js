@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { fetchMembers } from '../../redux/actions';
 import { connect } from 'react-redux';
 import Accordion from '../../components/Accordion/Accordion';
@@ -6,14 +6,38 @@ import AddMember from './AddMember';
 import EditMember from './EditMember';
 import DeleteMember from './DeleteMember';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAlert } from '../../contexts/AlertContext';
 import SocialIcons from '../../components/SocialIcons';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import StaticAlert from '../../components/Alert/StaticAlert';
 
-const CurrentMembers = ({ fetchMembers, members }) => {
+const CurrentMembers = ({ fetchMembers, members, loading, error }) => {
   const { theme } = useTheme();
+  const { showSuccess, showError } = useAlert();
+  const operationSuccessfulRef = useRef(false);
 
   useEffect(() => {
     fetchMembers();
-  }, []);
+  }, [fetchMembers]);
+
+  // Handle successful member operations
+  const handleMemberSuccess = message => {
+    showSuccess(message);
+    operationSuccessfulRef.current = true;
+  };
+
+  // Handle member operation errors
+  const handleMemberError = message => {
+    showError(message);
+  };
+
+  // Handle modal close - only fetch if operation was successful
+  const handleModalClose = () => {
+    if (operationSuccessfulRef.current) {
+      fetchMembers();
+      operationSuccessfulRef.current = false;
+    }
+  };
 
   const renderSocialIcons = member => {
     const links = {
@@ -76,11 +100,15 @@ const CurrentMembers = ({ fetchMembers, members }) => {
           <>
             <EditMember
               member={member}
-              fetchMembers={fetchMembers}
+              onSuccess={handleMemberSuccess}
+              onError={handleMemberError}
+              onClose={handleModalClose}
             />
             <DeleteMember
               member={member}
-              fetchMembers={fetchMembers}
+              onSuccess={handleMemberSuccess}
+              onError={handleMemberError}
+              onClose={handleModalClose}
             />
           </>
         ),
@@ -92,14 +120,33 @@ const CurrentMembers = ({ fetchMembers, members }) => {
 
   return (
     <div className='my-5 mb-8'>
-      <Accordion
-        id='membersList'
-        title='Members'
-        items={createAccordionItems()}
-      />
       <div className='d-flex mb-5'>
-        <AddMember />
+        <AddMember
+          onSuccess={handleMemberSuccess}
+          onError={handleMemberError}
+          onClose={handleModalClose}
+        />
       </div>
+
+      {loading ? (
+        <LoadingSpinner
+          size='lg'
+          color='white'
+          centered={true}
+        />
+      ) : error ? (
+        <StaticAlert
+          type={error.severity || 'danger'}
+          title={error.title || 'Error'}
+          description={error.message || error}
+        />
+      ) : (
+        <Accordion
+          id='membersList'
+          title='Members'
+          items={createAccordionItems()}
+        />
+      )}
     </div>
   );
 };
@@ -107,6 +154,8 @@ const CurrentMembers = ({ fetchMembers, members }) => {
 function mapStateToProps({ members }) {
   return {
     members: members?.data || [],
+    loading: members?.loading || false,
+    error: members?.error || null,
   };
 }
 

@@ -48,8 +48,17 @@ const BaseModal = ({
   // Handle modal closing
   const handleClose = useCallback(() => {
     // Use stored Bootstrap Modal instance
-    if (bootstrapModalRef.current) {
-      bootstrapModalRef.current.hide();
+    if (bootstrapModalRef.current && modalRef.current) {
+      // Check if the modal element still exists in the DOM
+      if (document.contains(modalRef.current)) {
+        bootstrapModalRef.current.hide();
+      } else {
+        // Modal element has been removed from DOM, just cleanup
+        bootstrapModalRef.current.dispose();
+        bootstrapModalRef.current = null;
+        setIsOpen(false);
+        onClose?.();
+      }
     } else {
       // Fallback if Bootstrap not available
       setIsOpen(false);
@@ -94,7 +103,12 @@ const BaseModal = ({
     // Cleanup Bootstrap Modal instance on unmount
     return () => {
       if (bootstrapModalRef.current) {
-        bootstrapModalRef.current.dispose();
+        try {
+          bootstrapModalRef.current.dispose();
+        } catch (error) {
+          // Ignore errors during disposal (e.g., if modal was already disposed)
+          console.warn('Error disposing Bootstrap modal:', error);
+        }
         bootstrapModalRef.current = null;
       }
     };
@@ -116,11 +130,14 @@ const BaseModal = ({
     };
 
     modalElement.addEventListener('show.bs.modal', handleShow);
-    modalElement.addEventListener('hide.bs.modal', handleHide);
+    modalElement.addEventListener('hidden.bs.modal', handleHide); // Use 'hidden' instead of 'hide' to wait for animation to complete
 
     return () => {
-      modalElement.removeEventListener('show.bs.modal', handleShow);
-      modalElement.removeEventListener('hide.bs.modal', handleHide);
+      // Only remove event listeners if the element still exists in the DOM
+      if (document.contains(modalElement)) {
+        modalElement.removeEventListener('show.bs.modal', handleShow);
+        modalElement.removeEventListener('hidden.bs.modal', handleHide);
+      }
     };
   }, [onOpen, onClose]);
 

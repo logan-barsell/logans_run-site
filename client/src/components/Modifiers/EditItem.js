@@ -8,6 +8,7 @@ const EditItem = ({
   item,
   editFields,
   onEdit,
+  onClose, // NEW: callback for when modal closes
   variant = 'square', // 'square' or 'wide'
   buttonText = 'Edit',
   title,
@@ -48,6 +49,7 @@ const EditItem = ({
           {variant === 'wide' && buttonText}
         </Button>
       }
+      onClose={onClose} // NEW: pass onClose to BaseModal
       onSuccess={handleFormSuccess}
     >
       {fields ? (

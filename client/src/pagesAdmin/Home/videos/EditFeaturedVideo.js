@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAlert } from '../../../contexts/AlertContext';
 import { featuredVideoFields } from './constants';
 import { updateFeaturedVideo } from '../../../services/featuredContentService';
 import {
@@ -8,9 +7,7 @@ import {
 } from '../../../utils/firebaseVideo';
 import EditItem from '../../../components/Modifiers/EditItem';
 
-const EditFeaturedVideo = ({ video, fetchVideos }) => {
-  const { showError, showSuccess } = useAlert();
-
+const EditFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
   const handleEdit = async values => {
     try {
       let payload = { ...values };
@@ -44,12 +41,17 @@ const EditFeaturedVideo = ({ video, fetchVideos }) => {
         payload.releaseDate = new Date(payload.releaseDate);
       }
 
+      // Handle startTime and endTime - convert empty strings to null, valid strings to integers
+      payload.startTime =
+        payload.startTime === '' ? null : parseInt(payload.startTime) || null;
+      payload.endTime =
+        payload.endTime === '' ? null : parseInt(payload.endTime) || null;
+
       const id = video.id;
       await updateFeaturedVideo(id, payload);
-      showSuccess('Featured video updated successfully');
-      fetchVideos();
+      onSuccess('Featured video updated successfully');
     } catch (err) {
-      showError(err.message || 'Failed to update featured video');
+      onError(err.message || 'Failed to update featured video');
       throw err; // Re-throw to prevent modal from closing
     }
   };
@@ -61,6 +63,7 @@ const EditFeaturedVideo = ({ video, fetchVideos }) => {
       item={{ data: video }}
       editFields={editFields}
       onEdit={handleEdit}
+      onClose={onClose}
       title='EDIT FEATURED VIDEO'
       variant='wide'
       buttonText='Edit'
