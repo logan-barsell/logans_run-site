@@ -59,9 +59,29 @@ class SESThrottler {
   }
 
   /**
-   * Add email to the sending queue
+   * Add email(s) to the sending queue
+   * @param {Object} emailData - Email data object
+   * @param {string|Array} emailData.to - Single email (string) or multiple emails (array)
    */
   async queueEmail(emailData) {
+    // Handle both single email (string) and multiple emails (array)
+    const recipients = Array.isArray(emailData.to)
+      ? emailData.to
+      : [emailData.to];
+
+    if (recipients.length === 1) {
+      // Single email - use existing logic
+      return this.queueSingleEmail(emailData);
+    } else {
+      // Multiple emails - queue each individually with proper sequencing
+      return this.queueMultipleEmails(emailData, recipients);
+    }
+  }
+
+  /**
+   * Queue a single email (existing logic)
+   */
+  async queueSingleEmail(emailData) {
     return new Promise((resolve, reject) => {
       this.emailQueue.push({
         ...emailData,
@@ -80,6 +100,49 @@ class SESThrottler {
         this.processQueue();
       }
     });
+  }
+
+  /**
+   * Queue multiple emails individually
+   */
+  async queueMultipleEmails(emailData, recipients) {
+    const results = [];
+
+    logger.info(`📧 Queuing ${recipients.length} emails for batch sending`);
+
+    // Queue each email individually
+    for (const recipient of recipients) {
+      const singleEmailData = { ...emailData, to: recipient };
+      try {
+        const result = await this.queueSingleEmail(singleEmailData);
+        results.push({ success: true, email: recipient, result });
+      } catch (error) {
+        results.push({
+          success: false,
+          email: recipient,
+          error: error.message,
+        });
+        logger.error(
+          `❌ Failed to queue email for ${recipient}:`,
+          error.message
+        );
+      }
+    }
+
+    // Count successes and failures
+    const successful = results.filter(r => r.success).length;
+    const failed = results.filter(r => !r.success).length;
+
+    logger.info(
+      `📧 Batch email queueing complete: ${successful} successful, ${failed} failed`
+    );
+
+    return {
+      results,
+      successful,
+      failed,
+      total: recipients.length,
+    };
   }
 
   /**

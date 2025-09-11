@@ -8,7 +8,7 @@ const sesThrottler = require('../utils/sesThrottler');
 
 /**
  * Sends an email using AWS SES or logs in development
- * @param {string} to - Recipient email
+ * @param {string|Array} to - Recipient email(s) - single email (string) or multiple emails (array)
  * @param {string} subject - Email subject
  * @param {string} html - Email HTML content
  * @param {string} templateType - Type of template to use (optional)
@@ -24,6 +24,14 @@ async function sendEmail(
   tenantId = null
 ) {
   try {
+    // DEV mode check - send only to ADMIN_EMAIL regardless of input
+    if (process.env.NODE_ENV !== 'production') {
+      to = process.env.ADMIN_EMAIL || 'admin@bandsyte.com';
+    }
+
+    // Ensure to is always an array for consistent processing
+    const recipients = Array.isArray(to) ? to : [to];
+
     // Validate that either templateType is provided, or both subject and html are provided
     if (!templateType && (!subject || !html)) {
       throw new AppError(
@@ -38,7 +46,9 @@ async function sendEmail(
       (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY)
     ) {
       logger.info(
-        `📧 Email logged (development): ${to} - ${subject || 'Template email'}`
+        `📧 Email logged (development): ${recipients.join(', ')} - ${
+          subject || 'Template email'
+        }`
       );
       return { success: true, message: 'Email logged (development mode)' };
     }
@@ -173,19 +183,34 @@ async function sendEmail(
 
     // Use SES throttler for production, log for development
     if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-      // Queue email with throttler for proper rate limiting
-      await sesThrottler.queueEmail({
-        to,
+      // Queue email(s) with throttler for proper rate limiting
+      const result = await sesThrottler.queueEmail({
+        to: recipients,
         subject,
         html,
         from: customFromAddress,
       });
 
-      return { success: true, message: 'Email queued for sending' };
+      return {
+        success: true,
+        message: 'Email(s) queued for sending',
+        ...(Array.isArray(to) && result
+          ? {
+              batchResults: result,
+              successful: result.successful,
+              failed: result.failed,
+              total: result.total,
+            }
+          : {}),
+      };
     }
 
     // Fallback for development
-    logger.info(`📧 Email logged (no AWS credentials): ${to} - ${subject}`);
+    logger.info(
+      `📧 Email logged (no AWS credentials): ${recipients.join(
+        ', '
+      )} - ${subject}`
+    );
     return { success: true, message: 'Email logged (no AWS credentials)' };
   } catch (error) {
     logger.error('❌ Email sending failed:', error);
@@ -393,7 +418,8 @@ async function sendNewsletterSignupNotification(
 }
 
 /**
- * Send content notification to subscriber with professional template
+ * Send content notification to subscriber(s) with professional template
+ * @param {string|Array} to - Recipient email(s) - single email (string) or multiple emails (array)
  */
 async function sendContentNotification(
   to,
