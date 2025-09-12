@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { uploadImageToFirebase } from '../../../utils/firebase';
 import { featuredReleaseFields } from './constants';
 import { addFeaturedRelease as addFeaturedReleaseService } from '../../../services/featuredContentService';
@@ -7,12 +8,15 @@ import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';
 
 const AddFeaturedRelease = ({ onSuccess, onError, onClose }) => {
-  const handleAdd = async (fields, setUploadProgress) => {
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
+
+  const handleAdd = async fields => {
     try {
       let coverImageUrl = '';
       if (fields.coverImage && fields.coverImage[0]) {
         coverImageUrl = await uploadImageToFirebase(fields.coverImage[0], {
-          onProgress: () => {}, // Pass empty function instead of progress tracking
+          tenantId,
         });
       }
       const payload = {

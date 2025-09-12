@@ -230,8 +230,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         ref={imageRef}
         label={label}
         name={name}
-        conditionField={field.conditionField}
-        conditionValue={field.conditionValue}
+        conditions={field.conditions}
         initialValue={initialValue}
         placeholder={placeholder}
         required={required}

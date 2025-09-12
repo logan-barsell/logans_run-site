@@ -4,10 +4,7 @@ import { fetchTheme, updateTheme } from '../../../redux/actions';
 import { EditableForm } from '../../../components/Forms';
 import ResponsiveImageDisplay from '../../../components/Forms/ResponsiveImageDisplay';
 import { useAlert } from '../../../contexts/AlertContext';
-import {
-  uploadImageToFirebase,
-  deleteImageFromFirebase,
-} from '../../../utils/firebase';
+import { uploadImageAndReplace } from '../../../utils/firebase';
 import { THEME_FIELDS } from './constants';
 
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
@@ -32,19 +29,8 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
             : values.bandLogo;
 
         if (file instanceof File) {
-          // Delete old band logo if it exists
-          if (theme && theme.bandLogoUrl) {
-            try {
-              await deleteImageFromFirebase(theme.bandLogoUrl);
-            } catch (error) {
-              // ignore
-            }
-          }
-
           try {
-            bandLogoUrl = await uploadImageToFirebase(file, {
-              onProgress: () => {}, // Pass empty function instead of setUploadProgress
-            });
+            bandLogoUrl = await uploadImageAndReplace(file, theme?.bandLogoUrl);
           } catch (err) {
             setUploading(false);
             showError('Failed to upload band logo');

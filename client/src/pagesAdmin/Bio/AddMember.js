@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import ModalForm from '../../components/Forms/ModalForm';
 import BaseModal from '../../components/Modals/BaseModal';
 import { uploadImageToFirebase } from '../../utils/firebase';
@@ -10,6 +11,8 @@ import { addMemberFields } from './constants';
 
 const AddMember = ({ onSuccess, onError, onClose }) => {
   const [uploading, setUploading] = React.useState(false);
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
 
   const onSubmit = async values => {
     try {
@@ -21,7 +24,7 @@ const AddMember = ({ onSuccess, onError, onClose }) => {
           fileName = Date.now() + values.bioPic[0].name;
           imageUrl = await uploadImageToFirebase(values.bioPic[0], {
             fileName,
-            onProgress: () => {}, // Pass empty function instead of setUploadProgress
+            tenantId,
           });
         } catch (err) {
           setUploading(false);

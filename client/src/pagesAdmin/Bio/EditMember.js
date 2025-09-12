@@ -1,9 +1,6 @@
 import React from 'react';
 import EditItem from '../../components/Modifiers/EditItem';
-import {
-  uploadImageToFirebase,
-  deleteImageFromFirebase,
-} from '../../utils/firebase';
+import { uploadImageAndReplace } from '../../utils/firebase';
 import { editMemberFields } from './constants';
 import { normalizeUrl } from '../../utils/strings';
 import { updateMember as updateMemberService } from '../../services/membersService';
@@ -19,22 +16,13 @@ const EditMember = ({ member, onSuccess, onError, onClose }) => {
         fields.bioPic[0] &&
         fields.bioPic[0] instanceof File
       ) {
-        // Delete old image if it exists
-        if (member.bioPic) {
-          try {
-            await deleteImageFromFirebase(member.bioPic);
-          } catch (imageError) {
-            console.warn(
-              'Failed to delete old image from Firebase:',
-              imageError
-            );
-            // Continue with upload even if old image deletion fails
-          }
-        }
-
-        // Upload new image
+        // Upload new image and replace old one
         const fileName = Date.now() + fields.bioPic[0].name;
-        imageUrl = await uploadImageToFirebase(fields.bioPic[0], { fileName });
+        imageUrl = await uploadImageAndReplace(
+          fields.bioPic[0],
+          member.bioPic,
+          { fileName }
+        );
       }
 
       const socials = ['facebook', 'instagram', 'tiktok', 'youtube', 'x'];

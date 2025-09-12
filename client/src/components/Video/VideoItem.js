@@ -21,6 +21,8 @@ function getYouTubeId(url) {
 const VideoItem = ({
   videoId,
   youtubeLink,
+  videoUrl, // NEW: For uploaded videos
+  videoType, // NEW: 'youtube' or 'upload'
   title,
   description,
   startTime,
@@ -28,7 +30,7 @@ const VideoItem = ({
   iframe,
   children,
 }) => {
-  // Determine the embed URL
+  // Determine the embed URL for YouTube videos
   let embedUrl = '';
   if (iframe) {
     const id = getYouTubeId(youtubeLink);
@@ -40,10 +42,39 @@ const VideoItem = ({
     if (startTime) embedUrl += `?start=${startTime}`;
     if (endTime) embedUrl += `${startTime ? '&' : '?'}end=${endTime}`;
   }
+  console.log('videoUrl', videoUrl);
+  console.log('videoType', videoType);
 
-  return (
-    <div className='vid-container'>
-      <div className='video embed-responsive embed-responsive-16by9 mb-2'>
+  // Render video player based on type
+  const renderVideoPlayer = () => {
+    if (videoType === 'upload' && videoUrl) {
+      // Render HTML5 video player for uploaded videos
+      return (
+        <video
+          className='embed-responsive-item'
+          controls
+          muted
+          preload='metadata'
+          style={{ width: '100%', height: '100%' }}
+        >
+          <source
+            src={videoUrl}
+            type='video/mp4'
+          />
+          <source
+            src={videoUrl}
+            type='video/webm'
+          />
+          <source
+            src={videoUrl}
+            type='video/quicktime'
+          />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else {
+      // Render YouTube iframe for YouTube videos
+      return (
         <iframe
           title={title}
           className='embed-responsive-item'
@@ -52,6 +83,14 @@ const VideoItem = ({
           width='100%'
           height='100%'
         ></iframe>
+      );
+    }
+  };
+
+  return (
+    <div className='vid-container'>
+      <div className='video embed-responsive embed-responsive-16by9 mb-2'>
+        {renderVideoPlayer()}
       </div>
       <div className='mb-2'>
         <div className='video-title'>{title}</div>

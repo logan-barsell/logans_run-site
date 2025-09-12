@@ -12,11 +12,15 @@ const ConditionalNumberField = forwardRef(
             return null;
           }
 
+          // If the field is visible, it should be required
+          const shouldBeRequired = conditionInput.value === conditionValue;
+
           return (
             <div className='mb-3'>
               <NumberField
                 ref={ref}
                 name={name}
+                required={shouldBeRequired}
                 {...props}
               />
             </div>

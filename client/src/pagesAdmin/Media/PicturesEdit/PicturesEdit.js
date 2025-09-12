@@ -1,11 +1,12 @@
 import './picturesEdit.css';
 
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { fetchMediaImages } from '../../../redux/actions';
 import {
-  uploadImageToFirebase,
+  uploadImagesBulk,
   deleteImageFromFirebase,
+  extractStoragePathFromUrl,
 } from '../../../utils/firebase';
 import {
   uploadMediaImage,
@@ -18,39 +19,29 @@ import { PageTitle } from '../../../components/Header';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import StaticAlert from '../../../components/Alert/StaticAlert';
 
-function extractStoragePathFromUrl(url) {
-  const match = url && url.match(/\/o\/([^?]+)/);
-  if (match && match[1]) {
-    return decodeURIComponent(match[1]);
-  }
-  return url ? url.split('/').pop().split('?')[0] : '';
-}
-
 const imgCount = 12;
 const PicturesEdit = ({ fetchMediaImages, images, loading, error }) => {
   const { showError, showSuccess } = useAlert();
   const [limit, setLimit] = React.useState(imgCount);
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
 
   useEffect(() => {
     fetchMediaImages();
   }, [fetchMediaImages]);
 
   const handleUpload = async files => {
-    const uploadPromises = Array.from(files).map(async (file, index) => {
-      const fileName = new Date().getTime() + '_' + index + '_' + file.name;
-      try {
-        const downloadURL = await uploadImageToFirebase(file, {
-          fileName,
-          onProgress: () => {},
-        });
-        return { name: fileName, imgLink: downloadURL, success: true };
-      } catch (error) {
-        showError(`Failed to upload ${file.name}`);
-        return { name: fileName, error: error.message, success: false };
-      }
-    });
-    const uploadResults = await Promise.all(uploadPromises);
+    const uploadResults = await uploadImagesBulk(files, { tenantId });
     const successfulUploads = uploadResults.filter(result => result.success);
+    const failedUploads = uploadResults.filter(result => !result.success);
+
+    // Show consolidated error message for failed uploads
+    if (failedUploads.length > 0) {
+      showError(
+        `Failed to upload ${failedUploads.length} image(s). Please try again.`
+      );
+    }
+
     if (successfulUploads.length > 0) {
       await uploadMediaImage(
         successfulUploads.map(result => ({

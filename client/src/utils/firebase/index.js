@@ -6,13 +6,16 @@
 // Firebase image utilities
 export {
   uploadImageToFirebase,
-  safeDeleteImageFromFirebase,
+  uploadImageAndReplace,
+  uploadImagesBulk,
   deleteImageFromFirebase,
+  extractStoragePathFromUrl,
 } from './firebaseImage';
 
 // Firebase video utilities
 export {
   uploadVideoToFirebase,
-  safeDeleteVideoFromFirebase,
+  uploadVideoAndReplace,
   deleteVideoFromFirebase,
+  extractStoragePathFromVideoUrl,
 } from './firebaseVideo';

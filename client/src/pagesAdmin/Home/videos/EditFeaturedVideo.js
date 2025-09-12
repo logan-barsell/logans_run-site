@@ -1,32 +1,39 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { featuredVideoFields } from './constants';
 import { updateFeaturedVideo } from '../../../services/featuredContentService';
 import {
-  uploadVideoToFirebase,
-  safeDeleteVideoFromFirebase,
+  uploadVideoAndReplace,
+  deleteVideoFromFirebase,
 } from '../../../utils/firebase';
 import EditItem from '../../../components/Modifiers/EditItem';
 
 const EditFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
+
   const handleEdit = async values => {
     try {
       let payload = { ...values };
 
       // Handle video upload if video type is 'upload' and new file is selected
       if (values.videoType === 'upload' && values.videoFile) {
-        // Delete old video file if it exists
-        if (video.videoFile) {
-          await safeDeleteVideoFromFirebase(video.videoFile);
-        }
-
         const videoFile = values.videoFile[0];
-        const videoUrl = await uploadVideoToFirebase(videoFile);
+        const videoUrl = await uploadVideoAndReplace(
+          videoFile,
+          video.videoFile,
+          { tenantId }
+        );
         payload.videoFile = videoUrl;
         payload.videoType = 'upload';
       } else if (values.videoType === 'youtube') {
         // Clean up video file if switching from upload to youtube
         if (video.videoFile) {
-          await safeDeleteVideoFromFirebase(video.videoFile);
+          try {
+            await deleteVideoFromFirebase(video.videoFile);
+          } catch (error) {
+            console.warn('Failed to delete old video:', error);
+          }
         }
         payload.videoFile = null;
         payload.videoType = 'youtube';

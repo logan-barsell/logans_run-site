@@ -26,7 +26,7 @@ const EditImages = ({
     if (!files || files.length === 0) return;
     setUploading(true);
     try {
-      await onUpload(files, () => {}); // Pass empty function instead of setUploadProgress
+      await onUpload(files);
       setUploading(false);
       if (
         imageUploadRef.current &&

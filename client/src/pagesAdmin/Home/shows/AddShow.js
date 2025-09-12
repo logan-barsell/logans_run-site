@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { uploadImageToFirebase } from '../../../utils/firebase';
 import { addShow } from '../../../services/showsService';
 import { ADD_SHOW_FIELDS } from './constants';
@@ -7,13 +8,14 @@ import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';
 
 const AddShow = ({ onSuccess, onError, onClose }) => {
-  const onAdd = async (fields, setUploadProgress) => {
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
+
+  const onAdd = async fields => {
     try {
       let posterUrl = '';
       if (fields?.poster && fields?.poster?.[0]) {
-        posterUrl = await uploadImageToFirebase(fields.poster[0], {
-          onProgress: () => {}, // Pass empty function instead of progress tracking
-        });
+        posterUrl = await uploadImageToFirebase(fields.poster[0], { tenantId });
       } else {
         onError('Image required.');
         return;

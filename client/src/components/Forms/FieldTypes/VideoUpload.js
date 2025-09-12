@@ -130,8 +130,29 @@ const VideoUpload = forwardRef(
 // Wrapper component for react-final-form compatibility
 const VideoUploadField = forwardRef(
   ({ name, setVideo, required = false, onFileChange, ...props }, ref) => {
+    const isRequired = required === true;
+    const validation = () => {
+      if (isRequired) {
+        return value => {
+          // Check if value exists and is not empty
+          if (
+            !value ||
+            (Array.isArray(value) && value.length === 0) ||
+            (value instanceof FileList && value.length === 0)
+          ) {
+            return 'Required';
+          }
+          return undefined;
+        };
+      }
+      return undefined;
+    };
+
     return (
-      <Field name={name}>
+      <Field
+        name={name}
+        validate={validation()}
+      >
         {({ input: { value, onChange, ...input } }) => (
           <VideoUpload
             {...props}
