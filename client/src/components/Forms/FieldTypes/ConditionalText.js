@@ -12,12 +12,16 @@ const ConditionalTextField = forwardRef(
             return null;
           }
 
+          // If the field is visible, it should be required
+          const shouldBeRequired = conditionInput.value === conditionValue;
+
           return (
             <div className='mb-3'>
               <TextField
                 ref={ref}
                 name={name}
                 {...props}
+                required={shouldBeRequired} // Override any required prop from props
               />
             </div>
           );

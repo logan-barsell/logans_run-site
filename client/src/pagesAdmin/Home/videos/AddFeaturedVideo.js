@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { featuredVideoFields } from './constants';
 import { addFeaturedVideo as addFeaturedVideoService } from '../../../services/featuredContentService';
 import { uploadVideoToFirebase } from '../../../utils/firebase';
@@ -7,6 +8,9 @@ import Button from '../../../components/Button/Button';
 import { PlusSquareFill } from '../../../components/icons';
 
 const AddFeaturedVideo = ({ onSuccess, onError, onClose }) => {
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
+
   const handleAdd = async values => {
     try {
       let payload = { ...values };
@@ -14,7 +18,7 @@ const AddFeaturedVideo = ({ onSuccess, onError, onClose }) => {
       // Handle video upload if video type is 'upload'
       if (values.videoType === 'upload' && values.videoFile) {
         const videoFile = values.videoFile[0];
-        const videoUrl = await uploadVideoToFirebase(videoFile);
+        const videoUrl = await uploadVideoToFirebase(videoFile, { tenantId });
         payload.videoFile = videoUrl;
         payload.videoType = 'upload';
       } else {

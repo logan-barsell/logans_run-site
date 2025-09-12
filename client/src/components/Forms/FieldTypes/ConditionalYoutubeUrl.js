@@ -1,15 +1,42 @@
 import React, { forwardRef } from 'react';
-import { Field } from 'react-final-form';
+import { FormSpy } from 'react-final-form';
 import TextField from './TextField';
 import { validateYouTubeUrl } from '../../../utils/validation';
 
 const ConditionalYoutubeUrlField = forwardRef(
-  ({ name, conditionField, conditionValue, ...props }, ref) => {
+  ({ name, conditions, ...props }, ref) => {
+    // Helper function to check if a single condition is met
+    const isConditionMet = (condition, formValues) => {
+      return Object.entries(condition).every(([field, expectedValue]) => {
+        return formValues[field] === expectedValue;
+      });
+    };
+
+    // Helper function to check if any condition is met
+    const shouldShowField = formValues => {
+      if (!conditions || !Array.isArray(conditions)) {
+        return false;
+      }
+
+      return conditions.some(condition =>
+        isConditionMet(condition, formValues)
+      );
+    };
+
+    // Helper function to determine if field should be required
+    const shouldBeRequired = formValues => {
+      // If the field is visible, it should be required
+      return shouldShowField(formValues);
+    };
+
     return (
-      <Field name={conditionField}>
-        {({ input: conditionInput }) => {
-          // Only render when condition matches
-          if (conditionInput.value !== conditionValue) {
+      <FormSpy>
+        {({ form, values }) => {
+          // Get all form values for condition checking
+          const formValues = values || {};
+
+          // Only render when at least one condition is met
+          if (!shouldShowField(formValues)) {
             return null;
           }
 
@@ -25,11 +52,12 @@ const ConditionalYoutubeUrlField = forwardRef(
                   return validation.isValid ? undefined : validation.error;
                 }}
                 {...props}
+                required={shouldBeRequired(formValues)} // Override any required prop from props
               />
             </div>
           );
         }}
-      </Field>
+      </FormSpy>
     );
   }
 );

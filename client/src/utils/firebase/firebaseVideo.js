@@ -10,36 +10,30 @@ import app from '../../pagesAdmin/firebase';
 /**
  * Uploads a video file to Firebase Storage and returns the download URL.
  * @param {File} file - The video file to upload.
- * @param {Object} options - Optional callbacks: onProgress(progress), fileName (override).
+ * @param {Object} options - Optional: fileName (override), tenantId (required).
  * @returns {Promise<string>} - Resolves to the download URL.
  */
-export function uploadVideoToFirebase(file, { onProgress, fileName } = {}) {
+export function uploadVideoToFirebase(file, { fileName, tenantId } = {}) {
+  if (!tenantId) {
+    throw new Error('tenantId is required for file uploads');
+  }
+
   return new Promise((resolve, reject) => {
     const storage = getStorage(app);
-    const name = fileName || `videos/${Date.now()}_${file.name}`;
+    const name = fileName
+      ? `${tenantId}/videos/${fileName}`
+      : `${tenantId}/videos/${Date.now()}_${file.name}`;
     const storageRef = ref(storage, name);
 
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    // Call onProgress with 0 to indicate upload started
-    if (onProgress) {
-      onProgress(0);
-    }
-
     uploadTask.on(
       'state_changed',
-      snapshot => {
-        // Progress tracking - just call onProgress with 100 when complete
-        if (onProgress && snapshot.state === 'success') {
-          onProgress(100);
-        }
-      },
+      null, // No progress tracking needed
       error => {
         reject(error);
       },
       async () => {
-        if (onProgress) onProgress(100);
-
         try {
           const url = await getDownloadURL(uploadTask.snapshot.ref);
           resolve(url);
@@ -52,18 +46,44 @@ export function uploadVideoToFirebase(file, { onProgress, fileName } = {}) {
 }
 
 /**
- * Safely deletes a video from Firebase Storage without failing the main operation.
- * @param {string} videoUrlOrName - The full download URL or just the storage name.
- * @returns {Promise<boolean>} - Returns true if deletion was successful, false if it failed.
+ * Uploads a new video and replaces an existing one (deletes old video first).
+ * @param {File} file - The new video file to upload.
+ * @param {string} oldVideoUrl - The URL of the old video to delete.
+ * @param {Object} options - Optional: fileName (override), tenantId (required).
+ * @returns {Promise<string>} - Resolves to the new download URL.
  */
-export async function safeDeleteVideoFromFirebase(videoUrlOrName) {
-  try {
-    await deleteVideoFromFirebase(videoUrlOrName);
-    return true;
-  } catch (error) {
-    console.warn('Failed to delete video from Firebase:', error);
-    return false;
+export async function uploadVideoAndReplace(
+  file,
+  oldVideoUrl,
+  { fileName, tenantId } = {}
+) {
+  // Delete old video first
+  if (oldVideoUrl) {
+    try {
+      await deleteVideoFromFirebase(oldVideoUrl);
+    } catch (error) {
+      console.warn('Failed to delete old video:', error);
+      // Continue with upload even if old video deletion fails
+    }
   }
+
+  // Upload new video
+  return await uploadVideoToFirebase(file, { fileName, tenantId });
+}
+
+/**
+ * Extracts the storage path from a Firebase video download URL.
+ * @param {string} url - The Firebase video download URL.
+ * @returns {string} - The storage path or filename.
+ */
+export function extractStoragePathFromVideoUrl(url) {
+  if (!url) return '';
+
+  const match = url.match(/\/o\/([^?]+)/);
+  if (match && match[1]) {
+    return decodeURIComponent(match[1]);
+  }
+  return url.split('/').pop().split('?')[0];
 }
 
 /**

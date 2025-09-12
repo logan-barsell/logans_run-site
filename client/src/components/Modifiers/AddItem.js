@@ -19,13 +19,7 @@ const AddItem = ({
   const handleSubmit = async formFields => {
     setLoading(true);
     try {
-      // If any field is an image, pass a no-op function to onAdd (for backward compatibility)
-      const hasImage = fields.some(f => f.type === 'image');
-      if (hasImage) {
-        await onAdd(formFields, () => {}); // Pass empty function instead of setUploadProgress
-      } else {
-        await onAdd(formFields);
-      }
+      await onAdd(formFields);
       setLoading(false);
     } catch (err) {
       setLoading(false);

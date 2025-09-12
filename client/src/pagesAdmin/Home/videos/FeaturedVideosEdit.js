@@ -79,6 +79,8 @@ const FeaturedVideosEdit = ({ fetchFeaturedVideos, featuredVideos }) => {
             <VideoItem
               key={video.id}
               youtubeLink={video.youtubeLink}
+              videoUrl={video.videoFile}
+              videoType={video.videoType}
               title={video.title}
               description={video.description}
               startTime={video.startTime}

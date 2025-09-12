@@ -8,10 +8,7 @@ import { useAlert } from '../../contexts/AlertContext';
 import { EditableForm } from '../../components/Forms';
 import ResponsiveImageDisplay from '../../components/Forms/ResponsiveImageDisplay';
 import { BIO_FIELDS } from './constants';
-import {
-  uploadImageToFirebase,
-  deleteImageFromFirebase,
-} from '../../utils/firebase';
+import { uploadImageAndReplace } from '../../utils/firebase';
 
 const BioEdit = ({ fetchBio, bio, theme }) => {
   const { showError, showSuccess } = useAlert();
@@ -44,19 +41,11 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
             : values.customImage;
 
         if (file instanceof File) {
-          // Delete old custom image if it exists
-          if (bioRow && bioRow.customImageUrl) {
-            try {
-              await deleteImageFromFirebase(bioRow.customImageUrl);
-            } catch (error) {
-              // ignore
-            }
-          }
-
           try {
-            customImageUrl = await uploadImageToFirebase(file, {
-              onProgress: () => {}, // Pass empty function instead of setUploadProgress
-            });
+            customImageUrl = await uploadImageAndReplace(
+              file,
+              bioRow?.customImageUrl
+            );
           } catch (err) {
             setUploading(false);
             showError('Failed to upload custom image');

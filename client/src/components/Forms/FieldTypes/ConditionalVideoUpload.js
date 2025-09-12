@@ -11,12 +11,16 @@ const ConditionalVideoUploadField = forwardRef(({ name, ...props }, ref) => {
           return null;
         }
 
+        // If the field is visible, it should be required
+        const shouldBeRequired = videoTypeInput.value === 'upload';
+
         return (
           <div className='mb-3'>
             <VideoUploadField
               ref={ref}
               name={name}
               {...props}
+              required={shouldBeRequired} // Override any required prop from props
             />
           </div>
         );

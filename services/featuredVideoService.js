@@ -43,17 +43,44 @@ async function addFeaturedVideo(tenantId, videoData) {
     }
 
     // Validate required fields
-    if (!videoData.title) {
-      throw new AppError('Video title is required', 400);
-    }
     if (!videoData.videoType) {
       throw new AppError('Video type is required', 400);
     }
     if (!videoData.displayMode) {
       throw new AppError('Display mode is required', 400);
     }
-    if (!videoData.youtubeLink && videoData.videoType !== 'upload') {
+
+    // Conditional validation based on videoType and displayMode
+    // Title and description are required when displayMode is 'full' (Captions)
+    if (videoData.displayMode === 'full') {
+      if (!videoData.title) {
+        throw new AppError(
+          'Video title is required for captions display mode',
+          400
+        );
+      }
+      if (!videoData.description) {
+        throw new AppError(
+          'Video description is required for captions display mode',
+          400
+        );
+      }
+    }
+
+    // YouTube link is required when:
+    // 1. videoType is 'youtube' (YouTube Snippet) - always
+    // 2. videoType is 'upload' AND displayMode is 'full' (Upload + Captions)
+    const needsYouTubeLink =
+      videoData.videoType === 'youtube' ||
+      (videoData.videoType === 'upload' && videoData.displayMode === 'full');
+
+    if (needsYouTubeLink && !videoData.youtubeLink) {
       throw new AppError('YouTube link is required', 400);
+    }
+
+    // Video file is required when videoType is 'upload'
+    if (videoData.videoType === 'upload' && !videoData.videoFile) {
+      throw new AppError('Video file is required for upload video type', 400);
     }
 
     const data = whitelistFields(videoData, FEATURED_VIDEO_FIELDS);

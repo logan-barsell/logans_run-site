@@ -3,24 +3,23 @@ export const featuredVideoFields = (video = {}) => [
     label: 'Upload Video',
     name: 'videoFile',
     type: 'conditionalVideo',
-    required: false,
   },
   {
     label: 'Preview Type',
     name: 'videoType',
     type: 'select',
     options: [
-      { value: 'youtube', name: 'YouTube Video' },
+      { value: 'youtube', name: 'YouTube Snippet' },
       { value: 'upload', name: 'Upload Video' },
     ],
-    initialValue: video.videoType || 'youtube',
+    initialValue: video.videoType || 'upload',
   },
   {
     label: 'Display Mode',
     name: 'displayMode',
     type: 'select',
     options: [
-      { value: 'full', name: 'Full Video' },
+      { value: 'full', name: 'Captions (with YouTube link)' },
       { value: 'videoOnly', name: 'Video Only' },
     ],
     initialValue: video.displayMode || 'full',
@@ -45,11 +44,12 @@ export const featuredVideoFields = (video = {}) => [
     label: 'YouTube Link',
     name: 'youtubeLink',
     type: 'conditionalYoutubeUrl',
-    conditionField: 'displayMode',
-    conditionValue: 'full',
+    conditions: [
+      { videoType: 'youtube' }, // Always show for YouTube Snippet
+      { videoType: 'upload', displayMode: 'full' }, // Show for Upload + Captions
+    ],
     initialValue: video.youtubeLink || '',
     placeholder: 'Enter YouTube video URL',
-    required: true,
   },
   {
     label: 'Start Time (seconds)',
@@ -57,7 +57,8 @@ export const featuredVideoFields = (video = {}) => [
     type: 'conditionalNumber',
     conditionField: 'videoType',
     conditionValue: 'youtube',
-    initialValue: video.startTime || '',
+    initialValue: video.startTime || 0,
+    min: 0,
   },
   {
     label: 'End Time (seconds)',
@@ -65,7 +66,8 @@ export const featuredVideoFields = (video = {}) => [
     type: 'conditionalNumber',
     conditionField: 'videoType',
     conditionValue: 'youtube',
-    initialValue: video.endTime || '',
+    initialValue: video.endTime || 10,
+    min: 0,
   },
   {
     label: 'Release Date',

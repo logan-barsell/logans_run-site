@@ -1,13 +1,14 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import EditItem from '../../../components/Modifiers/EditItem';
-import {
-  uploadImageToFirebase,
-  deleteImageFromFirebase,
-} from '../../../utils/firebase';
+import { uploadImageAndReplace } from '../../../utils/firebase';
 import { editShowFields } from './constants';
 import { updateShow as updateShowService } from '../../../services/showsService';
 
 const EditShow = ({ show, onSuccess, onError, onClose }) => {
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
+
   const onEdit = async fields => {
     const id = show.id;
     try {
@@ -19,20 +20,10 @@ const EditShow = ({ show, onSuccess, onError, onClose }) => {
         fields.poster[0] &&
         fields.poster[0] instanceof File
       ) {
-        // Delete old image if it exists
-        if (show.poster) {
-          try {
-            await deleteImageFromFirebase(show.poster);
-          } catch (imageError) {
-            console.warn(
-              'Failed to delete old image from Firebase:',
-              imageError
-            );
-            // Continue with upload even if old image deletion fails
-          }
-        }
-        // Upload new image
-        posterUrl = await uploadImageToFirebase(fields.poster[0]);
+        // Upload new image and replace old one
+        posterUrl = await uploadImageAndReplace(fields.poster[0], show.poster, {
+          tenantId,
+        });
       }
 
       const updatedShow = {
