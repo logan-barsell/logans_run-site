@@ -31,8 +31,9 @@ function YouTubeSnippet({
   height = '100%',
   startTime = 0,
   endTime = null,
+  active = true,
 }) {
-  const iframeRef = useRef(null);
+  const containerRef = useRef(null);
   const playerRef = useRef(null);
 
   useEffect(() => {
@@ -41,11 +42,17 @@ function YouTubeSnippet({
 
     // create or re-create the YT.Player instance
     function initPlayer() {
-      if (!iframeRef.current || !window.YT?.Player) return;
+      if (!active) return;
+      if (!containerRef.current || !window.YT?.Player) return;
       // destroy any existing before re-init
       playerRef.current?.destroy();
+      // ensure container is empty before creating a new player
+      try {
+        containerRef.current.innerHTML = '';
+      } catch (_) {}
 
-      playerRef.current = new window.YT.Player(iframeRef.current, {
+      playerRef.current = new window.YT.Player(containerRef.current, {
+        videoId,
         playerVars: {
           start: startTime,
           ...(endTime != null ? { end: endTime } : {}),
@@ -94,40 +101,54 @@ function YouTubeSnippet({
     }
 
     // wait for the API, then init
-    ensureYouTubeAPI().then(() => {
-      if (!isActive) return;
-      initPlayer();
-    });
+    if (active) {
+      ensureYouTubeAPI().then(() => {
+        if (!isActive) return;
+        initPlayer();
+      });
+    } else {
+      // When becoming inactive, destroy and clear container to avoid blank re-mounts
+      if (playerRef.current) {
+        try {
+          playerRef.current.destroy();
+        } catch (_) {}
+        playerRef.current = null;
+      }
+      try {
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
+      } catch (_) {}
+    }
 
     return () => {
       isActive = false;
       if (intervalId) clearInterval(intervalId);
-      playerRef.current?.destroy();
+      // On unmount, destroy to stop buffering in background and clear container
+      if (playerRef.current) {
+        try {
+          playerRef.current.destroy();
+        } catch (_) {}
+        playerRef.current = null;
+      }
+      try {
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
+      } catch (_) {}
     };
-  }, [videoId, startTime, endTime]);
-
-  // build the src URL including UI-hiding flags
-  let src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1
-       &autoplay=1
-       &start=${startTime}${endTime != null ? `&end=${endTime}` : ''}&controls=0
-       &rel=0
-       &loop=1
-       &playlist=${videoId}&modestbranding=1
-       &disablekb=1
-       &iv_load_policy=3
-       &playsinline=1`.replace(/\s+/g, '');
+  }, [videoId, startTime, endTime, active]);
 
   return (
-    <iframe
-      ref={iframeRef}
+    <div
+      ref={containerRef}
       title='Band Video Preview'
-      width={width}
-      height={height}
-      src={src}
-      allow='autoplay; encrypted-media'
       style={{
+        width,
+        height,
         overflow: 'hidden',
         pointerEvents: 'none',
+        backgroundColor: 'black',
       }}
     />
   );

@@ -42,8 +42,6 @@ const VideoItem = ({
     if (startTime) embedUrl += `?start=${startTime}`;
     if (endTime) embedUrl += `${startTime ? '&' : '?'}end=${endTime}`;
   }
-  console.log('videoUrl', videoUrl);
-  console.log('videoType', videoType);
 
   // Render video player based on type
   const renderVideoPlayer = () => {
