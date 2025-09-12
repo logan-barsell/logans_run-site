@@ -24,6 +24,7 @@ const THEME_FIELDS = [
   'greeting',
   'introduction',
   'bandLogoUrl',
+  'bandHeaderLogoUrl',
   'headerDisplay',
   'headerPosition',
   'primaryColor',
@@ -75,6 +76,21 @@ async function updateTheme(tenantId, update) {
         // Don't fail the update if logo cleanup fails
       }
       delete data.oldBandLogoUrl; // Remove from update data
+    }
+
+    // Handle old header logo cleanup if bandHeaderLogoUrl is being updated
+    if (data.bandHeaderLogoUrl && data.oldBandHeaderLogoUrl) {
+      try {
+        const oldHeaderLogoPath = data.oldBandHeaderLogoUrl.split('/').pop();
+        if (oldHeaderLogoPath) {
+          const file = bucket.file(`logos/${oldHeaderLogoPath}`);
+          await file.delete();
+          logger.info(`✅ Old header logo deleted: ${oldHeaderLogoPath}`);
+        }
+      } catch (cleanupError) {
+        logger.warn('Failed to delete old header logo:', cleanupError);
+      }
+      delete data.oldBandHeaderLogoUrl;
     }
 
     return await withTenant(tenantId, async tx => {

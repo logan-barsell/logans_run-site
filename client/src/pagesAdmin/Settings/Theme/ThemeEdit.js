@@ -1,16 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { fetchTheme, updateTheme } from '../../../redux/actions';
+import { updateTheme as updateThemeService } from '../../../services/themeService';
 import { EditableForm } from '../../../components/Forms';
 import ResponsiveImageDisplay from '../../../components/Forms/ResponsiveImageDisplay';
+import SelectField from '../../../components/Forms/FieldTypes/SelectField';
 import { useAlert } from '../../../contexts/AlertContext';
 import { uploadImageAndReplace } from '../../../utils/firebase';
 import { THEME_FIELDS } from './constants';
 
 const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   const [uploading, setUploading] = useState(false);
+  const [logoType, setLogoType] = useState('icon'); // 'icon' | 'header'
   const { showError, showSuccess } = useAlert();
   const imageUploadRef = useRef();
+  const { user } = useSelector(state => state.auth);
+  const tenantId = user?.tenantId;
 
   useEffect(() => {
     fetchTheme();
@@ -19,6 +24,7 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
   const handleSubmit = async values => {
     setUploading(true);
     let bandLogoUrl = values.bandLogo;
+    let bandHeaderLogoUrl = values.bandHeaderLogo;
 
     try {
       // Handle band logo upload if there's a new file or FileList
@@ -30,37 +36,90 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
 
         if (file instanceof File) {
           try {
-            bandLogoUrl = await uploadImageAndReplace(file, theme?.bandLogoUrl);
+            bandLogoUrl = await uploadImageAndReplace(
+              file,
+              theme?.bandLogoUrl,
+              {
+                tenantId,
+              }
+            );
           } catch (err) {
-            setUploading(false);
             showError('Failed to upload band logo');
-            return;
+            throw err;
+          }
+        }
+      }
+
+      // Handle header logo upload if there's a new file or FileList
+      if (values.bandHeaderLogo) {
+        const file =
+          values.bandHeaderLogo instanceof FileList
+            ? values.bandHeaderLogo[0]
+            : values.bandHeaderLogo;
+
+        if (file instanceof File) {
+          try {
+            bandHeaderLogoUrl = await uploadImageAndReplace(
+              file,
+              theme?.bandHeaderLogoUrl,
+              { tenantId }
+            );
+          } catch (err) {
+            showError('Failed to upload header logo');
+            throw err;
           }
         }
       }
 
       // Update theme with logo settings
-      const { bandLogo, ...rest } = values;
+      const { bandLogo, bandHeaderLogo, __logoType, ...rest } = values;
       const dataToSave = {
         ...rest,
         bandLogoUrl,
+        bandHeaderLogoUrl,
       };
 
-      await updateTheme(dataToSave);
-      setUploading(false);
+      await updateThemeService(dataToSave);
       showSuccess('Theme updated successfully');
+      // Refresh Redux theme so UI reflects latest
+      fetchTheme();
     } catch (err) {
-      setUploading(false);
       showError(err.message || 'Failed to update theme');
+      throw err;
+    } finally {
+      setUploading(false);
     }
   };
 
-  // Use fields from constants
-  const themeFields = THEME_FIELDS;
+  // Use fields from constants, but hide header-logo-only when no header logo exists yet
+  const headerHasLogo = Boolean(theme?.bandHeaderLogoUrl);
+  // First adjust header display options
+  const baseFields = THEME_FIELDS.map(field => {
+    if (field.name === 'headerDisplay') {
+      return {
+        ...field,
+        options: (field.options || []).filter(
+          opt => opt.value !== 'header-logo-only' || headerHasLogo
+        ),
+      };
+    }
+    return field;
+  });
+  // Then filter which image field is visible based on local logoType
+  const themeFields = baseFields.filter(field => {
+    if (logoType === 'icon') {
+      return field.name !== 'bandHeaderLogo';
+    }
+    if (logoType === 'header') {
+      return field.name !== 'bandLogo';
+    }
+    return true;
+  });
 
   // Get current theme data for initial values
   const initialValues = {
     bandLogo: theme?.bandLogoUrl || '',
+    bandHeaderLogo: theme?.bandHeaderLogoUrl || '',
     siteTitle: theme?.siteTitle || '',
     greeting: theme?.greeting || '',
     introduction: theme?.introduction || '',
@@ -73,11 +132,18 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
     secondaryFont: theme?.secondaryFont || 'CourierPrime',
     socialMediaIconStyle: theme?.socialMediaIconStyle || 'default',
     paceTheme: theme?.paceTheme || 'minimal',
+    __logoType: 'icon',
   };
+
+  // If header logo isn't available but the saved value is header-logo-only, fall back to band-name-and-logo
+  if (!headerHasLogo && initialValues.headerDisplay === 'header-logo-only') {
+    initialValues.headerDisplay = 'band-name-and-logo';
+  }
 
   return (
     <div className='mb-5 pb-5'>
       <EditableForm
+        title='Edit Theme'
         fields={themeFields}
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -85,23 +151,42 @@ const ThemeEdit = ({ theme, fetchTheme, updateTheme }) => {
         successMessage='Update Successful'
         loading={uploading}
         imageRef={imageUploadRef}
+        ignoreDirtyFields={['__logoType']}
       >
-        {({ values }) => {
-          const currentHeaderDisplay =
-            values?.headerDisplay || initialValues.headerDisplay;
-
+        {() => {
           return (
             <>
+              {/* Logo type selector using existing SelectField */}
+              <SelectField
+                label='Manage Logos'
+                name='__logoType'
+                options={[
+                  { value: 'icon', label: 'Icon Logo' },
+                  { value: 'header', label: 'Header Logo' },
+                ]}
+                initialValue={logoType}
+                onChange={e => setLogoType(e.target.value)}
+                placeholder='Select Logo Type'
+                selectProps={{ value: logoType }}
+                className='mb-4'
+                helperText={
+                  logoType === 'header'
+                    ? 'Upload a wide logo (e.g., 800×200) used as a header logo'
+                    : 'Upload a square icon (e.g., 512×512) used for favicon and icon logo'
+                }
+              />
+
               {/* Logo Display */}
               <div className='mb-4'>
-                {currentHeaderDisplay !== 'band-name-only' &&
-                  initialValues.bandLogo && (
-                    <ResponsiveImageDisplay
-                      src={initialValues.bandLogo}
-                      alt='Band Logo'
-                      maxHeight='200px'
-                    />
-                  )}
+                <ResponsiveImageDisplay
+                  src={
+                    logoType === 'header'
+                      ? initialValues.bandHeaderLogo
+                      : initialValues.bandLogo
+                  }
+                  alt={logoType === 'header' ? 'Header Logo' : 'Icon Logo'}
+                  maxHeight='200px'
+                />
               </div>
             </>
           );

@@ -96,6 +96,20 @@ const TopNav = ({ routes }) => {
         ) : (
           theme?.siteTitle || 'Bandsyte'
         );
+      case 'header-logo-only':
+        return theme?.bandHeaderLogoUrl ? (
+          <img
+            src={theme.bandHeaderLogoUrl}
+            alt={theme?.siteTitle || 'Header Logo'}
+          />
+        ) : theme?.bandLogoUrl ? (
+          <img
+            src={theme.bandLogoUrl}
+            alt={theme?.siteTitle || 'Band Logo'}
+          />
+        ) : (
+          theme?.siteTitle || 'Bandsyte'
+        );
       case 'band-name-and-logo':
       default:
         return (
@@ -130,7 +144,9 @@ const TopNav = ({ routes }) => {
   // Determine header display class
   const getHeaderDisplayClass = () => {
     const headerDisplay = theme?.headerDisplay || 'band-name-and-logo';
-    return `header-${headerDisplay.replace(/-/g, '-')}`;
+    return headerDisplay.startsWith('header-')
+      ? headerDisplay.replace(/-/g, '-')
+      : `header-${headerDisplay.replace(/-/g, '-')}`;
   };
 
   return (
