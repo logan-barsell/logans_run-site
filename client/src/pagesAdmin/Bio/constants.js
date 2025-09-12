@@ -4,22 +4,23 @@ export const BIO_FIELDS = [
   {
     name: 'customImage',
     type: 'image',
-    label: 'Custom Image',
     conditionField: 'imageType',
     conditionValue: 'custom-image',
     required: false,
   },
+  { type: 'divider' },
   {
     name: 'imageType',
     type: 'dropdown',
     label: 'Image Display Type',
     options: [
-      { name: 'Band Logo', value: 'band-logo' },
+      { name: 'Icon Logo', value: 'band-logo' },
+      { name: 'Header Logo', value: 'header-logo' },
       { name: 'Custom Image', value: 'custom-image' },
     ],
     initialValue: 'band-logo',
     helperText:
-      'Choose whether to display the band logo or a custom image above the bio text.',
+      'Choose whether to display a logo or a custom image above the bio text.',
   },
   {
     name: 'text',

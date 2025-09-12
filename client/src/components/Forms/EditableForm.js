@@ -36,6 +36,7 @@ const EditableForm = ({
   children, // Custom content to render before fields
   hideDefaultSaveButton = false, // Option to hide the default SaveButton
   successMessage = 'Update Successful', // Custom success message
+  ignoreDirtyFields = [], // Field names to ignore for dirty/pristine detection
   ...props
 }) => {
   const [isSaved, setIsSaved] = useState(false);
@@ -115,7 +116,9 @@ const EditableForm = ({
           // Fix pristine state calculation to handle missing fields using internal baseline
           let actualPristine = pristine;
           if (baselineValues && values) {
-            const baselineKeys = Object.keys(baselineValues);
+            const baselineKeys = Object.keys(baselineValues).filter(
+              key => !ignoreDirtyFields.includes(key)
+            );
             const allFieldsMatch = baselineKeys.every(key => {
               const baselineValue = baselineValues[key] ?? '';
               const currentValue = values[key] ?? '';

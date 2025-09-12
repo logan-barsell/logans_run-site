@@ -6,9 +6,20 @@ const ResponsiveImageDisplay = ({
   alt,
   className = '',
   maxHeight = '200px',
-  showBorder = true,
+  placeholder = 'No Image Uploaded',
 }) => {
-  if (!src) return null;
+  if (!src) {
+    return (
+      <div className={`responsive-image-container ${className}`}>
+        <div
+          className='d-flex align-items-center justify-content-center border border-dark secondary-font rounded text-muted'
+          style={{ minHeight: '120px', background: 'var(--form-bg)' }}
+        >
+          {placeholder}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`responsive-image-container ${className}`}>

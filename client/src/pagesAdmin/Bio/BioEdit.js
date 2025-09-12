@@ -77,12 +77,27 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
   };
 
   // Define the form fields configuration
-  const bioFields = BIO_FIELDS;
+  const headerHasLogo = Boolean(theme?.bandHeaderLogoUrl);
+  const bioFields = BIO_FIELDS.map(field => {
+    if (field.name === 'imageType') {
+      return {
+        ...field,
+        options: (field.options || []).filter(
+          opt => opt.value !== 'header-logo' || headerHasLogo
+        ),
+      };
+    }
+    return field;
+  });
 
   // Get current bio data for initial values
+  const initialImageTypeCandidate = bioRow.imageType || 'band-logo';
   const initialValues = {
     text: bioRow.text || '',
-    imageType: bioRow.imageType || 'band-logo',
+    imageType:
+      initialImageTypeCandidate === 'header-logo' && !headerHasLogo
+        ? 'band-logo'
+        : initialImageTypeCandidate,
     customImage: bioRow.customImageUrl || '',
   };
 
@@ -109,10 +124,19 @@ const BioEdit = ({ fetchBio, bio, theme }) => {
                 {currentImageType === 'band-logo' && theme?.bandLogoUrl && (
                   <ResponsiveImageDisplay
                     src={theme.bandLogoUrl}
-                    alt='Band Logo'
+                    alt='Icon Logo'
                     maxHeight='200px'
                   />
                 )}
+
+                {currentImageType === 'header-logo' &&
+                  theme?.bandHeaderLogoUrl && (
+                    <ResponsiveImageDisplay
+                      src={theme.bandHeaderLogoUrl}
+                      alt='Header Logo'
+                      maxHeight='200px'
+                    />
+                  )}
 
                 {currentImageType === 'custom-image' &&
                   initialValues.customImage && (

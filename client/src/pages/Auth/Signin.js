@@ -41,9 +41,6 @@ const Signin = () => {
       // Normal login success
       setIsSuccess(true);
       showSuccess('Login successful! Redirecting...');
-      setTimeout(() => {
-        window.location.href = '/settings';
-      }, 1000);
     } else {
       showError(result.error);
     }

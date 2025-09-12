@@ -15,6 +15,7 @@ const ImageUpload = forwardRef(
   (
     {
       name,
+      label,
       setImage,
       multiple = false,
       onChange,

@@ -19,9 +19,9 @@
 }
 
 .navbar-brand.yesdevil.header-logo-only img {
-  height: 60px;
+  height: 88px;
   width: auto;
-  max-width: 300px;
+  max-width: 560px;
 }
 
 .navbar-brand.yesdevil.header-band-name-and-logo {
@@ -40,8 +40,8 @@
 
 @media (max-width: 2000px) {
   .navbar-brand.yesdevil.header-logo-only img {
-    height: clamp(32px, 4vw, 80px);
-    max-width: clamp(64px, 20vw, 400px);
+    height: clamp(48px, 6vw, 120px);
+    max-width: clamp(160px, 35vw, 720px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
@@ -52,8 +52,8 @@
 
 @media (max-width: 991px) {
   .navbar-brand.yesdevil.header-logo-only img {
-    height: clamp(32px, 6vw, 60px);
-    max-width: clamp(80px, 25vw, 250px);
+    height: clamp(44px, 10vw, 96px);
+    max-width: clamp(140px, 40vw, 560px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
@@ -64,8 +64,8 @@
 
 @media (max-width: 650px) {
   .navbar-brand.yesdevil.header-logo-only img {
-    height: clamp(32px, 8vw, 52px);
-    max-width: clamp(96px, 30vw, 195px);
+    height: clamp(40px, 12vw, 84px);
+    max-width: clamp(128px, 45vw, 420px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
@@ -76,8 +76,8 @@
 
 @media (max-width: 500px) {
   .navbar-brand.yesdevil.header-logo-only img {
-    height: clamp(32px, 10vw, 50px);
-    max-width: clamp(112px, 35vw, 175px);
+    height: clamp(38px, 14vw, 72px);
+    max-width: clamp(120px, 50vw, 360px);
   }
 
   .navbar-brand.yesdevil.header-band-name-and-logo img {
@@ -107,6 +107,10 @@ nav {
 
 .navbar-nav {
   width: 100%;
+}
+
+nav.navbar:has(> .container-fluid.navbar-container-center) {
+  opacity: 0.9;
 }
 
 .navbar-toggler {
@@ -216,10 +220,6 @@ nav {
   z-index: 2;
 }
 
-.navbar-container-right {
-  /* Standard row layout, but we'll position brand to the right */
-}
-
 .navbar-container-right .navbar-brand {
   order: 2;
   margin-left: auto;
@@ -296,6 +296,30 @@ nav {
     order: 3;
     width: 100%;
   }
+
+  /* Mobile-only nav link alignment using align-items */
+  .navbar-container-left .navbar-nav {
+    align-items: flex-start !important;
+  }
+
+  .navbar-container-center .navbar-nav {
+    align-items: center !important;
+  }
+
+  .navbar-container-right .navbar-nav {
+    align-items: flex-end !important;
+  }
+
+  /* Text alignment for links in mobile stacked layout */
+  .navbar-container-center .navbar-nav .nav-link {
+    text-align: center;
+  }
+
+  .navbar-container-right .navbar-nav .nav-link {
+    text-align: right;
+  }
+
+  /* (Reverted) no special ordering for logout on mobile */
 }
 
 /* Mobile responsive navbar toggler */

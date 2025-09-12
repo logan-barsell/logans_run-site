@@ -121,6 +121,7 @@ model Theme {
   greeting             String?
   introduction         String?
   bandLogoUrl          String?
+  bandHeaderLogoUrl    String?
   headerDisplay        String?  @default("band-name-and-logo")
   headerPosition       String?  @default("left")
   primaryColor         String?  @default("#000000")

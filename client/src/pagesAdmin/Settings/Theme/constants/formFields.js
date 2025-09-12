@@ -12,10 +12,19 @@ export const THEME_FIELDS = [
   {
     name: 'bandLogo',
     type: 'image',
-    label: 'Band Logo',
+    label: 'Icon Logo',
     required: false,
-    helperText: 'Upload your band logo for the header',
+    helperText:
+      'Upload a square icon (e.g., 512×512) used for favicon and icon logo',
   },
+  {
+    name: 'bandHeaderLogo',
+    type: 'image',
+    label: 'Header Logo',
+    required: false,
+    helperText: 'Upload a wide logo (e.g., 800×200) used in the header',
+  },
+  { type: 'divider' },
   {
     name: 'siteTitle',
     type: 'text',
