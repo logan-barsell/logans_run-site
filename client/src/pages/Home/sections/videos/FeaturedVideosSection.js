@@ -46,6 +46,7 @@ const FeaturedVideosSection = ({
         videoType: v.videoType || 'youtube',
         displayMode: v.displayMode || 'full',
         videoFile: v.videoFile,
+        videoThumbnail: v.videoThumbnail,
         youtubeLink: v.youtubeLink,
         title: v.title,
         description: v.description,

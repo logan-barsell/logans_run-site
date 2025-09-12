@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import YouTubeSnippet from '../YouTubeSnippet';
 import VideoPlayer from '../Video/VideoPlayer';
 import { YouTube } from '../icons';
 import Button from '../Button/Button';
 
 function VideoCarousel({ videos }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const handleSlid = e => {
+      // Prefer Bootstrap's provided index; fallback to DOM query
+      if (typeof e.to === 'number') {
+        setActiveIndex(e.to);
+      } else {
+        const items = Array.from(el.querySelectorAll('.carousel-item'));
+        const idx = items.findIndex(item => item.classList.contains('active'));
+        if (idx >= 0) setActiveIndex(idx);
+      }
+    };
+
+    el.addEventListener('slid.bs.carousel', handleSlid);
+    return () => {
+      el.removeEventListener('slid.bs.carousel', handleSlid);
+    };
+  }, []);
+
   return (
     <div
       id='videoCarousel'
       className='carousel slide'
       data-bs-ride='carousel'
       data-bs-interval='15000'
+      ref={carouselRef}
     >
       <div className='carousel-inner'>
         {videos.map((video, idx) => (
@@ -26,12 +51,15 @@ function VideoCarousel({ videos }) {
                   videoUrl={video.videoFile}
                   startTime={video.startTime}
                   endTime={video.endTime}
+                  active={idx === activeIndex}
+                  poster={video.videoThumbnail}
                 />
               ) : (
                 <YouTubeSnippet
                   videoId={video.videoId}
                   startTime={video.startTime}
                   endTime={video.endTime}
+                  active={idx === activeIndex}
                 />
               )}
 

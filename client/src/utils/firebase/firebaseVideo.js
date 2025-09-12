@@ -25,7 +25,10 @@ export function uploadVideoToFirebase(file, { fileName, tenantId } = {}) {
       : `${tenantId}/videos/${Date.now()}_${file.name}`;
     const storageRef = ref(storage, name);
 
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    const uploadTask = uploadBytesResumable(storageRef, file, {
+      cacheControl: 'public, max-age=31536000, immutable',
+      contentType: file?.type || 'video/mp4',
+    });
 
     uploadTask.on(
       'state_changed',
