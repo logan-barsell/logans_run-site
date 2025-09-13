@@ -11,7 +11,9 @@
     "build": "npm run build --prefix client",
     "install-client": "npm install --prefix client",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
-    "generate-secret": "node scripts/generateJWTSecret.js"
+    "generate-secret": "node scripts/generateJWTSecret.js",
+    "migrate:deploy": "node scripts/run-prisma-owner.js migrate deploy --schema db/prisma/schema.prisma",
+    "migrate:status": "node scripts/run-prisma-owner.js migrate status --schema db/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",

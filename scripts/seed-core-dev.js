@@ -4,6 +4,7 @@
 
 require('dotenv').config();
 const { prisma } = require('../db/prisma');
+const { withTenant } = require('../db/withTenant');
 
 async function run() {
   const tenantId = process.env.DEV_TENANT_ID;
@@ -68,29 +69,49 @@ async function run() {
     x: 'https://x.com/johndo',
     tiktok: 'https://tiktok.com/@johndo',
   };
-  const existingContact = await prisma.contactInfo.findUnique({
-    where: { tenantId },
-  });
-  if (existingContact) {
-    await prisma.contactInfo.update({
+  await withTenant(tenantId, async tx => {
+    const existingContact = await tx.contactInfo.findUnique({
       where: { tenantId },
-      data: {
-        contactJson: contactInfoPayload,
-        updatedAt: fixedDate,
-      },
     });
-    console.log('ContactInfo updated');
-  } else {
-    await prisma.contactInfo.create({
-      data: {
-        tenantId,
-        contactJson: contactInfoPayload,
-        createdAt: fixedDate,
-        updatedAt: fixedDate,
-      },
-    });
-    console.log('ContactInfo created');
-  }
+    if (existingContact) {
+      await tx.contactInfo.update({
+        where: { tenantId },
+        data: {
+          publicEmail: contactInfoPayload.publicEmail,
+          publicPhone: contactInfoPayload.publicPhone,
+          facebook: contactInfoPayload.facebook,
+          instagram: contactInfoPayload.instagram,
+          youtube: contactInfoPayload.youtube,
+          soundcloud: contactInfoPayload.soundcloud,
+          spotify: contactInfoPayload.spotify,
+          appleMusic: contactInfoPayload.appleMusic,
+          x: contactInfoPayload.x,
+          tiktok: contactInfoPayload.tiktok,
+          updatedAt: fixedDate,
+        },
+      });
+      console.log('ContactInfo updated');
+    } else {
+      await tx.contactInfo.create({
+        data: {
+          tenantId,
+          publicEmail: contactInfoPayload.publicEmail,
+          publicPhone: contactInfoPayload.publicPhone,
+          facebook: contactInfoPayload.facebook,
+          instagram: contactInfoPayload.instagram,
+          youtube: contactInfoPayload.youtube,
+          soundcloud: contactInfoPayload.soundcloud,
+          spotify: contactInfoPayload.spotify,
+          appleMusic: contactInfoPayload.appleMusic,
+          x: contactInfoPayload.x,
+          tiktok: contactInfoPayload.tiktok,
+          createdAt: fixedDate,
+          updatedAt: fixedDate,
+        },
+      });
+      console.log('ContactInfo created');
+    }
+  });
 
   // 4) Upsert Bio by unique tenantId
   const bioPayload = {
@@ -99,27 +120,35 @@ async function run() {
     customImageUrl:
       'https://firebasestorage.googleapis.com/v0/b/yes-devil.appspot.com/o/1756696090054IMG_1894.jpeg?alt=media&token=a50f0af0-2627-42f5-9583-2ceab97f9e78',
   };
-  const existingBio = await prisma.bio.findUnique({ where: { tenantId } });
-  if (existingBio) {
-    await prisma.bio.update({
-      where: { tenantId },
-      data: {
-        bioJson: bioPayload,
-        updatedAt: fixedDate,
-      },
-    });
-    console.log('Bio updated');
-  } else {
-    await prisma.bio.create({
-      data: {
-        tenantId,
-        bioJson: bioPayload,
-        createdAt: fixedDate,
-        updatedAt: fixedDate,
-      },
-    });
-    console.log('Bio created');
-  }
+  await withTenant(tenantId, async tx => {
+    const existingBio = await tx.bio.findUnique({ where: { tenantId } });
+    if (existingBio) {
+      await tx.bio.update({
+        where: { tenantId },
+        data: {
+          name: 'Dev Band',
+          text: bioPayload.text,
+          imageType: bioPayload.imageType,
+          customImageUrl: bioPayload.customImageUrl,
+          updatedAt: fixedDate,
+        },
+      });
+      console.log('Bio updated');
+    } else {
+      await tx.bio.create({
+        data: {
+          tenantId,
+          name: 'Dev Band',
+          text: bioPayload.text,
+          imageType: bioPayload.imageType,
+          customImageUrl: bioPayload.customImageUrl,
+          createdAt: fixedDate,
+          updatedAt: fixedDate,
+        },
+      });
+      console.log('Bio created');
+    }
+  });
 
   console.log('Seeding complete.');
 }

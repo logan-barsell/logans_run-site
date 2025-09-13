@@ -11,13 +11,21 @@ This guide replaces all legacy MongoDB/Mongoose content. It documents how we des
 
 ## Environment
 
-Add your Neon connection string to `.env`:
+Add your Neon connection strings to `.env`:
 
 ```bash
-DATABASE_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require"
+# App runtime (RLS enforced role without BYPASSRLS)
+DATABASE_URL="postgresql://app_user:<password>@<host>/<database>?sslmode=require"
+
+# Owner (for migrations only)
+OWNER_DATABASE_URL="postgresql://neondb_owner:<password>@<host>/<database>?sslmode=require"
 ```
 
-Prisma reads `DATABASE_URL` for all commands.
+Prisma commands read `DATABASE_URL`. For migrations, temporarily override:
+
+```bash
+DATABASE_URL=$OWNER_DATABASE_URL npx prisma migrate deploy --schema db/prisma/schema.prisma
+```
 
 ## Project Layout
 
@@ -75,10 +83,10 @@ What `migrate dev` does:
 Commit migrations to VCS. On deploy (CI or server):
 
 ```bash
-npx prisma migrate deploy
+DATABASE_URL=$OWNER_DATABASE_URL npx prisma migrate deploy
 ```
 
-This applies any pending SQL migrations to the database configured by `DATABASE_URL`.
+This applies any pending SQL migrations using the owner connection while keeping the app runtime URL unchanged.
 
 ## Common Changes
 

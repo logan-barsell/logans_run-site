@@ -181,11 +181,45 @@ async function sendEmail(
       html = template.html;
     }
 
+    // Optional suppression prefilter (skip suppressed addresses)
+    let filteredRecipients = recipients;
+    if (process.env.SES_PREFILTER_SUPPRESSION === 'true') {
+      try {
+        const { isSuppressed } = require('./sesSuppression');
+        const checks = await Promise.all(
+          recipients.map(async r => ({
+            email: r,
+            suppressed: await isSuppressed(r),
+          }))
+        );
+        filteredRecipients = checks
+          .filter(c => !c.suppressed)
+          .map(c => c.email);
+        const suppressedCount = recipients.length - filteredRecipients.length;
+        if (suppressedCount > 0) {
+          logger.warn(
+            `📧 Suppression prefilter skipped ${suppressedCount} address(es)`
+          );
+        }
+        if (filteredRecipients.length === 0) {
+          return {
+            success: true,
+            message: 'All recipients are suppressed; nothing to send',
+          };
+        }
+      } catch (prefilterError) {
+        logger.warn(
+          '📧 Suppression prefilter failed; proceeding without it:',
+          prefilterError.message
+        );
+      }
+    }
+
     // Use SES throttler for production, log for development
     if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
       // Queue email(s) with throttler for proper rate limiting
       const result = await sesThrottler.queueEmail({
-        to: recipients,
+        to: filteredRecipients,
         subject,
         html,
         from: customFromAddress,

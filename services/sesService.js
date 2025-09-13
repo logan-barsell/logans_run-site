@@ -1,4 +1,6 @@
 const { prisma } = require('../db/prisma');
+const { withTenant } = require('../db/withTenant');
+const { addToSuppression } = require('./sesSuppression');
 const logger = require('../utils/logger');
 
 /**
@@ -45,15 +47,30 @@ async function handleBounce(bounceData) {
 
       // For hard bounces, immediately deactivate subscriber
       if (bounceType === 'Permanent') {
-        await prisma.newsletterSubscriber.updateMany({
-          where: { email: email.toLowerCase() },
-          data: {
-            isActive: false,
-            bouncedAt: new Date(),
-            bounceType: bounceSubType,
-            bounceReason: recipient.diagnosticCode || 'Permanent bounce',
-          },
+        const normalized = email.toLowerCase();
+        // Find impacted tenantIds first, then update per-tenant under withTenant
+        const impactedTenants = await prisma.newsletterSubscriber.findMany({
+          where: { email: normalized },
+          select: { tenantId: true },
+          distinct: ['tenantId'],
         });
+
+        for (const { tenantId } of impactedTenants) {
+          await withTenant(tenantId, async tx =>
+            tx.newsletterSubscriber.updateMany({
+              where: { tenantId, email: normalized },
+              data: {
+                isActive: false,
+                bouncedAt: new Date(),
+                bounceType: bounceSubType,
+                bounceReason: recipient.diagnosticCode || 'Permanent bounce',
+              },
+            })
+          );
+        }
+
+        // Add to SES suppression list for account-level blocking
+        await addToSuppression(email, 'BOUNCE');
         logger.info(`📧 Hard bounce: deactivated ${email} (${bounceSubType})`);
       }
       // For soft bounces, you might want to implement retry logic
@@ -87,16 +104,29 @@ async function handleComplaint(complaintData) {
       const email = recipient.emailAddress;
 
       // Immediately deactivate subscriber on complaint (CAN-SPAM requirement)
-      await prisma.newsletterSubscriber.updateMany({
-        where: { email: email.toLowerCase() },
-        data: {
-          isActive: false,
-          unsubscribedAt: new Date(),
-          unsubscribeReason: 'complaint',
-          complaintType: recipient.complaintFeedbackType || 'abuse',
-        },
+      const normalized = email.toLowerCase();
+      const impactedTenants = await prisma.newsletterSubscriber.findMany({
+        where: { email: normalized },
+        select: { tenantId: true },
+        distinct: ['tenantId'],
       });
 
+      for (const { tenantId } of impactedTenants) {
+        await withTenant(tenantId, async tx =>
+          tx.newsletterSubscriber.updateMany({
+            where: { tenantId, email: normalized },
+            data: {
+              isActive: false,
+              unsubscribedAt: new Date(),
+              unsubscribeReason: 'complaint',
+              complaintType: recipient.complaintFeedbackType || 'abuse',
+            },
+          })
+        );
+      }
+
+      // Add to SES suppression list for account-level blocking
+      await addToSuppression(email, 'COMPLAINT');
       logger.info(`📧 Complaint processed: deactivated ${email}`);
     } catch (error) {
       logger.error(
