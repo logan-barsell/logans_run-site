@@ -21,7 +21,7 @@
 }
 
 .modal-title {
-  color: var(--text-color);
+  color: var(--primary-color);
 }
 
 .modal-footer {
@@ -82,7 +82,7 @@
 .final-form .form-control:focus {
   background-color: var(--form-focus-bg);
   color: white;
-  border-color: var(--accent-color);
+  border-color: var(--secondary-color);
 }
 
 .final-form input.form-control {
@@ -127,11 +127,11 @@
 }
 
 #home .modal-header {
-  background-color: var(--secondary-bg);
+  background-color: var(--accordion-content-light);
 }
 
 #home .modal-footer {
-  background-color: var(--secondary-bg);
+  background-color: var(--accordion-content-light);
 }
 
 /* Responsive modal styles */

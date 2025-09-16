@@ -147,10 +147,6 @@
   background-color: var(--table-bg);
 }
 
-#home .table-striped tbody tr:nth-of-type(odd) {
-  background-color: var(--table-striped-bg);
-}
-
 #home .table-hover tbody tr:hover {
   background-color: var(--main);
   color: black;

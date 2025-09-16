@@ -1,0 +1,45 @@
+/* Bandsintown Widget Theme Overrides */
+
+/* Container styling */
+.bandsintown-widget-container {
+  padding: 50px;
+  max-width: 1500px;
+}
+
+@media (max-width: 600px) {
+  .bandsintown-widget-container {
+    padding: 50px 15px 0 15px;
+  }
+}
+
+@media (max-width: 370px) {
+  .bandsintown-widget-container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
+/* Bandsintown widget theme overrides */
+.bit-widget .bit-offers {
+  background-color: var(--main) !important;
+  border: 1px solid #fff !important;
+  color: #000 !important;
+}
+
+/* Bandsintown RSVP button theme override */
+.bit-widget .bit-rsvp {
+  color: var(--main) !important;
+  border: 1px solid var(--main) !important;
+}
+
+/* Bandsintown venue color override */
+.bit-widget .bit-venue {
+  color: var(--main) !important;
+}
+
+/* Bandsintown show all buttons override */
+.bit-widget .bit-upcoming-events-show-all-button,
+.bit-widget .bit-past-events-show-all-button {
+  color: var(--main) !important;
+  border: 1px solid var(--main) !important;
+}

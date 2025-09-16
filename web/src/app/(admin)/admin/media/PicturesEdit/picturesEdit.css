@@ -1,0 +1,18 @@
+#editPictures {
+  height: fit-content;
+  margin: 33px auto;
+  margin-bottom: 150px;
+}
+
+#editPictures .see-more {
+  max-width: 666px;
+  margin: 88px auto;
+  padding: 0px 27px;
+  width: inherit;
+}
+
+@media (max-width: 400px) {
+  #editPictures .see-more {
+    padding: 0px;
+  }
+}

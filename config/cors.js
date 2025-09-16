@@ -8,8 +8,13 @@ const corsOptions = {
 
     const allowedOrigins = [
       'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
       'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+      'http://127.0.0.1:3002',
       process.env.REACT_APP_DOMAIN || 'http://localhost:3000',
+      process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost:3001',
     ];
 
     // In production, add your actual domain
@@ -28,7 +33,13 @@ const corsOptions = {
   },
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'X-Tenant-ID',
+    'X-CSRF-Token',
+  ],
   optionsSuccessStatus: 200, // For legacy browser support
 };
 

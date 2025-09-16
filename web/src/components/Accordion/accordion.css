@@ -1,0 +1,178 @@
+.accordion {
+  max-width: 827px;
+  margin: auto;
+  margin-top: 50px;
+  width: 100%;
+}
+
+.accordion h5 {
+  color: var(--main);
+  text-align: center;
+  font-variant: small-caps;
+  font-size: var(--text-4xl);
+}
+
+.accordion .accordion-collapse {
+  background-color: var(--accordion-content-bg);
+}
+
+.accordion .accordion-header .btn-sm {
+  margin-left: 5px;
+}
+
+.accordion .accordion-body {
+  color: white;
+  align-items: center;
+  padding: 20px 15px;
+}
+
+.accordion .accordion-button {
+  background-color: var(--accordion-bg);
+  color: var(--main);
+}
+
+.accordion .accordion-button:not(.collapsed) {
+  background-color: var(--accordion-bg);
+}
+
+.accordion-button::after {
+  display: none;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.1rem var(--secondary);
+}
+
+.accordion .img-thumbnail {
+  max-width: 200px;
+}
+
+@media (max-width: 320px) {
+  .accordion .img-thumbnail {
+    width: clamp(198px, 62vw, 200px);
+    max-width: unset;
+  }
+}
+
+.accordion-img {
+  display: flex;
+  justify-content: center;
+  margin: 1px 0px;
+}
+
+.itemInfo {
+  text-align: center;
+  margin: 15px 0px;
+  height: fit-content;
+}
+
+.itemInfo .subhead {
+  font-size: var(--text-3xl);
+  color: white;
+}
+
+.subItemVal {
+  padding-left: 7px;
+  color: white;
+  display: inline-block;
+  font-weight: normal;
+  display: inline;
+}
+
+.memberMediaIcon {
+  color: white;
+}
+
+.accordion .content {
+  color: var(--main);
+  background: var(--accordion-content-light);
+  border-radius: 14px;
+  padding: 27px;
+  margin-top: 7px;
+  font-weight: bold;
+}
+
+.accordion .content .subItemVal .btn {
+  margin: 13px 0px;
+}
+
+.addButton.btn {
+  margin: 27px auto;
+  width: 69%;
+}
+
+.bi-plus-square-fill {
+  margin-right: 10px;
+}
+
+.modal-body.deleteItem {
+  font-family: var(--secondary-font);
+  letter-spacing: normal;
+}
+
+.deleteItem span {
+  color: var(--main);
+  margin: 0px 5px;
+}
+
+.accordion .modify-options {
+  position: absolute;
+  right: 29px;
+  display: flex;
+}
+
+.accordion .modify-options a.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  padding: 9px 11px;
+}
+
+/* ===== ACCORDION TYPOGRAPHY ===== */
+/* Using new typography system variables - adjusted for better sizing */
+
+.header {
+  font-size: var(--text-lg);
+}
+
+.accordion-header .coHeader {
+  font-size: var(--text-sm);
+}
+
+.itemInfo .subhead {
+  font-size: var(--text-xl);
+}
+
+.itemInfo .subhead .coSubhead {
+  font-size: var(--text-lg);
+}
+
+.content {
+  font-size: var(--text-base);
+}
+
+.subItemVal {
+  font-size: var(--text-base);
+}
+
+/* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */
+/* Keep layout-specific media queries */
+
+@media (max-width: 450px) {
+  .header {
+    max-width: clamp(112px, 35vw, 157px);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .accordion-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .accordion-body {
+    padding: 0.75rem 1rem;
+  }
+}

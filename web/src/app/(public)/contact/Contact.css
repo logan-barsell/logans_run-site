@@ -1,0 +1,131 @@
+#contact {
+  padding: 17px;
+}
+
+#contact .jumbotron {
+  margin-top: 33px;
+  margin-bottom: 2rem;
+  background-color: var(--form-bg);
+  border-radius: 0.3rem;
+  padding: 4rem 2rem;
+  border: 4px solid rgba(240, 128, 128, 0.3);
+}
+
+@media only screen and (max-width: 576px) {
+  #contact .jumbotron {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (min-width: 576px) {
+  #contact .p-sm-5 {
+    padding: 88px 44px;
+  }
+}
+
+#contact a {
+  color: var(--main);
+  text-shadow: 2px 1px black;
+}
+
+#contact p {
+  font-size: var(--body-base);
+}
+
+#contact a:hover {
+  text-decoration: underline;
+}
+
+.socmed.contact {
+  display: flex;
+  justify-content: center;
+}
+
+#contact .sendmsg {
+  margin: auto;
+  padding-bottom: 33px;
+  max-width: 666px;
+}
+
+#contact .form-group {
+  color: var(--main);
+  text-shadow: 1px 1px black;
+  margin-bottom: 1rem;
+}
+
+#contact label {
+  margin-left: 7px;
+}
+
+#contact .form-control {
+  background-color: var(--form-bg);
+  color: white;
+}
+
+#contact .form-control:focus {
+  background-color: var(--form-focus-bg);
+  color: white;
+}
+
+#contact a {
+  margin: 0px 10px;
+}
+
+#contact label {
+  font-size: var(--label-size);
+}
+
+@media (max-width: 500px) {
+  .socmed a {
+    margin: 0px 5px;
+  }
+}
+
+@media (max-width: 550px) {
+  #contact img {
+    width: clamp(32px, 10vw, 55px);
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .socmed.contact {
+    gap: 0px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .socmed.contact {
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .socmed.contact a {
+    margin: 0px 3px !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  #contact .secondary-font svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .socmed.contact a {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .socmed.contact a svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.at {
+  font-family: var(--secondary-font);
+}

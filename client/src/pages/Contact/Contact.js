@@ -98,7 +98,7 @@ const ContactPage = ({
       contactInfo.soundCloud ||
       contactInfo.x ||
       contactInfo.tiktok);
-
+  console.log('contactInfo', contactInfo);
   return contactInfo ? (
     <div
       className='container fadeIn'

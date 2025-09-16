@@ -1,0 +1,32 @@
+#currentShows.accordion {
+  margin: 50px 0px;
+}
+
+.accordion-header .coHeader {
+  color: white;
+  font-size: var(--text-base);
+  font-family: var(--secondary-font);
+  letter-spacing: normal;
+}
+
+.accordion-body .coSubhead {
+  font-size: var(--text-xl);
+  color: white;
+}
+
+#currentShows.accordion .accordion-header .btn-sm {
+  margin-left: 0px;
+}
+
+#currentShows .content .tix {
+  margin-top: 13px;
+}
+
+#currentShows .poster {
+  width: 62px;
+}
+
+.subItemVal {
+  font-family: var(--secondary-font);
+  letter-spacing: normal;
+}

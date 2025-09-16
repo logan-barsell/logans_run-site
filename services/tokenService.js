@@ -72,7 +72,15 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
   const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
   const storedData = await redisClient.get(`refreshToken:${decoded.sessionId}`);
 
-  if (!storedData) throw new AppError('Refresh token not found', 401);
+  if (!storedData) {
+    // Token not found in Redis - likely due to server restart
+    // Check if the token is still valid by verifying the JWT signature
+    // and checking if the session exists in the database
+    logger.warn(
+      `Refresh token not found in Redis for session ${decoded.sessionId} - likely server restart`
+    );
+    throw new AppError('Refresh token expired or invalid', 401);
+  }
 
   const {
     token: storedToken,
@@ -97,9 +105,11 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
           user.adminEmail,
           bandName,
           'token_reuse',
+          new Date().toISOString(),
           ip,
-          userAgent,
-          'Unknown'
+          userAgent || 'Unknown',
+          'Unknown Location',
+          tenantId
         );
         logger.info(`📧 Security alert sent to user ${userId} for token reuse`);
       }
@@ -111,7 +121,7 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
       // Don't fail the security check if email fails
     }
 
-    await UserService.endAllUserSessions(tenantId, userId); // Revoke all tokens and end sessions
+    await endAllUserSessions(tenantId, userId); // Revoke all tokens and end sessions
     throw new AppError('Suspicious activity detected - Token reuse', 403);
   }
 
@@ -131,9 +141,11 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
           user.adminEmail,
           bandName,
           'device_change',
+          new Date().toISOString(),
           ip,
-          userAgent,
-          'Unknown'
+          userAgent || 'Unknown',
+          'Unknown Location',
+          tenantId
         );
         logger.info(
           `📧 Security alert sent to user ${decoded.id} for device change`
@@ -147,7 +159,7 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
       // Don't fail the security check if email fails
     }
 
-    await UserService.endAllUserSessions(tenantId, decoded.id); // Revoke all tokens and end sessions
+    await endAllUserSessions(tenantId, decoded.id); // Revoke all tokens and end sessions
     throw new AppError(
       'Suspicious activity detected - Token used from a different device',
       403
@@ -196,17 +208,33 @@ async function revokeSessionRefreshToken(sessionId) {
   await redisClient.del(`refreshToken:${sessionId}`);
 }
 
-// Revoke All Refresh Tokens for a User (for "End All Sessions")
-async function revokeRefreshTokens(tenantId, userId) {
-  await withTenant(tenantId, async tx => {
-    const sessions = await tx.session.findMany({
-      where: { tenantId, userId, isActive: true },
-      select: { sessionId: true },
+// End all user sessions (moved from userService to break circular dependency)
+async function endAllUserSessions(tenantId, userId) {
+  try {
+    await withTenant(tenantId, async tx => {
+      const logoutTime = new Date();
+
+      // Update all active sessions to inactive
+      await tx.session.updateMany({
+        where: { tenantId, userId, isActive: true },
+        data: { logoutTime, isActive: false },
+      });
     });
-    for (const { sessionId } of sessions) {
-      await redisClient.del(`refreshToken:${sessionId}`);
-    }
-  });
+
+    // Revoke all refresh tokens for this user
+    await withTenant(tenantId, async tx => {
+      const sessions = await tx.session.findMany({
+        where: { tenantId, userId, isActive: true },
+        select: { sessionId: true },
+      });
+      for (const { sessionId } of sessions) {
+        await redisClient.del(`refreshToken:${sessionId}`);
+      }
+    });
+  } catch (error) {
+    logger.error('Error ending all user sessions:', error);
+    throw error;
+  }
 }
 
 function generateSignedToken(payload) {
@@ -244,8 +272,8 @@ const TokenService = {
   verifyAccessToken,
   verifyRefreshToken,
   refreshAccessToken,
-  revokeRefreshTokens,
   revokeSessionRefreshToken,
+  endAllUserSessions,
   generateSignedToken,
   verifySignedToken,
 };

@@ -1,0 +1,94 @@
+.edit-images-container {
+  height: fit-content;
+  margin: 33px auto 100px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.currentImages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 400px));
+  grid-gap: 55px;
+  margin-bottom: 55px;
+  padding: 0px 27px;
+  justify-content: center;
+  width: 100%;
+}
+
+.img-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 666px;
+}
+
+.currentImages .closeBtn {
+  background-color: var(--accordion-bg);
+  border-radius: 20px;
+  align-self: end;
+  position: relative;
+  bottom: -19px;
+  right: -20px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  height: 38px;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.currentImages img {
+  width: 100%;
+}
+
+.edit-images-container form {
+  width: 100%;
+  max-width: 666px;
+}
+
+.selectedFile {
+  color: white;
+}
+
+.edit-images-container .fileUpload {
+  max-width: 333px;
+  margin: auto;
+  background-color: var(--form-bg);
+  border: 2px solid var(--accordion-bg);
+}
+
+.edit-images-container .fileUpload:hover {
+  background-color: var(--form-bg);
+  border: 2px solid var(--accordion-bg);
+}
+
+@media (max-width: 450px) {
+  .currentImages {
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    grid-gap: 20px;
+    margin-bottom: 0px;
+    padding: 25px;
+  }
+
+  .currentImages .closeBtn {
+    height: 32px;
+    width: 32px;
+    bottom: -15px;
+    right: -15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .currentImages .closeBtn {
+    height: 28px;
+    width: 28px;
+    bottom: -12px;
+    right: -12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+}

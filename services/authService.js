@@ -329,7 +329,8 @@ async function requestPasswordReset(tenantId, email) {
   await BandsyteEmailService.sendPasswordResetWithBranding(
     user.adminEmail,
     resetUrl,
-    bandName
+    bandName,
+    tenantId
   );
   logger.info(`📧 Password reset email sent to user ${user.id}`);
 }
@@ -381,7 +382,9 @@ async function resetPassword(tenantId, token, newPassword) {
   // Send success notification email
   await BandsyteEmailService.sendPasswordResetSuccessWithBranding(
     user.adminEmail,
-    bandName
+    bandName,
+    new Date().toISOString(),
+    resolvedTenantId
   );
 
   logger.info(`🔑 Password successfully reset for user ${payload.userId}`);

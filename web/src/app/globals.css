@@ -1,0 +1,8 @@
+/* CSS Variables are now set programmatically in the layout */
+/* This file only contains base styles that don't depend on theme variables */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--primary-font, Arial, Helvetica, sans-serif);
+}

@@ -8,7 +8,7 @@ const {
 } = require('../utils/validation');
 const { generatePasswordHash } = require('../utils/hash');
 const { AppError } = require('../middleware/errorHandler');
-const TokenService = require('./tokenService');
+// Removed TokenService import to break circular dependency
 const { withTenant } = require('../db/withTenant');
 const { whitelistFields } = require('../utils/fieldWhitelist');
 
@@ -435,38 +435,6 @@ async function resetPassword(tenantId, token, newPassword) {
   }
 }
 
-/**
-
-/**
- * End all user sessions
- */
-async function endAllUserSessions(tenantId, userId) {
-  try {
-    // End all sessions for this user (Prisma)
-    await withTenant(tenantId, async tx => {
-      const sessions = await tx.session.findMany({
-        where: { tenantId, userId, isActive: true },
-      });
-      const now = new Date();
-      for (const session of sessions) {
-        const logoutTime = session.expiresAt < now ? session.expiresAt : now;
-        await tx.session.update({
-          where: { id: session.id },
-          data: { logoutTime, isActive: false },
-        });
-      }
-    });
-
-    await TokenService.revokeRefreshTokens(tenantId, userId);
-  } catch (error) {
-    logger.error('Error ending all user sessions:', error);
-    throw new AppError(
-      error.message || 'Error ending all user sessions',
-      error.statusCode || 500
-    );
-  }
-}
-
 module.exports = {
   getUserById,
   getUserByEmail,
@@ -478,7 +446,6 @@ module.exports = {
   updatePassword,
   setPasswordResetToken,
   resetPassword,
-  endAllUserSessions,
   checkAccountLocked,
   getLockoutTimeRemaining,
   handleFailedLogin,

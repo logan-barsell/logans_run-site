@@ -1,0 +1,332 @@
+/* CustomForm Component Styles */
+.custom-form-container {
+  height: fit-content;
+  padding: 0px 18px;
+  margin-top: 81px;
+  margin-bottom: 75px;
+}
+
+.custom-form-title {
+  color: var(--main);
+  margin: 22px 0px 33px 0px;
+  text-align: center;
+}
+
+/* Form styling */
+.custom-form-container form {
+  margin: auto;
+  padding: 66px;
+  max-width: 666px;
+  margin-bottom: 30px;
+  background-color: var(--form-bg);
+  border-radius: 0.3rem;
+  border: 4px solid var(--accordion-content-light);
+}
+
+.custom-form-container .final-form .form-group label,
+.final-form .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--main);
+}
+
+/* Keep the existing form-group styles but don't force display: block */
+.custom-form-container .final-form .form-group,
+.final-form .form-group {
+  color: var(--main);
+  margin-bottom: 1rem;
+}
+/* Button styling */
+.custom-form-container button.btn {
+  margin: auto;
+}
+
+/* Form elements */
+.custom-form-container label.form-label {
+  color: var(--main);
+}
+
+.custom-form-container .form-control,
+.custom-form-container .form-control-color {
+  background-color: var(--form-bg);
+  color: white;
+}
+
+.custom-form-container .form-text {
+  color: white;
+  font-family: var(--secondary-font);
+}
+
+.custom-form-container .btn-close {
+  filter: invert(1);
+}
+
+/* Responsive breakpoints */
+@media screen and (max-width: 735px) {
+  .custom-form-container form {
+    padding: 33px 22px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .custom-form-container button {
+    margin: 10px auto;
+  }
+}
+
+@media screen and (max-width: 315px) {
+  .custom-form-container form {
+    padding: 20px 15px;
+  }
+}
+
+/* Form elements responsive */
+@media (max-width: 768px) {
+  .custom-form-container .form-text {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .custom-form-container .form-control:not(textarea) {
+    font-size: 0.9rem !important;
+  }
+
+  .custom-form-container .form-label {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .custom-form-container .form-text {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .custom-form-container .form-control:not(textarea) {
+    font-size: 0.85rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .custom-form-container .form-label {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .custom-form-container .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .custom-form-container .form-text {
+    font-size: 0.7rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .custom-form-container .form-control:not(textarea) {
+    font-size: 0.8rem !important;
+    padding: 0.45rem 0.7rem !important;
+    height: calc(1.5em + 0.8rem + 2px) !important;
+  }
+
+  .custom-form-container .form-label {
+    font-size: 0.8rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .custom-form-container .mb-3 {
+    margin-bottom: 0.8rem !important;
+  }
+}
+
+/* Bio image select and helper text responsive */
+@media only screen and (max-width: 576px) {
+  .bio-image-select {
+    font-size: 0.9rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .bio-image-helper {
+    font-size: 0.75rem !important;
+    line-height: 1.3 !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .bio-image-select {
+    font-size: 0.85rem !important;
+    padding: 0.45rem 0.7rem !important;
+  }
+
+  .bio-image-helper {
+    font-size: 0.7rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .bio-image-select {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.6rem !important;
+  }
+
+  .bio-image-helper {
+    font-size: 0.65rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .custom-form-container.auth-form .form-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .custom-form-container.auth-form .form-control:not(textarea) {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .custom-form-container.auth-form .form-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .custom-form-container.auth-form .form-control:not(textarea) {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.7rem;
+    height: calc(1.5em + 0.9rem + 2px);
+  }
+
+  .custom-form-container.auth-form .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .custom-form-container.auth-form .form-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .custom-form-container.auth-form .form-control:not(textarea) {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+    height: calc(1.5em + 0.8rem + 2px);
+  }
+
+  .custom-form-container.auth-form .mb-3 {
+    margin-bottom: 0.8rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-form-container .form-text {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-form-container .form-text {
+    font-size: 0.7rem;
+    line-height: 1.1;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 360px) {
+  .custom-form-container .form-text {
+    font-size: 0.65rem;
+    line-height: 1.1;
+  }
+
+  .custom-form-container textarea.form-control {
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+}
+
+/* Special cases for specific forms */
+.custom-form-container.bio-form {
+  padding: 0px 20px;
+}
+
+.custom-form-container.bio-form .custom-form-title {
+  margin-top: 22px;
+}
+
+.custom-form-container.bio-form form {
+  padding-bottom: 100px;
+}
+
+.custom-form-container.bio-form label {
+  color: white;
+}
+
+.custom-form-container.bio-form textarea.form-control {
+  height: 215px;
+}
+
+@media screen and (max-width: 750px) {
+  .custom-form-container.bio-form textarea.form-control {
+    height: 357px;
+  }
+}
+
+/* ===== CUSTOM FORM TYPOGRAPHY ===== */
+/* Using new typography system variables */
+
+.custom-form-container.bio-form label {
+  font-size: var(--label-size);
+}
+
+.custom-form-container.bio-form textarea.form-control {
+  font-size: var(--input-size);
+}
+
+/* Auth form specific styles */
+.custom-form-container.auth-form {
+  margin-bottom: 100px;
+}
+
+.custom-form-container.auth-form form {
+  margin-bottom: 50px;
+}
+
+/* Icon spacing */
+.custom-form-container .bi {
+  margin-left: 5px;
+}
+
+.custom-form-container .form-label > svg,
+.custom-form-container .form-label > .icon {
+  margin-left: 0.5em;
+  vertical-align: middle;
+}

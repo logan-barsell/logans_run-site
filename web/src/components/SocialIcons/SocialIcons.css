@@ -1,0 +1,196 @@
+/* Base Social Icons Styles */
+.social-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.social-icon-link {
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icon-link:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.social-icon-link svg {
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s ease-in-out;
+}
+
+.social-icon-label {
+  margin-left: 8px;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+/* Size Variants */
+.social-icons--small .social-icon-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+.social-icons--large .social-icon-link svg {
+  width: 40px;
+  height: 40px;
+}
+
+/* Variant: Default */
+.social-icons--default {
+  justify-content: center;
+}
+
+/* Variant: Member (Bio pages) */
+.social-icons--member {
+  justify-content: center;
+  margin-bottom: 0 !important;
+}
+
+/* Variant: Contact */
+.social-icons--contact {
+  justify-content: center;
+  gap: 0px;
+}
+
+/* Variant: Footer */
+.social-icons--footer {
+  gap: 20px;
+  padding: 25px 30px;
+  justify-content: center;
+}
+
+/* Variant: Music */
+.social-icons--music {
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 12px;
+}
+
+.social-icons--music .social-icon-link svg {
+  width: 40px;
+  height: 40px;
+}
+
+/* Responsive Design */
+
+/* Tablet and smaller */
+@media only screen and (max-width: 768px) {
+  .social-icons--footer {
+    padding: 20px 25px;
+  }
+
+  .social-icons--music .social-icon-link svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Mobile */
+@media only screen and (max-width: 576px) {
+  .social-icons {
+    gap: 15px;
+  }
+
+  .social-icons--member {
+    gap: 15px;
+  }
+
+  .social-icons--contact {
+    gap: 0px;
+  }
+
+  .social-icons--footer {
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  .social-icons--music .social-icon-link svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Small mobile */
+@media only screen and (max-width: 400px) {
+  .social-icons {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .social-icons--member {
+    gap: 12px;
+  }
+
+  .social-icons--contact {
+    gap: 5px;
+  }
+
+  .social-icons--footer {
+    gap: 12px;
+    padding: 12px 15px;
+  }
+
+  .social-icons--music .social-icon-link svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .social-icons--contact .social-icon-link {
+    margin: 0px 3px !important;
+  }
+}
+
+/* Extra small screens */
+@media only screen and (max-width: 330px) {
+  .social-icon-link {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .social-icon-link svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .social-icons--small .social-icon-link svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .social-icons--large .social-icon-link svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .social-icons--footer {
+    padding: 10px 10px;
+    gap: 10px;
+  }
+
+  .social-icons--footer .social-icon-link {
+    min-width: 20px;
+    min-height: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Very small screens */
+@media only screen and (max-width: 320px) {
+  .social-icons--footer {
+    padding-top: 10px;
+    gap: 10px;
+    padding: 10px 10px;
+  }
+}

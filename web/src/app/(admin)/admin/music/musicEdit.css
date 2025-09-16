@@ -1,0 +1,82 @@
+#music-edit {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 150px;
+}
+
+#currentPlayers {
+  max-width: 888px;
+  padding: 13px;
+  gap: 45px;
+}
+
+#currentPlayers .list-group {
+  gap: 25px;
+}
+
+#currentPlayers .list-group-item {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: 3px solid rgba(0, 0, 0, 0.2);
+  margin-bottom: 1px;
+  border-radius: 0.3rem;
+}
+
+#currentPlayers a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.released {
+  color: var(--main);
+  margin-bottom: 0;
+}
+
+.released span {
+  color: white;
+  font-family: var(--secondary-font);
+  letter-spacing: normal;
+  margin-left: 9px;
+}
+
+#currentPlayers .theme {
+  height: 15px;
+  width: 15px;
+  display: inline-block;
+  border-radius: 2px;
+  margin-left: 2px;
+}
+
+#currentPlayers .buttons {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.music-platform-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.music-platform-links a {
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-platform-links a:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.music-platform-links svg {
+  width: 24px;
+  height: 24px;
+}

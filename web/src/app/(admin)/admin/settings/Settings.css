@@ -1,0 +1,272 @@
+/* Settings Page Styles */
+.settings-container {
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+/* Sidebar Animations */
+.sidebar-nav {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: visible !important;
+  z-index: 1000;
+  position: relative;
+}
+
+.sidebar-nav.collapsed {
+  transform: translateX(-100%);
+}
+
+/* Ensure parent containers don't clip */
+.d-flex {
+  overflow: visible !important;
+}
+
+/* Target all possible parent containers */
+.settings-container,
+.main-content,
+.container-fluid,
+aside,
+nav,
+.d-flex,
+.flex-column {
+  overflow: visible !important;
+}
+
+/* Target the opacity transition divs that wrap nav items */
+.sidebar-nav > div {
+  overflow: visible !important;
+  position: relative;
+  z-index: 1005;
+}
+
+/* Nav Item Hover Effects - Only for sidebar nav items */
+.sidebar-nav .nav-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: visible !important;
+  z-index: 1010;
+}
+
+.sidebar-nav .nav-item:hover {
+  transform: translateX(8px);
+  z-index: 1020;
+}
+
+.sidebar-nav .nav-item.active {
+  color: var(--main) !important;
+  z-index: 1015;
+}
+
+/* Collapsed State Icons */
+.collapsed-icon {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+}
+
+.collapsed-icon:hover {
+  color: var(--main) !important;
+  transform: translateX(4px) scale(1.05);
+}
+
+.collapsed-icon.active {
+  color: var(--main) !important;
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Main Content Area */
+.main-content {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Responsive Padding */
+@media (max-width: 1200px) {
+  .main-content {
+    padding: 0.75rem !important;
+  }
+
+  .custom-form-container {
+    padding: 0.75rem !important;
+    margin-top: 2rem !important;
+  }
+
+  /* Login form padding */
+  .login-form,
+  .auth-form,
+  form[action*='login'],
+  form[action*='signin'] {
+    padding: 2rem !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .main-content {
+    padding: 0.5rem !important;
+  }
+
+  .custom-form-container {
+    padding: 0.5rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  /* Login form padding */
+  .login-form,
+  .auth-form,
+  form[action*='login'],
+  form[action*='signin'] {
+    padding: 1.5rem !important;
+  }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 825px) {
+  .sidebar-nav {
+    min-width: 40px !important;
+    max-width: 40px !important;
+    width: 40px !important;
+  }
+
+  .sidebar-nav.expanded {
+    min-width: 300px !important;
+    max-width: 300px !important;
+    width: 300px !important;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Hide toggle button on mobile */
+  .sidebar-toggle {
+    display: none !important;
+  }
+
+  /* Force collapsed state on mobile */
+  .sidebar-nav {
+    min-width: 40px !important;
+    max-width: 40px !important;
+    width: 40px !important;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar-nav {
+    position: fixed;
+    z-index: 1000;
+    height: auto;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+  }
+}
+
+/* Smooth Icon Transitions */
+.icon {
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover .icon {
+  transform: scale(1.1);
+}
+
+/* Active State Enhancements */
+.nav-item.active .icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Form input focus styling */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--secondary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(var(--secondary-rgb), 0.25) !important;
+}
+
+/* Color input focus styling */
+.form-control-color:focus {
+  border-color: var(--secondary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(var(--secondary-rgb), 0.25) !important;
+}
+
+/* Checkbox focus styling */
+.form-check-input:focus {
+  border-color: var(--secondary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(var(--secondary-rgb), 0.25) !important;
+}
+
+/* Color swatch styles */
+.color-swatch {
+  transition: all 0.2s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.color-swatch.selected {
+  box-shadow: 0 0 0 2px var(--secondary), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile responsive color swatches */
+@media only screen and (max-width: 576px) {
+  .color-swatch {
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .color-swatch {
+    min-width: 32px !important;
+    min-height: 32px !important;
+    margin: 2px;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .color-swatch {
+    min-width: 28px !important;
+    min-height: 28px !important;
+    margin: 1px;
+  }
+}
+
+/* Focus color for inputs */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus,
+.form-control-color:focus {
+  border-color: var(--secondary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(var(--secondary-rgb), 0.25) !important;
+}
+
+/* Ensure secondary color variable is available */
+/* Removed hardcoded --secondary-rgb; now derived dynamically via ThemeContext in App.css root */
+
+/* Update secondary color when theme changes */
+/* Removed redundant [data-theme] override; relies on CSS custom properties set in JS */

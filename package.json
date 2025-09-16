@@ -6,11 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix client",
+    "client": "npm run dev --prefix web",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm run build --prefix client",
-    "install-client": "npm install --prefix client",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "build": "npm run build --prefix web",
+    "install-client": "npm install --prefix web",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix web && npm run build --prefix web",
     "generate-secret": "node scripts/generateJWTSecret.js",
     "migrate:deploy": "node scripts/run-prisma-owner.js migrate deploy --schema db/prisma/schema.prisma",
     "migrate:status": "node scripts/run-prisma-owner.js migrate status --schema db/prisma/schema.prisma"

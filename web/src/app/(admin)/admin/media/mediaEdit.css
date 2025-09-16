@@ -1,0 +1,8 @@
+#mediaEdit .videos-tab {
+  margin-top: 27px;
+  color: white;
+}
+
+.videos-tab .nav-link.select {
+  color: var(--main);
+}

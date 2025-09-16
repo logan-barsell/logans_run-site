@@ -2,7 +2,7 @@ import React from 'react';
 import { useAlert } from '../../../contexts/AlertContext';
 import { changePassword } from '../../../services/userService';
 import PasswordField from '../../../components/Forms/FieldTypes/PasswordField';
-import Button from '../../../components/Button/Button';
+// import Button from '../../../components/Button/Button';
 import EditableForm from '../../../components/Forms/EditableForm';
 import { calculatePasswordStrength } from '../../../utils/validation/passwordValidation';
 
@@ -53,9 +53,9 @@ const UpdatePassword = () => {
     >
       {({ values, form, pristine, submitting, errors }) => {
         // Enhanced validation
-        const hasValidationErrors = Object.keys(errors || {}).length > 0;
-        const isCurrentPasswordFilled =
-          values.currentPassword && values.currentPassword.trim() !== '';
+        // const hasValidationErrors = Object.keys(errors || {}).length > 0;
+        // const isCurrentPasswordFilled =
+        //   values.currentPassword && values.currentPassword.trim() !== '';
         const isNewPasswordFilled =
           values.newPassword && values.newPassword.trim() !== '';
         const isConfirmPasswordFilled =
@@ -68,12 +68,12 @@ const UpdatePassword = () => {
           passwordStrength &&
           passwordStrength !== 'very-weak' &&
           passwordStrength !== 'weak';
-        const isFormValid =
-          isCurrentPasswordFilled &&
-          isNewPasswordFilled &&
-          isConfirmPasswordFilled &&
-          passwordsMatch &&
-          isPasswordStrongEnough;
+        // const isFormValid =
+        //   isCurrentPasswordFilled &&
+        //   isNewPasswordFilled &&
+        //   isConfirmPasswordFilled &&
+        //   passwordsMatch &&
+        //   isPasswordStrongEnough;
 
         return (
           <>
