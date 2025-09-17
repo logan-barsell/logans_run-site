@@ -3,6 +3,7 @@ import './globals.css'; // 2. Theme variables
 import './App.css'; // 3. Custom overrides
 import Providers from './providers';
 import PaceLoader from '../components/PaceLoader';
+import AlertContainer from '../components/Alert/AlertContainer';
 import Script from 'next/script';
 import { getTenantFromRequest } from '../lib/tenancy/getTenantFromRequest';
 import { getServerTheme } from '../lib/theme/getServerTheme';
@@ -36,17 +37,12 @@ export default async function RootLayout({ children }) {
         <PaceLoader />
       </head>
       <body>
-        {/* Inject theme data securely via data attributes */}
-        <div
-          id='theme-data'
-          data-theme={JSON.stringify(theme)}
-          style={{ display: 'none' }}
-        />
         <Providers
           theme={theme}
           tenant={tenant}
         >
           {children}
+          <AlertContainer />
         </Providers>
         {/* Load theme-loader.js first to configure pace */}
         <Script

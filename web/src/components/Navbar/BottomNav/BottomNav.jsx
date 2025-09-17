@@ -78,7 +78,7 @@ const BottomNav = ({ routes }) => {
         {/* Footer Links */}
         <div className='container-fluid text-center text-md-left'>
           <div className='row'>
-            <div className='col-md-7'>
+            <div className='col-md-7 p-3'>
               <h5 className='text-uppercase'>{theme?.greeting || 'HELLO.'}</h5>
               <p className='secondary-font'>
                 {theme?.introduction || 'Welcome to our site'}.

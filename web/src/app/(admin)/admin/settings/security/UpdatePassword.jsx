@@ -5,7 +5,7 @@ import { useAlert } from '../../../../../contexts/AlertContext';
 import { changePassword } from '../../../../../services/userService';
 import PasswordField from '../../../../../components/Forms/FieldTypes/PasswordField';
 import EditableForm from '../../../../../components/Forms/EditableForm';
-import { calculatePasswordStrength } from '../../../../../lib/validation/passwordValidation';
+import { validatePassword } from '../../../../../lib/validation/passwordValidation';
 
 const UpdatePassword = () => {
   const { showSuccess, showError } = useAlert();
@@ -16,9 +16,9 @@ const UpdatePassword = () => {
       return;
     }
 
-    const passwordValidation = calculatePasswordStrength(formData.newPassword);
-    if (passwordValidation === 'very-weak' || passwordValidation === 'weak') {
-      showError('Password is too weak. Please use a stronger password.');
+    const passwordValidation = validatePassword(formData.newPassword);
+    if (!passwordValidation.isValid) {
+      showError(passwordValidation.errors[0]);
       return;
     }
 
@@ -59,13 +59,11 @@ const UpdatePassword = () => {
         const isConfirmPasswordFilled =
           values.confirmPassword && values.confirmPassword.trim() !== '';
         const passwordsMatch = values.newPassword === values.confirmPassword;
-        const passwordStrength = isNewPasswordFilled
-          ? calculatePasswordStrength(values.newPassword)
+        const passwordValidation = isNewPasswordFilled
+          ? validatePassword(values.newPassword)
           : null;
-        const isPasswordStrongEnough =
-          passwordStrength &&
-          passwordStrength !== 'very-weak' &&
-          passwordStrength !== 'weak';
+        const isPasswordValid =
+          passwordValidation && passwordValidation.isValid;
 
         return (
           <>
@@ -89,10 +87,8 @@ const UpdatePassword = () => {
                 showRequirements={true}
                 validate={value => {
                   if (!value) return 'Required';
-                  const s = calculatePasswordStrength(value);
-                  return s === 'very-weak' || s === 'weak'
-                    ? 'Password too weak'
-                    : undefined;
+                  const validation = validatePassword(value);
+                  return !validation.isValid ? validation.errors[0] : undefined;
                 }}
               />
             </div>
@@ -112,8 +108,8 @@ const UpdatePassword = () => {
                 helperText={
                   isConfirmPasswordFilled && !passwordsMatch
                     ? 'Passwords do not match'
-                    : isConfirmPasswordFilled && !isPasswordStrongEnough
-                    ? 'New password is too weak - please choose a stronger password'
+                    : isConfirmPasswordFilled && !isPasswordValid
+                    ? 'New password does not meet requirements'
                     : ''
                 }
               />

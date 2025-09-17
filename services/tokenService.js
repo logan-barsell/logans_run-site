@@ -11,11 +11,70 @@ const { getClientIp } = require('../utils/request-utils');
 const BandsyteEmailService = require('./bandsyteEmailService');
 const ThemeService = require('./themeService');
 const { withTenant } = require('../db/withTenant');
+const {
+  sendSecurityAlertWithDeduplication,
+} = require('../utils/securityAlertDeduplicator');
 
 const ACCESS_TOKEN_SECRET =
   process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET;
 const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET;
+
+/**
+ * Send security alert with deduplication
+ * @param {string} tenantId - Tenant ID
+ * @param {string} userId - User ID
+ * @param {string} alertType - Type of security alert
+ * @param {string} ip - IP address
+ * @param {string} userAgent - User agent
+ * @returns {Promise<boolean>} True if alert was sent, false if skipped
+ */
+async function sendSecurityAlertWithDeduplicationHelper(
+  tenantId,
+  userId,
+  alertType,
+  ip,
+  userAgent
+) {
+  try {
+    const user = await UserService.findUserById(tenantId, userId);
+    if (!user || !user.adminEmail) {
+      logger.warn(
+        `No admin email found for user ${userId}, skipping security alert`
+      );
+      return false;
+    }
+
+    const theme = await ThemeService.getTheme(tenantId);
+    const bandName = theme.siteTitle || 'Bandsyte';
+
+    // Use the deduplication utility to send the alert
+    const alertSent = await sendSecurityAlertWithDeduplication(
+      BandsyteEmailService.sendSecurityAlertWithBranding,
+      userId,
+      alertType,
+      ip,
+      user.adminEmail,
+      bandName,
+      alertType,
+      new Date().toISOString(),
+      ip,
+      userAgent || 'Unknown',
+      'Unknown Location',
+      tenantId
+    );
+
+    if (alertSent) {
+      logger.info(`📧 Security alert sent to user ${userId} for ${alertType}`);
+    }
+
+    return alertSent;
+  } catch (error) {
+    logger.error(`Failed to send security alert for ${alertType}:`, error);
+    // Don't fail the security check if email fails
+    return false;
+  }
+}
 
 // Generate Access Token (1 hour expiry)
 function generateAccessToken(token) {
@@ -94,32 +153,14 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
       `🚨 Refresh token reuse detected for user ${decoded.uuid} from IP: ${ip}`
     );
 
-    // Send security alert email to user about suspicious activity
-    try {
-      const user = await UserService.findUserById(tenantId, userId);
-      if (user && user.adminEmail) {
-        const theme = await ThemeService.getTheme(tenantId);
-        const bandName = theme.siteTitle || 'Bandsyte';
-
-        await BandsyteEmailService.sendSecurityAlertWithBranding(
-          user.adminEmail,
-          bandName,
-          'token_reuse',
-          new Date().toISOString(),
-          ip,
-          userAgent || 'Unknown',
-          'Unknown Location',
-          tenantId
-        );
-        logger.info(`📧 Security alert sent to user ${userId} for token reuse`);
-      }
-    } catch (emailError) {
-      logger.error(
-        'Failed to send security alert for token reuse:',
-        emailError
-      );
-      // Don't fail the security check if email fails
-    }
+    // Send security alert email to user about suspicious activity with deduplication
+    await sendSecurityAlertWithDeduplicationHelper(
+      tenantId,
+      userId,
+      'token_reuse',
+      ip,
+      userAgent
+    );
 
     await endAllUserSessions(tenantId, userId); // Revoke all tokens and end sessions
     throw new AppError('Suspicious activity detected - Token reuse', 403);
@@ -130,34 +171,14 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
       `⚠️ Possible token theft for user ${decoded.uuid} - Different IP/device detected`
     );
 
-    // Send security alert email to user about device change
-    try {
-      const user = await UserService.findUserById(tenantId, decoded.id);
-      if (user && user.adminEmail) {
-        const theme = await ThemeService.getTheme(tenantId);
-        const bandName = theme.siteTitle || 'Bandsyte';
-
-        await BandsyteEmailService.sendSecurityAlertWithBranding(
-          user.adminEmail,
-          bandName,
-          'device_change',
-          new Date().toISOString(),
-          ip,
-          userAgent || 'Unknown',
-          'Unknown Location',
-          tenantId
-        );
-        logger.info(
-          `📧 Security alert sent to user ${decoded.id} for device change`
-        );
-      }
-    } catch (emailError) {
-      logger.error(
-        'Failed to send security alert for device change:',
-        emailError
-      );
-      // Don't fail the security check if email fails
-    }
+    // Send security alert email to user about device change with deduplication
+    await sendSecurityAlertWithDeduplicationHelper(
+      tenantId,
+      decoded.id,
+      'device_change',
+      ip,
+      userAgent
+    );
 
     await endAllUserSessions(tenantId, decoded.id); // Revoke all tokens and end sessions
     throw new AppError(

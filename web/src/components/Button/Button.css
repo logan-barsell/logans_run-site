@@ -39,10 +39,24 @@ a.btn-danger:disabled {
   background-color: var(--main);
   color: black !important;
 }
+
+.btn-danger.disabled,
+.btn-danger:disabled {
+  border-color: white;
+}
 .btn-check:focus + .btn-danger,
 .btn-danger:focus {
   background-color: var(--main);
   color: black;
+}
+
+.btn-check:active + .btn-danger:focus,
+.btn-check:checked + .btn-danger:focus,
+.btn-danger.active:focus,
+.btn-danger:active:focus,
+.show > .btn-danger.dropdown-toggle:focus,
+.btn-danger:focus {
+  box-shadow: 0 0 0 0.2rem rgba(var(--main-rgb), 0.25);
 }
 
 /* Sizes */

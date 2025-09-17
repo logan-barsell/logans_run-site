@@ -170,7 +170,14 @@ async function findUserByEmail(tenantId, email) {
   try {
     const normalized = email.toLowerCase();
     const user = await withTenant(tenantId, async tx => {
-      return await tx.user.findUnique({ where: { adminEmail: normalized } });
+      // Explicitly include tenantId in the query for additional security
+      // RLS will also enforce this, but this makes it explicit
+      return await tx.user.findUnique({
+        where: {
+          adminEmail: normalized,
+          tenantId: tenantId, // Explicit tenant validation
+        },
+      });
     });
     return user || null;
   } catch (error) {

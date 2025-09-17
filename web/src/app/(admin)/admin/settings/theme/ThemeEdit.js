@@ -17,7 +17,7 @@ const ThemeEdit = () => {
   const theme = useSelector(state => state.theme?.data || {});
   const user = useSelector(state => state.auth?.user);
   const [uploading, setUploading] = useState(false);
-  const [logoType, setLogoType] = useState('icon'); // 'icon' | 'header'
+  const [logoType, setLogoType] = useState('header'); // 'icon' | 'header'
   const { showError, showSuccess } = useAlert();
   const { updateTheme: updateThemeContext } = useTheme();
   const imageUploadRef = useRef();
@@ -101,16 +101,30 @@ const ThemeEdit = () => {
     }
   };
 
-  // Use fields from constants, but hide header-logo-only when no header logo exists yet
+  // Use fields from constants, but hide logo options when no logos exist yet
   const headerHasLogo = Boolean(theme?.bandHeaderLogoUrl);
+  const bandHasLogo = Boolean(theme?.bandLogoUrl);
+
   // First adjust header display options
   const baseFields = THEME_FIELDS.map(field => {
     if (field.name === 'headerDisplay') {
       return {
         ...field,
-        options: (field.options || []).filter(
-          opt => opt.value !== 'header-logo-only' || headerHasLogo
-        ),
+        options: (field.options || []).filter(opt => {
+          // Hide header-logo-only if no header logo
+          if (opt.value === 'header-logo-only' && !headerHasLogo) {
+            return false;
+          }
+          // Hide logo-only if no band logo
+          if (opt.value === 'logo-only' && !bandHasLogo) {
+            return false;
+          }
+          // Hide band-name-and-logo if no band logo
+          if (opt.value === 'band-name-and-logo' && !bandHasLogo) {
+            return false;
+          }
+          return true;
+        }),
       };
     }
     return field;
@@ -145,11 +159,19 @@ const ThemeEdit = () => {
     __logoType: 'icon',
   };
 
-  // If header logo isn't available but the saved value is header-logo-only, fall back to band-name-and-logo
+  // If logos aren't available but the saved value requires them, fall back to band-name-only
   if (!headerHasLogo && initialValues.headerDisplay === 'header-logo-only') {
-    initialValues.headerDisplay = 'band-name-and-logo';
+    initialValues.headerDisplay = 'band-name-only';
+  }
+  if (
+    !bandHasLogo &&
+    (initialValues.headerDisplay === 'logo-only' ||
+      initialValues.headerDisplay === 'band-name-and-logo')
+  ) {
+    initialValues.headerDisplay = 'band-name-only';
   }
 
+  const maxHeight = logoType === 'header' ? 100 : 150;
   return (
     <div className='mb-5 pb-5'>
       <EditableForm
@@ -171,8 +193,8 @@ const ThemeEdit = () => {
                 label='Manage Logos'
                 name='__logoType'
                 options={[
-                  { value: 'icon', label: 'Icon Logo' },
                   { value: 'header', label: 'Header Logo' },
+                  { value: 'icon', label: 'Icon Logo' },
                 ]}
                 initialValue={logoType}
                 onChange={e => setLogoType(e.target.value)}
@@ -195,7 +217,7 @@ const ThemeEdit = () => {
                       : initialValues.bandLogo
                   }
                   alt={logoType === 'header' ? 'Header Logo' : 'Icon Logo'}
-                  maxHeight='150px'
+                  maxHeight={maxHeight}
                 />
               </div>
             </>

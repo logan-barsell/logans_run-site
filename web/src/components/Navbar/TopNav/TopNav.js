@@ -81,7 +81,6 @@ const TopNav = ({ routes }) => {
           <Image
             src={theme.bandLogoUrl}
             alt={theme?.siteTitle || 'Band Logo'}
-            style={{ maxHeight: '50px' }}
             width={150}
             height={50}
           />

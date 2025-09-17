@@ -23,14 +23,10 @@ export function generateStyleString(theme) {
   );
 
   return `:root {
-  --main: ${theme?.primaryColor || '#e3ff05'};
-  --main-rgb: ${
-    theme?.primaryColor ? hexToRgb(theme.primaryColor) : '227, 255, 5'
-  };
-  --secondary: ${theme?.secondaryColor || '#f08080'};
-  --secondary-rgb: ${
-    theme?.secondaryColor ? hexToRgb(theme.secondaryColor) : '240, 128, 128'
-  };
+  --main: ${theme?.primaryColor};
+  --main-rgb: ${hexToRgb(theme.primaryColor)};
+  --secondary: ${theme?.secondaryColor};
+  --secondary-rgb: ${hexToRgb(theme.secondaryColor)};
   --background: ${palette.background};
   --navbar-bg: ${palette.navbar};
   --secondary-nav-bg: ${palette.secondaryNav};

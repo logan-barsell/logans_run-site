@@ -16,6 +16,7 @@ const Signin = () => {
   const { showError, showSuccess } = useAlert();
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const onSubmit = async values => {
     setIsSuccess(false);
@@ -28,12 +29,6 @@ const Signin = () => {
       if (result.success) {
         // Check if 2FA is required
         if (result.requiresTwoFactor) {
-          const navigationState = {
-            userId: result.data.userId,
-            user: result.data.user,
-            bandName: result.data.user.bandName || 'Bandsyte',
-          };
-
           // Show success message that code was sent
           showSuccess(result.message || 'Verification code sent to your email');
 
@@ -47,20 +42,23 @@ const Signin = () => {
         showSuccess('Login successful! Redirecting...');
 
         // Redirect to intended page
-        setTimeout(() => {
-          router.push(redirectTo);
-        }, 1000);
+
+        router.push(redirectTo);
       } else {
         showError(result.message || 'Login failed. Please try again.');
+        setError(result.message || 'Login failed. Please try again.');
       }
     } catch (err) {
       // Handle different types of errors
       if (err.response?.data?.message) {
+        setError(err.response.data.message);
         showError(err.response.data.message);
       } else if (err.message) {
         showError(err.message);
+        setError(err.message);
       } else {
         showError('Login failed. Please try again.');
+        setError('Login failed. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -84,6 +82,9 @@ const Signin = () => {
               if (isSuccess) setIsSuccess(false);
             }}
           >
+            {error && (
+              <ErrorMessage className='mb-4 px-3'>{error}</ErrorMessage>
+            )}
             <div className='mb-3'>
               <Field name='email'>
                 {({ input }) => (

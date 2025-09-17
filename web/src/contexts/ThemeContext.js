@@ -4,6 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchTheme } from '../redux/actions';
 import { generateStyleObject } from '../lib/theme/generateStyleObject';
 import { defaultTheme } from '../lib/theme/defaultTheme';
+import {
+  getCachedTheme,
+  setCachedTheme,
+  getCachedDefaultTheme,
+  setCachedDefaultTheme,
+} from '../lib/theme/themeCache';
 
 const ThemeContext = createContext({ theme: null });
 
@@ -15,23 +21,58 @@ export const useTheme = () => {
   return context;
 };
 
-export const ThemeProvider = ({ theme: serverTheme, children }) => {
+export const ThemeProvider = ({ theme: serverTheme, tenant, children }) => {
   const dispatch = useDispatch();
   const reduxTheme = useSelector(state => state.theme?.data || {});
   const [clientTheme, setClientTheme] = useState(serverTheme || defaultTheme);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
 
   // Mark as hydrated after first render
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
+  // Check for cached theme on hydration
+  useEffect(() => {
+    if (isHydrated && tenant?.id) {
+      const cachedTheme = getCachedTheme(tenant.id);
+      if (cachedTheme && !reduxTheme?.id) {
+        // Use cached theme if no Redux theme is loaded yet
+        setClientTheme(cachedTheme);
+        console.log('🎨 Using cached theme for tenant:', tenant.id);
+      }
+    }
+  }, [isHydrated, tenant?.id, reduxTheme?.id]);
+
   // Update client theme when Redux theme changes
   useEffect(() => {
     if (reduxTheme && Object.keys(reduxTheme).length > 0) {
       setClientTheme(reduxTheme);
+
+      // Cache the theme for offline use
+      if (tenant?.id) {
+        setCachedTheme(tenant.id, reduxTheme);
+      }
+
+      // Also cache as default theme if it's marked as default
+      if (reduxTheme.isDefault) {
+        setCachedDefaultTheme(reduxTheme);
+      }
     }
-  }, [reduxTheme]);
+  }, [reduxTheme, tenant?.id]);
+
+  // Cache server theme on initial load
+  useEffect(() => {
+    if (serverTheme && tenant?.id) {
+      setCachedTheme(tenant.id, serverTheme);
+
+      // Also cache as default theme if it's marked as default
+      if (serverTheme.isDefault) {
+        setCachedDefaultTheme(serverTheme);
+      }
+    }
+  }, [serverTheme, tenant?.id]);
 
   // Function to update theme immediately (for instant updates)
   const updateTheme = newThemeData => {

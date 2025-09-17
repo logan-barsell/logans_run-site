@@ -135,6 +135,7 @@ model Theme {
   notifyOnNewShows     Boolean  @default(false)
   notifyOnNewMusic     Boolean  @default(false)
   notifyOnNewVideos    Boolean  @default(false)
+  isDefault            Boolean  @default(false)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }

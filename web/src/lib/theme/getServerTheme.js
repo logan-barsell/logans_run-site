@@ -19,6 +19,7 @@ export async function getServerTheme(tenantId) {
     return theme;
   } catch (e) {
     console.error('Error loading theme:', e);
+    // Server-side fallback to default theme
     return defaultTheme;
   }
 }

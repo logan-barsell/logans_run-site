@@ -17,6 +17,7 @@
   height: 88px;
   width: auto;
   max-width: 560px;
+  max-height: 50px;
 }
 
 .navbar-brand.yesdevil.header-band-name-and-logo {
@@ -28,6 +29,7 @@
   width: auto;
   max-width: 200px;
   margin-right: 15px;
+  max-height: 50px;
 }
 
 /* ===== RESPONSIVE LAYOUT ADJUSTMENTS ===== */

@@ -9,7 +9,7 @@ import Button from '../../../components/Button/Button';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BackArrow } from '../../../components/icons';
-import { validatePasswordStrength } from '../../../lib/validation';
+import { validatePassword } from '../../../lib/validation/passwordValidation';
 import PasswordField from '../../../components/Forms/FieldTypes/PasswordField';
 
 const ResetPassword = () => {
@@ -37,9 +37,9 @@ const ResetPassword = () => {
     if (!values.password) {
       errors.password = 'Password is required';
     } else {
-      const strengthValidation = validatePasswordStrength(values.password);
-      if (strengthValidation.score < 3) {
-        errors.password = 'Password too weak';
+      const passwordValidation = validatePassword(values.password);
+      if (!passwordValidation.isValid) {
+        errors.password = passwordValidation.errors[0]; // Show first error
       }
     }
 
@@ -148,8 +148,8 @@ const ResetPassword = () => {
                 showStrengthIndicator={true}
                 validate={value => {
                   if (!value) return 'Required';
-                  const strength = validatePasswordStrength(value);
-                  return strength.score < 3 ? 'Password too weak' : undefined;
+                  const validation = validatePassword(value);
+                  return !validation.isValid ? validation.errors[0] : undefined;
                 }}
               />
             </div>

@@ -44,8 +44,17 @@ const THEME_FIELDS = [
 async function getTheme(tenantId) {
   try {
     return await withTenant(tenantId, async tx => {
-      const theme = await tx.theme.findUnique({ where: { tenantId } });
-      return theme; // may be null
+      // First try to get tenant-specific theme
+      let theme = await tx.theme.findUnique({ where: { tenantId } });
+
+      // If no theme found, get default theme (RLS allows this)
+      if (!theme) {
+        theme = await tx.theme.findFirst({
+          where: { isDefault: true },
+        });
+      }
+
+      return theme; // may be null if no default theme exists
     });
   } catch (error) {
     logger.error('❌ Error fetching theme:', error);

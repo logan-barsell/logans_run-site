@@ -1,7 +1,6 @@
 import { generateMetadata } from '../../lib/metadata/generateMetadata';
 import { TopNav } from '../../components/Navbar/TopNav/TopNav';
 import BottomNav from '../../components/Navbar/BottomNav/BottomNav';
-import AlertContainer from '../../components/Alert/AlertContainer';
 import ActiveContextProvider from '../../contexts/ActiveContextProvider';
 import PublicNavigationProvider from '../../contexts/PublicNavigationProvider';
 import PublicContentRenderer from '../../components/Navigation/PublicContentRenderer';
@@ -28,7 +27,6 @@ export default function SiteLayout({ children }) {
             <PublicContentRenderer>{children}</PublicContentRenderer>
           </main>
           <BottomNav routes={routes} />
-          <AlertContainer />
         </div>
       </PublicNavigationProvider>
     </ActiveContextProvider>

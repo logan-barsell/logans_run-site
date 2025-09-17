@@ -41,12 +41,11 @@ export const validatePassword = password => {
     );
   }
 
-  // Check for common weak patterns
+  // Check for common weak patterns (only if password is mostly the weak pattern)
   const weakPatterns = [
     'password',
     '123456',
     'qwerty',
-    'admin',
     'letmein',
     'welcome',
     'monkey',
@@ -56,7 +55,16 @@ export const validatePassword = password => {
   ];
 
   const lowerPassword = password.toLowerCase();
-  if (weakPatterns.some(pattern => lowerPassword.includes(pattern))) {
+  // Only flag if the password is mostly a weak pattern (more than 70% of the password)
+  if (
+    weakPatterns.some(pattern => {
+      const patternLength = pattern.length;
+      const passwordLength = password.length;
+      return (
+        lowerPassword.includes(pattern) && patternLength / passwordLength > 0.7
+      );
+    })
+  ) {
     errors.push('Password contains common weak patterns');
   }
 

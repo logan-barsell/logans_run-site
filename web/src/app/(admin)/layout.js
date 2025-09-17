@@ -6,7 +6,6 @@ import { ThemeProvider } from '../../contexts/ThemeContext';
 import ActiveContextProvider from '../../contexts/ActiveContextProvider';
 import NavBarEdit from '../../components/Navbar/TopNav/NavBarEdit';
 import ConditionalBottomNav from '../../components/Navbar/BottomNav/ConditionalBottomNav';
-import AlertContainer from '../../components/Alert/AlertContainer';
 import AdminNavigationProvider from '../../contexts/AdminNavigationProvider';
 import AdminContentRenderer from '../../components/Navigation/AdminContentRenderer';
 
@@ -37,7 +36,6 @@ export default async function AdminLayout({ children }) {
                 <AdminContentRenderer>{children}</AdminContentRenderer>
               </main>
               <ConditionalBottomNav />
-              <AlertContainer />
             </div>
           </AdminNavigationProvider>
         </ActiveContextProvider>

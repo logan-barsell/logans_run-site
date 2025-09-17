@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBio } from '../../../../redux/actions';
 import { updateBio } from '../../../../services/bioService';
@@ -16,8 +16,11 @@ export default function BioEditPage() {
   const dispatch = useDispatch();
   const bio = useSelector(state => state.currentBio?.data || []);
   const theme = useSelector(state => state.theme?.data || null);
+  const { user } = useSelector(state => state.auth);
   const { showError, showSuccess } = useAlert();
   const [uploading, setUploading] = useState(false);
+  const tenantId = user?.tenantId;
+  const imageUploadRef = useRef();
 
   useEffect(() => {
     dispatch(fetchBio());
@@ -49,7 +52,8 @@ export default function BioEditPage() {
           try {
             customImageUrl = await uploadImageAndReplace(
               file,
-              bioRow?.customImageUrl
+              bioRow?.customImageUrl,
+              { tenantId }
             );
           } catch (err) {
             setUploading(false);
@@ -106,6 +110,8 @@ export default function BioEditPage() {
     customImage: bioRow.customImageUrl || '',
   };
 
+  const maxHeight = bioRow.imageType === 'header-logo' ? 80 : 200;
+
   return (
     <div className='mb-5 pb-5'>
       <EditableForm
@@ -117,40 +123,44 @@ export default function BioEditPage() {
         onSubmit={handleSubmit}
         successMessage='Update Successful'
         loading={uploading}
+        imageRef={imageUploadRef}
         onSuccess={handleSuccess}
       >
         {({ values }) => {
           const currentImageType = values.imageType || 'band-logo';
-
           return (
             <>
               {/* Image Display */}
               <div className='mb-4'>
-                {currentImageType === 'band-logo' && theme?.bandLogoUrl && (
-                  <ResponsiveImageDisplay
-                    src={theme.bandLogoUrl}
-                    alt='Icon Logo'
-                    maxHeight='200px'
-                  />
-                )}
+                {bioRow.imageType ? (
+                  <>
+                    {currentImageType === 'band-logo' && theme?.bandLogoUrl && (
+                      <ResponsiveImageDisplay
+                        src={theme.bandLogoUrl}
+                        alt='Icon Logo'
+                        maxHeight={maxHeight}
+                      />
+                    )}
 
-                {currentImageType === 'header-logo' &&
-                  theme?.bandHeaderLogoUrl && (
-                    <ResponsiveImageDisplay
-                      src={theme.bandHeaderLogoUrl}
-                      alt='Header Logo'
-                      maxHeight='200px'
-                    />
-                  )}
+                    {currentImageType === 'header-logo' &&
+                      theme?.bandHeaderLogoUrl && (
+                        <ResponsiveImageDisplay
+                          src={theme.bandHeaderLogoUrl}
+                          alt='Header Logo'
+                          maxHeight={maxHeight}
+                        />
+                      )}
 
-                {currentImageType === 'custom-image' &&
-                  initialValues.customImage && (
-                    <ResponsiveImageDisplay
-                      src={initialValues.customImage}
-                      alt='Custom bio display'
-                      maxHeight='200px'
-                    />
-                  )}
+                    {currentImageType === 'custom-image' &&
+                      initialValues.customImage && (
+                        <ResponsiveImageDisplay
+                          src={initialValues.customImage}
+                          alt='Custom bio display'
+                          maxHeight={maxHeight}
+                        />
+                      )}
+                  </>
+                ) : null}
               </div>
             </>
           );

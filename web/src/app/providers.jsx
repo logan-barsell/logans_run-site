@@ -16,7 +16,10 @@ export default function Providers({ children, theme, tenant }) {
         loading={null}
         persistor={persistor}
       >
-        <ThemeProvider theme={theme}>
+        <ThemeProvider
+          theme={theme}
+          tenant={tenant}
+        >
           <TenantProvider tenant={tenant}>
             <AuthProvider>
               <AlertProvider>
