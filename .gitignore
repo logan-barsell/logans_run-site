@@ -31,8 +31,6 @@ dev.js
 
 /client/public/images
 
-config/serviceAccountKey.json
-server/config/serviceAccountKey.json
 
 # logs
 /logs

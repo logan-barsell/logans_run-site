@@ -1,22 +1,7 @@
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
 const { withTenant } = require('../db/withTenant');
-const admin = require('firebase-admin');
-const path = require('path');
-const serviceAccount = require(path.join(
-  __dirname,
-  '../config/serviceAccountKey.json'
-));
 const { whitelistFields } = require('../utils/fieldWhitelist');
-
-// Initialize Firebase if not already done
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'yes-devil.appspot.com',
-  });
-}
-const bucket = admin.storage().bucket();
 
 // Theme allowed fields
 const THEME_FIELDS = [
@@ -71,34 +56,11 @@ async function updateTheme(tenantId, update) {
 
     const data = whitelistFields(update, THEME_FIELDS);
 
-    // Handle old logo cleanup if bandLogoUrl is being updated
-    if (data.bandLogoUrl && data.oldBandLogoUrl) {
-      try {
-        const oldLogoPath = data.oldBandLogoUrl.split('/').pop();
-        if (oldLogoPath) {
-          const file = bucket.file(`logos/${oldLogoPath}`);
-          await file.delete();
-          logger.info(`✅ Old logo deleted: ${oldLogoPath}`);
-        }
-      } catch (cleanupError) {
-        logger.warn('Failed to delete old logo:', cleanupError);
-        // Don't fail the update if logo cleanup fails
-      }
-      delete data.oldBandLogoUrl; // Remove from update data
+    // Remove old logo URLs from update data (cleanup handled by frontend)
+    if (data.oldBandLogoUrl) {
+      delete data.oldBandLogoUrl;
     }
-
-    // Handle old header logo cleanup if bandHeaderLogoUrl is being updated
-    if (data.bandHeaderLogoUrl && data.oldBandHeaderLogoUrl) {
-      try {
-        const oldHeaderLogoPath = data.oldBandHeaderLogoUrl.split('/').pop();
-        if (oldHeaderLogoPath) {
-          const file = bucket.file(`logos/${oldHeaderLogoPath}`);
-          await file.delete();
-          logger.info(`✅ Old header logo deleted: ${oldHeaderLogoPath}`);
-        }
-      } catch (cleanupError) {
-        logger.warn('Failed to delete old header logo:', cleanupError);
-      }
+    if (data.oldBandHeaderLogoUrl) {
       delete data.oldBandHeaderLogoUrl;
     }
 

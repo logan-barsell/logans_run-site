@@ -2,21 +2,6 @@ const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
 const MerchConfigService = require('./merchConfigService');
 const ThemeService = require('./themeService');
-const admin = require('firebase-admin');
-const path = require('path');
-const serviceAccount = require(path.join(
-  __dirname,
-  '../config/serviceAccountKey.json'
-));
-
-// Initialize Firebase if not already done
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'yes-devil.appspot.com',
-  });
-}
-const bucket = admin.storage().bucket();
 
 // Initialize Stripe with error handling
 let stripe;
