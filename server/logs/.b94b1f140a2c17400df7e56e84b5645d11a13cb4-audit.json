@@ -1,0 +1,80 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/.b94b1f140a2c17400df7e56e84b5645d11a13cb4-audit.json",
+    "files": [
+        {
+            "date": 1757041552964,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-04.log",
+            "hash": "52edbdd31d7f9601ca2bd6a3429dfa97d552b48e57a691489501ae17ff0fc341"
+        },
+        {
+            "date": 1757080225808,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-05.log",
+            "hash": "5a289280957f520d2b02151492225b92d233d821486a097e04f2d6352db9fcb8"
+        },
+        {
+            "date": 1757176726721,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-06.log",
+            "hash": "06203b29c202674d72939eb798b8044f21d748b7f7b6826c5d7c986f34d41ce3"
+        },
+        {
+            "date": 1757261693110,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-07.log",
+            "hash": "69d4373ae60b9b4089ee9a4839a917bca0759baf929dd74ee424fbb02f7702fb"
+        },
+        {
+            "date": 1757345885357,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-08.log",
+            "hash": "93c8b587eb38ca3b3eb26cd8f000cf176e00da2f00c6357847bc7b621f775c01"
+        },
+        {
+            "date": 1757428750982,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-09.log",
+            "hash": "156b45c2d9ef1cbf9da8f49fcdd9801209cf518e78e18faa39df7d509d9b8c30"
+        },
+        {
+            "date": 1757487600009,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-10.log",
+            "hash": "22f44c8330beed0f6a67b9565192ba3e42d94077f5d3dee14585193192f87fb0"
+        },
+        {
+            "date": 1757613168537,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-11.log",
+            "hash": "b44420cfe09332f148bcd9c1d69b386ac9eb908571ea4cdc3274f9745fffb18f"
+        },
+        {
+            "date": 1757695515915,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-12.log",
+            "hash": "ffd267db8d99fe5ab7d7141304fc005b04667cea1962a5af7e12225b95b4a3bb"
+        },
+        {
+            "date": 1757779415578,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-13.log",
+            "hash": "1ad9eb6c94a474bc9f481716583c1ca8c51e235d639f274357b8c24822fb5387"
+        },
+        {
+            "date": 1757874701531,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-14.log",
+            "hash": "732ede00915282d86f84944c8d5c6441be97e3aeeb3b348e9f0d19b3bf18a9aa"
+        },
+        {
+            "date": 1757954248724,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-15.log",
+            "hash": "0f2d2511d348ddc6844dc27a472819b5a983c3e365dd0e7c0c8502fe24f1fccc"
+        },
+        {
+            "date": 1758044951187,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-16.log",
+            "hash": "65d2c12bdcad11c8e025ecc04710d944a2a2bae80d2f7740f2df9c84845609a6"
+        },
+        {
+            "date": 1758132720030,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/logs/app-2025-09-17.log",
+            "hash": "d45a48594c849087529ed1a3496aee844c780457f1fdcd295e366eb1f94c460c"
+        }
+    ],
+    "hashType": "sha256"
+}

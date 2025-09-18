@@ -1,0 +1,104 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: bandsyte-postgres
+    environment:
+      POSTGRES_DB: bandsyte_dev
+      POSTGRES_USER: bandsyte_user
+      POSTGRES_PASSWORD: bandsyte_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/db/prisma/schema.prisma:/docker-entrypoint-initdb.d/schema.prisma:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U bandsyte_user']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: bandsyte-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: bandsyte-api
+    ports:
+      - '5001:5001'
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://bandsyte_user:bandsyte_password@postgres:5432/bandsyte_dev
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+      - ./server/logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://localhost:5001/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Web App
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: bandsyte-web
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:5001
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3000',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+  redis_data:

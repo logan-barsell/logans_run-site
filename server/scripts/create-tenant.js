@@ -12,12 +12,24 @@ async function main() {
     console.log('Add this to your .env as DEV_TENANT_ID=');
   }
   const name = 'Dev Tenant';
-  const slug = 'dev-tenant';
+  const subDomain = 'dev-tenant';
+  const domain = 'dev-tenant.bandsyte.com';
+  const isCustomDomain = false;
 
   const tenant = await prisma.tenant.upsert({
     where: { id },
-    update: {},
-    create: { id, name, slug },
+    update: {
+      subDomain,
+      domain,
+      isCustomDomain,
+    },
+    create: {
+      id,
+      name,
+      subDomain,
+      domain,
+      isCustomDomain,
+    },
   });
 
   console.log('Tenant created or found:', tenant);

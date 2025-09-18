@@ -14,19 +14,23 @@ module.exports = async function tenantResolver(req, res, next) {
       }
     }
 
-    // 2. Custom domain
-    const domain = await prisma.tenantDomain.findUnique({
+    // 2. Direct domain lookup (custom domains or full subdomains)
+    const tenant = await prisma.tenant.findUnique({
       where: { domain: host },
     });
-    if (domain) {
-      tenantId = domain.tenantId;
+    if (tenant) {
+      tenantId = tenant.id;
     }
 
-    // 3. Subdomain: <slug>.bandsyte.com
+    // 3. Subdomain lookup: <subDomain>.bandsyte.com
     if (!tenantId && host.endsWith('.bandsyte.com')) {
       const sub = host.replace('.bandsyte.com', '');
-      const tenant = await prisma.tenant.findUnique({ where: { slug: sub } });
-      if (tenant) tenantId = tenant.id;
+      const subdomainTenant = await prisma.tenant.findUnique({
+        where: { subDomain: sub },
+      });
+      if (subdomainTenant) {
+        tenantId = subdomainTenant.id;
+      }
     }
 
     // 4. Admin override

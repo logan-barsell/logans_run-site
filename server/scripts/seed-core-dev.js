@@ -1,6 +1,6 @@
 // scripts/seed-core-dev.js
 // Usage: node scripts/seed-core-dev.js
-// Seeds core singleton tables for the DEV tenant: TenantDomain, ContactInfo, Bio
+// Seeds core singleton tables for the DEV tenant: Tenant (with domain config), ContactInfo, Bio
 
 require('dotenv').config();
 const { prisma } = require('../db/prisma');
@@ -16,43 +16,34 @@ async function run() {
   const nowIso = '2025-09-08T23:05:35.384Z';
   const fixedDate = new Date(nowIso);
 
-  // 1) Ensure Tenant exists
+  // 1) Ensure Tenant exists with domain configuration
   const existingTenant = await prisma.tenant.findUnique({
     where: { id: tenantId },
   });
+
+  const tenantData = {
+    id: tenantId,
+    name: 'Dev Band',
+    subDomain: 'devband',
+    domain: 'devband.bandsyte.com',
+    isCustomDomain: false,
+  };
+
   if (!existingTenant) {
     await prisma.tenant.create({
+      data: tenantData,
+    });
+    console.log('Tenant created with domain configuration');
+  } else {
+    await prisma.tenant.update({
+      where: { id: tenantId },
       data: {
-        id: tenantId,
-        slug: 'devband',
-        name: 'Dev Band',
+        subDomain: tenantData.subDomain,
+        domain: tenantData.domain,
+        isCustomDomain: tenantData.isCustomDomain,
       },
     });
-    console.log('Tenant created');
-  } else {
-    console.log('Tenant skipped (already exists)');
-  }
-
-  // 2) Upsert TenantDomain by unique domain
-  const domain = 'devband.bandsyte.com';
-  const existingDomain = await prisma.tenantDomain.findUnique({
-    where: { domain },
-  });
-  if (existingDomain) {
-    await prisma.tenantDomain.update({
-      where: { domain },
-      data: { tenantId, verified: true },
-    });
-    console.log('TenantDomain updated');
-  } else {
-    await prisma.tenantDomain.create({
-      data: {
-        domain,
-        tenantId,
-        verified: true,
-      },
-    });
-    console.log('TenantDomain created');
+    console.log('Tenant updated with domain configuration');
   }
 
   // 3) Upsert ContactInfo by unique tenantId

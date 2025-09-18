@@ -10,42 +10,32 @@ datasource db {
 model Tenant {
   id                    String                 @id @default(uuid())
   name                  String
-  slug                  String                 @unique
-  theme                 Theme?
-  contactInfo           ContactInfo?
-  user                  User?
+  subDomain             String?                @unique
+  domain                String                 @unique
+  isCustomDomain        Boolean                @default(false)
   bio                   Bio?
-  merchConfig           MerchConfig?
-  showsSettings         ShowsSettings?
-  domains               TenantDomain[]
-  members               Member[]
-  shows                 Show[]
-  videos                Video[]
-  featuredVideos        FeaturedVideo[]
+  contactInfo           ContactInfo?
   featuredReleases      FeaturedRelease[]
-  mediaImages           MediaImage[]
+  featuredVideos        FeaturedVideo[]
   homeImages            HomeImage[]
+  mediaImages           MediaImage[]
+  members               Member[]
+  merchConfig           MerchConfig?
   newsletterSubscribers NewsletterSubscriber[]
-  spotifyPlayers        SpotifyPlayer[]
-  // sessions  Session[] // Removed: Session model not defined yet
   Session               Session[]
-}
-
-model TenantDomain {
-  id       String  @id @default(uuid())
-  domain   String  @unique
-  tenant   Tenant  @relation(fields: [tenantId], references: [id])
-  tenantId String
-  verified Boolean @default(false)
+  shows                 Show[]
+  showsSettings         ShowsSettings?
+  spotifyPlayers        SpotifyPlayer[]
+  theme                 Theme?
+  user                  User?
+  videos                Video[]
 }
 
 model User {
   id                  String    @id @default(uuid())
-  tenant              Tenant    @relation(fields: [tenantId], references: [id])
   tenantId            String    @unique
   bandName            String
   adminEmail          String    @unique
-  adminPhone          String?
   password            String
   role                String
   userType            String
@@ -66,15 +56,13 @@ model User {
   lastFailedLogin     DateTime?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
-
-  sessions Session[]
+  adminPhone          String?
+  sessions            Session[]
+  tenant              Tenant    @relation(fields: [tenantId], references: [id])
 }
 
 model Session {
   id         String    @id @default(uuid())
-  tenant     Tenant    @relation(fields: [tenantId], references: [id])
-  tenantId   String
-  user       User      @relation(fields: [userId], references: [id])
   userId     String
   sessionId  String    @unique
   loginTime  DateTime  @default(now())
@@ -85,6 +73,9 @@ model Session {
   userAgent  String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  tenantId   String
+  tenant     Tenant    @relation(fields: [tenantId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
 
   @@index([tenantId, userId, isActive])
   @@index([userId, isActive])
@@ -93,7 +84,6 @@ model Session {
 
 model NewsletterSubscriber {
   id                String    @id @default(uuid())
-  tenant            Tenant    @relation(fields: [tenantId], references: [id])
   tenantId          String
   email             String
   isActive          Boolean   @default(true)
@@ -109,70 +99,70 @@ model NewsletterSubscriber {
   lastEmailSent     DateTime?
   unsubscribedAt    DateTime?
   updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation(fields: [tenantId], references: [id])
 
   @@unique([tenantId, email])
 }
 
 model Theme {
   id                   String   @id @default(uuid())
-  tenant               Tenant   @relation(fields: [tenantId], references: [id])
   tenantId             String   @unique
-  siteTitle            String?  @default("Logan's Run")
-  greeting             String?
-  introduction         String?
-  bandLogoUrl          String?
-  bandHeaderLogoUrl    String?
-  headerDisplay        String?  @default("band-name-and-logo")
-  headerPosition       String?  @default("left")
-  primaryColor         String?  @default("#000000")
-  secondaryColor       String?  @default("#000000")
-  backgroundColor      String?  @default("black")
-  primaryFont          String?  @default("Anton")
-  secondaryFont        String?  @default("Oswald")
-  socialMediaIconStyle String?  @default("default")
-  paceTheme            String?  @default("minimal")
-  enableNewsletter     Boolean  @default(true)
-  notifyOnNewShows     Boolean  @default(false)
-  notifyOnNewMusic     Boolean  @default(false)
-  notifyOnNewVideos    Boolean  @default(false)
-  isDefault            Boolean  @default(false)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+  backgroundColor      String?  @default("black")
+  bandLogoUrl          String?
+  enableNewsletter     Boolean  @default(true)
+  greeting             String?
+  headerDisplay        String?  @default("band-name-and-logo")
+  headerPosition       String?  @default("left")
+  introduction         String?
+  notifyOnNewMusic     Boolean  @default(false)
+  notifyOnNewShows     Boolean  @default(false)
+  notifyOnNewVideos    Boolean  @default(false)
+  paceTheme            String?  @default("minimal")
+  primaryColor         String?  @default("#000000")
+  primaryFont          String?  @default("Anton")
+  secondaryColor       String?  @default("#000000")
+  secondaryFont        String?  @default("Oswald")
+  siteTitle            String?  @default("Logan's Run")
+  socialMediaIconStyle String?  @default("default")
+  bandHeaderLogoUrl    String?
+  isDefault            Boolean? @default(false)
+  tenant               Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model Bio {
   id             String   @id @default(uuid())
-  tenant         Tenant   @relation(fields: [tenantId], references: [id])
   tenantId       String   @unique
-  name           String?
-  text           String?
-  imageType      String   @default("band-logo")
-  customImageUrl String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  customImageUrl String?
+  imageType      String   @default("band-logo")
+  name           String?
+  text           String?
+  tenant         Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model ContactInfo {
   id          String   @id @default(uuid())
-  tenant      Tenant   @relation(fields: [tenantId], references: [id])
   tenantId    String   @unique
-  publicEmail String?
-  publicPhone String?
-  facebook    String?
-  instagram   String?
-  youtube     String?
-  soundcloud  String?
-  spotify     String?
-  appleMusic  String?
-  x           String?
-  tiktok      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  appleMusic  String?
+  facebook    String?
+  instagram   String?
+  publicEmail String?
+  publicPhone String?
+  soundcloud  String?
+  spotify     String?
+  tiktok      String?
+  x           String?
+  youtube     String?
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model Member {
   id        String   @id @default(uuid())
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
   tenantId  String
   name      String
   role      String
@@ -184,11 +174,11 @@ model Member {
   x         String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model Show {
   id        String    @id @default(uuid())
-  tenant    Tenant    @relation(fields: [tenantId], references: [id])
   tenantId  String
   poster    String?
   venue     String?
@@ -201,38 +191,24 @@ model Show {
   tixlink   String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-}
-
-enum VideoCategory {
-  LIVE_PERFORMANCE
-  VLOG
-  MUSIC_VIDEO
-  LYRIC_VIDEO
-}
-
-enum MusicType {
-  SINGLE
-  ALBUM
-  EP
-  LP
+  tenant    Tenant    @relation(fields: [tenantId], references: [id])
 }
 
 model Video {
   id        String        @id @default(uuid())
-  tenant    Tenant        @relation(fields: [tenantId], references: [id])
   tenantId  String
-  category  VideoCategory
   title     String?
   date      DateTime?
   link      String?
   embedLink String?
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+  category  VideoCategory
+  tenant    Tenant        @relation(fields: [tenantId], references: [id])
 }
 
 model FeaturedVideo {
   id             String   @id @default(uuid())
-  tenant         Tenant   @relation(fields: [tenantId], references: [id])
   tenantId       String
   title          String
   description    String
@@ -248,44 +224,44 @@ model FeaturedVideo {
   releaseDate    DateTime
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  tenant         Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model FeaturedRelease {
   id          String    @id @default(uuid())
-  tenant      Tenant    @relation(fields: [tenantId], references: [id])
   tenantId    String
   coverImage  String
   title       String
-  type        MusicType
   releaseDate DateTime
   musicLink   String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  type        MusicType
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
 }
 
 model MediaImage {
   id        String   @id @default(uuid())
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
   tenantId  String
   name      String
   imgLink   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model HomeImage {
   id        String   @id @default(uuid())
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
   tenantId  String
   name      String
   imgLink   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model MerchConfig {
   id                    String   @id @default(uuid())
-  tenant                Tenant   @relation(fields: [tenantId], references: [id])
   tenantId              String   @unique
   storeType             String
   shopDomain            String?
@@ -296,24 +272,23 @@ model MerchConfig {
   storefrontUrl         String?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
+  tenant                Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model ShowsSettings {
   id                String   @id @default(uuid())
-  tenant            Tenant   @relation(fields: [tenantId], references: [id])
   tenantId          String   @unique
   showSystem        String?
   bandsintownArtist String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+  tenant            Tenant   @relation(fields: [tenantId], references: [id])
 }
 
 model SpotifyPlayer {
   id             String     @id @default(uuid())
-  tenant         Tenant     @relation(fields: [tenantId], references: [id])
   tenantId       String
   title          String?
-  type           MusicType?
   date           DateTime?
   bgColor        String?
   spotifyLink    String?
@@ -323,4 +298,20 @@ model SpotifyPlayer {
   soundcloudLink String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
+  type           MusicType?
+  tenant         Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+enum VideoCategory {
+  LIVE_PERFORMANCE
+  VLOG
+  MUSIC_VIDEO
+  LYRIC_VIDEO
+}
+
+enum MusicType {
+  SINGLE
+  ALBUM
+  EP
+  LP
 }
