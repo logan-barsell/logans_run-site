@@ -166,7 +166,6 @@ const TopNav = ({ routes }) => {
           aria-expanded={toggle}
           aria-label='Toggle navigation'
         >
-          <span className='navbar-toggler-icon'></span>
           <span className='hamburger-line'></span>
         </button>
         <div
