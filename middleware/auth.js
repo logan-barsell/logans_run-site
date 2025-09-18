@@ -3,6 +3,7 @@ const { AppError } = require('./errorHandler');
 const UserService = require('../services/userService');
 const SessionService = require('../services/sessionService');
 const { clearAuthCookies } = require('../utils/cookie-utils');
+const { getConfig } = require('../config/app');
 const logger = require('../utils/logger');
 const crypto = require('crypto');
 
@@ -60,7 +61,8 @@ async function requireAuth(req, res, next) {
   }
 
   const logoutUser = async () => {
-    clearAuthCookies(res);
+    const config = await getConfig(req.tenantId);
+    clearAuthCookies(res, config.domain);
     const sessionId = req.user?.sessionId;
     const userId = req.user?.id;
 

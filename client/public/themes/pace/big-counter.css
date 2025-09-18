@@ -30,7 +30,7 @@
   top: 0;
   right: 0.5rem;
   content: attr(data-progress-text);
-  font-family: var(--secondary-font), 'Helvetica Neue', sans-serif;
+  font-family: var(--secondary-font);
   font-weight: 100;
   font-size: 5rem;
   line-height: 1;

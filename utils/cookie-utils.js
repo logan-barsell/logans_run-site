@@ -1,5 +1,3 @@
-const config = require('../config');
-
 const isProduction = process.env.NODE_ENV === 'production';
 
 /**
@@ -7,16 +5,17 @@ const isProduction = process.env.NODE_ENV === 'production';
  * @param {Object} res - Express response object
  * @param {string} accessToken - The access token to set as a cookie
  * @param {string} refreshToken - The refresh token to set as a cookie
+ * @param {string} domain - The domain to set cookies for (optional)
  */
-function setAuthCookies(res, accessToken, refreshToken) {
+function setAuthCookies(res, accessToken, refreshToken, domain = null) {
   const baseCookieOptions = {
     httpOnly: true,
     sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production',
   };
 
-  if (isProduction) {
-    baseCookieOptions.domain = config.domain;
+  if (isProduction && domain) {
+    baseCookieOptions.domain = domain;
   }
 
   // Access token: 1 hour expiry
@@ -38,8 +37,9 @@ function setAuthCookies(res, accessToken, refreshToken) {
 /**
  * Clears authentication cookies from the response.
  * @param {Object} res - Express response object
+ * @param {string} domain - The domain to clear cookies for (optional)
  */
-function clearAuthCookies(res) {
+function clearAuthCookies(res, domain = null) {
   const cookieOptions = {
     httpOnly: true,
     sameSite: 'strict',
@@ -47,8 +47,8 @@ function clearAuthCookies(res) {
     path: '/',
   };
 
-  if (isProduction) {
-    cookieOptions.domain = config.domain;
+  if (isProduction && domain) {
+    cookieOptions.domain = domain;
   }
 
   res.clearCookie('access_token', cookieOptions);

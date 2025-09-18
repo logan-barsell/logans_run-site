@@ -6,263 +6,263 @@
 /* FONTS */
 @font-face {
   font-family: sprayPaint;
-  src: url(../fonts/sprayPaint.ttf);
+  src: url(../lib/fonts/fonts/sprayPaint.ttf);
 }
 
 /* Edgy/Rock Fonts */
 @font-face {
   font-family: BebasNeue;
-  src: url(../fonts/BebasNeue-Regular.ttf);
+  src: url(../lib/fonts/fonts/BebasNeue-Regular.ttf);
 }
 @font-face {
   font-family: Anton;
-  src: url(../fonts/Anton-Regular.ttf);
+  src: url(../lib/fonts/fonts/Anton-Regular.ttf);
 }
 @font-face {
   font-family: Oswald;
-  src: url(../fonts/Oswald-Regular.ttf);
+  src: url(../lib/fonts/fonts/Oswald-Regular.ttf);
 }
 
 /* 60s/70s Hippy Fonts */
 @font-face {
   font-family: Pacifico;
-  src: url(../fonts/Pacifico-Regular.ttf);
+  src: url(../lib/fonts/fonts/Pacifico-Regular.ttf);
 }
 
 /* Metal/Horror Fonts */
 @font-face {
   font-family: Creepster;
-  src: url(../fonts/Creepster-Regular.ttf);
+  src: url(../lib/fonts/fonts/Creepster-Regular.ttf);
 }
 @font-face {
   font-family: Sancreek;
-  src: url(../fonts/Sancreek-Regular.ttf);
+  src: url(../lib/fonts/fonts/Sancreek-Regular.ttf);
 }
 
 /* Punk/Graffiti Fonts */
 @font-face {
   font-family: VT323;
-  src: url(../fonts/VT323-Regular.ttf);
+  src: url(../lib/fonts/fonts/VT323-Regular.ttf);
 }
 
 /* Hand-Drawn/Rock Fonts */
 @font-face {
   font-family: Kalam;
-  src: url(../fonts/Kalam-Regular.ttf);
+  src: url(../lib/fonts/fonts/Kalam-Regular.ttf);
 }
 @font-face {
   font-family: IndieFlower;
-  src: url(../fonts/IndieFlower-Regular.ttf);
+  src: url(../lib/fonts/fonts/IndieFlower-Regular.ttf);
 }
 @font-face {
   font-family: ArchitectsDaughter;
-  src: url(../fonts/ArchitectsDaughter-Regular.ttf);
+  src: url(../lib/fonts/fonts/ArchitectsDaughter-Regular.ttf);
 }
 
 /* Fun/Bold Fonts */
 @font-face {
   font-family: Righteous;
-  src: url(../fonts/Righteous-Regular.ttf);
+  src: url(../lib/fonts/fonts/Righteous-Regular.ttf);
 }
 @font-face {
   font-family: Lobster;
-  src: url(../fonts/Lobster-Regular.ttf);
+  src: url(../lib/fonts/fonts/Lobster-Regular.ttf);
 }
 
 /* ROCK/METAL FONTS */
 @font-face {
   font-family: MetalMania;
-  src: url(../fonts/MetalMania-Regular.ttf);
+  src: url(../lib/fonts/fonts/MetalMania-Regular.ttf);
 }
 @font-face {
   font-family: Butcherman;
-  src: url(../fonts/Butcherman-Regular.ttf);
+  src: url(../lib/fonts/fonts/Butcherman-Regular.ttf);
 }
 @font-face {
   font-family: RoadRage;
-  src: url(../fonts/RoadRage-Regular.ttf);
+  src: url(../lib/fonts/fonts/RoadRage-Regular.ttf);
 }
 @font-face {
   font-family: RubikBurned;
-  src: url(../fonts/RubikBurned-Regular.ttf);
+  src: url(../lib/fonts/fonts/RubikBurned-Regular.ttf);
 }
 @font-face {
   font-family: RubikGlitch;
-  src: url(../fonts/RubikGlitch-Regular.ttf);
+  src: url(../lib/fonts/fonts/RubikGlitch-Regular.ttf);
 }
 @font-face {
   font-family: RubikWetPaint;
-  src: url(../fonts/RubikWetPaint-Regular.ttf);
+  src: url(../lib/fonts/fonts/RubikWetPaint-Regular.ttf);
 }
 @font-face {
   font-family: Bungee;
-  src: url(../fonts/Bungee-Regular.ttf);
+  src: url(../lib/fonts/fonts/Bungee-Regular.ttf);
 }
 @font-face {
   font-family: BungeeHairline;
-  src: url(../fonts/BungeeHairline-Regular.ttf);
+  src: url(../lib/fonts/fonts/BungeeHairline-Regular.ttf);
 }
 @font-face {
   font-family: Bangers;
-  src: url(../fonts/Bangers-Regular.ttf);
+  src: url(../lib/fonts/fonts/Bangers-Regular.ttf);
 }
 @font-face {
   font-family: Barrio;
-  src: url(../fonts/Barrio-Regular.ttf);
+  src: url(../lib/fonts/fonts/Barrio-Regular.ttf);
 }
 @font-face {
   font-family: Frijole;
-  src: url(../fonts/Frijole-Regular.ttf);
+  src: url(../lib/fonts/fonts/Frijole-Regular.ttf);
 }
 @font-face {
   font-family: Griffy;
-  src: url(../fonts/Griffy-Regular.ttf);
+  src: url(../lib/fonts/fonts/Griffy-Regular.ttf);
 }
 @font-face {
   font-family: JollyLodger;
-  src: url(../fonts/JollyLodger-Regular.ttf);
+  src: url(../lib/fonts/fonts/JollyLodger-Regular.ttf);
 }
 @font-face {
   font-family: Lacquer;
-  src: url(../fonts/Lacquer-Regular.ttf);
+  src: url(../lib/fonts/fonts/Lacquer-Regular.ttf);
 }
 @font-face {
   font-family: PirataOne;
-  src: url(../fonts/PirataOne-Regular.ttf);
+  src: url(../lib/fonts/fonts/PirataOne-Regular.ttf);
 }
 
 /* RETRO/VINTAGE FONTS */
 @font-face {
   font-family: Asimovian;
-  src: url(../fonts/Asimovian-Regular.ttf);
+  src: url(../lib/fonts/fonts/Asimovian-Regular.ttf);
 }
 @font-face {
   font-family: CourierPrime;
-  src: url(../fonts/CourierPrime-Regular.ttf);
+  src: url(../lib/fonts/fonts/CourierPrime-Regular.ttf);
 }
 @font-face {
   font-family: SpecialElite;
-  src: url(../fonts/SpecialElite-Regular.ttf);
+  src: url(../lib/fonts/fonts/SpecialElite-Regular.ttf);
 }
 @font-face {
   font-family: XanhMono;
-  src: url(../fonts/XanhMono-Regular.ttf);
+  src: url(../lib/fonts/fonts/XanhMono-Regular.ttf);
 }
 @font-face {
   font-family: SixCaps;
-  src: url(../fonts/SixCaps-Regular.ttf);
+  src: url(../lib/fonts/fonts/SixCaps-Regular.ttf);
 }
 @font-face {
   font-family: Smokum;
-  src: url(../fonts/Smokum-Regular.ttf);
+  src: url(../lib/fonts/fonts/Smokum-Regular.ttf);
 }
 @font-face {
   font-family: Rye;
-  src: url(../fonts/Rye-Regular.ttf);
+  src: url(../lib/fonts/fonts/Rye-Regular.ttf);
 }
 @font-face {
   font-family: TradeWinds;
-  src: url(../fonts/TradeWinds-Regular.ttf);
+  src: url(../lib/fonts/fonts/TradeWinds-Regular.ttf);
 }
 @font-face {
   font-family: IMFellEnglishSC;
-  src: url(../fonts/IMFellEnglishSC-Regular.ttf);
+  src: url(../lib/fonts/fonts/IMFellEnglishSC-Regular.ttf);
 }
 @font-face {
   font-family: Oranienbaum;
-  src: url(../fonts/Oranienbaum-Regular.ttf);
+  src: url(../lib/fonts/fonts/Oranienbaum-Regular.ttf);
 }
 
 /* DRAMATIC/ARTISTIC FONTS */
 @font-face {
   font-family: Ewert;
-  src: url(../fonts/Ewert-Regular.ttf);
+  src: url(../lib/fonts/fonts/Ewert-Regular.ttf);
 }
 @font-face {
   font-family: FrederickatheGreat;
-  src: url(../fonts/FrederickatheGreat-Regular.ttf);
+  src: url(../lib/fonts/fonts/FrederickatheGreat-Regular.ttf);
 }
 @font-face {
   font-family: CormorantUnicase;
-  src: url(../fonts/CormorantUnicase-Medium.ttf);
+  src: url(../lib/fonts/fonts/CormorantUnicase-Medium.ttf);
 }
 @font-face {
   font-family: Bellefair;
-  src: url(../fonts/Bellefair-Regular.ttf);
+  src: url(../lib/fonts/fonts/Bellefair-Regular.ttf);
 }
 @font-face {
   font-family: Italiana;
-  src: url(../fonts/Italiana-Regular.ttf);
+  src: url(../lib/fonts/fonts/Italiana-Regular.ttf);
 }
 @font-face {
   font-family: GlassAntiqua;
-  src: url(../fonts/GlassAntiqua-Regular.ttf);
+  src: url(../lib/fonts/fonts/GlassAntiqua-Regular.ttf);
 }
 @font-face {
   font-family: Lancelot;
-  src: url(../fonts/Lancelot-Regular.ttf);
+  src: url(../lib/fonts/fonts/Lancelot-Regular.ttf);
 }
 @font-face {
   font-family: Macondo;
-  src: url(../fonts/Macondo-Regular.ttf);
+  src: url(../lib/fonts/fonts/Macondo-Regular.ttf);
 }
 
 /* HAND-DRAWN/CASUAL FONTS */
 @font-face {
   font-family: LondrinaSketch;
-  src: url(../fonts/LondrinaSketch-Regular.ttf);
+  src: url(../lib/fonts/fonts/LondrinaSketch-Regular.ttf);
 }
 @font-face {
   font-family: Caveat;
-  src: url(../fonts/Caveat-VariableFont_wght.ttf);
+  src: url(../lib/fonts/fonts/Caveat-VariableFont_wght.ttf);
 }
 @font-face {
   font-family: SmoochSans;
-  src: url(../fonts/SmoochSans-VariableFont_wght.ttf);
+  src: url(../lib/fonts/fonts/SmoochSans-VariableFont_wght.ttf);
 }
 @font-face {
   font-family: AmaticSC;
-  src: url(../fonts/AmaticSC-Regular.ttf);
+  src: url(../lib/fonts/fonts/AmaticSC-Regular.ttf);
 }
 @font-face {
   font-family: Chicle;
-  src: url(../fonts/Chicle-Regular.ttf);
+  src: url(../lib/fonts/fonts/Chicle-Regular.ttf);
 }
 
 /* FUN/PLAYFUL FONTS */
 @font-face {
   font-family: Aladin;
-  src: url(../fonts/Aladin-Regular.ttf);
+  src: url(../lib/fonts/fonts/Aladin-Regular.ttf);
 }
 @font-face {
   font-family: Bahiana;
-  src: url(../fonts/Bahiana-Regular.ttf);
+  src: url(../lib/fonts/fonts/Bahiana-Regular.ttf);
 }
 @font-face {
   font-family: CaesarDressing;
-  src: url(../fonts/CaesarDressing-Regular.ttf);
+  src: url(../lib/fonts/fonts/CaesarDressing-Regular.ttf);
 }
 @font-face {
   font-family: Danfo;
-  src: url(../fonts/Danfo-Regular-VariableFont_ELSH.ttf);
+  src: url(../lib/fonts/fonts/Danfo-Regular-VariableFont_ELSH.ttf);
 }
 @font-face {
   font-family: Fascinate;
-  src: url(../fonts/Fascinate-Regular.ttf);
+  src: url(../lib/fonts/fonts/Fascinate-Regular.ttf);
 }
 @font-face {
   font-family: Iceland;
-  src: url(../fonts/Iceland-Regular.ttf);
+  src: url(../lib/fonts/fonts/Iceland-Regular.ttf);
 }
 
 /* READABLE/CLASSIC FONTS */
 @font-face {
   font-family: EpundaSlab;
-  src: url(../fonts/EpundaSlab-VariableFont_wght.ttf);
+  src: url(../lib/fonts/fonts/EpundaSlab-VariableFont_wght.ttf);
 }
 @font-face {
   font-family: InstrumentSerif;
-  src: url(../fonts/InstrumentSerif-Regular.ttf);
+  src: url(../lib/fonts/fonts/InstrumentSerif-Regular.ttf);
 }
 
 html,

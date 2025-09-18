@@ -1,7 +1,7 @@
 'use client';
 import './TopNav.css';
 
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import InstantNavLink from '../../Routing/InstantNavLink';
 import { Collapse } from 'bootstrap';
@@ -11,24 +11,11 @@ import { useNavHeight } from '../../../contexts/NavHeightContext';
 import { logout } from '../../../services/authService';
 import Button from '../../Button/Button';
 
-async function handleLogout() {
-  try {
-    await logout();
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
-    }
-  } catch (error) {
-    console.error('Logout failed:', error);
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
-    }
-  }
-}
-
 const NavBarEdit = ({ routes }) => {
   const { theme } = useTheme();
   const { setTopNavHeight } = useNavHeight();
 
+  const [loading, setLoading] = useState(false);
   const ref = useRef();
   const { toggle, setToggle } = useContext(ActiveContext);
 
@@ -171,6 +158,23 @@ const NavBarEdit = ({ routes }) => {
       : `header-${headerDisplay.replace(/-/g, '-')}`;
   };
 
+  async function handleLogout() {
+    try {
+      setLoading(true);
+      await logout();
+      if (typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+      if (typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <nav
       ref={ref}
@@ -201,12 +205,14 @@ const NavBarEdit = ({ routes }) => {
             />
             <div className='nav-item nav-link'>
               <Button
-                onClick={e => {
+                onClick={async e => {
                   e.preventDefault();
                   e.stopPropagation();
-                  handleLogout();
+                  await handleLogout();
                 }}
                 type='button'
+                disabled={loading}
+                loading={loading}
                 size='sm'
                 variant='danger'
               >

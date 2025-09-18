@@ -13,7 +13,6 @@ const corsOptions = {
       'http://127.0.0.1:3000',
       'http://127.0.0.1:3001',
       'http://127.0.0.1:3002',
-      process.env.REACT_APP_DOMAIN || 'http://localhost:3000',
       process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost:3001',
     ];
 

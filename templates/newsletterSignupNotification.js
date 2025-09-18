@@ -1,3 +1,5 @@
+const { bandsyteToBandTemplate } = require('./baseTemplates');
+
 /**
  * Newsletter Signup Notification Template
  *
@@ -7,90 +9,48 @@
  *
  * @param {string} fanEmail - The fan's email address
  * @param {string} bandName - The band's name
+ * @param {Object} theme - Theme object with bandLogoUrl
  * @returns {Object} Template with subject and HTML
  */
 const newsletterSignupNotification = (
   fanEmail,
   bandName = 'Bandsyte',
-  theme = {}
-) => ({
-  subject: `New Newsletter Signup - ${bandName}`,
-  html: `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>New Newsletter Signup - ${bandName}</title>
-      ${
-        theme.bandLogoUrl
-          ? `
-      <meta property="og:image" content="${theme.bandLogoUrl}" />
-      <meta name="twitter:image" content="${theme.bandLogoUrl}" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <link rel="icon" type="image/png" href="${theme.bandLogoUrl}" />
-      `
-          : ''
-      }
-      <style>
-        body { font-family: "Courier New", monospace; line-height: 1.6; color: #333 !important; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: #000000; color: white !important; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; color: #333 !important; }
-        .content p { color: #333 !important; }
-        .content h2 { color: #333 !important; }
-        .content strong { color: #333 !important; }
-        .footer { text-align: center; margin-top: 30px; color: #333 !important; font-size: 14px; }
-        .highlight { background: #e8f5e8; border-left: 4px solid #27ae60; padding: 15px; margin: 20px; color: #155724 !important; }
-        .highlight p { color: #155724 !important; }
-        .highlight strong { color: #155724 !important; }
-        .bandsyte-brand { background: #000000; color: white !important; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          ${
-            theme.bandLogoUrl
-              ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
-              : ''
-          }
-          <h1>${bandName}</h1>
-          <p>New Newsletter Signup</p>
-        </div>
-        <div class="content">
-          <h2>🎸 New Fan Just Joined!</h2>
-          <p>Hey <strong>${bandName}</strong> crew,</p>
-          <p>Someone just signed up for your newsletter! Your fan base is growing.</p>
-          
-          <div class="highlight">
-            <p><strong>New Subscriber:</strong> ${fanEmail}</p>
-            <p><strong>Signed up:</strong> ${new Date().toLocaleString()}</p>
-          </div>
-          
-          <p>This fan will now receive updates about:</p>
-          <ul>
-            <li>🎵 Your latest tracks and music videos</li>
-            <li>🎤 Upcoming shows and tour dates</li>
-            <li>🛍️ New merch drops and exclusive deals</li>
-            <li>📸 Behind-the-scenes content</li>
-            <li>🎁 VIP access and fan perks</li>
-          </ul>
-          
-          <p>Keep rocking and keep your fans in the loop!</p>
-        </div>
-        <div class="bandsyte-brand">
-          <p><strong>Bandsyte</strong> - Professional Band Websites</p>
-          <p>This notification was sent by your Bandsyte website platform.</p>
-        </div>
-        <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
-          <p>Website powered by <strong>Bandsyte</strong>.</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `,
-});
+  theme = {},
+  config
+) => {
+  const subject = `New Newsletter Signup - ${bandName}`;
+
+  const content = `
+    <h2>🎸 New Fan Just Joined!</h2>
+    <p>Hey <strong>${bandName}</strong> crew,</p>
+    <p>Someone just signed up for your newsletter! Your fan base is growing.</p>
+    
+    <div class="highlight">
+      <p><strong>New Subscriber:</strong> ${fanEmail}</p>
+      <p><strong>Signed up:</strong> ${new Date().toLocaleString()}</p>
+    </div>
+    
+    <p>This fan will now receive updates about:</p>
+    <ul>
+      <li>🎵 Your latest tracks and music videos</li>
+      <li>🎤 Upcoming shows and tour dates</li>
+      <li>🛍️ New merch drops and exclusive deals</li>
+      <li>📸 Behind-the-scenes content</li>
+      <li>🎁 VIP access and fan perks</li>
+    </ul>
+    
+    <p>Keep rocking and keep your fans in the loop!</p>
+  `;
+
+  return bandsyteToBandTemplate(
+    bandName,
+    subject,
+    bandName,
+    'New Newsletter Signup',
+    content,
+    theme,
+    config
+  );
+};
 
 module.exports = newsletterSignupNotification;

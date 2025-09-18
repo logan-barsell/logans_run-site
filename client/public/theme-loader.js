@@ -294,6 +294,9 @@
         case 'VT323':
           fontStack = "'VT323', monospace";
           break;
+        default:
+          fontStack = "'Courier New', Courier, monospace";
+          break;
       }
       root.style.setProperty('--secondary-font', fontStack);
     }

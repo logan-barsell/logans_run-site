@@ -7,6 +7,7 @@ const { daysToSeconds } = require('../utils/dates');
 const UserService = require('./userService');
 const SessionService = require('./sessionService');
 const { setAuthCookies } = require('../utils/cookie-utils');
+const { getConfig } = require('../config/app');
 const { getClientIp } = require('../utils/request-utils');
 const BandsyteEmailService = require('./bandsyteEmailService');
 const ThemeService = require('./themeService');
@@ -216,7 +217,8 @@ async function refreshAccessToken(req, res) {
   const newAccessToken = generateAccessToken(decoded);
   const newRefreshToken = await generateRefreshToken(decoded, ip, userAgent);
 
-  setAuthCookies(res, newAccessToken, newRefreshToken);
+  const config = await getConfig(req.tenantId);
+  setAuthCookies(res, newAccessToken, newRefreshToken, config.domain);
 
   logger.info(
     `✅ New tokens issued for user ${decoded.id}, session ${decoded.sessionId}`

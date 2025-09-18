@@ -3,6 +3,8 @@ const emailTemplates = require('../templates');
 const ThemeService = require('./themeService');
 const { AppError } = require('../middleware/errorHandler');
 const sesThrottler = require('../utils/sesThrottler');
+const { getConfig } = require('../config/app');
+const { minify } = require('html-minifier-terser');
 
 // AWS SES throttling is handled by sesThrottler utility
 
@@ -59,6 +61,7 @@ async function sendEmail(
 
       // Fetch theme data for email styling
       let theme = null;
+      let config = null;
       if (!tenantId) {
         throw new AppError('tenantId is required for themed emails', 400);
       }
@@ -68,10 +71,16 @@ async function sendEmail(
         if (!theme) {
           throw new AppError('Theme configuration not found', 404);
         }
+
+        // Fetch config for dynamic URLs
+        config = await getConfig(tenantId);
       } catch (error) {
-        logger.error('❌ Failed to fetch theme for email template:', error);
+        logger.error(
+          '❌ Failed to fetch theme or config for email template:',
+          error
+        );
         throw new AppError(
-          `Failed to fetch theme data for email: ${error.message}`,
+          `Failed to fetch theme or config data for email: ${error.message}`,
           500
         );
       }
@@ -81,39 +90,45 @@ async function sendEmail(
         template = emailTemplates[templateType](
           templateData.contactData,
           templateData.bandName,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'welcomeEmail') {
         template = emailTemplates[templateType](
           templateData.bandName,
-          templateData.dashboardUrl
+          templateData.dashboardUrl,
+          config
         );
       } else if (templateType === 'newsletterConfirmation') {
         template = emailTemplates[templateType](
           templateData.bandName,
           templateData.email,
           templateData.unsubscribeToken,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'newsletterSignupNotification') {
         template = emailTemplates[templateType](
           templateData.fanEmail,
           templateData.bandName,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'passwordReset') {
         // Password reset template needs link, bandName, and theme
         template = emailTemplates[templateType](
           templateData.link,
           templateData.bandName,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'passwordResetSuccess') {
         // Password reset success template needs bandName, timestamp, and theme
         template = emailTemplates[templateType](
           templateData.bandName,
           templateData.timestamp,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'loginAlert') {
         // Login alert template needs bandName, timestamp, ipAddress, userAgent, location, theme
@@ -123,7 +138,8 @@ async function sendEmail(
           templateData.ipAddress,
           templateData.userAgent,
           templateData.location,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'securityAlert') {
         // Security alert template needs bandName, alertType, timestamp, ipAddress, userAgent, location, theme
@@ -134,14 +150,16 @@ async function sendEmail(
           templateData.ipAddress,
           templateData.userAgent,
           templateData.location,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'twoFactorCode') {
         // Two-factor code template needs code, bandName, and theme
         template = emailTemplates[templateType](
           templateData.code,
           templateData.bandName,
-          theme
+          theme,
+          config
         );
       } else if (templateType === 'musicNotification') {
         // Music notification template needs bandName, content, theme, unsubscribeToken
@@ -149,7 +167,8 @@ async function sendEmail(
           templateData.bandName,
           templateData.content,
           theme,
-          templateData.unsubscribeToken
+          templateData.unsubscribeToken,
+          config
         );
       } else if (templateType === 'videoNotification') {
         // Video notification template needs bandName, content, theme, unsubscribeToken
@@ -157,7 +176,8 @@ async function sendEmail(
           templateData.bandName,
           templateData.content,
           theme,
-          templateData.unsubscribeToken
+          templateData.unsubscribeToken,
+          config
         );
       } else if (templateType === 'showNotification') {
         // Show notification template needs bandName, content, theme, unsubscribeToken
@@ -165,7 +185,8 @@ async function sendEmail(
           templateData.bandName,
           templateData.content,
           theme,
-          templateData.unsubscribeToken
+          templateData.unsubscribeToken,
+          config
         );
       } else {
         // Default pattern for emailVerification
@@ -173,12 +194,46 @@ async function sendEmail(
           templateData.link,
           templateData.role,
           templateData.bandName,
-          theme
+          theme,
+          config
         );
       }
 
       subject = template.subject;
       html = template.html;
+    }
+
+    // Minify HTML to reduce Gmail clipping
+    if (html) {
+      try {
+        html = await minify(html, {
+          removeComments: false, // Keep comments as requested
+          collapseWhitespace: true,
+          conservativeCollapse: true, // Safer for emails
+          removeEmptyElements: false, // Keep empty elements for email compatibility
+          removeAttributeQuotes: false, // Keep quotes for email safety
+          minifyCSS: true,
+          minifyJS: false, // Don't minify JS in emails
+          caseSensitive: false,
+          keepClosingSlash: true,
+          removeRedundantAttributes: false, // Keep all attributes
+          removeScriptTypeAttributes: false,
+          removeStyleLinkTypeAttributes: false,
+          useShortDoctype: false, // Keep full doctype
+          ignoreCustomFragments: [
+            // Preserve any special email fragments if needed
+            /<!--.*?-->/g, // Keep HTML comments
+          ],
+        });
+
+        logger.debug(`📧 HTML minified successfully. Size reduced.`);
+      } catch (error) {
+        logger.warn(
+          '⚠️ HTML minification failed, using original HTML:',
+          error.message
+        );
+        // Continue with unminified HTML - don't break email sending
+      }
     }
 
     // Optional suppression prefilter (skip suppressed addresses)

@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const config = require('../config');
+const { getConfig } = require('../config/app');
 const UserService = require('./userService');
 const TokenService = require('./tokenService');
 const BandsyteEmailService = require('./bandsyteEmailService');
@@ -239,6 +239,7 @@ async function sendEmailVerificationWithToken(
 
   // Get the actual band name from theme
   const theme = await ThemeService.getTheme(tenantId);
+  const config = await getConfig(tenantId);
   const bandName = theme.siteTitle || config.appName;
 
   // Send verification email
@@ -322,6 +323,7 @@ async function requestPasswordReset(tenantId, email) {
 
   // Get the actual band name from theme
   const theme = await ThemeService.getTheme(tenantId);
+  const config = await getConfig(tenantId);
   const bandName = theme.siteTitle || config.appName;
 
   // Send reset email
@@ -377,6 +379,7 @@ async function resetPassword(tenantId, token, newPassword) {
 
   // Get the actual band name from theme
   const theme = await ThemeService.getTheme(resolvedTenantId);
+  const config = await getConfig(resolvedTenantId);
   const bandName = theme.siteTitle || config.appName;
 
   // Send success notification email

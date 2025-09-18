@@ -5,6 +5,7 @@ const BandsyteEmailService = require('../services/bandsyteEmailService');
 const ThemeService = require('../services/themeService');
 const { AppError } = require('../middleware/errorHandler');
 const { clearAuthCookies } = require('../utils/cookie-utils');
+const { getConfig } = require('../config/app');
 const bcrypt = require('bcrypt');
 const logger = require('../utils/logger');
 
@@ -157,7 +158,8 @@ async function endSession(req, res, next) {
     // If ending current session, also revoke tokens and clear cookies
     if (sessionId === currentSessionId) {
       await TokenService.revokeSessionRefreshToken(sessionId);
-      clearAuthCookies(res);
+      const config = await getConfig(req.tenantId);
+      clearAuthCookies(res, config.domain);
     }
 
     res.status(200).json({

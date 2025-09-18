@@ -4,6 +4,7 @@ const TokenService = require('../services/tokenService');
 const SessionService = require('../services/sessionService');
 const { AppError } = require('../middleware/errorHandler');
 const { setAuthCookies, clearAuthCookies } = require('../utils/cookie-utils');
+const { getConfig } = require('../config/app');
 const { getClientIp } = require('../utils/request-utils');
 const logger = require('../utils/logger');
 const BandsyteEmailService = require('../services/bandsyteEmailService');
@@ -52,7 +53,8 @@ async function login(req, res, next) {
     }
 
     // Set cookies for normal login
-    setAuthCookies(res, result.accessToken, result.refreshToken);
+    const config = await getConfig(req.tenantId);
+    setAuthCookies(res, result.accessToken, result.refreshToken, config.domain);
 
     logger.info(`User logged in successfully: ${email}`);
 
@@ -124,7 +126,8 @@ async function completeTwoFactorLogin(req, res, next) {
     });
 
     // Set cookies
-    setAuthCookies(res, result.accessToken, result.refreshToken);
+    const config = await getConfig(req.tenantId);
+    setAuthCookies(res, result.accessToken, result.refreshToken, config.domain);
 
     logger.info(`User completed 2FA login successfully: ${userId}`);
 
@@ -196,7 +199,8 @@ async function signup(req, res, next) {
     });
 
     // Set cookies
-    setAuthCookies(res, result.accessToken, result.refreshToken);
+    const config = await getConfig(req.tenantId);
+    setAuthCookies(res, result.accessToken, result.refreshToken, config.domain);
 
     logger.info(`User signed up successfully: ${email}`);
 
