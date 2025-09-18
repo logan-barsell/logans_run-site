@@ -76,6 +76,21 @@ export const PRIMARY_FONT_OPTIONS = [
       { value: 'Pacifico', label: 'Pacifico (Hippy Vibes)' },
     ],
   },
+  {
+    group: '💻 SYSTEM FONTS',
+    options: [
+      { value: 'MyanmarMN', label: 'Myanmar MN (Myanmar Script)' },
+      { value: 'Arial', label: 'Arial (Classic Sans-Serif)' },
+      { value: 'Helvetica', label: 'Helvetica (Swiss Design)' },
+      { value: 'Times New Roman', label: 'Times New Roman (Classic Serif)' },
+      { value: 'Georgia', label: 'Georgia (Readable Serif)' },
+      { value: 'Verdana', label: 'Verdana (Screen Optimized)' },
+      { value: 'Trebuchet MS', label: 'Trebuchet MS (Friendly Sans)' },
+      { value: 'Impact', label: 'Impact (Bold Statement)' },
+      { value: 'Comic Sans MS', label: 'Comic Sans MS (Playful)' },
+      { value: 'Palatino', label: 'Palatino (Elegant Serif)' },
+    ],
+  },
 ];
 
 // Secondary font options with optgroups
@@ -117,6 +132,21 @@ export const SECONDARY_FONT_OPTIONS = [
       { value: 'Oswald', label: 'Oswald (Condensed Industrial)' },
       { value: 'EpundaSlab', label: 'EpundaSlab (Slab Serif)' },
       { value: 'InstrumentSerif', label: 'InstrumentSerif (Serif)' },
+    ],
+  },
+  {
+    group: '💻 SYSTEM FONTS',
+    options: [
+      { value: 'MyanmarMN', label: 'Myanmar MN (Myanmar Script)' },
+      { value: 'Arial', label: 'Arial (Classic Sans-Serif)' },
+      { value: 'Helvetica', label: 'Helvetica (Swiss Design)' },
+      { value: 'Times New Roman', label: 'Times New Roman (Classic Serif)' },
+      { value: 'Georgia', label: 'Georgia (Readable Serif)' },
+      { value: 'Verdana', label: 'Verdana (Screen Optimized)' },
+      { value: 'Trebuchet MS', label: 'Trebuchet MS (Friendly Sans)' },
+      { value: 'Impact', label: 'Impact (Bold Statement)' },
+      { value: 'Comic Sans MS', label: 'Comic Sans MS (Playful)' },
+      { value: 'Palatino', label: 'Palatino (Elegant Serif)' },
     ],
   },
 ];

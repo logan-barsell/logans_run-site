@@ -1,13 +1,11 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchTheme } from '../redux/actions';
+import { useSelector } from 'react-redux';
 import { generateStyleObject } from '../lib/theme/generateStyleObject';
 import { defaultTheme } from '../lib/theme/defaultTheme';
 import {
   getCachedTheme,
   setCachedTheme,
-  getCachedDefaultTheme,
   setCachedDefaultTheme,
 } from '../lib/theme/themeCache';
 
@@ -22,11 +20,9 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ theme: serverTheme, tenant, children }) => {
-  const dispatch = useDispatch();
   const reduxTheme = useSelector(state => state.theme?.data || {});
   const [clientTheme, setClientTheme] = useState(serverTheme || defaultTheme);
   const [isHydrated, setIsHydrated] = useState(false);
-  const [isOffline, setIsOffline] = useState(false);
 
   // Mark as hydrated after first render
   useEffect(() => {

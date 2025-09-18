@@ -71,6 +71,18 @@ export function getFontStack(fontName, defaultFont) {
     EpundaSlab: "'EpundaSlab', serif",
     InstrumentSerif: "'InstrumentSerif', serif",
     'Courier New': "'Courier New', Courier, monospace",
+    // SYSTEM FONTS
+    MyanmarMN: "'Myanmar MN', 'Myanmar Text', 'Padauk', sans-serif",
+    Arial: "'Arial', 'Helvetica Neue', Helvetica, sans-serif",
+    Helvetica: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+    'Times New Roman': "'Times New Roman', Times, serif",
+    Georgia: "'Georgia', 'Times New Roman', Times, serif",
+    Verdana: "'Verdana', Geneva, sans-serif",
+    'Trebuchet MS':
+      "'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif",
+    Impact: "'Impact', 'Arial Black', sans-serif",
+    'Comic Sans MS': "'Comic Sans MS', cursive, sans-serif",
+    Palatino: "'Palatino', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
   };
   return fontMap[fontName] || defaultFont;
 }
