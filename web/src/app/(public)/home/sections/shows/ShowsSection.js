@@ -15,7 +15,7 @@ export default function ShowsSection() {
   const showsSettings = useSelector(
     state =>
       state.showsSettings?.data || {
-        showSystem: 'custom',
+        showSystem: 'CUSTOM',
         bandsintownArtist: '',
       }
   );
@@ -112,7 +112,7 @@ export default function ShowsSection() {
   const renderMainContent = () => {
     // Render Bandsintown widget if configured
     if (
-      showsSettings.showSystem === 'bandsintown' &&
+      showsSettings.showSystem === 'BANDSINTOWN' &&
       showsSettings.bandsintownArtist
     ) {
       return (
@@ -180,7 +180,7 @@ export default function ShowsSection() {
       <div id='upcomingshows'>
         {renderMainContent()}
         {/* Only show request a show section for custom shows management */}
-        {showsSettings.showSystem !== 'bandsintown' &&
+        {showsSettings.showSystem !== 'BANDSINTOWN' &&
           renderRequestShowSection()}
       </div>
     </>

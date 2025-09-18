@@ -104,6 +104,45 @@ async function markSecurityAlertSent(userId, alertType, ipAddress) {
 }
 
 /**
+ * Atomically check and set deduplication key to prevent race conditions
+ * @param {string} userId - User ID
+ * @param {string} alertType - Type of security alert
+ * @param {string} ipAddress - IP address
+ * @returns {Promise<boolean>} True if alert should be sent (key was set), false if duplicate
+ */
+async function tryAtomicDeduplication(userId, alertType, ipAddress) {
+  try {
+    const dedupKey = generateDeduplicationKey(userId, alertType, ipAddress);
+    const windowSeconds = DEDUPLICATION_WINDOW_MINUTES * 60;
+
+    // Use SET with NX (only if not exists) and EX (expiration) for atomic operation
+    // This prevents race conditions by combining check-and-set into one operation
+    const result = await redisClient.set(dedupKey, 'sent', {
+      NX: true, // Only set if key doesn't exist
+      EX: windowSeconds, // Set expiration
+    });
+
+    if (result === 'OK') {
+      // Key was successfully set, alert should be sent
+      logger.debug(
+        `📧 Atomic deduplication successful for user ${userId} (${alertType})`
+      );
+      return true;
+    } else {
+      // Key already exists, skip duplicate alert
+      logger.info(
+        `📧 Skipping duplicate security alert for user ${userId} (${alertType}) - atomic check`
+      );
+      return false;
+    }
+  } catch (error) {
+    logger.error('Error in atomic deduplication check:', error);
+    // On error, allow the alert to be sent (fail open)
+    return true;
+  }
+}
+
+/**
  * Send a security alert with deduplication
  * This is a wrapper that handles the deduplication logic
  * @param {Function} sendAlertFunction - Function that actually sends the alert
@@ -121,22 +160,35 @@ async function sendSecurityAlertWithDeduplication(
   ...alertArgs
 ) {
   try {
-    // Check if we should send this alert
-    const shouldSend = await shouldSendSecurityAlert(
+    // Use atomic deduplication to prevent race conditions
+    const shouldSend = await tryAtomicDeduplication(
       userId,
       alertType,
       ipAddress
     );
 
     if (!shouldSend) {
-      return false; // Alert was skipped
+      return false; // Alert was skipped due to deduplication
+    }
+
+    // Check rate limiting (after atomic deduplication passes)
+    const rateLimitKey = generateRateLimitKey(userId);
+    const alertCount = await redisClient.incr(rateLimitKey);
+
+    // Set expiration on first increment
+    if (alertCount === 1) {
+      await redisClient.expire(rateLimitKey, 3600); // 1 hour
+    }
+
+    if (alertCount > MAX_ALERTS_PER_USER_PER_HOUR) {
+      logger.warn(
+        `📧 Rate limiting security alerts for user ${userId} (${alertCount} alerts in last hour)`
+      );
+      return false; // Alert was skipped due to rate limiting
     }
 
     // Send the actual alert
     await sendAlertFunction(...alertArgs);
-
-    // Mark as sent to prevent duplicates
-    await markSecurityAlertSent(userId, alertType, ipAddress);
 
     logger.info(
       `📧 Security alert sent successfully for user ${userId} (${alertType})`
@@ -181,6 +233,7 @@ async function clearUserSecurityAlertData(userId) {
 module.exports = {
   shouldSendSecurityAlert,
   markSecurityAlertSent,
+  tryAtomicDeduplication,
   sendSecurityAlertWithDeduplication,
   clearUserSecurityAlertData,
   // Export constants for testing/configuration

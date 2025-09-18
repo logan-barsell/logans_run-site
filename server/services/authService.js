@@ -149,14 +149,7 @@ const completeTwoFactorLogin = async options => {
 };
 
 const signup = async options => {
-  const {
-    tenantId,
-    email,
-    password,
-    userType = 'USER',
-    ip,
-    userAgent,
-  } = options;
+  const { tenantId, email, password, ip, userAgent } = options;
 
   const existingUser = await UserService.findUserByEmail(tenantId, email);
 
@@ -168,7 +161,6 @@ const signup = async options => {
     adminEmail: email,
     password,
     role: 'USER',
-    userType,
   });
 
   if (!newUser) {
@@ -192,14 +184,12 @@ const signup = async options => {
     id: newUser.id,
     uuid: newUser.uuid,
     role: newUser.role,
-    userType: newUser.userType,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
       id: newUser.id,
       uuid: newUser.uuid,
       role: newUser.role,
-      userType: newUser.userType,
     },
     ip,
     userAgent

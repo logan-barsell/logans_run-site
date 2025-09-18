@@ -176,7 +176,7 @@ async function completeTwoFactorLogin(req, res, next) {
  */
 async function signup(req, res, next) {
   try {
-    const { email, password, userType } = req.body;
+    const { email, password } = req.body;
 
     // Basic input validation
     if (!email || !password) {
@@ -193,7 +193,6 @@ async function signup(req, res, next) {
       tenantId: req.tenantId,
       email,
       password,
-      userType,
       ip,
       userAgent,
     });

@@ -10,7 +10,7 @@ const DeleteFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
     const id = item.id;
     try {
       // Try to delete video file, but don't fail the entire operation if it fails
-      if (video && video.videoFile && video.videoType === 'upload') {
+      if (video && video.videoFile && video.videoType === 'UPLOAD') {
         try {
           await deleteVideoFromFirebase(video.videoFile);
         } catch (videoError) {

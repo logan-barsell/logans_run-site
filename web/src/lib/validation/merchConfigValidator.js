@@ -9,11 +9,11 @@ export const validateMerchConfig = merchConfig => {
   }
 
   switch (merchConfig.storeType) {
-    case 'shopify':
+    case 'SHOPIFY':
       return validateShopifyConfig(merchConfig);
-    case 'stripe':
+    case 'STRIPE':
       return validateStripeConfig(merchConfig);
-    case 'external':
+    case 'EXTERNAL':
       return validateExternalConfig(merchConfig);
     default:
       return false;
@@ -64,7 +64,7 @@ export const shouldShowStoreNav = merchConfig => {
   }
 
   // For external stores, we need a valid URL to show the nav link
-  if (merchConfig.storeType === 'external') {
+  if (merchConfig.storeType === 'EXTERNAL') {
     return !!(
       merchConfig.storefrontUrl && merchConfig.storefrontUrl.trim() !== ''
     );
@@ -83,7 +83,7 @@ export const shouldAllowStoreAccess = merchConfig => {
   }
 
   // External stores should not reach the /store page
-  if (merchConfig.storeType === 'external') {
+  if (merchConfig.storeType === 'EXTERNAL') {
     return false;
   }
 

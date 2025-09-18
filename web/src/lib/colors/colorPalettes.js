@@ -238,7 +238,9 @@ const preselectedColors = {
 
 // Helper function to get color palette
 export const getColorPalette = theme => {
-  return colorPalettes[theme] || colorPalettes.black;
+  // Handle ENUM values by converting to lowercase
+  const themeKey = theme ? theme.toLowerCase() : 'black';
+  return colorPalettes[themeKey] || colorPalettes.black;
 };
 
 // Helper function to get specific color

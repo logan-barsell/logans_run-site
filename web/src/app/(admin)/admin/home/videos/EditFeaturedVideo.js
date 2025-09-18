@@ -19,7 +19,7 @@ const EditFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
       let payload = { ...values };
 
       // Handle video upload if video type is 'upload' and new file is selected
-      if (values.videoType === 'upload' && values.videoFile) {
+      if (values.videoType === 'UPLOAD' && values.videoFile) {
         const videoFile = values.videoFile[0];
         const videoUrl = await uploadVideoAndReplace(
           videoFile,
@@ -27,8 +27,8 @@ const EditFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
           { tenantId }
         );
         payload.videoFile = videoUrl;
-        payload.videoType = 'upload';
-      } else if (values.videoType === 'youtube') {
+        payload.videoType = 'UPLOAD';
+      } else if (values.videoType === 'YOUTUBE') {
         // Clean up video file if switching from upload to youtube
         if (video.videoFile) {
           try {
@@ -38,10 +38,10 @@ const EditFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
           }
         }
         payload.videoFile = null;
-        payload.videoType = 'youtube';
+        payload.videoType = 'YOUTUBE';
       } else {
         // Keep existing video type and file
-        payload.videoType = values.videoType || video.videoType || 'youtube';
+        payload.videoType = values.videoType || video.videoType || 'YOUTUBE';
         payload.videoFile = video.videoFile || null;
       }
 

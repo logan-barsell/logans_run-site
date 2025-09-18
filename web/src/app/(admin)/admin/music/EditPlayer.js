@@ -26,7 +26,13 @@ const EditPlayer = ({ player }) => {
       // Generate embed URL
       const embedLink = generateSpotifyEmbedUrl(
         fields.spotifyLink,
-        fields.bgColor
+        fields.bgColor === 'AUTO'
+          ? 'auto'
+          : fields.bgColor === 'DARK'
+          ? '0'
+          : fields.bgColor === 'LIGHT'
+          ? '1'
+          : 'auto'
       );
       if (!embedLink) {
         showError('Failed to generate Spotify embed URL');

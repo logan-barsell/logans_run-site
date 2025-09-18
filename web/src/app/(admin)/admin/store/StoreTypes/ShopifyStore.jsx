@@ -31,7 +31,7 @@ const ShopifyStore = ({ forceValidation }) => {
   const handleSubmit = async values => {
     try {
       const configData = {
-        storeType: 'shopify',
+        storeType: 'SHOPIFY',
         shopDomain: values.shopDomain,
         storefrontAccessToken: values.storefrontAccessToken,
         collectionId: values.collectionId,

@@ -18,6 +18,6 @@ export async function getUserFromHeaders(headers) {
   return {
     isAuthenticated,
     user,
-    isAdmin: isAuthenticated && user?.role === 'admin', // Adjust based on your user role structure
+    isAdmin: isAuthenticated && user?.role === 'ADMIN', // Using UserRole enum
   };
 }

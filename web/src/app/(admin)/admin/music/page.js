@@ -37,16 +37,15 @@ export default function MusicEditPage() {
     let color;
     let borderStyle;
     switch (player.bgColor) {
-      case 'auto':
-      case '':
+      case 'AUTO':
         color = 'transparent'; // Transparent for auto theme
         borderStyle = '2px solid #666666'; // Outline for auto theme
         break;
-      case '0':
+      case 'DARK':
         color = '#282828'; // Dark gray for dark theme
         borderStyle = 'none';
         break;
-      case '1':
+      case 'LIGHT':
         color = '#FFFFFF'; // White for light theme
         borderStyle = 'none';
         break;
@@ -86,7 +85,7 @@ export default function MusicEditPage() {
                 className='hvr-grow'
                 title='Spotify'
               >
-                <Spotify style={theme?.socialMediaIconStyle || 'default'} />
+                <Spotify style={theme?.socialMediaIconStyle || 'DEFAULT'} />
               </a>
             )}
             {player.appleMusicLink && (
@@ -97,7 +96,7 @@ export default function MusicEditPage() {
                 className='hvr-grow'
                 title='Apple Music'
               >
-                <AppleMusic style={theme?.socialMediaIconStyle || 'default'} />
+                <AppleMusic style={theme?.socialMediaIconStyle || 'DEFAULT'} />
               </a>
             )}
             {player.youtubeLink && (
@@ -108,7 +107,7 @@ export default function MusicEditPage() {
                 className='hvr-grow'
                 title='YouTube'
               >
-                <YouTube style={theme?.socialMediaIconStyle || 'default'} />
+                <YouTube style={theme?.socialMediaIconStyle || 'DEFAULT'} />
               </a>
             )}
             {player.soundcloudLink && (
@@ -119,7 +118,7 @@ export default function MusicEditPage() {
                 className='hvr-grow'
                 title='SoundCloud'
               >
-                <SoundCloud style={theme?.socialMediaIconStyle || 'default'} />
+                <SoundCloud style={theme?.socialMediaIconStyle || 'DEFAULT'} />
               </a>
             )}
           </div>

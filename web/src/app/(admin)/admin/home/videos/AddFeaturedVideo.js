@@ -18,13 +18,13 @@ const AddFeaturedVideo = ({ onSuccess, onError, onClose }) => {
       let payload = { ...values };
 
       // Handle video upload if video type is 'upload'
-      if (values.videoType === 'upload' && values.videoFile) {
+      if (values.videoType === 'UPLOAD' && values.videoFile) {
         const videoFile = values.videoFile[0];
         const videoUrl = await uploadVideoToFirebase(videoFile, { tenantId });
         payload.videoFile = videoUrl;
-        payload.videoType = 'upload';
+        payload.videoType = 'UPLOAD';
       } else {
-        payload.videoType = 'youtube';
+        payload.videoType = 'YOUTUBE';
       }
 
       // Handle release date

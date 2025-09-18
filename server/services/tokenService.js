@@ -175,13 +175,13 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
     // Send security alert email to user about device change with deduplication
     await sendSecurityAlertWithDeduplicationHelper(
       tenantId,
-      decoded.id,
+      userId,
       'device_change',
       ip,
       userAgent
     );
 
-    await endAllUserSessions(tenantId, decoded.id); // Revoke all tokens and end sessions
+    await endAllUserSessions(tenantId, userId); // Revoke all tokens and end sessions
     throw new AppError(
       'Suspicious activity detected - Token used from a different device',
       403

@@ -13,7 +13,7 @@ async function sendCode(req, res, next) {
     // Determine userId and tenantId based on whether user is authenticated
     const userId = req.user?.id || req.body.userId;
     const tenantId = req.tenantId || req.body.tenantId;
-    const bandName = req.body.bandName || 'Bandsyte';
+    const bandName = 'Bandsyte'; // Default fallback, should be retrieved from theme.siteTitle in production
 
     if (!userId) {
       return res.status(400).json({

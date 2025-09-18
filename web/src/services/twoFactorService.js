@@ -58,7 +58,7 @@ export const disableTwoFactor = async () => {
 export const sendTwoFactorCode = async (bandName = 'Bandsyte') => {
   try {
     const response = await api.post('/2fa/send-code', {
-      bandName,
+      siteTitle: bandName, // Using siteTitle as the band name field
     });
     return response.data;
   } catch (error) {

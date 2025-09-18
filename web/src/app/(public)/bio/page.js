@@ -136,7 +136,7 @@ export default function BioPage() {
           <div className='row justify-content-center'>
             <div className='col-7 col-sm-auto'>
               {bio &&
-              bio[0]?.imageType === 'custom-image' &&
+              bio[0]?.imageType === 'CUSTOM_IMAGE' &&
               bio[0]?.customImageUrl ? (
                 <Image
                   className='aboutuspic'

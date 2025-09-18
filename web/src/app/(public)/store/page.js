@@ -60,7 +60,7 @@ export default function StorePage() {
     >
       <SecondaryNav label='Merchandise' />
       <div className='my-2 mb-5 my-sm-5'>
-        {merchConfig.storeType === 'shopify' && (
+        {merchConfig.storeType === 'SHOPIFY' && (
           <ShopifyStorefront
             shopDomain={merchConfig.shopDomain}
             storefrontAccessToken={merchConfig.storefrontAccessToken}
@@ -68,7 +68,7 @@ export default function StorePage() {
           />
         )}
 
-        {merchConfig.storeType === 'stripe' && (
+        {merchConfig.storeType === 'STRIPE' && (
           <StripeStorefront
             paymentLinkIds={merchConfig.paymentLinkIds}
             publishableKey={merchConfig.publishableKey}

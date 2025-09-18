@@ -12,9 +12,14 @@
     "web": "npm run dev --prefix web",
     "migrate:dev": "npm run migrate:dev --prefix server",
     "migrate:gen": "npm run migrate:gen --prefix server",
+    "migrate:gen-only": "npm run migrate:gen-only --prefix server",
     "migrate:deploy": "npm run migrate:deploy --prefix server",
     "migrate:status": "npm run migrate:status --prefix server",
-    "generate-secret": "npm run generate-secret --prefix server"
+    "prisma:generate": "npm run prisma:generate --prefix server",
+    "generate-secret": "npm run generate-secret --prefix server",
+    "seed:all": "npm run seed:all --prefix server",
+    "seed:bandsyte": "npm run seed:bandsyte --prefix server",
+    "seed:logans-run": "npm run seed:logans-run --prefix server"
   },
   "keywords": [
     "band",

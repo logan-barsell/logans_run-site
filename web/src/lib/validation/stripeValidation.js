@@ -58,7 +58,7 @@ export const validateStripeConfig = (publishableKey, buyButtonIds) => {
 // Helper function to check if Stripe config is complete
 export const isStripeConfigComplete = merchConfig => {
   return (
-    merchConfig?.storeType === 'stripe' &&
+    merchConfig?.storeType === 'STRIPE' &&
     merchConfig?.publishableKey &&
     merchConfig?.paymentLinkIds &&
     merchConfig?.paymentLinkIds.length > 0

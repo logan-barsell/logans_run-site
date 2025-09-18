@@ -27,7 +27,7 @@ const CurrentShows = () => {
     () => showsSettingsState?.data || DEFAULT_SHOW_SETTINGS,
     [showsSettingsState?.data]
   );
-  const [showSystem, setShowSystem] = useState('custom');
+  const [showSystem, setShowSystem] = useState('CUSTOM');
   const isUpdating = useRef(false);
   const operationSuccessfulRef = useRef(false);
 
@@ -37,13 +37,13 @@ const CurrentShows = () => {
 
   useEffect(() => {
     if (showsSettings) {
-      setShowSystem(showsSettings.showSystem || 'custom');
+      setShowSystem(showsSettings.showSystem || 'CUSTOM');
     }
   }, [showsSettings]);
 
   // Ensure we fetch fresh shows for admin when using custom management
   useEffect(() => {
-    if (showSystem === 'custom') {
+    if (showSystem === 'CUSTOM') {
       dispatch(fetchShows());
     }
   }, [dispatch, showSystem]);
@@ -67,7 +67,7 @@ const CurrentShows = () => {
         showError(
           showsSettingsState?.error?.message || 'Failed to update show system'
         );
-        setShowSystem(showsSettings?.showSystem || 'custom');
+        setShowSystem(showsSettings?.showSystem || 'CUSTOM');
       } else if (showsSettingsState?.data) {
         showSuccess('Show system updated successfully');
       }
@@ -104,12 +104,12 @@ const CurrentShows = () => {
           aria-label='.form-select-lg example'
         >
           <option disabled>Select Shows System</option>
-          <option value='custom'>Custom Management</option>
-          <option value='bandsintown'>Bandsintown</option>
+          <option value='CUSTOM'>Custom Management</option>
+          <option value='BANDSINTOWN'>Bandsintown</option>
         </select>
       </div>
       <hr />
-      {showSystem === 'bandsintown' ? (
+      {showSystem === 'BANDSINTOWN' ? (
         <BandsintownManagement
           showSystem={showSystem}
           showsSettings={showsSettings}

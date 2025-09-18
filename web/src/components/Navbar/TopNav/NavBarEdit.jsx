@@ -89,12 +89,12 @@ const NavBarEdit = ({ routes }) => {
 
   // Determine header display content
   const getHeaderContent = () => {
-    const headerDisplay = theme?.headerDisplay || 'band-name-and-logo';
+    const headerDisplay = theme?.headerDisplay || 'BAND_NAME_AND_LOGO';
 
     switch (headerDisplay) {
-      case 'band-name-only':
+      case 'BAND_NAME_ONLY':
         return theme?.siteTitle || 'Bandsyte';
-      case 'logo-only':
+      case 'LOGO_ONLY':
         return theme?.bandLogoUrl ? (
           <Image
             src={theme.bandLogoUrl}
@@ -106,7 +106,7 @@ const NavBarEdit = ({ routes }) => {
         ) : (
           theme?.siteTitle || 'Bandsyte'
         );
-      case 'header-logo-only':
+      case 'HEADER_LOGO_ONLY':
         return theme?.bandHeaderLogoUrl ? (
           <Image
             src={theme.bandHeaderLogoUrl}
@@ -117,7 +117,7 @@ const NavBarEdit = ({ routes }) => {
         ) : (
           theme?.siteTitle || 'Bandsyte'
         );
-      case 'band-name-and-logo':
+      case 'BAND_NAME_AND_LOGO':
       default:
         return (
           <>
@@ -137,25 +137,35 @@ const NavBarEdit = ({ routes }) => {
 
   // Determine header position class
   const getHeaderPositionClass = () => {
-    const headerPosition = theme?.headerPosition || 'left';
+    const headerPosition = theme?.headerPosition || 'LEFT';
 
     switch (headerPosition) {
-      case 'center':
+      case 'CENTER':
         return 'navbar-container-center';
-      case 'right':
+      case 'RIGHT':
         return 'navbar-container-right';
-      case 'left':
+      case 'LEFT':
       default:
         return 'navbar-container-left';
     }
   };
 
-  // Determine header display class
+  // Determine header display class - FIXED VERSION
   const getHeaderDisplayClass = () => {
-    const headerDisplay = theme?.headerDisplay || 'band-name-and-logo';
-    return headerDisplay.startsWith('header-')
-      ? headerDisplay.replace(/-/g, '-')
-      : `header-${headerDisplay.replace(/-/g, '-')}`;
+    const headerDisplay = theme?.headerDisplay || 'BAND_NAME_AND_LOGO';
+
+    // Convert ENUM values to CSS class names
+    switch (headerDisplay) {
+      case 'BAND_NAME_ONLY':
+        return 'header-band-name-only';
+      case 'BAND_NAME_AND_LOGO':
+        return 'header-band-name-and-logo';
+      case 'LOGO_ONLY':
+      case 'HEADER_LOGO_ONLY': // Both use the same CSS class
+        return 'header-logo-only';
+      default:
+        return 'header-band-name-and-logo';
+    }
   };
 
   async function handleLogout() {

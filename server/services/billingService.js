@@ -36,7 +36,7 @@ async function getProducts(tenantId) {
   try {
     // Ensure tenant has stripe merch configured
     const merch = await MerchConfigService.getMerchConfig(tenantId);
-    if (!merch || merch.storeType !== 'stripe') {
+    if (!merch || merch.storeType !== 'STRIPE') {
       throw new AppError('Stripe store is not configured for tenant', 400);
     }
     checkStripeAvailable();
@@ -89,7 +89,7 @@ async function getProducts(tenantId) {
 async function createCheckoutSession(tenantId, products) {
   try {
     const merch = await MerchConfigService.getMerchConfig(tenantId);
-    if (!merch || merch.storeType !== 'stripe') {
+    if (!merch || merch.storeType !== 'STRIPE') {
       throw new AppError('Stripe store is not configured for tenant', 400);
     }
     checkStripeAvailable();
@@ -132,7 +132,7 @@ async function createCheckoutSession(tenantId, products) {
 async function getShippingRate(tenantId) {
   try {
     const merch = await MerchConfigService.getMerchConfig(tenantId);
-    if (!merch || merch.storeType !== 'stripe') {
+    if (!merch || merch.storeType !== 'STRIPE') {
       throw new AppError('Stripe store is not configured for tenant', 400);
     }
     checkStripeAvailable();
@@ -160,7 +160,7 @@ async function getShippingRate(tenantId) {
 async function createProduct(tenantId, productData) {
   try {
     const merch = await MerchConfigService.getMerchConfig(tenantId);
-    if (!merch || merch.storeType !== 'stripe') {
+    if (!merch || merch.storeType !== 'STRIPE') {
       throw new AppError('Stripe store is not configured for tenant', 400);
     }
     checkStripeAvailable();
@@ -200,7 +200,7 @@ async function createProduct(tenantId, productData) {
 async function updateProduct(tenantId, productId, updateData) {
   try {
     const merch = await MerchConfigService.getMerchConfig(tenantId);
-    if (!merch || merch.storeType !== 'stripe') {
+    if (!merch || merch.storeType !== 'STRIPE') {
       throw new AppError('Stripe store is not configured for tenant', 400);
     }
     checkStripeAvailable();
@@ -226,7 +226,7 @@ async function updateProduct(tenantId, productId, updateData) {
 async function deleteProduct(tenantId, productId) {
   try {
     const merch = await MerchConfigService.getMerchConfig(tenantId);
-    if (!merch || merch.storeType !== 'stripe') {
+    if (!merch || merch.storeType !== 'STRIPE') {
       throw new AppError('Stripe store is not configured for tenant', 400);
     }
     checkStripeAvailable();

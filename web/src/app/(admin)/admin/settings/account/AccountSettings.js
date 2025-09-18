@@ -39,7 +39,7 @@ const AccountSettings = () => {
     }),
     [user?.adminEmail, user?.adminPhone]
   );
-
+  console.log('user', user);
   if (!user || !user.adminEmail) {
     return <PageLoader />;
   }

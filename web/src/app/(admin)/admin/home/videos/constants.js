@@ -9,27 +9,27 @@ export const featuredVideoFields = (video = {}) => [
     name: 'videoType',
     type: 'select',
     options: [
-      { value: 'youtube', name: 'YouTube Snippet' },
-      { value: 'upload', name: 'Upload Video' },
+      { value: 'YOUTUBE', name: 'YouTube Snippet' },
+      { value: 'UPLOAD', name: 'Upload Video' },
     ],
-    initialValue: video.videoType || 'upload',
+    initialValue: video.videoType || 'UPLOAD',
   },
   {
     label: 'Display Mode',
     name: 'displayMode',
     type: 'select',
     options: [
-      { value: 'full', name: 'Captions (with YouTube link)' },
-      { value: 'videoOnly', name: 'Video Only' },
+      { value: 'FULL', name: 'Captions (with YouTube link)' },
+      { value: 'VIDEO_ONLY', name: 'Video Only' },
     ],
-    initialValue: video.displayMode || 'full',
+    initialValue: video.displayMode || 'FULL',
   },
   {
     label: 'Title',
     name: 'title',
     type: 'conditionalText',
     conditionField: 'displayMode',
-    conditionValue: 'full',
+    conditionValue: 'FULL',
     initialValue: video.title || '',
   },
   {
@@ -37,7 +37,7 @@ export const featuredVideoFields = (video = {}) => [
     name: 'description',
     type: 'conditionalText',
     conditionField: 'displayMode',
-    conditionValue: 'full',
+    conditionValue: 'FULL',
     initialValue: video.description || '',
   },
   {
@@ -45,8 +45,8 @@ export const featuredVideoFields = (video = {}) => [
     name: 'youtubeLink',
     type: 'conditionalYoutubeUrl',
     conditions: [
-      { videoType: 'youtube' }, // Always show for YouTube Snippet
-      { videoType: 'upload', displayMode: 'full' }, // Show for Upload + Captions
+      { videoType: 'YOUTUBE' }, // Always show for YouTube Snippet
+      { videoType: 'UPLOAD', displayMode: 'FULL' }, // Show for Upload + Captions
     ],
     initialValue: video.youtubeLink || '',
     placeholder: 'Enter YouTube video URL',
@@ -56,7 +56,7 @@ export const featuredVideoFields = (video = {}) => [
     name: 'startTime',
     type: 'conditionalNumber',
     conditionField: 'videoType',
-    conditionValue: 'youtube',
+    conditionValue: 'YOUTUBE',
     initialValue: video.startTime || 0,
     min: 0,
   },
@@ -65,7 +65,7 @@ export const featuredVideoFields = (video = {}) => [
     name: 'endTime',
     type: 'conditionalNumber',
     conditionField: 'videoType',
-    conditionValue: 'youtube',
+    conditionValue: 'YOUTUBE',
     initialValue: video.endTime || 10,
     min: 0,
   },

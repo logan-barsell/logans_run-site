@@ -60,9 +60,9 @@ export const EXTERNAL_FIELDS = [
   },
 ];
 
-// Store type options for the selector
+// Store type options for the selector - using MerchStoreType enum values
 export const STORE_TYPE_OPTIONS = [
-  { value: 'shopify', label: 'Shopify' },
-  { value: 'stripe', label: 'Stripe' },
-  { value: 'external', label: 'External Store' },
+  { value: 'SHOPIFY', label: 'Shopify' },
+  { value: 'STRIPE', label: 'Stripe' },
+  { value: 'EXTERNAL', label: 'External Store' },
 ];

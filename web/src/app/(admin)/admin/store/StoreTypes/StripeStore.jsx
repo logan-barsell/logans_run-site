@@ -33,7 +33,7 @@ const StripeStore = ({ forceValidation }) => {
         : [];
 
       const configData = {
-        storeType: 'stripe',
+        storeType: 'STRIPE',
         publishableKey: values.publishableKey,
         paymentLinkIds: paymentLinkIdsArray,
         // Preserve other store type fields

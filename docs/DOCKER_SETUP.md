@@ -58,8 +58,14 @@ NEXT_PUBLIC_API_URL=http://localhost:5001
    ```
 
 5. **Seed the database with test data:**
+
    ```bash
-   npm run seed:full
+   # Seed all tenants (Bandsyte + Logan's Run)
+   npm run seed:all
+
+   # Or seed individual tenants:
+   npm run seed:bandsyte
+   npm run seed:logans-run
    ```
 
 ## Production Setup
@@ -68,6 +74,36 @@ NEXT_PUBLIC_API_URL=http://localhost:5001
    ```bash
    docker compose -f docker-compose.prod.yml up -d
    ```
+
+## Database Seeders
+
+The application includes a comprehensive seeding system located in `server/db/prisma/seeders/`:
+
+### Available Seeders
+
+- **Bandsyte Tenant** (`bandsyte-seeder.js`): Seeds the official Bandsyte company tenant
+
+  - Domain: bandsyte.com
+  - Admin: admin@bandsyte.com / Bandsyte!1
+  - Includes: theme, bio, contact info
+
+- **Logan's Run Tenant** (`logans-run-seeder.js`): Seeds an example band tenant
+  - Domain: logansrun.bandsyte.com
+  - Admin: loganjbars@gmail.com
+  - Includes: theme, bio, contact info, member, merch config
+
+### Seeder Features
+
+- **One-time setup**: Designed for initial database setup only
+- **Tenant-scoped**: Uses `withTenant` for proper data isolation
+- **Comprehensive**: Seeds all required data for each tenant type
+- **Modular**: Each seeder can be run independently
+
+### ⚠️ Important Notes
+
+- **Do not run seeders multiple times**: These seeders create tenants with unique constraints (domains, emails, etc.)
+- **Run only during initial setup**: Use these seeders to set up your development environment initially
+- **Reset database if needed**: If you need to re-seed, use `npm run db:reset` to clear and rebuild the database first
 
 ## Available Services
 
@@ -83,7 +119,9 @@ NEXT_PUBLIC_API_URL=http://localhost:5001
 - **Rebuild services**: `docker compose up --build`
 - **Run migrations**: `npm run migrate:deploy`
 - **Check migration status**: `npm run migrate:status`
-- **Seed development data**: `npm run seed:full`
+- **Seed all tenants**: `npm run seed:all`
+- **Seed Bandsyte tenant**: `npm run seed:bandsyte`
+- **Seed Logan's Run tenant**: `npm run seed:logans-run`
 - **Export database**: `npm run db:export`
 - **Import database**: `npm run db:import-docker backup-file.sql`
 - **Reset database**: `npm run db:reset`

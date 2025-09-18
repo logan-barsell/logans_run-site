@@ -89,19 +89,19 @@ async function sendEmail(
       if (templateType === 'contactNotification') {
         template = emailTemplates[templateType](
           templateData.contactData,
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           theme,
           config
         );
       } else if (templateType === 'welcomeEmail') {
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.dashboardUrl,
           config
         );
       } else if (templateType === 'newsletterConfirmation') {
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.email,
           templateData.unsubscribeToken,
           theme,
@@ -110,7 +110,7 @@ async function sendEmail(
       } else if (templateType === 'newsletterSignupNotification') {
         template = emailTemplates[templateType](
           templateData.fanEmail,
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           theme,
           config
         );
@@ -118,14 +118,14 @@ async function sendEmail(
         // Password reset template needs link, bandName, and theme
         template = emailTemplates[templateType](
           templateData.link,
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           theme,
           config
         );
       } else if (templateType === 'passwordResetSuccess') {
         // Password reset success template needs bandName, timestamp, and theme
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.timestamp,
           theme,
           config
@@ -133,7 +133,7 @@ async function sendEmail(
       } else if (templateType === 'loginAlert') {
         // Login alert template needs bandName, timestamp, ipAddress, userAgent, location, theme
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.timestamp,
           templateData.ipAddress,
           templateData.userAgent,
@@ -144,7 +144,7 @@ async function sendEmail(
       } else if (templateType === 'securityAlert') {
         // Security alert template needs bandName, alertType, timestamp, ipAddress, userAgent, location, theme
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.alertType,
           templateData.timestamp,
           templateData.ipAddress,
@@ -157,14 +157,14 @@ async function sendEmail(
         // Two-factor code template needs code, bandName, and theme
         template = emailTemplates[templateType](
           templateData.code,
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           theme,
           config
         );
       } else if (templateType === 'musicNotification') {
         // Music notification template needs bandName, content, theme, unsubscribeToken
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.content,
           theme,
           templateData.unsubscribeToken,
@@ -173,7 +173,7 @@ async function sendEmail(
       } else if (templateType === 'videoNotification') {
         // Video notification template needs bandName, content, theme, unsubscribeToken
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.content,
           theme,
           templateData.unsubscribeToken,
@@ -182,7 +182,7 @@ async function sendEmail(
       } else if (templateType === 'showNotification') {
         // Show notification template needs bandName, content, theme, unsubscribeToken
         template = emailTemplates[templateType](
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           templateData.content,
           theme,
           templateData.unsubscribeToken,
@@ -193,7 +193,7 @@ async function sendEmail(
         template = emailTemplates[templateType](
           templateData.link,
           templateData.role,
-          templateData.bandName,
+          templateData.siteTitle || 'Bandsyte',
           theme,
           config
         );

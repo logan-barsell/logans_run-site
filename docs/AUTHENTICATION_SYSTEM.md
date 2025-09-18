@@ -235,11 +235,9 @@ CSRF_SECRET=your-csrf-secret
 
 ```javascript
 {
-  bandName: String,           // Required
   adminEmail: String,         // Required, unique
   password: String,           // Required, hashed
   role: 'USER' | 'ADMIN' | 'SUPERADMIN',
-  userType: 'USER' | 'ADMIN',
   status: 'ACTIVE' | 'INACTIVE',
   verified: Boolean,
   // ... additional fields

@@ -14,7 +14,7 @@ function validateMerchConfig(config) {
   }
 
   const { storeType } = config;
-  if (storeType === 'shopify') {
+  if (storeType === 'SHOPIFY') {
     const details = {
       hasShopDomain: isNonEmptyString(config.shopDomain),
       hasStorefrontAccessToken: isNonEmptyString(config.storefrontAccessToken),
@@ -27,7 +27,7 @@ function validateMerchConfig(config) {
     return { isValid, details };
   }
 
-  if (storeType === 'stripe') {
+  if (storeType === 'STRIPE') {
     const details = {
       hasValidPublishableKey: isNonEmptyString(config.publishableKey),
       hasValidBuyButtonIds: hasNonEmptyStringInArray(config.paymentLinkIds),
@@ -37,7 +37,7 @@ function validateMerchConfig(config) {
     return { isValid, details };
   }
 
-  if (storeType === 'external') {
+  if (storeType === 'EXTERNAL') {
     return { isValid: true, details: {} };
   }
 

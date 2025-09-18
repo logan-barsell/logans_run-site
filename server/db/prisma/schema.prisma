@@ -9,7 +9,6 @@ datasource db {
 
 model Tenant {
   id                    String                 @id @default(uuid())
-  name                  String
   subDomain             String?                @unique
   domain                String                 @unique
   isCustomDomain        Boolean                @default(false)
@@ -31,34 +30,107 @@ model Tenant {
   videos                Video[]
 }
 
+enum UserRole {
+  USER
+  ADMIN
+  SUPERADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum HeaderDisplay {
+  BAND_NAME_ONLY
+  BAND_NAME_AND_LOGO
+  LOGO_ONLY
+  HEADER_LOGO_ONLY
+}
+
+enum HeaderPosition {
+  LEFT
+  CENTER
+  RIGHT
+}
+
+enum BioImageType {
+  BAND_LOGO
+  HEADER_LOGO
+  CUSTOM_IMAGE
+}
+
+enum MerchStoreType {
+  SHOPIFY
+  STRIPE
+  EXTERNAL
+}
+
+enum FeaturedVideoType {
+  YOUTUBE
+  UPLOAD
+}
+
+enum ShowSystem {
+  CUSTOM
+  BANDSINTOWN
+}
+
+enum SpotifyBgColor {
+  AUTO
+  DARK
+  LIGHT
+}
+
+enum SocialMediaIconStyle {
+  DEFAULT
+  COLORFUL
+}
+
+enum FeaturedVideoDisplayMode {
+  FULL
+  VIDEO_ONLY
+}
+
+enum ThemeBackgroundColor {
+  BLACK
+  PURPLE
+  RED
+  GREEN
+  TEAL
+  BLUE
+  BURGUNDY
+  GRAY
+  BROWN
+  PINK
+}
+
 model User {
-  id                  String    @id @default(uuid())
-  tenantId            String    @unique
-  bandName            String
-  adminEmail          String    @unique
+  id                  String     @id @default(uuid())
+  tenantId            String     @unique
+  adminEmail          String     @unique
   password            String
-  role                String
-  userType            String
-  status              String
-  verified            Boolean   @default(false)
+  role                UserRole
+  status              UserStatus
+  verified            Boolean    @default(false)
   invitedByUUID       String?
   deactivatedByUUID   String?
   deactivatedAt       DateTime?
   resetToken          String?
   resetTokenExpiry    DateTime?
-  twoFactorEnabled    Boolean   @default(false)
+  twoFactorEnabled    Boolean    @default(false)
   twoFactorCode       String?
   twoFactorCodeExpiry DateTime?
   securityPreferences Json?
-  isActive            Boolean   @default(true)
-  failedLoginAttempts Int       @default(0)
+  isActive            Boolean    @default(true)
+  failedLoginAttempts Int        @default(0)
   lockedUntil         DateTime?
   lastFailedLogin     DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
   adminPhone          String?
   sessions            Session[]
-  tenant              Tenant    @relation(fields: [tenantId], references: [id])
+  tenant              Tenant     @relation(fields: [tenantId], references: [id])
 }
 
 model Session {
@@ -105,42 +177,41 @@ model NewsletterSubscriber {
 }
 
 model Theme {
-  id                   String   @id @default(uuid())
-  tenantId             String   @unique
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  backgroundColor      String?  @default("black")
+  id                   String                @id @default(uuid())
+  tenantId             String                @unique
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  backgroundColor      ThemeBackgroundColor? @default(BLACK)
   bandLogoUrl          String?
-  enableNewsletter     Boolean  @default(true)
+  enableNewsletter     Boolean               @default(true)
   greeting             String?
-  headerDisplay        String?  @default("band-name-and-logo")
-  headerPosition       String?  @default("left")
+  headerDisplay        HeaderDisplay?        @default(BAND_NAME_AND_LOGO)
+  headerPosition       HeaderPosition?       @default(LEFT)
   introduction         String?
-  notifyOnNewMusic     Boolean  @default(false)
-  notifyOnNewShows     Boolean  @default(false)
-  notifyOnNewVideos    Boolean  @default(false)
-  paceTheme            String?  @default("minimal")
-  primaryColor         String?  @default("#000000")
-  primaryFont          String?  @default("Anton")
-  secondaryColor       String?  @default("#000000")
-  secondaryFont        String?  @default("Oswald")
-  siteTitle            String?  @default("Logan's Run")
-  socialMediaIconStyle String?  @default("default")
+  notifyOnNewMusic     Boolean               @default(false)
+  notifyOnNewShows     Boolean               @default(false)
+  notifyOnNewVideos    Boolean               @default(false)
+  paceTheme            String?               @default("minimal")
+  primaryColor         String?               @default("#000000")
+  primaryFont          String?               @default("Anton")
+  secondaryColor       String?               @default("#000000")
+  secondaryFont        String?               @default("Oswald")
+  siteTitle            String?               @default("Logan's Run")
+  socialMediaIconStyle SocialMediaIconStyle? @default(DEFAULT)
   bandHeaderLogoUrl    String?
-  isDefault            Boolean? @default(false)
-  tenant               Tenant   @relation(fields: [tenantId], references: [id])
+  isDefault            Boolean?              @default(false)
+  tenant               Tenant                @relation(fields: [tenantId], references: [id])
 }
 
 model Bio {
-  id             String   @id @default(uuid())
-  tenantId       String   @unique
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id             String       @id @default(uuid())
+  tenantId       String       @unique
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   customImageUrl String?
-  imageType      String   @default("band-logo")
-  name           String?
+  imageType      BioImageType @default(BAND_LOGO)
   text           String?
-  tenant         Tenant   @relation(fields: [tenantId], references: [id])
+  tenant         Tenant       @relation(fields: [tenantId], references: [id])
 }
 
 model ContactInfo {
@@ -208,12 +279,12 @@ model Video {
 }
 
 model FeaturedVideo {
-  id             String   @id @default(uuid())
+  id             String                   @id @default(uuid())
   tenantId       String
   title          String
   description    String
-  videoType      String
-  displayMode    String
+  videoType      FeaturedVideoType
+  displayMode    FeaturedVideoDisplayMode
   youtubeLink    String
   videoFile      String?
   videoThumbnail String?
@@ -222,9 +293,9 @@ model FeaturedVideo {
   startTime      Int?
   endTime        Int?
   releaseDate    DateTime
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  tenant         Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  tenant         Tenant                   @relation(fields: [tenantId], references: [id])
 }
 
 model FeaturedRelease {
@@ -261,45 +332,45 @@ model HomeImage {
 }
 
 model MerchConfig {
-  id                    String   @id @default(uuid())
-  tenantId              String   @unique
-  storeType             String
+  id                    String         @id @default(uuid())
+  tenantId              String         @unique
+  storeType             MerchStoreType
   shopDomain            String?
   storefrontAccessToken String?
   collectionId          String?
   paymentLinkIds        String[]
   publishableKey        String?
   storefrontUrl         String?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  tenant                Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  tenant                Tenant         @relation(fields: [tenantId], references: [id])
 }
 
 model ShowsSettings {
-  id                String   @id @default(uuid())
-  tenantId          String   @unique
-  showSystem        String?
+  id                String      @id @default(uuid())
+  tenantId          String      @unique
+  showSystem        ShowSystem?
   bandsintownArtist String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  tenant            Tenant      @relation(fields: [tenantId], references: [id])
 }
 
 model SpotifyPlayer {
-  id             String     @id @default(uuid())
+  id             String          @id @default(uuid())
   tenantId       String
   title          String?
   date           DateTime?
-  bgColor        String?
+  bgColor        SpotifyBgColor?
   spotifyLink    String?
   embedLink      String?
   appleMusicLink String?
   youtubeLink    String?
   soundcloudLink String?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   type           MusicType?
-  tenant         Tenant     @relation(fields: [tenantId], references: [id])
+  tenant         Tenant          @relation(fields: [tenantId], references: [id])
 }
 
 enum VideoCategory {

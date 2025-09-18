@@ -85,11 +85,11 @@ export const editPlayerFields = player => {
       name: 'bgColor',
       type: 'options',
       options: [
-        { name: 'Auto (from artwork)', value: 'auto' },
-        { name: 'Dark', value: '0' },
-        { name: 'Light', value: '1' },
+        { name: 'Auto (from artwork)', value: 'AUTO' },
+        { name: 'Dark', value: 'DARK' },
+        { name: 'Light', value: 'LIGHT' },
       ],
-      initialValue: bgColor || '0',
+      initialValue: bgColor || 'AUTO',
     },
     { label: 'Title', name: 'title', type: 'text', initialValue: title },
     {

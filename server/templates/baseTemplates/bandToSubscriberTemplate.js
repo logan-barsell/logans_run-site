@@ -12,7 +12,7 @@
 //  * - Show notifications
 //  * - Newsletter signup notifications
 //  *
-//  * @param {string} bandName - The band's name
+//  * @param {string} siteTitle - The band's name (from theme.siteTitle)
 //  * @param {string} subject - Email subject
 //  * @param {string} headerTitle - Title shown in header
 //  * @param {string} headerSubtitle - Subtitle shown in header
@@ -22,7 +22,7 @@
 //  * @returns {Object} Template with subject and HTML
 //  */
 // const bandToSubscriberTemplate = (
-//   bandName,
+//   siteTitle,
 //   subject,
 //   headerTitle,
 //   headerSubtitle,
@@ -112,7 +112,7 @@
 //         <div class="header">
 //           ${
 //             theme.bandLogoUrl
-//               ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
+//               ? `<img src="${theme.bandLogoUrl}" alt="${siteTitle} Logo" style="max-height: 130px; height: auto; width: auto;" />`
 //               : ''
 //           }
 //           <h1>${headerTitle}</h1>

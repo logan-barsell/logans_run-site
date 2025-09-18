@@ -43,8 +43,8 @@ export default function FeaturedVideosSection() {
       return {
         id: v.id,
         videoId,
-        videoType: v.videoType || 'youtube',
-        displayMode: v.displayMode || 'full',
+        videoType: v.videoType || 'YOUTUBE',
+        displayMode: v.displayMode || 'FULL',
         videoFile: v.videoFile,
         videoThumbnail: v.videoThumbnail,
         youtubeLink: v.youtubeLink,

@@ -23,7 +23,7 @@ const ExternalStore = () => {
   const handleSubmit = async values => {
     try {
       const configData = {
-        storeType: 'external',
+        storeType: 'EXTERNAL',
         storefrontUrl: values.storefrontUrl,
         // Preserve other store type fields
         shopDomain: merchConfig?.shopDomain || '',

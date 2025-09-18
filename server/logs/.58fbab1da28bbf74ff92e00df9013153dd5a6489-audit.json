@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/server/logs/.58fbab1da28bbf74ff92e00df9013153dd5a6489-audit.json",
+    "files": [
+        {
+            "date": 1758217679950,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/server/logs/app-2025-09-18.log",
+            "hash": "1c74d04d2fa6d05dcc92709c584871d0003960b37b8e3dd3906f26f87d596c66"
+        }
+    ],
+    "hashType": "sha256"
+}

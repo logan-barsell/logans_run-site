@@ -112,15 +112,15 @@ const ThemeEdit = () => {
         ...field,
         options: (field.options || []).filter(opt => {
           // Hide header-logo-only if no header logo
-          if (opt.value === 'header-logo-only' && !headerHasLogo) {
+          if (opt.value === 'HEADER_LOGO_ONLY' && !headerHasLogo) {
             return false;
           }
           // Hide logo-only if no band logo
-          if (opt.value === 'logo-only' && !bandHasLogo) {
+          if (opt.value === 'LOGO_ONLY' && !bandHasLogo) {
             return false;
           }
           // Hide band-name-and-logo if no band logo
-          if (opt.value === 'band-name-and-logo' && !bandHasLogo) {
+          if (opt.value === 'BAND_NAME_AND_LOGO' && !bandHasLogo) {
             return false;
           }
           return true;
@@ -147,28 +147,28 @@ const ThemeEdit = () => {
     siteTitle: theme?.siteTitle || '',
     greeting: theme?.greeting || '',
     introduction: theme?.introduction || '',
-    headerDisplay: theme?.headerDisplay || 'band-name-and-logo',
-    headerPosition: theme?.headerPosition || 'left',
-    backgroundColor: theme?.backgroundColor || 'black',
+    headerDisplay: theme?.headerDisplay || 'BAND_NAME_AND_LOGO',
+    headerPosition: theme?.headerPosition || 'LEFT',
+    backgroundColor: theme?.backgroundColor || 'BLACK',
     primaryColor: theme?.primaryColor || '#000000',
     secondaryColor: theme?.secondaryColor || '#ffffff',
     primaryFont: theme?.primaryFont || 'MetalMania',
     secondaryFont: theme?.secondaryFont || 'CourierPrime',
-    socialMediaIconStyle: theme?.socialMediaIconStyle || 'default',
+    socialMediaIconStyle: theme?.socialMediaIconStyle || 'DEFAULT',
     paceTheme: theme?.paceTheme || 'minimal',
     __logoType: 'icon',
   };
 
   // If logos aren't available but the saved value requires them, fall back to band-name-only
-  if (!headerHasLogo && initialValues.headerDisplay === 'header-logo-only') {
-    initialValues.headerDisplay = 'band-name-only';
+  if (!headerHasLogo && initialValues.headerDisplay === 'HEADER_LOGO_ONLY') {
+    initialValues.headerDisplay = 'BAND_NAME_ONLY';
   }
   if (
     !bandHasLogo &&
-    (initialValues.headerDisplay === 'logo-only' ||
-      initialValues.headerDisplay === 'band-name-and-logo')
+    (initialValues.headerDisplay === 'LOGO_ONLY' ||
+      initialValues.headerDisplay === 'BAND_NAME_AND_LOGO')
   ) {
-    initialValues.headerDisplay = 'band-name-only';
+    initialValues.headerDisplay = 'BAND_NAME_ONLY';
   }
 
   const maxHeight = logoType === 'header' ? 100 : 150;

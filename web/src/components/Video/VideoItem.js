@@ -45,7 +45,7 @@ const VideoItem = ({
 
   // Render video player based on type
   const renderVideoPlayer = () => {
-    if (videoType === 'upload' && videoUrl) {
+    if (videoType === 'UPLOAD' && videoUrl) {
       // Render HTML5 video player for uploaded videos
       return (
         <video

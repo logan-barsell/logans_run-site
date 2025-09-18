@@ -47,7 +47,7 @@ export default function PublicNavLink({ routes = [], menuToggle, footer }) {
       // Handle external store URLs differently (same as original NavLink)
       if (
         route.name === 'Store' &&
-        merchConfig?.storeType === 'external' &&
+        merchConfig?.storeType === 'EXTERNAL' &&
         merchConfig?.storefrontUrl
       ) {
         return (

@@ -71,15 +71,15 @@ async function addFeaturedVideo(tenantId, videoData) {
     // 1. videoType is 'youtube' (YouTube Snippet) - always
     // 2. videoType is 'upload' AND displayMode is 'full' (Upload + Captions)
     const needsYouTubeLink =
-      videoData.videoType === 'youtube' ||
-      (videoData.videoType === 'upload' && videoData.displayMode === 'full');
+      videoData.videoType === 'YOUTUBE' ||
+      (videoData.videoType === 'UPLOAD' && videoData.displayMode === 'full');
 
     if (needsYouTubeLink && !videoData.youtubeLink) {
       throw new AppError('YouTube link is required', 400);
     }
 
     // Video file is required when videoType is 'upload'
-    if (videoData.videoType === 'upload' && !videoData.videoFile) {
+    if (videoData.videoType === 'UPLOAD' && !videoData.videoFile) {
       throw new AppError('Video file is required for upload video type', 400);
     }
 

@@ -80,12 +80,12 @@ export const editShowFields = show => {
 };
 
 export const SHOW_SYSTEM_OPTIONS = [
-  { value: 'custom', label: 'Custom Management' },
-  { value: 'bandsintown', label: 'Bandsintown' },
+  { value: 'CUSTOM', label: 'Custom Management' },
+  { value: 'BANDSINTOWN', label: 'Bandsintown' },
 ];
 
 export const DEFAULT_SHOW_SETTINGS = {
-  showSystem: 'custom',
+  showSystem: 'CUSTOM',
   bandsintownArtist: '',
 };
 

@@ -398,7 +398,7 @@ export async function validateShopifyConfig(
  */
 export function isShopifyConfigComplete(merchConfig) {
   return (
-    merchConfig?.storeType === 'shopify' &&
+    merchConfig?.storeType === 'SHOPIFY' &&
     merchConfig?.shopDomain &&
     merchConfig?.storefrontAccessToken &&
     merchConfig?.collectionId

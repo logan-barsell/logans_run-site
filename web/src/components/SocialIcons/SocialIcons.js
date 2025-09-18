@@ -69,7 +69,13 @@ const SocialIcons = ({
             aria-label={`Visit our ${config.name} page`}
             title={config.name}
           >
-            <IconComponent style={theme?.socialMediaIconStyle || 'default'} />
+            <IconComponent
+              style={
+                theme?.socialMediaIconStyle === 'COLORFUL'
+                  ? 'colorful'
+                  : 'default'
+              }
+            />
             {showLabels && (
               <span className='social-icon-label'>{config.name}</span>
             )}

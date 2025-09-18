@@ -14,7 +14,7 @@
 //  * - Two-factor authentication
 //  * - Login alerts
 //  *
-//  * @param {string} bandName - The band's name
+//  * @param {string} siteTitle - The band's name (from theme.siteTitle)
 //  * @param {string} subject - Email subject
 //  * @param {string} headerTitle - Title shown in header
 //  * @param {string} headerSubtitle - Subtitle shown in header
@@ -24,7 +24,7 @@
 //  * @returns {Object} Template with subject and HTML
 //  */
 // const bandsyteToBandTemplate = (
-//   bandName,
+//   siteTitle,
 //   subject,
 //   headerTitle,
 //   headerSubtitle,
@@ -104,7 +104,7 @@
 //         <div class="header">
 //           ${
 //             theme.bandLogoUrl
-//               ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
+//               ? `<img src="${theme.bandLogoUrl}" alt="${siteTitle} Logo" style="max-height: 130px; height: auto; width: auto;" />`
 //               : ''
 //           }
 //           <h1>${headerTitle}</h1>
@@ -119,7 +119,7 @@
 //           <p>This notification was sent by your Bandsyte website platform.</p>
 //         </div>
 //         <div class="footer">
-//           <p>&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
+//           <p>&copy; ${new Date().getFullYear()} ${siteTitle}. All rights reserved.</p>
 //           <p>Website powered by <strong>Bandsyte</strong>.</p>
 //         </div>
 //       </div>
@@ -134,7 +134,7 @@
 const { getColorPalette } = require('../../utils/colorPalettes');
 
 const bandsyteToBandTemplate = (
-  bandName,
+  siteTitle,
   subject,
   headerTitle,
   headerSubtitle,
@@ -170,7 +170,7 @@ const bandsyteToBandTemplate = (
         }; color:white !important; padding:30px; text-align:center; border-radius:10px 10px 0 0;">
           ${
             theme.bandLogoUrl
-              ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height:130px; height:auto; width:auto;" />`
+              ? `<img src="${theme.bandLogoUrl}" alt="${siteTitle} Logo" style="max-height:130px; height:auto; width:auto;" />`
               : ''
           }
           <h1 style="margin:20px 0 10px; font-size:24px; color:white !important;">${headerTitle}</h1>
@@ -193,7 +193,7 @@ const bandsyteToBandTemplate = (
           <p style="margin:0;">This notification was sent by your Bandsyte website platform.</p>
         </div>
         <div class="footer" style="text-align:center; margin-top:30px; color:#333 !important; font-size:14px;">
-          <p style="margin:0;">&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
+          <p style="margin:0;">&copy; ${new Date().getFullYear()} ${siteTitle}. All rights reserved.</p>
           <p style="margin:0;">Website powered by <strong>Bandsyte</strong>.</p>
         </div>
       </div>

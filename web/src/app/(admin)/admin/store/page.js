@@ -69,11 +69,11 @@ export default function StoreEditPage() {
     }
 
     switch (selectedStoreType) {
-      case 'shopify':
+      case 'SHOPIFY':
         return <ShopifyStore forceValidation={forceValidation} />;
-      case 'stripe':
+      case 'STRIPE':
         return <StripeStore forceValidation={forceValidation} />;
-      case 'external':
+      case 'EXTERNAL':
         return <ExternalStore />;
       default:
         return null;

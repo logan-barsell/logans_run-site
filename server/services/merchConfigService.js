@@ -24,7 +24,7 @@ async function getMerchConfig(tenantId) {
       if (!merchConfig) return null;
 
       const { isValid, details } = validateMerchConfig(merchConfig);
-      if (!isValid && merchConfig.storeType === 'stripe') {
+      if (!isValid && merchConfig.storeType === 'STRIPE') {
         logger.warn('Stripe config validation failed:', details);
       }
       return isValid ? merchConfig : null;

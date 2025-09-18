@@ -28,7 +28,7 @@ export const showsReducer = (state = showsInitialState, action) => {
 };
 
 const showsSettingsInitialState = {
-  data: { showSystem: 'custom', bandsintownArtist: '' },
+  data: { showSystem: 'CUSTOM', bandsintownArtist: '' },
   loading: false,
   error: null,
 };

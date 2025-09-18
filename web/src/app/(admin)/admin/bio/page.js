@@ -35,7 +35,7 @@ export default function BioEditPage() {
 
     try {
       // Validate that custom image is provided when custom image type is selected
-      if (values.imageType === 'custom-image' && !values.customImage) {
+      if (values.imageType === 'CUSTOM_IMAGE' && !values.customImage) {
         throw new Error(
           'Please upload a custom image when selecting custom image type'
         );
@@ -100,17 +100,17 @@ export default function BioEditPage() {
   });
 
   // Get current bio data for initial values
-  const initialImageTypeCandidate = bioRow.imageType || 'band-logo';
+  const initialImageTypeCandidate = bioRow.imageType || 'BAND_LOGO';
   const initialValues = {
     text: bioRow.text || '',
     imageType:
-      initialImageTypeCandidate === 'header-logo' && !headerHasLogo
-        ? 'band-logo'
+      initialImageTypeCandidate === 'HEADER_LOGO' && !headerHasLogo
+        ? 'BAND_LOGO'
         : initialImageTypeCandidate,
     customImage: bioRow.customImageUrl || '',
   };
 
-  const maxHeight = bioRow.imageType === 'header-logo' ? 80 : 200;
+  const maxHeight = bioRow.imageType === 'HEADER_LOGO' ? 80 : 200;
 
   return (
     <div className='mb-5 pb-5'>
@@ -127,14 +127,14 @@ export default function BioEditPage() {
         onSuccess={handleSuccess}
       >
         {({ values }) => {
-          const currentImageType = values.imageType || 'band-logo';
+          const currentImageType = values.imageType || 'BAND_LOGO';
           return (
             <>
               {/* Image Display */}
               <div className='mb-4'>
                 {bioRow.imageType ? (
                   <>
-                    {currentImageType === 'band-logo' && theme?.bandLogoUrl && (
+                    {currentImageType === 'BAND_LOGO' && theme?.bandLogoUrl && (
                       <ResponsiveImageDisplay
                         src={theme.bandLogoUrl}
                         alt='Icon Logo'
@@ -142,7 +142,7 @@ export default function BioEditPage() {
                       />
                     )}
 
-                    {currentImageType === 'header-logo' &&
+                    {currentImageType === 'HEADER_LOGO' &&
                       theme?.bandHeaderLogoUrl && (
                         <ResponsiveImageDisplay
                           src={theme.bandHeaderLogoUrl}
@@ -151,7 +151,7 @@ export default function BioEditPage() {
                         />
                       )}
 
-                    {currentImageType === 'custom-image' &&
+                    {currentImageType === 'CUSTOM_IMAGE' &&
                       initialValues.customImage && (
                         <ResponsiveImageDisplay
                           src={initialValues.customImage}

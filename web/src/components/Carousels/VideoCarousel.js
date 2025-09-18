@@ -46,7 +46,7 @@ function VideoCarousel({ videos }) {
             {/* make this container relative so overlay & caption can sit on top */}
             <div className='position-relative ratio ratio-16x9 w-100'>
               {/* Render video based on type */}
-              {video.videoType === 'upload' && video.videoFile ? (
+              {video.videoType === 'UPLOAD' && video.videoFile ? (
                 <VideoPlayer
                   videoUrl={video.videoFile}
                   startTime={video.startTime}
@@ -64,7 +64,7 @@ function VideoCarousel({ videos }) {
               )}
 
               {/* now layer your caption on top - only show if displayMode is 'full' */}
-              {video.displayMode !== 'videoOnly' && (
+              {video.displayMode !== 'VIDEO_ONLY' && (
                 <div className='carousel-caption d-block carousel-caption-content'>
                   <p className='carousel-title'>{video.title}</p>
                   {video.description && (

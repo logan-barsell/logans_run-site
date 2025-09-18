@@ -19,7 +19,6 @@ const USER_CREATE_FIELDS = [
   'adminPhone',
   'password',
   'role',
-  'userType',
   'status',
   'verified',
   'invitedByUUID',
@@ -37,7 +36,6 @@ const USER_UPDATE_FIELDS = [
   'adminEmail',
   'adminPhone',
   'role',
-  'userType',
   'status',
   'verified',
   'invitedByUUID',
@@ -238,8 +236,6 @@ async function createUser(tenantId, userData) {
         {
           ...userData,
           adminEmail: normalizedEmail,
-          bandName:
-            userData.bandName || process.env.DEFAULT_BAND_NAME || 'Bandsyte',
         },
         USER_CREATE_FIELDS
       );
