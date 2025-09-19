@@ -10,9 +10,19 @@
 /* Ensure date picker popup appears above other elements */
 .react-datepicker-popper {
   z-index: 9999 !important;
-  top: unset !important;
 }
 
+/* Fix positioning for time pickers in input groups */
+.react-datepicker-popper {
+  position: absolute !important;
+  left: auto !important;
+  top: auto !important;
+  position: absolute;
+}
+
+.input-group .react-datepicker-popper {
+  transform: translate3d(-190px, 47px, 0px);
+}
 .react-datepicker-wrapper {
   width: 100%;
 }

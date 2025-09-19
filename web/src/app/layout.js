@@ -44,6 +44,8 @@ export default async function RootLayout({ children }) {
           {children}
           <AlertContainer />
         </Providers>
+        {/* Portal element for react-datepicker */}
+        <div id='root-portal'></div>
         {/* Load theme-loader.js first to configure pace */}
         <Script
           src='/theme-loader.js'
