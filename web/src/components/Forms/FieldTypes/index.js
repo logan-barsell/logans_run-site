@@ -1,5 +1,4 @@
 export { default as ImageUpload, ImageUploadField } from './ImageUpload';
-export { default as ConditionalImageUploadField } from './ConditionalImageUpload';
 export { default as TextField } from './TextField';
 export { default as PasswordField } from './PasswordField';
 export { default as DateField } from './DateField';

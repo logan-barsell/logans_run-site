@@ -18,9 +18,7 @@ const VideoUpload = forwardRef(
   ) => {
     const [selectedFiles, setSelectedFiles] = useState(null);
     const inputRef = useRef();
-    console.log('selectedFiles', selectedFiles);
-    console.log('value', value);
-    console.log('ref', ref);
+
     // Expose clear() to parent
     useImperativeHandle(ref, () => ({
       clear: () => {
@@ -132,7 +130,6 @@ const VideoUpload = forwardRef(
 // Wrapper component for react-final-form compatibility
 const VideoUploadField = forwardRef(
   ({ name, setVideo, required = false, onFileChange, ...props }, ref) => {
-    console.log('VideoUploadField', required);
     return (
       <Field name={name}>
         {({ input: { value, onChange } }) => (

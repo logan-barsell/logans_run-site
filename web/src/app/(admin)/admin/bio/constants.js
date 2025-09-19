@@ -4,8 +4,7 @@ export const BIO_FIELDS = [
   {
     name: 'customImage',
     type: 'image',
-    conditionField: 'imageType',
-    conditionValue: 'CUSTOM_IMAGE',
+    conditions: [{ imageType: 'CUSTOM_IMAGE' }],
     required: false,
   },
   { type: 'divider' },

@@ -1,9 +1,9 @@
 import './modalForm.css';
 
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { Form } from 'react-final-form';
 
-import RenderField from './RenderField';
+import ConditionalField from './ConditionalField';
 import Button from '../Button/Button';
 import SaveButton from './SaveButton';
 
@@ -20,54 +20,24 @@ const ModalForm = ({
   isModal = true, // For backward compatibility
   resetMode = 'initial', // 'initial' for AddItem, 'values' for EditItem
 }) => {
-  // Create refs for all image fields
-  const imageRefs = useRef({});
+  // Create refs for all file fields (image and video)
+  const fileRefs = useRef({});
   fields.forEach(field => {
-    if (field.type === 'image' && !imageRefs.current[field.name]) {
-      imageRefs.current[field.name] = React.createRef();
+    if (
+      ['image', 'video'].includes(field.type) &&
+      !fileRefs.current[field.name]
+    ) {
+      fileRefs.current[field.name] = React.createRef();
     }
   });
 
-  // State to track file values for all image fields
-  const [imageValues, setImageValues] = useState({});
-
-  // State to track form submission
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // State to track if form has meaningful changes
-  const [hasChanges, setHasChanges] = useState(false);
-
-  // State to track success state
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  // Ref to track if component is mounted
-  const isMountedRef = useRef(true);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
-  // Safe state setter that only updates if component is mounted
-  const safeSetState = useCallback((setter, value) => {
-    if (isMountedRef.current) {
-      setter(value);
-    }
-  }, []);
-
-  // Clear success state whenever the form becomes dirty
-  useEffect(() => {
-    if (hasChanges && isSuccess) {
-      setIsSuccess(false);
-    }
-  }, [hasChanges, isSuccess]);
+  // State to track file values for all file fields
+  const [fileValues, setFileValues] = useState({});
 
   // Extract initial values from fields
   const initialValues = fields.reduce((acc, field) => {
-    // Don't include image fields in initial values since they should only track file selections
-    if (field.type === 'image') {
+    // Don't include file fields in initial values since they should only track file selections
+    if (['image', 'video'].includes(field.type)) {
       return acc;
     }
 
@@ -86,144 +56,65 @@ const ModalForm = ({
     return acc;
   }, {});
 
-  // Callback to update imageValues when a file is selected/cleared
+  // Callback to update fileValues when a file is selected/cleared
   const handleFileChange = useCallback((name, files) => {
-    setImageValues(prev => ({ ...prev, [name]: files }));
+    setFileValues(prev => ({ ...prev, [name]: files }));
   }, []);
 
-  // Helper to check if all required image fields have a value
-  const imageRequired = fields
-    .filter(field => field.type === 'image' && field.required)
-    .some(field => {
-      const files = imageValues[field.name];
-      return !files || files.length === 0;
+  // Helper function to check if a condition is met
+  const isConditionMet = (condition, formValues) => {
+    return Object.entries(condition).every(([fieldName, expectedValue]) => {
+      return formValues[fieldName] === expectedValue;
     });
+  };
 
-  // Deep comparison function for form values
-  const compareValues = useCallback((initial, current) => {
-    // Handle Date objects - compare by timestamp
-    if (initial instanceof Date && current instanceof Date) {
-      return initial.getTime() === current.getTime();
+  // Helper function to check if a field should be visible
+  const shouldShowField = (field, formValues) => {
+    if (!field.conditions || !Array.isArray(field.conditions)) {
+      return true; // No conditions means always visible
     }
+    return field.conditions.some(condition =>
+      isConditionMet(condition, formValues)
+    );
+  };
 
-    // Handle case where one is Date and other isn't
-    if (initial instanceof Date || current instanceof Date) {
-      // Try to convert both to timestamps for comparison
-      let initialTime, currentTime;
-
-      if (initial instanceof Date) {
-        initialTime = initial.getTime();
-      } else if (typeof initial === 'string' && initial) {
-        // Try to parse as ISO string
-        const parsed = new Date(initial);
-        if (!isNaN(parsed.getTime())) {
-          initialTime = parsed.getTime();
-        } else {
-          return false;
+  // Helper function to check if required file fields have values (considering conditional rendering)
+  const getFileFieldsRequired = formValues => {
+    return fields
+      .filter(
+        field => ['image', 'video'].includes(field.type) && field.required
+      )
+      .some(field => {
+        // Check if field is actually visible due to conditions
+        if (!shouldShowField(field, formValues)) {
+          return false; // Field is not visible, so it's not required
         }
-      } else {
-        return false;
-      }
 
-      if (current instanceof Date) {
-        currentTime = current.getTime();
-      } else if (typeof current === 'string' && current) {
-        // Try to parse as ISO string
-        const parsed = new Date(current);
-        if (!isNaN(parsed.getTime())) {
-          currentTime = parsed.getTime();
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-
-      return initialTime === currentTime;
-    }
-
-    // Handle null/undefined cases
-    if (initial === null && current === null) return true;
-    if (initial === undefined && current === undefined) return true;
-    if (initial === null || current === null) return false;
-    if (initial === undefined || current === undefined) return false;
-
-    // Handle different types
-    if (typeof initial !== typeof current) {
-      return false;
-    }
-
-    // Handle primitive types
-    if (typeof initial !== 'object') {
-      // Handle numeric string conversion for number inputs
-      if (typeof initial === 'number' && typeof current === 'string') {
-        const currentAsNumber = Number(current);
-        if (!isNaN(currentAsNumber)) {
-          return initial === currentAsNumber;
-        }
-      }
-      if (typeof current === 'number' && typeof initial === 'string') {
-        const initialAsNumber = Number(initial);
-        if (!isNaN(initialAsNumber)) {
-          return initialAsNumber === current;
-        }
-      }
-
-      return initial === current;
-    }
-
-    // Handle arrays
-    if (Array.isArray(initial) !== Array.isArray(current)) {
-      return false;
-    }
-
-    if (Array.isArray(initial)) {
-      if (initial.length !== current.length) {
-        return false;
-      }
-      return initial.every((item, index) =>
-        compareValues(item, current[index])
-      );
-    }
-
-    // Handle objects
-    const initialKeys = Object.keys(initial);
-    const currentKeys = Object.keys(current);
-
-    if (initialKeys.length !== currentKeys.length) {
-      return false;
-    }
-
-    return initialKeys.every(key => compareValues(initial[key], current[key]));
-  }, []);
+        // Field is visible, check if it has a value
+        const files = fileValues[field.name];
+        return !files || files.length === 0;
+      });
+  };
 
   const renderFields = () => {
     return fields.map((field, index) => {
       return (
-        <RenderField
+        <ConditionalField
           key={index}
           field={field}
-          imageRef={
-            field.type === 'image' ? imageRefs.current[field.name] : undefined
+          fileRef={
+            ['image', 'video'].includes(field.type)
+              ? fileRefs.current[field.name]
+              : undefined
           }
-          onFileChange={field.type === 'image' ? handleFileChange : undefined}
+          onFileChange={
+            ['image', 'video'].includes(field.type)
+              ? handleFileChange
+              : undefined
+          }
         />
       );
     });
-  };
-
-  const onFormRestart = form => {
-    form.restart();
-    // Clear all image upload fields via refs
-    Object.values(imageRefs.current).forEach(ref => {
-      if (ref && ref.current && typeof ref.current.clear === 'function') {
-        ref.current.clear();
-      }
-    });
-    safeSetState(setImageValues, {});
-    safeSetState(setIsSubmitting, false);
-    safeSetState(setHasChanges, false);
-    safeSetState(setIsSuccess, false);
   };
 
   // Handle form cancellation
@@ -241,42 +132,29 @@ const ModalForm = ({
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues}
-        subscription={{ values: true, errors: true }}
-        render={({ handleSubmit, form, values, errors }) => {
-          // Check for changes whenever values change
-          const changed = !compareValues(initialValues, values);
-          // Update hasChanges state if it changed
-          if (changed !== hasChanges) {
-            // Use requestAnimationFrame to defer the state update
-            requestAnimationFrame(() => safeSetState(setHasChanges, changed));
-          }
-
-          // (moved) Resetting success state handled by useEffect above
+        render={({
+          handleSubmit,
+          form,
+          values,
+          errors,
+          dirty, // React Final Form's built-in "has changes"
+          submitting, // React Final Form's built-in "is submitting"
+          valid, // React Final Form's built-in validation state
+          pristine, // React Final Form's "no changes made"
+        }) => {
+          // Check file field requirements considering conditional rendering
+          const fileFieldsRequired = getFileFieldsRequired(values);
 
           const handleFormSubmit = async event => {
-            setIsSubmitting(true);
             try {
-              const result = await handleSubmit(event);
-              if (result) {
-                return result; // Return validation errors
-              }
-              // Success - set success state and update form's initial values to make it pristine
-              form.batch(() => {
-                Object.keys(values).forEach(key => {
-                  form.change(key, values[key]);
-                });
-                form.reset(resetMode === 'initial' ? initialValues : values);
-              });
-
-              // Clean up form then close
-              onFormRestart(form);
-              if (typeof closeModal === 'function') {
-                closeModal();
-              } else {
-                onSuccess?.();
-              }
-            } finally {
-              safeSetState(setIsSubmitting, false);
+              await handleSubmit(event);
+              // Success - reset form and close modal
+              form.reset(resetMode === 'initial' ? initialValues : values);
+              closeModal?.();
+              onSuccess?.();
+            } catch (error) {
+              // Error handling - form stays open
+              console.error('Form submission error:', error);
             }
           };
 
@@ -291,7 +169,18 @@ const ModalForm = ({
                     variant={cancelButtonVariant}
                     type='button'
                     onClick={() => {
-                      onFormRestart(form);
+                      // Clear all file upload fields via refs
+                      Object.values(fileRefs.current).forEach(ref => {
+                        if (
+                          ref &&
+                          ref.current &&
+                          typeof ref.current.clear === 'function'
+                        ) {
+                          ref.current.clear();
+                        }
+                      });
+                      setFileValues({});
+                      form.reset();
                       handleCancel();
                     }}
                   >
@@ -300,9 +189,9 @@ const ModalForm = ({
                 </div>
                 <div className='d-grid col-6'>
                   <SaveButton
-                    hasChanges={hasChanges}
-                    isDirty={hasChanges}
-                    isSaving={isSubmitting}
+                    hasChanges={dirty}
+                    isDirty={dirty}
+                    isSaving={submitting}
                     isSaved={false}
                     saveText={submitButtonText}
                     savedText=''
@@ -310,14 +199,10 @@ const ModalForm = ({
                     buttonType='submit'
                     className={`btn btn-${submitButtonVariant} submitForm`}
                     disabled={
-                      Object.keys(errors || {}).length !== 0 ||
-                      imageRequired ||
-                      !hasChanges ||
-                      isSubmitting ||
-                      // Check if any required fields are empty
-                      fields.some(
-                        field => field.required && !values[field.name]
-                      )
+                      !valid ||
+                      fileFieldsRequired || // Now considers conditional rendering
+                      pristine ||
+                      submitting
                     }
                   />
                 </div>

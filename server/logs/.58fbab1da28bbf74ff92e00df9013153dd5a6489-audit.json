@@ -9,6 +9,11 @@
             "date": 1758217679950,
             "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/server/logs/app-2025-09-18.log",
             "hash": "1c74d04d2fa6d05dcc92709c584871d0003960b37b8e3dd3906f26f87d596c66"
+        },
+        {
+            "date": 1758306260207,
+            "name": "/Users/loganbarsell/Documents/Dev/LOGANS_RUN/logans_run-site/server/logs/app-2025-09-19.log",
+            "hash": "7ae6b51c921abd8a43de3d14b66886bb9af5be59122ad881a463b5c30234c241"
         }
     ],
     "hashType": "sha256"

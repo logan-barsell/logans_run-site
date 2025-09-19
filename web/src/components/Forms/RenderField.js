@@ -11,11 +11,6 @@ import {
 } from './FieldTypes';
 import { ImageUploadField } from './FieldTypes/ImageUpload';
 import { VideoUploadField } from './FieldTypes/VideoUpload';
-import ConditionalVideoUploadField from './FieldTypes/ConditionalVideoUpload';
-import ConditionalImageUploadField from './FieldTypes/ConditionalImageUpload';
-import ConditionalNumberField from './FieldTypes/ConditionalNumber';
-import ConditionalTextField from './FieldTypes/ConditionalText';
-import ConditionalYoutubeUrlField from './FieldTypes/ConditionalYoutubeUrl';
 import OptionsField from './FieldTypes/OptionsField';
 import NumberField from './FieldTypes/NumberField';
 import ColorSelectorField from './FieldTypes/ColorSelectorField';
@@ -124,22 +119,6 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
       />
     );
   } else if (type === 'image') {
-    // Check if this is a conditional field
-    if (field.conditionField && field.conditionValue) {
-      return (
-        <ConditionalImageUploadField
-          ref={imageRef}
-          label={label}
-          name={name}
-          conditionField={field.conditionField}
-          conditionValue={field.conditionValue}
-          initialValue={initialValue}
-          required={required}
-          onFileChange={onFileChange}
-        />
-      );
-    }
-
     return (
       <ImageUploadField
         ref={imageRef}
@@ -173,67 +152,6 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         initialValue={initialValue}
         required={required}
         onFileChange={onFileChange}
-      />
-    );
-  } else if (type === 'conditionalVideo') {
-    return (
-      <ConditionalVideoUploadField
-        ref={imageRef}
-        label={label}
-        name={name}
-        initialValue={initialValue}
-        required={required}
-        onFileChange={onFileChange}
-      />
-    );
-  } else if (type === 'conditionalImage') {
-    return (
-      <ConditionalImageUploadField
-        ref={imageRef}
-        label={label}
-        name={name}
-        conditionField={field.conditionField}
-        conditionValue={field.conditionValue}
-        initialValue={initialValue}
-        required={required}
-        onFileChange={onFileChange}
-      />
-    );
-  } else if (type === 'conditionalNumber') {
-    return (
-      <ConditionalNumberField
-        ref={imageRef}
-        label={label}
-        name={name}
-        conditionField={field.conditionField}
-        conditionValue={field.conditionValue}
-        initialValue={initialValue}
-        placeholder={placeholder}
-      />
-    );
-  } else if (type === 'conditionalText') {
-    return (
-      <ConditionalTextField
-        ref={imageRef}
-        label={label}
-        name={name}
-        conditionField={field.conditionField}
-        conditionValue={field.conditionValue}
-        initialValue={initialValue}
-        placeholder={placeholder}
-        required={required}
-      />
-    );
-  } else if (type === 'conditionalYoutubeUrl') {
-    return (
-      <ConditionalYoutubeUrlField
-        ref={imageRef}
-        label={label}
-        name={name}
-        conditions={field.conditions}
-        initialValue={initialValue}
-        placeholder={placeholder}
-        required={required}
       />
     );
   } else if (type === 'price') {
@@ -278,6 +196,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter Spotify URL'}
         validate={value => {
           if (!value) return undefined;
@@ -293,6 +212,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter Spotify URL'}
         validate={value => {
           if (!value) return undefined;
@@ -308,6 +228,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter Apple Music URL'}
         validate={value => {
           if (!value) return undefined;
@@ -323,6 +244,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter YouTube URL'}
         validate={value => {
           if (!value) return undefined;
@@ -338,6 +260,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter SoundCloud URL'}
         validate={value => {
           if (!value) return undefined;
@@ -353,6 +276,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter Facebook URL'}
         validate={value => {
           if (!value) return undefined;
@@ -368,6 +292,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter Instagram URL'}
         validate={value => {
           if (!value) return undefined;
@@ -383,6 +308,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter TikTok URL'}
         validate={value => {
           if (!value) return undefined;
@@ -398,6 +324,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter YouTube URL'}
         validate={value => {
           if (!value) return undefined;
@@ -413,6 +340,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter X (Twitter) URL'}
         validate={value => {
           if (!value) return undefined;
@@ -428,6 +356,7 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
         label={label}
         name={name}
         initialValue={initialValue}
+        required={required}
         placeholder={placeholder || 'Enter URL'}
         validate={value => {
           if (!value) return undefined;

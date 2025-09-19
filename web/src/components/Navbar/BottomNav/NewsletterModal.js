@@ -4,6 +4,7 @@ import Button from '../../Button/Button';
 import { Envelope } from '../../icons';
 import { useAlert } from '../../../contexts/AlertContext';
 import { signupNewsletter } from '../../../services/newsletterService';
+import { validateEmail } from '@/lib/validation';
 
 // Separate component for the form content
 const NewsletterForm = ({
@@ -51,7 +52,7 @@ const NewsletterForm = ({
         variant='outline-light'
         type='submit'
         loading={isSubmitting}
-        disabled={isSubmitting}
+        disabled={isSubmitting || !validateEmail(email).isValid}
       >
         {isSubmitting ? 'Subscribing...' : 'Join'}
       </Button>
@@ -63,7 +64,7 @@ const NewsletterModal = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showSuccess, showError } = useAlert();
-
+  console.log(validateEmail(email));
   const sendNewsletter = async e => {
     e.preventDefault();
     setIsSubmitting(true);
