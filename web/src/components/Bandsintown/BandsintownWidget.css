@@ -24,6 +24,7 @@
   background-color: var(--main) !important;
   border: 1px solid #fff !important;
   color: #000 !important;
+  border-radius: 8px !important;
 }
 
 /* Bandsintown RSVP button theme override */

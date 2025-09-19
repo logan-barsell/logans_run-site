@@ -18,7 +18,9 @@ const VideoUpload = forwardRef(
   ) => {
     const [selectedFiles, setSelectedFiles] = useState(null);
     const inputRef = useRef();
-
+    console.log('selectedFiles', selectedFiles);
+    console.log('value', value);
+    console.log('ref', ref);
     // Expose clear() to parent
     useImperativeHandle(ref, () => ({
       clear: () => {
@@ -130,30 +132,10 @@ const VideoUpload = forwardRef(
 // Wrapper component for react-final-form compatibility
 const VideoUploadField = forwardRef(
   ({ name, setVideo, required = false, onFileChange, ...props }, ref) => {
-    const isRequired = required === true;
-    const validation = () => {
-      if (isRequired) {
-        return value => {
-          // Check if value exists and is not empty
-          if (
-            !value ||
-            (Array.isArray(value) && value.length === 0) ||
-            (value instanceof FileList && value.length === 0)
-          ) {
-            return 'Required';
-          }
-          return undefined;
-        };
-      }
-      return undefined;
-    };
-
+    console.log('VideoUploadField', required);
     return (
-      <Field
-        name={name}
-        validate={validation()}
-      >
-        {({ input: { value, onChange, ...input } }) => (
+      <Field name={name}>
+        {({ input: { value, onChange } }) => (
           <VideoUpload
             {...props}
             name={name}
@@ -169,6 +151,9 @@ const VideoUploadField = forwardRef(
     );
   }
 );
+
+VideoUpload.displayName = 'VideoUpload';
+VideoUploadField.displayName = 'VideoUploadField';
 
 export default VideoUpload;
 export { VideoUploadField };

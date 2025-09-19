@@ -512,4 +512,5 @@ const RenderField = forwardRef(({ field, imageRef, onFileChange }, ref) => {
   return null;
 });
 
+RenderField.displayName = 'RenderField';
 export default RenderField;

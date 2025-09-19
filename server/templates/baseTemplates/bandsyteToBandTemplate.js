@@ -14,7 +14,7 @@
 //  * - Two-factor authentication
 //  * - Login alerts
 //  *
-//  * @param {string} siteTitle - The band's name (from theme.siteTitle)
+//  * @param {string} bandName - The band's name (from theme.bandName)
 //  * @param {string} subject - Email subject
 //  * @param {string} headerTitle - Title shown in header
 //  * @param {string} headerSubtitle - Subtitle shown in header
@@ -24,7 +24,7 @@
 //  * @returns {Object} Template with subject and HTML
 //  */
 // const bandsyteToBandTemplate = (
-//   siteTitle,
+//   bandName,
 //   subject,
 //   headerTitle,
 //   headerSubtitle,
@@ -104,7 +104,7 @@
 //         <div class="header">
 //           ${
 //             theme.bandLogoUrl
-//               ? `<img src="${theme.bandLogoUrl}" alt="${siteTitle} Logo" style="max-height: 130px; height: auto; width: auto;" />`
+//               ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height: 130px; height: auto; width: auto;" />`
 //               : ''
 //           }
 //           <h1>${headerTitle}</h1>
@@ -119,7 +119,7 @@
 //           <p>This notification was sent by your Bandsyte website platform.</p>
 //         </div>
 //         <div class="footer">
-//           <p>&copy; ${new Date().getFullYear()} ${siteTitle}. All rights reserved.</p>
+//           <p>&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
 //           <p>Website powered by <strong>Bandsyte</strong>.</p>
 //         </div>
 //       </div>
@@ -134,7 +134,7 @@
 const { getColorPalette } = require('../../utils/colorPalettes');
 
 const bandsyteToBandTemplate = (
-  siteTitle,
+  bandName,
   subject,
   headerTitle,
   headerSubtitle,
@@ -145,7 +145,6 @@ const bandsyteToBandTemplate = (
   const campaignId = `campaign-${Date.now()}-${Math.random()
     .toString(36)
     .substring(2, 8)}`;
-
   return {
     subject,
     html: `
@@ -155,22 +154,51 @@ const bandsyteToBandTemplate = (
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${subject}</title>
+      ${
+        theme.bandLogoUrl
+          ? `
+      <meta property="og:image" content="${theme.bandLogoUrl}" />
+      <meta name="twitter:image" content="${theme.bandLogoUrl}" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <link rel="icon" type="image/png" href="${theme.bandLogoUrl}" />
+      `
+          : ''
+      }
       <!-- ${campaignId} -->
-      <span style="display:none; font-size:0; line-height:0;">${campaignId}-top</span>
       <style>
         :root { color-scheme: light !important; -webkit-color-scheme: light !important; }
-        body { margin:0; padding:0; line-height:1.6; color:#333 !important; }
+        body { margin:0; padding:0; line-height:1.6; color:black !important; }
         .container { max-width:600px; margin:0 auto; padding:20px; }
+        .content p { color:black !important; }
+        .content h2 { color:black !important; }
+        .content strong { color:black !important; }
+        .button { display:inline-block; background:#000000; color:white !important; padding:15px 30px; text-decoration:none; border-radius:5px; font-weight:bold; margin:20px 0; border:none; transition:all 0.3s ease; }
+        .button:hover { background:#333333; color:white !important; text-decoration:none; }
+        .highlight { background:#e8f5e8; border-left:4px solid #27ae60; padding:15px; margin:20px 0; color:#155724 !important; }
+        .highlight p { color:#155724 !important; }
+        .highlight strong { color:#155724 !important; }
+        .highlight h3 { color:#155724 !important; margin-top:0; }
+        .warning { background:#fff3cd; border:1px solid #ffeaa7; padding:15px; border-radius:5px; margin:20px 0; color:#856404 !important; }
+        .warning p { color:#856404 !important; }
+        .warning strong { color:#856404 !important; }
+        .security { background:#d1ecf1; border-left:4px solid #bee5eb; padding:15px; margin:20px 0; color:#0c5460 !important; }
+        .security p { color:#0c5460 !important; }
+        .security strong { color:#0c5460 !important; }
+        .bandsyte-brand img { max-height:40px; max-width:100%; height:auto; width:auto; object-fit:contain; display:block; margin:0 auto 10px auto; border-radius:8px; }
+        .field { margin-bottom:20px; }
+        .field-label { font-weight:bold; color:#555 !important; margin-bottom:5px; }
+        .field-value { background:white; padding:15px; border-radius:5px; border-left:4px solid #3498db; color:#333 !important; }
+        .code-display { background:#f8f9fa; border:2px solid #dee2e6; border-radius:8px; padding:20px; text-align:center; font-size:2rem; font-weight:bold; letter-spacing:0.5rem; color:#000 !important; font-family:'Courier New',monospace; margin:20px 0; }
       </style>
     </head>
-    <body style="margin:0; padding:0; line-height:1.6; color:#333 !important; background:#ffffff;">
+    <body data-campaign-id="${campaignId}" style="margin:0; padding:0; line-height:1.6; color:black !important; background:#ffffff;">
       <div class="container" style="max-width:600px; margin:0 auto; padding:20px;">
         <div class="header" style="background:${
           bg.navbar
         }; color:white !important; padding:30px; text-align:center; border-radius:10px 10px 0 0;">
           ${
             theme.bandLogoUrl
-              ? `<img src="${theme.bandLogoUrl}" alt="${siteTitle} Logo" style="max-height:130px; height:auto; width:auto;" />`
+              ? `<img src="${theme.bandLogoUrl}" alt="${bandName} Logo" style="max-height:130px; height:auto; width:auto;" />`
               : ''
           }
           <h1 style="margin:20px 0 10px; font-size:24px; color:white !important;">${headerTitle}</h1>
@@ -180,11 +208,11 @@ const bandsyteToBandTemplate = (
               : ''
           }
         </div>
-        <div class="content" style="background:#f9f9f9; padding:30px; border-radius:0 0 10px 10px; color:#333 !important;">
+        <div class="content" style="background:#f9f9f9; padding:30px; border-radius:0 0 10px 10px; color:black !important;">
           ${content}
         </div>
          <!-- ${campaignId} -->
-      <span style="display:none; font-size:0; line-height:0;">${campaignId}-middle</span>
+      <!-- ${campaignId}-middle -->
         <div class="bandsyte-brand" style="background:${
           bg.navbar
         }; color:white !important; padding:20px; border-radius:8px; margin:20px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
@@ -192,15 +220,15 @@ const bandsyteToBandTemplate = (
           <p style="margin:0 0 5px;"><strong>Bandsyte</strong> - Professional Band Websites</p>
           <p style="margin:0;">This notification was sent by your Bandsyte website platform.</p>
         </div>
-        <div class="footer" style="text-align:center; margin-top:30px; color:#333 !important; font-size:14px;">
-          <p style="margin:0;">&copy; ${new Date().getFullYear()} ${siteTitle}. All rights reserved.</p>
+        <div class="footer" style="text-align:center; margin-top:30px; color:black !important; font-size:14px;">
+          <p style="margin:0;">&copy; ${new Date().getFullYear()} ${bandName}. All rights reserved.</p>
           <p style="margin:0;">Website powered by <strong>Bandsyte</strong>.</p>
         </div>
       </div>
        <!-- ${campaignId} -->
-      <span style="display:none; font-size:0; line-height:0;">${campaignId}-top</span>
-    </body>
-    </html>
+       </body>
+       <span style="display:none; font-size:0; line-height:0;">${campaignId}-top</span>
+       </html>
   `,
   };
 };

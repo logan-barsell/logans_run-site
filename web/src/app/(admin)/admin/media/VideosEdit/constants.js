@@ -13,13 +13,14 @@ export const addVideoFields = [
     options: VIDEO_CATEGORIES,
     initialValue: 'MUSIC_VIDEO',
   },
-  { label: 'Title', name: 'title', type: 'text' },
-  { label: 'Release Date', name: 'date', type: 'date' },
+  { label: 'Title', name: 'title', type: 'text', required: true },
+  { label: 'Release Date', name: 'date', type: 'date', required: true },
   {
     label: 'YouTube Share Link',
     name: 'link',
     type: 'youtubeUrl',
     placeholder: 'Enter YouTube video URL',
+    required: true,
   },
 ];
 
@@ -39,12 +40,14 @@ export const editVideoFields = video => {
       name: 'title',
       type: 'text',
       initialValue: title || null,
+      required: true,
     },
     {
       label: 'Release Date',
       name: 'date',
       type: 'date',
       initialValue: date ? new Date(date) : null,
+      required: true,
     },
     {
       label: 'YouTube Share Link',
@@ -52,6 +55,7 @@ export const editVideoFields = video => {
       type: 'youtubeUrl',
       initialValue: link || null,
       placeholder: 'Enter YouTube video URL',
+      required: true,
     },
   ];
 };

@@ -65,8 +65,8 @@ const EditFeaturedVideo = ({ video, onSuccess, onError, onClose }) => {
     }
   };
 
-  const editFields = videoData => featuredVideoFields(videoData);
-
+  const editFields = videoData => featuredVideoFields(videoData, false);
+  console.log('editFields', editFields());
   return (
     <EditItem
       item={{ data: video }}

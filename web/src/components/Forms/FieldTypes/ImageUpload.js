@@ -27,7 +27,9 @@ const ImageUpload = forwardRef(
   ) => {
     const [selectedFiles, setSelectedFiles] = useState(null);
     const inputRef = useRef();
-
+    console.log('selectedFiles', selectedFiles);
+    console.log('value', value);
+    console.log('ref', ref);
     // Expose clear() to parent
     useImperativeHandle(ref, () => ({
       clear: () => {
@@ -128,6 +130,7 @@ const ImageUploadField = forwardRef(
     },
     ref
   ) => {
+    console.log('ImageUploadField', required);
     return (
       <div className='mb-4 d-flex justify-content-center'>
         <div style={{ width: '100%', maxWidth: '400px' }}>
@@ -151,6 +154,9 @@ const ImageUploadField = forwardRef(
     );
   }
 );
+
+ImageUpload.displayName = 'ImageUpload';
+ImageUploadField.displayName = 'ImageUploadField';
 
 export default ImageUpload;
 export { ImageUploadField };

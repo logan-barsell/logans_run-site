@@ -23,7 +23,7 @@ const contactNotification = (
   const content = `
     <h2>📧 Fan Mail Incoming!</h2>
     <p>Hey <strong>${bandName}</strong> crew,</p>
-    <p>Someone just hit you up through your website. Time to rock and respond!</p>
+    <p>Someone just hit you up through your website.</p>
     
     <div class="field">
       <div class="field-label">Name:</div>

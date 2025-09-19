@@ -7,12 +7,12 @@ const ConditionalVideoUploadField = forwardRef(({ name, ...props }, ref) => {
     <Field name='videoType'>
       {({ input: videoTypeInput }) => {
         // Only render video upload when videoType is 'upload'
-        if (videoTypeInput.value !== 'UPLOAD') {
+        if (videoTypeInput.value !== 'upload') {
           return null;
         }
 
         // If the field is visible, it should be required
-        const shouldBeRequired = videoTypeInput.value === 'UPLOAD';
+        const shouldBeRequired = videoTypeInput.value === 'upload';
 
         return (
           <div className='mb-3'>

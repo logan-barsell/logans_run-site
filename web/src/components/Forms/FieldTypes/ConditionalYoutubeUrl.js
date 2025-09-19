@@ -62,4 +62,5 @@ const ConditionalYoutubeUrlField = forwardRef(
   }
 );
 
+ConditionalYoutubeUrlField.displayName = 'ConditionalYoutubeUrlField';
 export default ConditionalYoutubeUrlField;

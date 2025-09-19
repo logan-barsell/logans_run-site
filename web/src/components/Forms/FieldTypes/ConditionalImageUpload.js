@@ -25,4 +25,6 @@ const ConditionalImageUploadField = forwardRef(
   }
 );
 
+ConditionalImageUploadField.displayName = 'ConditionalImageUploadField';
+
 export default ConditionalImageUploadField;

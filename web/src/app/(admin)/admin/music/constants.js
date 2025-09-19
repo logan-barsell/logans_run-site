@@ -11,11 +11,11 @@ export const ADD_PLAYER_FIELDS = [
     name: 'bgColor',
     type: 'options',
     options: [
-      { name: 'Auto (from artwork)', value: 'auto' },
-      { name: 'Dark', value: '0' },
-      { name: 'Light', value: '1' },
+      { name: 'Auto (from artwork)', value: 'AUTO' },
+      { name: 'Dark', value: 'DARK' },
+      { name: 'Light', value: 'LIGHT' },
     ],
-    initialValue: 'auto',
+    initialValue: 'AUTO',
   },
   { label: 'Title', name: 'title', type: 'text' },
   {

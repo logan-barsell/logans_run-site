@@ -136,12 +136,23 @@ export default function BioPage() {
           <div className='row justify-content-center'>
             <div className='col-7 col-sm-auto'>
               {bio &&
-              bio[0]?.imageType === 'CUSTOM_IMAGE' &&
-              bio[0]?.customImageUrl ? (
+              bio?.imageType === 'CUSTOM_IMAGE' &&
+              bio?.customImageUrl ? (
                 <Image
                   className='aboutuspic'
-                  src={bio[0].customImageUrl}
+                  src={bio.customImageUrl}
                   alt='Bio'
+                  width={400}
+                  height={300}
+                  style={{ height: 'auto', borderRadius: '8px' }}
+                />
+              ) : bio &&
+                bio?.imageType === 'HEADER_LOGO' &&
+                theme?.bandHeaderLogoUrl ? (
+                <Image
+                  className='aboutuspic'
+                  src={theme.bandHeaderLogoUrl}
+                  alt='Header Logo'
                   width={400}
                   height={300}
                   style={{ height: 'auto' }}

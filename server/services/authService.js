@@ -81,13 +81,11 @@ const login = async options => {
 
   const accessToken = TokenService.generateAccessToken({
     id: user.id,
-    uuid: user.uuid,
     sessionId: session.sessionId,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
       id: user.id,
-      uuid: user.uuid,
       sessionId: session.sessionId,
     },
     ip,
@@ -129,13 +127,11 @@ const completeTwoFactorLogin = async options => {
 
   const accessToken = TokenService.generateAccessToken({
     id: user.id,
-    uuid: user.uuid,
     sessionId: session.sessionId,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
       id: user.id,
-      uuid: user.uuid,
       sessionId: session.sessionId,
     },
     ip,
@@ -182,13 +178,11 @@ const signup = async options => {
 
   const accessToken = TokenService.generateAccessToken({
     id: newUser.id,
-    uuid: newUser.uuid,
     role: newUser.role,
   });
   const refreshToken = await TokenService.generateRefreshToken(
     {
       id: newUser.id,
-      uuid: newUser.uuid,
       role: newUser.role,
     },
     ip,

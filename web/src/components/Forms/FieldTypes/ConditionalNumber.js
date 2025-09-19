@@ -31,4 +31,5 @@ const ConditionalNumberField = forwardRef(
   }
 );
 
+ConditionalNumberField.displayName = 'ConditionalNumberField';
 export default ConditionalNumberField;

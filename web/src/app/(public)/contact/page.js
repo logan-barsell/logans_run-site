@@ -236,6 +236,7 @@ export default function ContactPage() {
                 value='send'
                 variant='danger'
                 disabled={isSubmitting}
+                loading={isSubmitting}
                 icon={<PaperAirplaneSend />}
                 iconPosition='right'
               >

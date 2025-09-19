@@ -39,8 +39,8 @@ export const addMemberFields = [
     type: 'image',
     required: true,
   },
-  { label: 'Name', name: 'name', type: 'text' },
-  { label: 'Role', name: 'role', type: 'text' },
+  { label: 'Name', name: 'name', type: 'text', required: true },
+  { label: 'Role', name: 'role', type: 'text', required: true },
   {
     label: 'Facebook',
     name: 'facebook',
@@ -89,8 +89,20 @@ export const editMemberFields = member => {
       initialValue: bioPic,
       required: false,
     },
-    { label: 'Name', name: 'name', type: 'text', initialValue: name },
-    { label: 'Role', name: 'role', type: 'text', initialValue: role },
+    {
+      label: 'Name',
+      name: 'name',
+      type: 'text',
+      initialValue: name,
+      required: true,
+    },
+    {
+      label: 'Role',
+      name: 'role',
+      type: 'text',
+      initialValue: role,
+      required: true,
+    },
     {
       label: 'Facebook',
       name: 'facebook',

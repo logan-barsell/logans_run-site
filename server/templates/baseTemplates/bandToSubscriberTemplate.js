@@ -167,7 +167,6 @@ const bandToSubscriberTemplate = (
   const campaignId = `campaign-${Date.now()}-${Math.random()
     .toString(36)
     .substring(2, 8)}`;
-
   return {
     subject,
     html: `
@@ -177,15 +176,36 @@ const bandToSubscriberTemplate = (
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${subject}</title>
+      ${
+        theme.bandLogoUrl
+          ? `
+      <meta property="og:image" content="${theme.bandLogoUrl}" />
+      <meta name="twitter:image" content="${theme.bandLogoUrl}" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <link rel="icon" type="image/png" href="${theme.bandLogoUrl}" />
+      `
+          : ''
+      }
       <!-- ${campaignId} -->
-      <span style="display:none; font-size:0; line-height:0;">${campaignId}-top</span>
       <style>
         :root { color-scheme: light !important; -webkit-color-scheme: light !important; }
-        body { margin:0; padding:0; line-height:1.6; color:#333 !important; }
+        body { margin:0; padding:0; line-height:1.6; color:black !important; }
         .container { max-width:600px; margin:0 auto; padding:20px; }
+        .content p { color:black !important; }
+        .content h2 { color:black !important; }
+        .content strong { color:black !important; }
+        .highlight { background:#e8f5e8; border-left:4px solid #27ae60; padding:15px; margin:20px 0; color:#155724 !important; }
+        .highlight p { color:#155724 !important; }
+        .highlight strong { color:#155724 !important; }
+        .highlight h3 { color:#155724 !important; margin-top:0; }
+        .cta-button { display:inline-block; background:#000000; color:white !important; padding:15px 30px; text-decoration:none; border-radius:5px; font-weight:bold; margin:20px 0; text-align:center; }
+        .cta-button:hover { background:#333333; color:white !important; }
+        .unsubscribe { margin-top:20px; padding-top:20px; border-top:1px solid #dee2e6; font-size:12px; color:#999; }
+        .unsubscribe a { color:#999; text-decoration:underline; }
+        .code-display { background:#f8f9fa; border:2px solid #dee2e6; border-radius:8px; padding:20px; text-align:center; font-size:2rem; font-weight:bold; letter-spacing:0.5rem; color:#000 !important; font-family:'Courier New',monospace; margin:20px 0; }
       </style>
     </head>
-    <body style="margin:0; padding:0; line-height:1.6; color:#333 !important; background:#ffffff;">
+    <body data-campaign-id="${campaignId}" style="margin:0; padding:0; line-height:1.6; color:black !important; background:#ffffff;">
       <div class="container" style="max-width:600px; margin:0 auto; padding:20px;">
         <div class="header" style="background:${
           bg.navbar
@@ -202,7 +222,7 @@ const bandToSubscriberTemplate = (
               : ''
           }
         </div>
-        <div class="content" style="background:#f9f9f9; padding:30px; border-radius:0 0 10px 10px; color:#333 !important;">
+        <div class="content" style="background:#f9f9f9; padding:30px; border-radius:0 0 10px 10px; color:black !important;">
           ${content}
         </div>
          <!-- ${campaignId} -->
@@ -229,9 +249,9 @@ const bandToSubscriberTemplate = (
           }
         </div>
       </div>
-       <!-- ${campaignId} -->
-      <span style="display:none; font-size:0; line-height:0;">${campaignId}-bottom</span>
-    </body>
+      </body>
+      <!-- ${campaignId} -->
+       <span style="display:none; font-size:0; line-height:0;">${campaignId}-bottom</span>
     </html>
   `,
   };

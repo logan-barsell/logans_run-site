@@ -188,7 +188,9 @@ const colorPalettes = {
  * @returns {Object} Color palette object
  */
 function getColorPalette(backgroundColor = 'black') {
-  return colorPalettes[backgroundColor] || colorPalettes.black;
+  // Handle both uppercase enum values from database and lowercase fallbacks
+  const normalizedKey = backgroundColor?.toLowerCase() || 'black';
+  return colorPalettes[normalizedKey] || colorPalettes.black;
 }
 
 /**

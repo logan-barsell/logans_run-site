@@ -92,7 +92,7 @@ export default function BioEditPage() {
       return {
         ...field,
         options: (field.options || []).filter(
-          opt => opt.value !== 'header-logo' || headerHasLogo
+          opt => opt.value !== 'HEADER_LOGO' || headerHasLogo
         ),
       };
     }
@@ -109,8 +109,7 @@ export default function BioEditPage() {
         : initialImageTypeCandidate,
     customImage: bioRow.customImageUrl || '',
   };
-
-  const maxHeight = bioRow.imageType === 'HEADER_LOGO' ? 80 : 200;
+  console.log('bioRow ET:', bioRow);
 
   return (
     <div className='mb-5 pb-5'>
@@ -128,6 +127,7 @@ export default function BioEditPage() {
       >
         {({ values }) => {
           const currentImageType = values.imageType || 'BAND_LOGO';
+          const maxHeight = currentImageType === 'HEADER_LOGO' ? 125 : 200;
           return (
             <>
               {/* Image Display */}
@@ -157,6 +157,7 @@ export default function BioEditPage() {
                           src={initialValues.customImage}
                           alt='Custom bio display'
                           maxHeight={maxHeight}
+                          className='rounded'
                         />
                       )}
                   </>

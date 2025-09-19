@@ -57,7 +57,6 @@ async function sendSecurityAlertWithDeduplicationHelper(
       ip,
       user.adminEmail,
       bandName,
-      alertType,
       new Date().toISOString(),
       ip,
       userAgent || 'Unknown',
@@ -80,8 +79,8 @@ async function sendSecurityAlertWithDeduplicationHelper(
 // Generate Access Token (1 hour expiry)
 function generateAccessToken(token) {
   try {
-    const { id, uuid, sessionId } = token;
-    return jwt.sign({ id, uuid, sessionId }, ACCESS_TOKEN_SECRET, {
+    const { id, sessionId } = token;
+    return jwt.sign({ id, sessionId }, ACCESS_TOKEN_SECRET, {
       expiresIn: '1h',
     });
   } catch (error) {
@@ -92,14 +91,10 @@ function generateAccessToken(token) {
 // Generate Refresh Token (7 days expiry) & Store in Redis
 async function generateRefreshToken(token, ip, userAgent) {
   try {
-    const { id, uuid, sessionId } = token;
-    const refreshToken = jwt.sign(
-      { id, uuid, sessionId },
-      REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: '7d',
-      }
-    );
+    const { id, sessionId } = token;
+    const refreshToken = jwt.sign({ id, sessionId }, REFRESH_TOKEN_SECRET, {
+      expiresIn: '7d',
+    });
     await redisClient.set(
       `refreshToken:${sessionId}`,
       JSON.stringify({
@@ -151,7 +146,7 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
 
   if (storedToken !== token) {
     logger.warn(
-      `🚨 Refresh token reuse detected for user ${decoded.uuid} from IP: ${ip}`
+      `🚨 Refresh token reuse detected for user ${decoded.id} from IP: ${ip}`
     );
 
     // Send security alert email to user about suspicious activity with deduplication
@@ -169,7 +164,7 @@ async function verifyRefreshToken(token, ip, userAgent, tenantId) {
 
   if (storedIp !== ip || storedUserAgent !== userAgent) {
     logger.warn(
-      `⚠️ Possible token theft for user ${decoded.uuid} - Different IP/device detected`
+      `⚠️ Possible token theft for user ${decoded.id} - Different IP/device detected`
     );
 
     // Send security alert email to user about device change with deduplication

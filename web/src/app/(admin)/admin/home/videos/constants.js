@@ -1,8 +1,9 @@
-export const featuredVideoFields = (video = {}) => [
+export const featuredVideoFields = (video = {}, required = true) => [
   {
     label: 'Upload Video',
     name: 'videoFile',
     type: 'conditionalVideo',
+    required,
   },
   {
     label: 'Preview Type',
