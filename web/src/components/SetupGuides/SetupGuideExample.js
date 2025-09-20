@@ -8,7 +8,7 @@ const SetupGuideExample = () => {
     {
       label: 'How do I update my band information?',
       value: [
-        <>Go to the admin panel and navigate to "Bio" section</>,
+        <>Go to the admin panel and navigate to &ldquo;Bio&rdquo; section</>,
         <>
           You can update your band description, add/remove members, and manage
           social media links
@@ -36,7 +36,7 @@ const SetupGuideExample = () => {
             </li>
           </ul>
         </>,
-        <>Go to "Theme" in the admin panel to make these changes</>,
+        <>Go to &ldquo;Theme&rdquo; in the admin panel to make these changes</>,
       ],
       tip: {
         type: 'info',
@@ -51,8 +51,8 @@ const SetupGuideExample = () => {
         <>
           <ol>
             <li>
-              <strong>Manual Entry:</strong> Go to "Shows" in admin and click
-              "Add Show"
+              <strong>Manual Entry:</strong> Go to &ldquo;Shows&rdquo; in admin
+              and click &ldquo;Add Show&rdquo;
             </li>
             <li>
               <strong>Bandsintown Integration:</strong> Connect your Bandsintown

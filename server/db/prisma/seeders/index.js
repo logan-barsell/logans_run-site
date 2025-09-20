@@ -32,3 +32,11 @@ module.exports = {
   seedBandsyteTenant,
   seedLogansRunTenant,
 };
+
+// Run the seeders if this file is executed directly
+if (require.main === module) {
+  runAllSeeders().catch(error => {
+    console.error('❌ Seeding failed:', error);
+    process.exit(1);
+  });
+}

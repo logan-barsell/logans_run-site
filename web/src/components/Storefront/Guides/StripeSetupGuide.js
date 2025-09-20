@@ -20,13 +20,13 @@ const StripeSetupGuide = () => {
           Navigate to <strong>Products</strong> in the left sidebar
         </>,
         <>
-          Click <strong>"Add product"</strong>
+          Click <strong>&ldquo;Add product&rdquo;</strong>
         </>,
         <>
           Fill in your product details:
           <ul>
             <li>
-              <strong>Name:</strong> Product name (e.g., "Band T-Shirt")
+              <strong>Name:</strong> Product name (e.g., &ldquo;Band T-Shirt&rdquo;)
             </li>
             <li>
               <strong>Description:</strong> Product description
@@ -40,7 +40,7 @@ const StripeSetupGuide = () => {
           </ul>
         </>,
         <>
-          Click <strong>"Save product"</strong>
+          Click <strong>&ldquo;Save product&rdquo;</strong>
         </>,
       ],
     },
@@ -51,11 +51,11 @@ const StripeSetupGuide = () => {
           In Stripe Dashboard, go to <strong>Payment Links</strong>
         </>,
         <>
-          Click <strong>"Create payment link"</strong>
+          Click <strong>&ldquo;Create payment link&rdquo;</strong>
         </>,
         <>Select your product from the dropdown</>,
         <>
-          Click <strong>"Create link"</strong>
+          Click <strong>&ldquo;Create link&rdquo;</strong>
         </>,
       ],
     },
@@ -67,34 +67,34 @@ const StripeSetupGuide = () => {
         </>,
         <>Click on the payment link to view it</>,
         <>
-          Click the <strong>"Embed"</strong> button (not "Share")
+          Click the <strong>&ldquo;Embed&rdquo;</strong> button (not &ldquo;Share&rdquo;)
         </>,
         <>
-          Select <strong>"Buy button"</strong> from the embed options
+          Select <strong>&ldquo;Buy button&rdquo;</strong> from the embed options
         </>,
         <>
           Copy the <strong>buy button ID</strong> (starts with{' '}
           <code>buy_btn_</code>)
         </>,
-        <>Paste it into the "Buy Button IDs" field above</>,
+        <>Paste it into the &ldquo;Buy Button IDs&rdquo; field above</>,
       ],
       tip: {
         type: 'info',
         content:
-          "The buy button ID is different from the payment link URL. Make sure you're copying the buy button ID, not the payment link.",
+          "The buy button ID is different from the payment link URL. Make sure you&rsquo;re copying the buy button ID, not the payment link.",
       },
     },
     {
       label: 'Step 4: Add Product Variations (Size, Color, etc.)',
       value: [
         <>
-          Go to your payment link and click <strong>"Edit"</strong>
+          Go to your payment link and click <strong>&ldquo;Edit&rdquo;</strong>
         </>,
         <>
-          Scroll down to <strong>"Additional options"</strong>
+          Scroll down to <strong>&ldquo;Additional options&rdquo;</strong>
         </>,
         <>
-          Click <strong>"Add option"</strong>
+          Click <strong>&ldquo;Add option&rdquo;</strong>
         </>,
         <>
           Choose the option type:
@@ -117,7 +117,7 @@ const StripeSetupGuide = () => {
           Configure the options:
           <ul>
             <li>
-              <strong>Label:</strong> "Size", "Color", "Quantity"
+              <strong>Label:</strong> &ldquo;Size&rdquo;, &ldquo;Color&rdquo;, &ldquo;Quantity&rdquo;
             </li>
             <li>
               <strong>Options:</strong> S, M, L, XL (for dropdowns)
@@ -128,7 +128,7 @@ const StripeSetupGuide = () => {
           </ul>
         </>,
         <>
-          Click <strong>"Save"</strong>
+          Click <strong>&ldquo;Save&rdquo;</strong>
         </>,
       ],
       tip: {
@@ -149,7 +149,7 @@ const StripeSetupGuide = () => {
           Find your <strong>Publishable key</strong> (starts with{' '}
           <code>pk_test_</code> or <code>pk_live_</code>)
         </>,
-        <>Copy the key and paste it in the "Publishable Key" field above</>,
+        <>Copy the key and paste it in the &ldquo;Publishable Key&rdquo; field above</>,
       ],
       tip: {
         type: 'warning',
@@ -162,7 +162,7 @@ const StripeSetupGuide = () => {
   const documentation = {
     text: 'Need help?',
     url: 'https://stripe.com/docs',
-    linkText: "Stripe's documentation",
+    linkText: 'Stripe&rsquo;s documentation',
   };
 
   return (

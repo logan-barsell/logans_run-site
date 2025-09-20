@@ -39,19 +39,20 @@ function YouTubeSnippet({
   useEffect(() => {
     let isActive = true;
     let intervalId = null;
+    const container = containerRef.current;
 
     // create or re-create the YT.Player instance
     function initPlayer() {
       if (!active) return;
-      if (!containerRef.current || !window.YT?.Player) return;
+      if (!container || !window.YT?.Player) return;
       // destroy any existing before re-init
       playerRef.current?.destroy();
       // ensure container is empty before creating a new player
       try {
-        containerRef.current.innerHTML = '';
+        container.innerHTML = '';
       } catch (_) {}
 
-      playerRef.current = new window.YT.Player(containerRef.current, {
+      playerRef.current = new window.YT.Player(container, {
         videoId,
         playerVars: {
           start: startTime,
@@ -115,8 +116,8 @@ function YouTubeSnippet({
         playerRef.current = null;
       }
       try {
-        if (containerRef.current) {
-          containerRef.current.innerHTML = '';
+        if (container) {
+          container.innerHTML = '';
         }
       } catch (_) {}
     }
@@ -132,8 +133,8 @@ function YouTubeSnippet({
         playerRef.current = null;
       }
       try {
-        if (containerRef.current) {
-          containerRef.current.innerHTML = '';
+        if (container) {
+          container.innerHTML = '';
         }
       } catch (_) {}
     };

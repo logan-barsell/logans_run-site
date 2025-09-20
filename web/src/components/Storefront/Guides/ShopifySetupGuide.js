@@ -29,21 +29,21 @@ const ShopifySetupGuide = () => {
           <strong>Apps and sales channels</strong>
         </>,
         <>
-          Click <strong>"Develop apps"</strong>
+          Click <strong>&ldquo;Develop apps&rdquo;</strong>
         </>,
         <>
-          Click <strong>"Create an app"</strong>
+          Click <strong>&ldquo;Create an app&rdquo;</strong>
         </>,
-        <>Give your app a name (e.g., "Band Storefront")</>,
+        <>Give your app a name (e.g., &ldquo;Band Storefront&rdquo;)</>,
         <>
-          Under <strong>"Configuration"</strong>, click{' '}
-          <strong>"Configure"</strong> next to Storefront API
-        </>,
-        <>
-          Enable <strong>"Read products, variants and collections"</strong>
+          Under <strong>&ldquo;Configuration&rdquo;</strong>, click{' '}
+          <strong>&ldquo;Configure&rdquo;</strong> next to Storefront API
         </>,
         <>
-          Click <strong>"Save"</strong>
+          Enable <strong>&ldquo;Read products, variants and collections&rdquo;</strong>
+        </>,
+        <>
+          Click <strong>&ldquo;Save&rdquo;</strong>
         </>,
       ],
     },
@@ -51,16 +51,16 @@ const ShopifySetupGuide = () => {
       label: 'Step 3: Generate Access Token',
       value: [
         <>
-          In your app settings, go to <strong>"API credentials"</strong>
+          In your app settings, go to <strong>&ldquo;API credentials&rdquo;</strong>
         </>,
         <>
-          Under <strong>"Storefront API"</strong>, click{' '}
-          <strong>"Install app"</strong>
+          Under <strong>&ldquo;Storefront API&rdquo;</strong>, click{' '}
+          <strong>&ldquo;Install app&rdquo;</strong>
         </>,
         <>
           Copy the <strong>Storefront access token</strong>
         </>,
-        <>Paste it in the "Storefront Access Token" field above</>,
+        <>Paste it in the &ldquo;Storefront Access Token&rdquo; field above</>,
       ],
       tip: {
         type: 'warning',
@@ -79,7 +79,7 @@ const ShopifySetupGuide = () => {
           Copy your <strong>myshopify.com domain</strong> (e.g.,{' '}
           <code>your-store.myshopify.com</code>)
         </>,
-        <>Paste it in the "Shop Domain" field above</>,
+        <>Paste it in the &ldquo;Shop Domain&rdquo; field above</>,
       ],
       tip: {
         type: 'info',
@@ -95,9 +95,9 @@ const ShopifySetupGuide = () => {
           <strong>Collections</strong>
         </>,
         <>
-          Click <strong>"Create collection"</strong>
+          Click <strong>&ldquo;Create collection&rdquo;</strong>
         </>,
-        <>Give it a name (e.g., "Band Merchandise")</>,
+        <>Give it a name (e.g., &ldquo;Band Merchandise&rdquo;)</>,
         <>Add your products to the collection</>,
         <>
           Make sure the collection is <strong>published</strong>
@@ -112,7 +112,7 @@ const ShopifySetupGuide = () => {
         <>
           Copy the collection ID (the number after <code>/collections/</code>)
         </>,
-        <>Paste it in the "Collection ID" field above</>,
+        <>Paste it in the &ldquo;Collection ID&rdquo; field above</>,
       ],
       tip: {
         type: 'info',
@@ -125,7 +125,7 @@ const ShopifySetupGuide = () => {
   const documentation = {
     text: 'Need help?',
     url: 'https://shopify.dev/docs/storefront-api',
-    linkText: "Shopify's documentation",
+    linkText: 'Shopify&rsquo;s documentation',
   };
 
   return (

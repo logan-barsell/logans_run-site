@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAlert } from '../../contexts/AlertContext';
 import './AlertItem.css';
 
@@ -6,6 +6,14 @@ const AlertItem = ({ alert }) => {
   const { removeAlert } = useAlert();
   const [isVisible, setIsVisible] = useState(false);
   const [isFading, setIsFading] = useState(false);
+
+  const handleFadeOut = useCallback(() => {
+    setIsFading(true);
+    // Wait for fade-out animation to complete, then remove
+    setTimeout(() => {
+      removeAlert(alert.id);
+    }, 200);
+  }, [removeAlert, alert.id]);
 
   useEffect(() => {
     // Trigger slide-in animation
@@ -25,15 +33,7 @@ const AlertItem = ({ alert }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [alert.duration, alert.id]);
-
-  const handleFadeOut = () => {
-    setIsFading(true);
-    // Wait for fade-out animation to complete, then remove
-    setTimeout(() => {
-      removeAlert(alert.id);
-    }, 200);
-  };
+  }, [alert.duration, alert.id, handleFadeOut]);
 
   const handleDismiss = () => {
     handleFadeOut();

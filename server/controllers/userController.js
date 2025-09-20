@@ -158,8 +158,8 @@ async function endSession(req, res, next) {
     // If ending current session, also revoke tokens and clear cookies
     if (sessionId === currentSessionId) {
       await TokenService.revokeSessionRefreshToken(sessionId);
-      const config = await getConfig(req.tenantId);
-      clearAuthCookies(res, config.domain);
+      const requestDomain = req.headers.host || req.hostname;
+      clearAuthCookies(res, requestDomain);
     }
 
     res.status(200).json({

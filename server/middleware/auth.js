@@ -61,8 +61,8 @@ async function requireAuth(req, res, next) {
   }
 
   const logoutUser = async () => {
-    const config = await getConfig(req.tenantId);
-    clearAuthCookies(res, config.domain);
+    const requestDomain = req.headers.host || req.hostname;
+    clearAuthCookies(res, requestDomain);
     const sessionId = req.user?.sessionId;
     const userId = req.user?.id;
 

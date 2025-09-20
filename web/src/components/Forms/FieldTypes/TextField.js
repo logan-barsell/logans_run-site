@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Field } from 'react-final-form';
 
 const TextField = ({
@@ -27,6 +27,26 @@ const TextField = ({
   // Only require if explicitly set to true
   const isRequired = required === true;
 
+  const handleValidation = useCallback(
+    value => {
+      // Handle required validation
+      if (isRequired && !value) {
+        return 'Required';
+      }
+
+      // Handle custom validation
+      if (validate && value) {
+        const validation = validate(value);
+        if (validation) {
+          return validation;
+        }
+      }
+
+      return undefined;
+    },
+    [isRequired, validate]
+  );
+
   // Run validation immediately for required fields
   useEffect(() => {
     if (isRequired) {
@@ -38,24 +58,7 @@ const TextField = ({
       };
       setLocalValidationState(newValidationState);
     }
-  }, [isRequired]);
-
-  const handleValidation = value => {
-    // Handle required validation
-    if (isRequired && !value) {
-      return 'Required';
-    }
-
-    // Handle custom validation
-    if (validate && value) {
-      const validation = validate(value);
-      if (validation) {
-        return validation;
-      }
-    }
-
-    return undefined;
-  };
+  }, [isRequired, handleValidation]);
 
   const handleChange = (input, value) => {
     input.onChange(value);

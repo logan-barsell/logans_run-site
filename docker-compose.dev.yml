@@ -2,7 +2,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
-    container_name: bandsyte-postgres
+    container_name: bandsyte-postgres-dev
     environment:
       POSTGRES_DB: bandsyte_dev
       POSTGRES_USER: bandsyte_user
@@ -10,7 +10,7 @@ services:
     ports:
       - '5433:5432' # Use 5433 to avoid local conflicts
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_dev_data:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U bandsyte_user -d bandsyte_dev']
       interval: 10s
@@ -20,23 +20,23 @@ services:
   # Redis Cache
   redis:
     image: redis:7-alpine
-    container_name: bandsyte-redis
+    container_name: bandsyte-redis-dev
     ports:
       - '6379:6379'
     volumes:
-      - redis_data:/data
+      - redis_dev_data:/data
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 3s
       retries: 5
 
-  # API Server
+  # API Server (Development)
   api:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: bandsyte-api
+    container_name: bandsyte-api-dev
     ports:
       - '5001:5001'
     environment:
@@ -66,24 +66,21 @@ services:
       retries: 3
       start_period: 40s
 
-  # Frontend Web App
+  # Frontend Web App (Development with hot reloading)
   web:
     build:
       context: ./web
-      dockerfile: Dockerfile
-    container_name: bandsyte-web
+      dockerfile: Dockerfile.dev
+    container_name: bandsyte-web-dev
     ports:
       - '3000:3000'
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:5001
+      - NEXT_PUBLIC_API_URL=http://localhost:5001 # For browser access
+      - API_BASE_URL=http://api:5001/api # For server-side requests
+      - DEV_TENANT_ID=579930bf-ea5b-4b8a-a108-625ae19886ee # Logan's Run tenant ID
     volumes:
-      - ./web/src:/app/src
-      - ./web/public:/app/public
-      - ./web/package.json:/app/package.json
-      - ./web/package-lock.json:/app/package-lock.json
-      - ./web/next.config.mjs:/app/next.config.mjs
-      - ./web/jsconfig.json:/app/jsconfig.json
+      - ./web:/app
       - /app/node_modules
       - /app/.next
     depends_on:
@@ -105,5 +102,5 @@ services:
       start_period: 60s
 
 volumes:
-  postgres_data:
-  redis_data:
+  postgres_dev_data:
+  redis_dev_data:

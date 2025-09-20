@@ -36,8 +36,15 @@ export async function middleware(req) {
   const requestHeaders = new Headers(req.headers);
   if (tenant?.id) requestHeaders.set('x-tenant-id', tenant.id);
 
+  // Create a modified request with tenant headers for auth check
+  const modifiedReq = new Request(req.url, {
+    method: req.method,
+    headers: requestHeaders,
+    body: req.body,
+  });
+
   // Check authentication status once for all logic
-  const authStatus = await checkAuthStatus(req);
+  const authStatus = await checkAuthStatus(modifiedReq);
 
   // Add admin status headers for conditional rendering
   requestHeaders.set(

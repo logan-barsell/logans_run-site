@@ -3,7 +3,7 @@ const colorPalettes = {
   black: {
     primary: '#000000',
     secondary: 'black',
-    background: '#272727',
+    background: 'rgba(0,0,0,.7)',
     navbar: '#000000',
     accordion: '#000000',
     accordionContent: 'rgba(0, 0, 0, 0.9)',

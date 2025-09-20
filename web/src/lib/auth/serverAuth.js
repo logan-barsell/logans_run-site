@@ -3,8 +3,23 @@
 export async function checkAuthStatus(request) {
   try {
     const url = new URL(request.url);
-    const baseUrl =
-      process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
+    const host = url.hostname;
+
+    // Determine API base URL based on current domain
+    let baseUrl;
+
+    if (host.includes('localhost') || host.includes('127.0.0.1')) {
+      baseUrl =
+        process.env.API_BASE_URL ||
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        'http://localhost:5000/api';
+    } else if (host.endsWith('.bandsyte.com')) {
+      // Subdomains use the main API
+      baseUrl = 'https://bandsyte.com/api';
+    } else {
+      // Custom domains use their own API endpoint
+      baseUrl = `https://${host}/api`;
+    }
 
     if (!baseUrl) {
       console.warn('API_BASE_URL not configured');
@@ -36,9 +51,9 @@ export async function checkAuthStatus(request) {
       credentials: 'include',
     });
 
-    if (response.ok) {
-      const responseText = await response.text();
+    const responseText = await response.text();
 
+    if (response.ok) {
       if (!responseText || responseText.trim() === '') {
         return { authenticated: false };
       }

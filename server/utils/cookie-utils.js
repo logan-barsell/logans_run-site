@@ -5,17 +5,25 @@ const isProduction = process.env.NODE_ENV === 'production';
  * @param {Object} res - Express response object
  * @param {string} accessToken - The access token to set as a cookie
  * @param {string} refreshToken - The refresh token to set as a cookie
- * @param {string} domain - The domain to set cookies for (optional)
+ * @param {string} requestDomain - The domain from the request (optional)
  */
-function setAuthCookies(res, accessToken, refreshToken, domain = null) {
+function setAuthCookies(res, accessToken, refreshToken, requestDomain = null) {
   const baseCookieOptions = {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
     secure: process.env.NODE_ENV === 'production',
+    path: '/',
   };
 
-  if (isProduction && domain) {
-    baseCookieOptions.domain = domain;
+  // Smart cookie domain strategy for multi-tenant setup
+  if (isProduction && requestDomain) {
+    // For subdomains like band1.bandsyte.com, set domain to .bandsyte.com for sharing
+    if (requestDomain.endsWith('.bandsyte.com')) {
+      baseCookieOptions.domain = '.bandsyte.com';
+    }
+    // For custom domains like yesdevil.com, don't set domain attribute
+    // This makes cookies domain-specific and secure
+    // else: no domain attribute set = cookies only work on exact domain
   }
 
   // Access token: 1 hour expiry
@@ -37,18 +45,23 @@ function setAuthCookies(res, accessToken, refreshToken, domain = null) {
 /**
  * Clears authentication cookies from the response.
  * @param {Object} res - Express response object
- * @param {string} domain - The domain to clear cookies for (optional)
+ * @param {string} requestDomain - The domain from the request (optional)
  */
-function clearAuthCookies(res, domain = null) {
+function clearAuthCookies(res, requestDomain = null) {
   const cookieOptions = {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
     secure: process.env.NODE_ENV === 'production',
     path: '/',
   };
 
-  if (isProduction && domain) {
-    cookieOptions.domain = domain;
+  // Apply the same smart domain strategy for clearing cookies
+  if (isProduction && requestDomain) {
+    // For subdomains like band1.bandsyte.com, clear from .bandsyte.com
+    if (requestDomain.endsWith('.bandsyte.com')) {
+      cookieOptions.domain = '.bandsyte.com';
+    }
+    // For custom domains, don't set domain attribute (clears from exact domain)
   }
 
   res.clearCookie('access_token', cookieOptions);

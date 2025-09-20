@@ -22,6 +22,7 @@
 .env.production.local
 .env.backup
 .env.*.backup
+.env.docker
 
 npm-debug.log*
 yarn-debug.log*

@@ -53,8 +53,8 @@ async function login(req, res, next) {
     }
 
     // Set cookies for normal login
-    const config = await getConfig(req.tenantId);
-    setAuthCookies(res, result.accessToken, result.refreshToken, config.domain);
+    const requestDomain = req.headers.host || req.hostname;
+    setAuthCookies(res, result.accessToken, result.refreshToken, requestDomain);
 
     logger.info(`User logged in successfully: ${email}`);
 
@@ -126,8 +126,8 @@ async function completeTwoFactorLogin(req, res, next) {
     });
 
     // Set cookies
-    const config = await getConfig(req.tenantId);
-    setAuthCookies(res, result.accessToken, result.refreshToken, config.domain);
+    const requestDomain = req.headers.host || req.hostname;
+    setAuthCookies(res, result.accessToken, result.refreshToken, requestDomain);
 
     logger.info(`User completed 2FA login successfully: ${userId}`);
 
@@ -198,8 +198,8 @@ async function signup(req, res, next) {
     });
 
     // Set cookies
-    const config = await getConfig(req.tenantId);
-    setAuthCookies(res, result.accessToken, result.refreshToken, config.domain);
+    const requestDomain = req.headers.host || req.hostname;
+    setAuthCookies(res, result.accessToken, result.refreshToken, requestDomain);
 
     logger.info(`User signed up successfully: ${email}`);
 
@@ -235,7 +235,8 @@ async function logout(req, res, next) {
     // Revoke only this session's refresh token
     await TokenService.revokeSessionRefreshToken(sessionId);
 
-    clearAuthCookies(res);
+    const requestDomain = req.headers.host || req.hostname;
+    clearAuthCookies(res, requestDomain);
 
     logger.info(`✅ Successful logout for session ${sessionId}`, { ip });
 
@@ -261,7 +262,8 @@ async function refresh(req, res, next) {
     });
   } catch (error) {
     logger.error('Token refresh error:', error);
-    clearAuthCookies(res);
+    const requestDomain = req.headers.host || req.hostname;
+    clearAuthCookies(res, requestDomain);
     next(error);
   }
 }

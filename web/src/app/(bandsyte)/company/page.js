@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function CompanyPage() {
   return (
     <div className='container py-5'>
@@ -12,18 +14,18 @@ export default function CompanyPage() {
             website in minutes.
           </p>
           <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
-            <a
+            <Link
               href='/company/signup'
               className='btn btn-primary btn-lg'
             >
               Get Started Free
-            </a>
-            <a
+            </Link>
+            <Link
               href='/company/features'
               className='btn btn-outline-primary btn-lg'
             >
               Learn More
-            </a>
+            </Link>
           </div>
         </div>
       </div>

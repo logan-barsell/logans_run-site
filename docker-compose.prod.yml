@@ -7,8 +7,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-bandsyte_prod}
       POSTGRES_USER: ${POSTGRES_USER:-bandsyte_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_prod_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-bandsyte_user}']
@@ -20,16 +22,18 @@ services:
   redis:
     image: redis:7-alpine
     container_name: bandsyte-redis-prod
+    ports:
+      - '6379:6379'
     volumes:
-      - redis_data:/data
+      - redis_prod_data:/data
     restart: unless-stopped
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
-      timeout: 5s
+      timeout: 3s
       retries: 5
 
-  # Backend API
+  # Backend API (Production)
   api:
     build:
       context: ./server
@@ -62,16 +66,18 @@ services:
       test:
         [
           'CMD',
-          'node',
-          '-e',
-          "require('http').get('http://localhost:5001/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })",
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:5001/api/health',
         ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-  # Frontend Web App
+  # Frontend Web App (Production)
   web:
     build:
       context: ./web
@@ -99,8 +105,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 60s
 
 volumes:
-  postgres_data:
-  redis_data:
+  postgres_prod_data:
+  redis_prod_data:

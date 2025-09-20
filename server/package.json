@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "docker-start": "node scripts/docker-start.js",
     "dev": "nodemon server.js",
     "generate-secret": "node scripts/generateJWTSecret.js",
     "migrate:dev": "node scripts/run-prisma-owner.js migrate dev --schema db/prisma/schema.prisma",

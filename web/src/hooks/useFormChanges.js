@@ -79,7 +79,7 @@ export const useFormChanges = (
     const changed = !compareData(initialDataRef.current, currentData);
     setHasChanges(changed);
     setIsDirty(changed);
-  }, [currentData, isInitialized, compareFunction]);
+  }, [currentData, isInitialized, compareFunction, compareData]);
 
   // Reset changes (useful after successful save)
   const resetChanges = () => {
